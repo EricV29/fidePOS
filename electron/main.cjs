@@ -7,12 +7,14 @@ let mainWindow = null;
 let loginWindow = null;
 let signupWindow = null;
 
-//CREATE WINDOWS
+//* CREATE WINDOWS
 
+// SIGNUP
 function createSignupWindow() {
   signupWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 650,
+    height: 700,
+    resizable: false,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "../public/fidelogo.ico"),
     webPreferences: {
@@ -27,10 +29,12 @@ function createSignupWindow() {
   });
 }
 
+// LOGIN
 function createLoginWindow() {
   loginWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 650,
+    height: 700,
+    resizable: false,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "../public/fidelogo.ico"),
     webPreferences: {
@@ -45,10 +49,12 @@ function createLoginWindow() {
   });
 }
 
+// MAIN WINDOW
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 900,
+    width: 1000,
     height: 700,
+    resizable: true,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "../public/fidelogo.ico"),
     webPreferences: {
@@ -57,13 +63,14 @@ function createMainWindow() {
     },
   });
 
+  mainWindow.maximize();
   mainWindow.loadURL("http://localhost:6969/main");
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
 }
 
-// LISTENERS
+//* LISTENERS
 
 // OPEN LOGIN
 ipcMain.on("signup-success", () => {
@@ -94,9 +101,9 @@ ipcMain.on("message_private", (event, msg) => {
   }
 });
 
-//INITIALIZATION
+//* INITIALIZATION
 app.whenReady().then(async () => {
-  const db = await initDatabase();
+  await initDatabase();
   createSignupWindow();
 
   app.on("activate", () => {
