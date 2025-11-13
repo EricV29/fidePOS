@@ -7,7 +7,7 @@ const Signup: React.FC = () => {
 
   return (
     <>
-      <div className="flex flex-col w-screen h-screen justify-center items-center">
+      <div className="w-screen h-screen flex flex-col justify-center items-center">
         <h1>Signup</h1>
         <button onClick={handleSignup}>Entrar</button>
       </div>

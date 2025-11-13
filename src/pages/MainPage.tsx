@@ -26,9 +26,8 @@ export default function MainPage() {
 
   return (
     <>
-      <div className="w-screen h-screen flex flex-col justify-center items-center gap-5">
-        <h1>React + Vite + Electron + Tailwind</h1>
-        <h2>Ventana Principal</h2>
+      <div className="w-screen h-screen flex flex-col justify-center items-center">
+        <h1>Main window</h1>
         <button onClick={sendMessage}>Enviar mensaje global</button>
         <p>Respuesta global: {msgReply}</p>
 
