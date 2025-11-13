@@ -47,6 +47,8 @@
     ]
   },
   "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.2.10",
+    "@fontsource/bricolage-grotesque": "^5.2.10",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-router-dom": "7.9.5",
