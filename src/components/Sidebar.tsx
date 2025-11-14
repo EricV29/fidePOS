@@ -1,5 +1,6 @@
 import React from "react";
 import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import MenuIcon from "../assets/icons/MenuIcon";
 import DashIcon from "../assets/icons/DashboardIcon";
 import ShopCarIcon from "../assets/icons/ShoppingCar";
@@ -24,6 +25,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   const handleLogout = () => {
     window.electronAPI.logoutSuccess();
   };
+
+  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <>
@@ -61,43 +65,43 @@ const Sidebar: React.FC<SidebarProps> = ({
             <Sidebaitem
               icon={DashIcon}
               label="Dashboard"
-              active={activeItem === "dashboard"}
-              onClick={() => setActiveItem("dashboard")}
+              active={location.pathname === "/main/dashboard"}
+              onClick={() => navigate("/main/dashboard")}
               isOpen={isOpen}
             />
             <Sidebaitem
               icon={ShopCarIcon}
               label="New Sale"
-              active={activeItem === "newSale"}
-              onClick={() => setActiveItem("newSale")}
+              active={location.pathname === "/main/newsale"}
+              onClick={() => navigate("/main/newsale")}
               isOpen={isOpen}
             />
             <Sidebaitem
               icon={BoxIcon}
               label="Products"
-              active={activeItem === "products"}
-              onClick={() => setActiveItem("products")}
+              active={location.pathname === "/main/products"}
+              onClick={() => navigate("/main/products")}
               isOpen={isOpen}
             />
             <Sidebaitem
               icon={RepIcon}
               label="Reports"
-              active={activeItem === "reports"}
-              onClick={() => setActiveItem("reports")}
+              active={location.pathname === "/main/reports"}
+              onClick={() => navigate("/main/reports")}
               isOpen={isOpen}
             />
             <Sidebaitem
               icon={CustIcon}
               label="Customers"
-              active={activeItem === "customers"}
-              onClick={() => setActiveItem("customers")}
+              active={location.pathname === "/main/customers"}
+              onClick={() => navigate("/main/customers")}
               isOpen={isOpen}
             />
             <Sidebaitem
               icon={SettIcon}
               label="Settings"
-              active={activeItem === "settings"}
-              onClick={() => setActiveItem("settings")}
+              active={location.pathname === "/main/settings"}
+              onClick={() => navigate("/main/settings")}
               isOpen={isOpen}
             />
           </div>

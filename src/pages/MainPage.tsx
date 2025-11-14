@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
+import { Outlet } from "react-router-dom";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(true);
@@ -12,10 +13,8 @@ export default function MainPage() {
       setIsLargeScreen(large);
 
       if (!large) {
-        // Pantalla chica → sidebar siempre cerrado
         setIsOpen(false);
       } else {
-        // Pantalla grande → sidebar siempre abierto
         setIsOpen(true);
       }
     }
@@ -60,7 +59,7 @@ export default function MainPage() {
       <div className="w-screen h-screen overflow-hidden flex p-[13px] gap-[15px]">
         <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
         <main className="h-full w-full bg-slate-400">
-          <h1>Main page</h1>
+          <Outlet />
         </main>
       </div>
     </>
