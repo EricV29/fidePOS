@@ -38,7 +38,7 @@ h2 {
   margin-bottom: 0.5em;
 }
 
-button {
+.bnormal {
   min-width: 150px;
   height: 48px;
   border-radius: 10px;
@@ -49,4 +49,23 @@ button {
   color: #f57c00;
   cursor: pointer;
   box-shadow: 0px 2px 0px rgba(245, 124, 0, 1);
+}
+
+.sideitem {
+  min-width: 100%;
+  height: 48px;
+  border-radius: 10px 0px 0px 10px;
+  padding: 0px 15px;
+  gap: 15px;
+  font-weight: 600;
+  transition: background-color 0.25s ease;
+}
+
+.sideitem:hover {
+  background-color: rgba(93, 93, 93, 0.15);
+}
+
+.sideitem.active:hover {
+  background-color: #f57c00;
+  color: #ffffff;
 }

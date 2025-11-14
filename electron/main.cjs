@@ -53,7 +53,8 @@ function createLoginWindow() {
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
-    height: 700,
+    minWidth: 1024,
+    minHeight: 750,
     resizable: true,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "../public/fidelogo.ico"),
@@ -82,6 +83,12 @@ ipcMain.on("signup-success", () => {
 ipcMain.on("login-success", () => {
   if (loginWindow) loginWindow.close();
   createMainWindow();
+});
+
+//LOGOUT
+ipcMain.on("logout-success", () => {
+  if (mainWindow) mainWindow.close();
+  createLoginWindow();
 });
 
 // GLOBAL LISTENER
