@@ -5,6 +5,7 @@ declare global {
     electronAPI: {
       signupSuccess: () => void;
       loginSuccess: () => void;
+      logoutSuccess: () => void;
       sendMessage: (msg: string) => void;
       onMessageReply: (callback: (data: string) => void) => void;
       sendMessagePrivate: (msg: string) => void;

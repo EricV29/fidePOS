@@ -8,6 +8,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Login bridge
   loginSuccess: () => ipcRenderer.send("login-success"),
 
+  // Logout bridge
+  logoutSuccess: () => ipcRenderer.send("logout-success"),
+
   // message 1 bridge
   sendMessage: (msg) => ipcRenderer.send("message", msg),
 
