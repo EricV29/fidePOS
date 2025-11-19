@@ -115,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             />
             {isOpen && (
               <>
-                <h1 className="text-[#F57C00] mb-0 break-all block">User</h1>
+                <h1 className="mb-0 break-all block">User</h1>
                 <p className="text-[#5D5D5D] block">Rol</p>
               </>
             )}

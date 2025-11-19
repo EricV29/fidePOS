@@ -53,8 +53,8 @@ function createLoginWindow() {
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
-    minWidth: 1024,
-    minHeight: 750,
+    minWidth: 1000,
+    minHeight: 700,
     resizable: true,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "../public/fidelogo.ico"),
