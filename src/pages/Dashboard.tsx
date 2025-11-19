@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "../components/DatePicker";
 import BarChartExample from "@/components/BarChart";
 import ChartPieDonutText from "@/components/PieChart";
@@ -18,12 +18,20 @@ import {
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
+  const [installDate, setInstallDate] = useState<string | null>(null);
+
+  useEffect(() => {
+    window.electronAPI.installDate().then((installDate) => {
+      setInstallDate(installDate);
+    });
+  }, []);
+
   return (
     <>
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
           <h1 className="text-[30px] mb-0">Dashboard</h1>
-          <DatePicker />
+          <DatePicker installDate={installDate} />
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <div className="flex-1 min-h-0 w-full flex flex-col">

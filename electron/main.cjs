@@ -1,6 +1,10 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
+const {
+  registerInstallDate,
+  getInstallDate,
+} = require("./installDateManager.cjs");
 
 const isDev = !app.isPackaged;
 let mainWindow = null;
@@ -92,6 +96,10 @@ ipcMain.on("logout-success", () => {
 });
 
 // GLOBAL LISTENER
+ipcMain.handle("installDate", () => {
+  return getInstallDate();
+});
+
 ipcMain.on("message", (event, msg) => {
   console.log("Message received:", msg);
   event.sender.send("message-reply", `Message: ${msg}`);
@@ -111,6 +119,7 @@ ipcMain.on("message_private", (event, msg) => {
 //* INITIALIZATION
 app.whenReady().then(async () => {
   await initDatabase();
+  registerInstallDate();
   createSignupWindow();
 
   app.on("activate", () => {

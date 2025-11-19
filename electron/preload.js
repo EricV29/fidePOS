@@ -2,6 +2,9 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  // Install Date bridge
+  installDate: () => ipcRenderer.invoke("installDate"),
+
   // Singup bridge
   signupSuccess: () => ipcRenderer.send("signup-success"),
 

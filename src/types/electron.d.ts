@@ -3,6 +3,7 @@ export {};
 declare global {
   interface Window {
     electronAPI: {
+      installDate: () => Promise<string>;
       signupSuccess: () => void;
       loginSuccess: () => void;
       logoutSuccess: () => void;

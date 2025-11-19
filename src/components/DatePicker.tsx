@@ -4,7 +4,13 @@ import CaretDIcon from "../assets/icons/CaretDIcon";
 import LeftIcon from "../assets/icons/LeftIcon";
 import RightIcon from "../assets/icons/RightIcon";
 
-export default function DateRangePickerWithInlineButtons() {
+interface DatePickerProps {
+  installDate: string;
+}
+
+const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
+  installDate,
+}) => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedStartDate, setSelectedStartDate] = useState(null);
   const [selectedEndDate, setSelectedEndDate] = useState(null);
@@ -82,7 +88,9 @@ export default function DateRangePickerWithInlineButtons() {
     } else if (selectedStartDate) {
       return selectedStartDate;
     } else {
-      return "";
+      const today = currentDate.toLocaleDateString("en-US");
+      const iDate = new Date(installDate).toLocaleDateString("en-US");
+      return `${iDate} - ${today}`;
     }
   };
 
@@ -111,107 +119,109 @@ export default function DateRangePickerWithInlineButtons() {
   }, []);
 
   return (
-    <div className="w-[320px] h-[48px] relative z-10" ref={datepickerRef}>
-      <div className="relative flex items-center">
-        <span className="absolute left-0 pl-5 text-dark-5 ">
-          <CalendarIcon size={20} color="#f57c00" />
-        </span>
+    <>
+      <div className="w-[320px] h-[48px] relative z-10" ref={datepickerRef}>
+        <div className="relative flex items-center">
+          <span className="absolute left-0 pl-5 text-dark-5 ">
+            <CalendarIcon size={20} color="#f57c00" />
+          </span>
+          <input
+            id="datepicker"
+            type="text"
+            placeholder="Pick a date"
+            className="w-full rounded-[10px] border-[2px] bg-white py-2.5 pl-[50px] pr-8 text-[#f57c00] outline-none transition border-[#f57c00] shadow-[0px_2px_0px_#F57C00]"
+            value={updateInput()}
+            onClick={toggleDatepicker}
+            readOnly
+          />
+          <span
+            className="absolute right-0 cursor-pointer pr-4 text-[#f57c00]"
+            onClick={toggleDatepicker}
+          >
+            <CaretDIcon size={20} color="#f57c00" />
+          </span>
+        </div>
 
-        <input
-          id="datepicker"
-          type="text"
-          placeholder="Pick a date"
-          className="w-full rounded-[10px] border-[2px] bg-white py-2.5 pl-[50px] pr-8 text-[#f57c00] outline-none transition border-[#f57c00] shadow-[0px_2px_0px_#F57C00]"
-          value={updateInput()}
-          onClick={toggleDatepicker}
-          readOnly
-        />
+        {isOpen && (
+          <div
+            id="datepicker-container"
+            className="shadow-datepicker absolute mt-2 rounded-xl border-[2px] bg-white pt-5 border-[#f57c00]"
+          >
+            <div className="flex items-center justify-between px-5">
+              <button
+                id="prevMonth"
+                className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black hover:text-white"
+                onClick={() =>
+                  setCurrentDate(
+                    new Date(currentDate.setMonth(currentDate.getMonth() - 1))
+                  )
+                }
+              >
+                <LeftIcon size={20} color="#000 hover:#fff" />
+              </button>
 
-        <span
-          className="absolute right-0 cursor-pointer pr-4 text-[#f57c00]"
-          onClick={toggleDatepicker}
-        >
-          <CaretDIcon size={20} color="#f57c00" />
-        </span>
-      </div>
+              <div
+                id="currentMonth"
+                className="text-lg font-medium text-dark-3 text-black"
+              >
+                {currentDate.toLocaleString("default", {
+                  month: "long",
+                })}{" "}
+                {currentDate.getFullYear()}
+              </div>
 
-      {isOpen && (
-        <div
-          id="datepicker-container"
-          className="shadow-datepicker absolute mt-2 rounded-xl border-[2px] bg-white pt-5 border-[#f57c00]"
-        >
-          <div className="flex items-center justify-between px-5">
-            <button
-              id="prevMonth"
-              className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black hover:text-white"
-              onClick={() =>
-                setCurrentDate(
-                  new Date(currentDate.setMonth(currentDate.getMonth() - 1))
-                )
-              }
-            >
-              <LeftIcon size={20} color="#000 hover:#fff" />
-            </button>
-
-            <div
-              id="currentMonth"
-              className="text-lg font-medium text-dark-3 text-black"
-            >
-              {currentDate.toLocaleString("default", {
-                month: "long",
-              })}{" "}
-              {currentDate.getFullYear()}
+              <button
+                id="nextMonth"
+                className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black hover:text-white"
+                onClick={() =>
+                  setCurrentDate(
+                    new Date(currentDate.setMonth(currentDate.getMonth() + 1))
+                  )
+                }
+              >
+                <RightIcon size={20} color="#000 hover:#fff" />
+              </button>
             </div>
 
-            <button
-              id="nextMonth"
-              className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black hover:text-white"
-              onClick={() =>
-                setCurrentDate(
-                  new Date(currentDate.setMonth(currentDate.getMonth() + 1))
-                )
-              }
-            >
-              <RightIcon size={20} color="#000 hover:#fff" />
-            </button>
-          </div>
+            <div className="mb-4 mt-6 grid grid-cols-7 gap-2 px-5">
+              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                <div
+                  key={day}
+                  className="text-center text-sm font-medium text-secondary-color"
+                >
+                  {day}
+                </div>
+              ))}
+            </div>
 
-          <div className="mb-4 mt-6 grid grid-cols-7 gap-2 px-5">
-            {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
-              <div
-                key={day}
-                className="text-center text-sm font-medium text-secondary-color"
+            <div
+              id="days-container"
+              className="mt-2 grid grid-cols-7 gap-y-0.5 px-5"
+            >
+              {renderCalendar()}
+            </div>
+
+            <div className="mt-5 flex justify-end space-x-2.5 border-t-[2px] border-[#f57c00] p-5 border-dark-3">
+              <button
+                id="cancelButton"
+                className="rounded-lg border border-[#f57c00] px-5 py-2.5 text-base font-medium text-[#f57c00] hover:bg-[#f57c00] hover:text-[#fff]"
+                onClick={handleCancel}
               >
-                {day}
-              </div>
-            ))}
+                Cancel
+              </button>
+              <button
+                id="applyButton"
+                className="rounded-lg bg-[#f57c00] px-5 py-2.5 text-base font-medium text-white hover:bg-[#ce6700]"
+                onClick={handleApply}
+              >
+                Apply
+              </button>
+            </div>
           </div>
-
-          <div
-            id="days-container"
-            className="mt-2 grid grid-cols-7 gap-y-0.5 px-5"
-          >
-            {renderCalendar()}
-          </div>
-
-          <div className="mt-5 flex justify-end space-x-2.5 border-t-[2px] border-[#f57c00] p-5 border-dark-3">
-            <button
-              id="cancelButton"
-              className="rounded-lg border border-[#f57c00] px-5 py-2.5 text-base font-medium text-[#f57c00] hover:bg-[#f57c00] hover:text-[#fff]"
-              onClick={handleCancel}
-            >
-              Cancel
-            </button>
-            <button
-              id="applyButton"
-              className="rounded-lg bg-[#f57c00] px-5 py-2.5 text-base font-medium text-white hover:bg-[#ce6700]"
-              onClick={handleApply}
-            >
-              Apply
-            </button>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
-}
+};
+
+export default DateRangePickerWithInlineButtons;
