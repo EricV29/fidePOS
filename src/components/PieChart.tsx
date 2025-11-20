@@ -10,43 +10,26 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-interface ChartPieDonutTextProps {}
+interface DataItem {
+  [key: string]: string | number;
+}
 
-export const description = "A donut chart with text";
+interface ChartPieDonutTextProps {
+  chartData: DataItem[];
+  chartConfig: ChartConfig;
+  xKey: string;
+  yKey: string;
+}
 
-const chartData = [
-  { category: "Edredones", products: 224, fill: "#F57C00" },
-  { category: "Maquillaje", products: 133, fill: "#FFA726" },
-  { category: "Juguetes", products: 287, fill: "#4A4A4A" },
-  { category: "Dulces", products: 173, fill: "#0277BD" },
-];
-
-const chartConfig = {
-  category: {
-    label: "Category",
-  },
-  chrome: {
-    label: "Edredones",
-    color: "#F57C00",
-  },
-  safari: {
-    label: "Maquillaje",
-    color: "#4A4A4A",
-  },
-  firefox: {
-    label: "Juguetes",
-    color: "#FFA726",
-  },
-  edge: {
-    label: "Dulces",
-    color: "#0277BD",
-  },
-} satisfies ChartConfig;
-
-const ChartPieDonutText: React.FC<ChartPieDonutTextProps> = ({}) => {
+const ChartPieDonutText: React.FC<ChartPieDonutTextProps> = ({
+  chartData,
+  chartConfig,
+  yKey,
+  xKey,
+}) => {
   const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.products, 0);
-  }, []);
+    return chartData.reduce((acc, curr) => acc + Number(curr.products), 0);
+  }, [chartData]);
 
   return (
     <ChartContainer
@@ -60,8 +43,8 @@ const ChartPieDonutText: React.FC<ChartPieDonutTextProps> = ({}) => {
         />
         <Pie
           data={chartData}
-          dataKey="products"
-          nameKey="category"
+          dataKey={yKey}
+          nameKey={xKey}
           innerRadius={50}
           strokeWidth={5}
         >

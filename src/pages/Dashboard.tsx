@@ -34,11 +34,26 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
     { category: "Peluches", sales: 42 },
   ];
 
-  const chartConfig = {
+  const chartConfigTSC = {
     sales: {
       color: "#F57C00",
     },
   };
+
+  const dataTAPC = [
+    { category: "Edredones", products: 100, fill: "#F57C00" },
+    { category: "Maquillaje", products: 203, fill: "#FFA726" },
+    { category: "Juguetes", products: 387, fill: "#4A4A4A" },
+    { category: "Dulces", products: 73, fill: "#0277BD" },
+  ];
+
+  const chartConfigTAPC = {
+    category: {
+      label: "Category",
+    },
+  };
+
+  if (!installDate) return null;
 
   return (
     <>
@@ -54,8 +69,8 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
               <div className="max-w-[600px] min-w-0 w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
                 <p className="font-semibold">Top 5 - Total Sales Categories</p>
                 <BarChartExample
-                  data={dataTSC}
-                  chartConfig={chartConfig}
+                  chartData={dataTSC}
+                  chartConfig={chartConfigTSC}
                   xKey={"category"}
                   yKey={"sales"}
                 />
@@ -64,7 +79,12 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                 <p className="font-semibold">
                   Total Active Products Categories
                 </p>
-                <ChartPieDonutText />
+                <ChartPieDonutText
+                  chartData={dataTAPC}
+                  chartConfig={chartConfigTAPC}
+                  xKey={"category"}
+                  yKey={"products"}
+                />
               </div>
               <div className="max-w-[300px] min-w-0 w-[300px] h-full flex flex-col gap-2 justify-between items-center">
                 <CardInfo

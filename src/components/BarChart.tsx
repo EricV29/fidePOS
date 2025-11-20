@@ -13,14 +13,14 @@ interface DataItem {
 }
 
 interface BarChartExampleProps {
-  data: DataItem[];
+  chartData: DataItem[];
   chartConfig: ChartConfig;
   xKey: string;
   yKey: string;
 }
 
 const BarChartExample: React.FC<BarChartExampleProps> = ({
-  data,
+  chartData,
   chartConfig,
   xKey,
   yKey,
@@ -31,7 +31,7 @@ const BarChartExample: React.FC<BarChartExampleProps> = ({
         config={chartConfig}
         className="min-w-[200px] w-full max-h-full h-[200px] min-h-[100px]"
       >
-        <BarChart accessibilityLayer data={data} margin={{ top: 20 }}>
+        <BarChart accessibilityLayer data={chartData} margin={{ top: 20 }}>
           <CartesianGrid vertical={false} />
           <XAxis
             dataKey={xKey}
