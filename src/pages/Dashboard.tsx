@@ -18,13 +18,27 @@ import {
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
-  const [installDate, setInstallDate] = useState<string | null>(null);
+  const [installDate, setInstallDate] = useState(String);
 
   useEffect(() => {
     window.electronAPI.installDate().then((installDate) => {
       setInstallDate(installDate);
     });
   }, []);
+
+  const dataTSC = [
+    { category: "Edredones", sales: 14 },
+    { category: "Maquillaje", sales: 39 },
+    { category: "Jueguetes", sales: 26 },
+    { category: "Dulces", sales: 53 },
+    { category: "Peluches", sales: 42 },
+  ];
+
+  const chartConfig = {
+    sales: {
+      color: "#F57C00",
+    },
+  };
 
   return (
     <>
@@ -39,7 +53,12 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
             <div className="h-[35vh] w-full flex justify-between gap-2 min-w-0">
               <div className="max-w-[600px] min-w-0 w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
                 <p className="font-semibold">Top 5 - Total Sales Categories</p>
-                <BarChartExample />
+                <BarChartExample
+                  data={dataTSC}
+                  chartConfig={chartConfig}
+                  xKey={"category"}
+                  yKey={"sales"}
+                />
               </div>
               <div className="max-w-[300px] min-w-0 h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
                 <p className="font-semibold">

@@ -14,7 +14,7 @@ function registerInstallDate() {
 
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
 
-    console.log("Fecha de instalación registrada:", data.installed);
+    //console.log("Install Date Inexist:", data.installed);
     return data.installed;
   }
 
@@ -22,7 +22,7 @@ function registerInstallDate() {
   const raw = fs.readFileSync(filePath, "utf-8");
   const json = JSON.parse(raw);
 
-  console.log("Fecha de instalación existente:", json.installed);
+  //console.log("Install Date Exist:", json.installed);
   return json.installed;
 }
 

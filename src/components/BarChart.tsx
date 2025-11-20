@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  LabelList,
-  XAxis,
-  ResponsiveContainer,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, LabelList, XAxis } from "recharts";
 import type { ChartConfig } from "@/components/ui/chart";
 import {
   ChartContainer,
@@ -15,34 +8,33 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-interface BarChartExampleProps {}
+interface DataItem {
+  [key: string]: string | number;
+}
 
-const chartData = [
-  { category: "Edredones", sales: 14 },
-  { category: "Maquillaje", sales: 39 },
-  { category: "Jueguetes", sales: 26 },
-  { category: "Dulces", sales: 53 },
-  { category: "Peluches", sales: 42 },
-];
+interface BarChartExampleProps {
+  data: DataItem[];
+  chartConfig: ChartConfig;
+  xKey: string;
+  yKey: string;
+}
 
-const chartConfig = {
-  sales: {
-    label: "Sales",
-    color: "#F57C00",
-  },
-} satisfies ChartConfig;
-
-const BarChartExample: React.FC<BarChartExampleProps> = ({}) => {
+const BarChartExample: React.FC<BarChartExampleProps> = ({
+  data,
+  chartConfig,
+  xKey,
+  yKey,
+}) => {
   return (
     <>
       <ChartContainer
         config={chartConfig}
         className="min-w-[200px] w-full max-h-full h-[200px] min-h-[100px]"
       >
-        <BarChart accessibilityLayer data={chartData} margin={{ top: 20 }}>
+        <BarChart accessibilityLayer data={data} margin={{ top: 20 }}>
           <CartesianGrid vertical={false} />
           <XAxis
-            dataKey="category"
+            dataKey={xKey}
             tickLine={false}
             tickMargin={10}
             axisLine={false}
@@ -52,7 +44,12 @@ const BarChartExample: React.FC<BarChartExampleProps> = ({}) => {
             cursor={false}
             content={<ChartTooltipContent hideLabel />}
           />
-          <Bar dataKey="sales" fill="#F57C00" radius={10} barSize={60}>
+          <Bar
+            dataKey={yKey}
+            fill={`var(--color-${yKey})`}
+            radius={10}
+            barSize={60}
+          >
             <LabelList
               position="top"
               offset={12}
