@@ -6,24 +6,21 @@ import TableDemo from "@/components/Table";
 import CardInfo from "../components/CardInfo";
 import RevenueIcon from "@/assets/icons/RevenueIcon";
 import InvestmentIcon from "@/assets/icons/InvestmentIcon";
-import {
-  Table,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { parseNumberData } from "../utility/numberParser";
 
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
   const [installDate, setInstallDate] = useState(String);
+  const [dataARF, setDataARF] = useState<Record<string, any>[]>([]);
+  const [dataRSPF, setDataRSPF] = useState<Record<string, any>[]>([]);
 
   useEffect(() => {
     window.electronAPI.installDate().then((installDate) => {
       setInstallDate(installDate);
     });
+
+    loadData();
   }, []);
 
   const dataTSC = [
@@ -53,6 +50,44 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
     },
   };
 
+  const dataRSP = [
+    {
+      date: "16/11/2025",
+      totalAmount: 25000,
+    },
+    {
+      date: "16/11/2025",
+      totalAmount: 15000,
+    },
+    {
+      date: "16/11/2025",
+      totalAmount: 35000,
+    },
+    {
+      date: "16/11/2025",
+      totalAmount: 45000,
+    },
+  ];
+
+  const dataAR = [
+    {
+      date: "16/11/2025",
+      totalAmount: 25000,
+      paidAmount: 5000,
+      debtPaid: 20000,
+    },
+    {
+      date: "16/11/2025",
+      totalAmount: 15000,
+      paidAmount: 5000,
+      debtPaid: 10000,
+    },
+  ];
+
+  async function loadData() {
+    setDataRSPF(parseNumberData(dataRSP));
+    setDataARF(parseNumberData(dataAR));
+  }
   if (!installDate) return null;
 
   return (
@@ -106,82 +141,20 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
           </div>
           <div className="flex-1 min-h-0 p-2 flex gap-2">
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
-              <p className="font-semibold mb-2">Accounts Receivable</p>
-              <Table>
-                <TableHeader className="bg-[#FFEFDE]">
-                  <TableRow>
-                    <TableHead className="text-[#000] text-center font-semibold">
-                      No.
-                    </TableHead>
-                    <TableHead className="text-[#000] text-center font-semibold">
-                      Date
-                    </TableHead>
-                    <TableHead className="text-[#000] text-center font-semibold">
-                      Total
-                    </TableHead>
-                    <TableHead className="text-[#000] text-center font-semibold">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-              </Table>
-
-              <div className="flex-1 min-h-0 overflow-y-auto">
-                <TableDemo />
-              </div>
-
-              <Table>
-                <TableFooter>
-                  <TableRow className="bg-[#b3b3b340]">
-                    <TableCell colSpan={2} className="font-bold">
-                      TOTAL:
-                    </TableCell>
-                    <TableCell className="text-right font-bold text-[#43A047]">
-                      $2,500.00
-                    </TableCell>
-                    <TableCell></TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
+              <p className="font-semibold mb-2">Recent Sales Paid</p>
+              <TableDemo
+                dataTable={dataRSPF}
+                activeTotal={false}
+                actions={{ view: true }}
+              />
             </div>
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
               <p className="font-semibold mb-2">Accounts Receivable</p>
-              <Table>
-                <TableHeader className="bg-[#FFEFDE]">
-                  <TableRow>
-                    <TableHead className="text-[#000] text-center font-semibold">
-                      No.
-                    </TableHead>
-                    <TableHead className="text-[#000] text-center font-semibold">
-                      Date
-                    </TableHead>
-                    <TableHead className="text-[#000] text-center font-semibold">
-                      Total
-                    </TableHead>
-                    <TableHead className="text-[#000] text-center font-semibold">
-                      Actions
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-              </Table>
-
-              <div className="flex-1 min-h-0 overflow-y-auto">
-                <TableDemo />
-              </div>
-
-              <Table>
-                <TableFooter>
-                  <TableRow className="bg-[#b3b3b340]">
-                    <TableCell colSpan={2} className="font-bold">
-                      TOTAL:
-                    </TableCell>
-                    <TableCell className="text-right font-bold text-[#43A047]">
-                      $2,500.00
-                    </TableCell>
-                    <TableCell></TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
+              <TableDemo
+                dataTable={dataARF}
+                activeTotal={true}
+                actions={{ view: true }}
+              />
             </div>
           </div>
         </div>
