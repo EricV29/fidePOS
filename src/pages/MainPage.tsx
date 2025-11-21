@@ -58,7 +58,7 @@ export default function MainPage() {
     <>
       <div className="w-screen h-screen overflow-hidden flex p-[13px] gap-[15px]">
         <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
-        <main className="h-full min-h-0 w-full min-w-0 p-[20px] rounded-[30px] bg-[#ffffff] border border-[gba(179, 179, 179, 40)] flex flex-col overflow-hidden">
+        <main className="h-full min-h-0 w-full min-w-0 p-5 rounded-[30px] bg-[#ffffff] border border-[gba(179, 179, 179, 40)] flex flex-col overflow-hidden">
           <Outlet />
         </main>
       </div>
