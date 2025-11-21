@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import DatePicker from "../components/DatePicker";
-import BarChartExample from "@/components/BarChart";
-import ChartPieDonutText from "@/components/PieChart";
-import TableDemo from "@/components/Table";
+//import BarChartExample from "@/components/BarChart";
+//import ChartPieDonutText from "@/components/PieChart";
+//import TableDemo from "@/components/Table";
 import CardInfo from "../components/CardInfo";
-import RevenueIcon from "@/assets/icons/RevenueIcon";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
+import RevenueIcon from "../assets/icons/RevenueIcon";
+import InvestmentIcon from "../assets/icons/InvestmentIcon";
 import { parseNumberData } from "../utility/numberParser";
 
 interface DashboardProps {}
@@ -103,23 +103,27 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
             <div className="h-[35vh] w-full flex justify-between gap-2 min-w-0">
               <div className="max-w-[600px] min-w-0 w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
                 <p className="font-semibold">Top 5 - Total Sales Categories</p>
+                {/*
                 <BarChartExample
                   chartData={dataTSC}
                   chartConfig={chartConfigTSC}
                   xKey={"category"}
                   yKey={"sales"}
                 />
+                */}
               </div>
               <div className="max-w-[300px] min-w-0 h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
                 <p className="font-semibold">
                   Total Active Products Categories
                 </p>
+                {/*
                 <ChartPieDonutText
                   chartData={dataTAPC}
                   chartConfig={chartConfigTAPC}
                   xKey={"category"}
                   yKey={"products"}
                 />
+                */}
               </div>
               <div className="max-w-[300px] min-w-0 w-[300px] h-full flex flex-col gap-2 justify-between items-center">
                 <CardInfo
@@ -142,19 +146,21 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
           <div className="flex-1 min-h-0 p-2 flex gap-2">
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
               <p className="font-semibold mb-2">Recent Sales Paid</p>
+              {/*
               <TableDemo
                 dataTable={dataRSPF}
                 activeTotal={false}
                 actions={{ view: true }}
               />
+              */}
             </div>
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
               <p className="font-semibold mb-2">Accounts Receivable</p>
-              <TableDemo
+              {/*<TableDemo
                 dataTable={dataARF}
                 activeTotal={true}
                 actions={{ view: true }}
-              />
+              />*/}
             </div>
           </div>
         </div>

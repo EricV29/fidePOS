@@ -11,7 +11,6 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
           Boton o date picker
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <div className="w-10 h-10 bg-primary"></div>
       </div>
     </>
   );
