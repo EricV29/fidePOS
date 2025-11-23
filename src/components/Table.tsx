@@ -30,18 +30,18 @@ const TableDemo: React.FC<TableDemoProps> = ({
     <Table>
       <TableHeader className="bg-[#FFEFDE] sticky top-0">
         <TableRow>
-          <TableHead className="text-[#000] text-center font-semibold">
+          <TableHead className="text-black text-center font-semibold">
             No.
           </TableHead>
           {Object.keys(dataTable[0]).map((key) => (
             <TableHead
               key={key}
-              className="text-[#000] text-center font-semibold"
+              className="text-black text-center font-semibold"
             >
               {key}
             </TableHead>
           ))}
-          <TableHead className="text-[#000] text-center font-semibold">
+          <TableHead className="text-black text-center font-semibold">
             Actions
           </TableHead>
         </TableRow>

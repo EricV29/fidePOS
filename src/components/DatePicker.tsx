@@ -34,7 +34,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
       const day = new Date(year, month, i);
       const dayString = day.toLocaleDateString("en-US");
       let className =
-        "flex items-center justify-center cursor-pointer w-[46px] h-[46px] rounded-full hover:bg-[#f57c00] hover:text-[#fff] text-black";
+        "flex items-center justify-center cursor-pointer w-[46px] h-[46px] rounded-full hover:bg-[#f57c00] hover:text-white text-black";
 
       if (selectedStartDate && dayString === selectedStartDate) {
         className += " bg-[#f57c00] text-white rounded-r-none";
@@ -120,7 +120,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
 
   return (
     <>
-      <div className="w-[320px] h-[48px] relative z-10" ref={datepickerRef}>
+      <div className="w-[320px] h-12 relative z-10" ref={datepickerRef}>
         <div className="relative flex items-center">
           <span className="absolute left-0 pl-5 text-dark-5 ">
             <CalendarIcon size={20} color="#f57c00" />
@@ -129,7 +129,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
             id="datepicker"
             type="text"
             placeholder="Pick a date"
-            className="w-full rounded-[10px] border-[2px] bg-white py-2.5 pl-[50px] pr-8 text-[#f57c00] outline-none transition border-[#f57c00] shadow-[0px_2px_0px_#F57C00]"
+            className="w-full rounded-[10px] border-2 bg-white py-2.5 pl-[50px] pr-8 text-[#f57c00] outline-none transition border-[#f57c00] shadow-[0px_2px_0px_#F57C00]"
             value={updateInput()}
             onClick={toggleDatepicker}
             readOnly
@@ -145,7 +145,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
         {isOpen && (
           <div
             id="datepicker-container"
-            className="shadow-datepicker absolute mt-2 rounded-xl border-[2px] bg-white pt-5 border-[#f57c00]"
+            className="shadow-datepicker absolute mt-2 rounded-xl border-2 bg-white pt-5 border-[#f57c00]"
           >
             <div className="flex items-center justify-between px-5">
               <button
@@ -201,10 +201,10 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
               {renderCalendar()}
             </div>
 
-            <div className="mt-5 flex justify-end space-x-2.5 border-t-[2px] border-[#f57c00] p-5 border-dark-3">
+            <div className="mt-5 flex justify-end space-x-2.5 border-t-2 border-[#f57c00] p-5 border-dark-3">
               <button
                 id="cancelButton"
-                className="rounded-lg border border-[#f57c00] px-5 py-2.5 text-base font-medium text-[#f57c00] hover:bg-[#f57c00] hover:text-[#fff]"
+                className="rounded-lg border border-[#f57c00] px-5 py-2.5 text-base font-medium text-[#f57c00] hover:bg-[#f57c00] hover:text-white"
                 onClick={handleCancel}
               >
                 Cancel

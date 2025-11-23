@@ -2,25 +2,47 @@ import { useEffect, useState } from "react";
 import DatePicker from "../components/DatePicker";
 //import BarChartExample from "@/components/BarChart";
 //import ChartPieDonutText from "@/components/PieChart";
-//import TableDemo from "@/components/Table";
 import CardInfo from "../components/CardInfo";
 import RevenueIcon from "../assets/icons/RevenueIcon";
 import InvestmentIcon from "../assets/icons/InvestmentIcon";
-import { parseNumberData } from "../utility/numberParser";
+import { DataTable } from "../components/ui/data-table";
+import { columnsRSP } from "../components/ui/columnsRSP";
+import { columnsAR } from "../components/ui/columnsAR";
+
+export type RecentSalesPaid = {
+  id: string;
+  date: string;
+  category: string;
+  amount: number;
+  actions?: {
+    view?: boolean;
+    delete?: boolean;
+    edit?: boolean;
+  };
+};
+
+export type AccountsReceivable = {
+  id: string;
+  date: string;
+  totalAmount: number;
+  paidAmount: number;
+  debtPending: number;
+  actions?: {
+    view?: boolean;
+    delete?: boolean;
+    edit?: boolean;
+  };
+};
 
 interface DashboardProps {}
 
 const Dashboard: React.FC<DashboardProps> = ({}) => {
   const [installDate, setInstallDate] = useState(String);
-  const [dataARF, setDataARF] = useState<Record<string, any>[]>([]);
-  const [dataRSPF, setDataRSPF] = useState<Record<string, any>[]>([]);
 
   useEffect(() => {
     window.electronAPI.installDate().then((installDate) => {
       setInstallDate(installDate);
     });
-
-    loadData();
   }, []);
 
   const dataTSC = [
@@ -30,12 +52,6 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
     { category: "Dulces", sales: 53 },
     { category: "Peluches", sales: 42 },
   ];
-
-  const chartConfigTSC = {
-    sales: {
-      color: "#F57C00",
-    },
-  };
 
   const dataTAPC = [
     { category: "Edredones", products: 100, fill: "#F57C00" },
@@ -50,44 +66,79 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
     },
   };
 
-  const dataRSP = [
+  //* Example data tables
+  const dataAR: AccountsReceivable[] = [
     {
-      date: "16/11/2025",
-      totalAmount: 25000,
-    },
-    {
-      date: "16/11/2025",
-      totalAmount: 15000,
-    },
-    {
-      date: "16/11/2025",
-      totalAmount: 35000,
-    },
-    {
-      date: "16/11/2025",
-      totalAmount: 45000,
-    },
-  ];
-
-  const dataAR = [
-    {
+      id: "728ed51f",
       date: "16/11/2025",
       totalAmount: 25000,
       paidAmount: 5000,
-      debtPaid: 20000,
+      debtPending: 20000,
     },
     {
+      id: "728ed51f",
       date: "16/11/2025",
-      totalAmount: 15000,
+      totalAmount: 25000,
       paidAmount: 5000,
-      debtPaid: 10000,
+      debtPending: 20000,
+    },
+
+    {
+      id: "728ed51f",
+      date: "16/11/2025",
+      totalAmount: 25000,
+      paidAmount: 5000,
+      debtPending: 20000,
+    },
+    {
+      id: "728ed51f",
+      date: "16/11/2025",
+      totalAmount: 25000,
+      paidAmount: 5000,
+      debtPending: 20000,
+    },
+    {
+      id: "728ed51f",
+      date: "16/11/2025",
+      totalAmount: 25000,
+      paidAmount: 5000,
+      debtPending: 20000,
     },
   ];
 
-  async function loadData() {
-    setDataRSPF(parseNumberData(dataRSP));
-    setDataARF(parseNumberData(dataAR));
-  }
+  const dataRSP: RecentSalesPaid[] = [
+    {
+      id: "728ed51f",
+      date: "16/11/2025",
+      category: "Maquillaje",
+      amount: 100,
+    },
+    {
+      id: "728ed52f",
+      date: "16/11/2025",
+      category: "Dulces",
+      amount: 100,
+    },
+    {
+      id: "728ed53f",
+      date: "16/11/2025",
+      category: "Edredones",
+      amount: 100,
+    },
+    {
+      id: "728ed54f",
+      date: "16/11/2025",
+      category: "Edredones",
+      amount: 100,
+    },
+    {
+      id: "728ed55f",
+      date: "16/11/2025",
+      category: "Edredones",
+      amount: 100,
+    },
+  ];
+
   if (!installDate) return null;
 
   return (
@@ -146,6 +197,15 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
           <div className="flex-1 min-h-0 p-2 flex gap-2">
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
               <p className="font-semibold mb-2">Recent Sales Paid</p>
+              <DataTable
+                columns={columnsRSP}
+                data={dataRSP}
+                actions={{
+                  view: true,
+                  edit: false,
+                  delete: false,
+                }}
+              />
               {/*
               <TableDemo
                 dataTable={dataRSPF}
@@ -156,11 +216,15 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
             </div>
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
               <p className="font-semibold mb-2">Accounts Receivable</p>
-              {/*<TableDemo
-                dataTable={dataARF}
-                activeTotal={true}
-                actions={{ view: true }}
-              />*/}
+              <DataTable
+                columns={columnsAR}
+                data={dataAR}
+                actions={{
+                  view: true,
+                  edit: false,
+                  delete: false,
+                }}
+              />
             </div>
           </div>
         </div>

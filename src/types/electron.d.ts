@@ -14,3 +14,13 @@ declare global {
     };
   }
 }
+
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends unknown> {
+    actions?: {
+      view?: boolean;
+      delete?: boolean;
+      edit?: boolean;
+    };
+  }
+}
