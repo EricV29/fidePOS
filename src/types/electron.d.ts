@@ -3,6 +3,7 @@ export {};
 declare global {
   interface Window {
     electronAPI: {
+      installDate: () => Promise<string>;
       signupSuccess: () => void;
       loginSuccess: () => void;
       logoutSuccess: () => void;
@@ -10,6 +11,16 @@ declare global {
       onMessageReply: (callback: (data: string) => void) => void;
       sendMessagePrivate: (msg: string) => void;
       onMessageReplyPrivate: (callback: (data: string) => void) => void;
+    };
+  }
+}
+
+declare module "@tanstack/react-table" {
+  interface TableMeta<TData extends unknown> {
+    actions?: {
+      view?: boolean;
+      delete?: boolean;
+      edit?: boolean;
     };
   }
 }

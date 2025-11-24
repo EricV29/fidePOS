@@ -5,8 +5,12 @@ interface ProductsProps {}
 const Products: React.FC<ProductsProps> = ({}) => {
   return (
     <>
-      <div className="w-screen h-screen overflow-hidden flex p-[13px] gap-[15px]">
-        <h1>Products</h1>
+      <div className="w-full h-full flex flex-col min-h-0">
+        <div className="w-full h-fit flex justify-between items-end">
+          <h1 className="text-[30px] mb-0">Product Inventory</h1>
+          Boton o date picker
+        </div>
+        <hr className="border border-[#b3b3b3] my-2" />
       </div>
     </>
   );

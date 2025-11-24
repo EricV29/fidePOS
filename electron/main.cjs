@@ -1,6 +1,10 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
+const {
+  registerInstallDate,
+  getInstallDate,
+} = require("./installDateManager.cjs");
 
 const isDev = !app.isPackaged;
 let mainWindow = null;
@@ -9,7 +13,7 @@ let signupWindow = null;
 
 //* CREATE WINDOWS
 
-// SIGNUP
+// Signup Window
 function createSignupWindow() {
   signupWindow = new BrowserWindow({
     width: 650,
@@ -29,7 +33,7 @@ function createSignupWindow() {
   });
 }
 
-// LOGIN
+// Login Window
 function createLoginWindow() {
   loginWindow = new BrowserWindow({
     width: 650,
@@ -49,12 +53,12 @@ function createLoginWindow() {
   });
 }
 
-// MAIN WINDOW
+// Main Window
 function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
-    minWidth: 1024,
-    minHeight: 750,
+    minWidth: 1000,
+    minHeight: 700,
     resizable: true,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "../public/fidelogo.ico"),
@@ -71,33 +75,40 @@ function createMainWindow() {
   });
 }
 
-//* LISTENERS
+//* GLOBAL LISTENER
 
-// OPEN LOGIN
+// Open login
 ipcMain.on("signup-success", () => {
   if (signupWindow) signupWindow.close();
   createLoginWindow();
 });
 
-//OPEN DASHBOARD
+// Open dashboard
 ipcMain.on("login-success", () => {
   if (loginWindow) loginWindow.close();
   createMainWindow();
 });
 
-//LOGOUT
+// Logout
 ipcMain.on("logout-success", () => {
   if (mainWindow) mainWindow.close();
   createLoginWindow();
 });
 
-// GLOBAL LISTENER
+// Get Install Date
+ipcMain.handle("installDate", () => {
+  return getInstallDate();
+});
+
+// Global message
 ipcMain.on("message", (event, msg) => {
   console.log("Message received:", msg);
   event.sender.send("message-reply", `Message: ${msg}`);
 });
 
-// PRIVATE LISTENER
+//* PRIVATE LISTENER
+
+// Message private
 ipcMain.on("message_private", (event, msg) => {
   if (event.sender === mainWindow.webContents) {
     console.log("Message received:", msg);
@@ -111,6 +122,7 @@ ipcMain.on("message_private", (event, msg) => {
 //* INITIALIZATION
 app.whenReady().then(async () => {
   await initDatabase();
+  registerInstallDate();
   createSignupWindow();
 
   app.on("activate", () => {
