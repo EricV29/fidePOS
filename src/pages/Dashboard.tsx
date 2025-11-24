@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import DatePicker from "../components/DatePicker";
-//import BarChartExample from "@/components/BarChart";
 //import ChartPieDonutText from "@/components/PieChart";
 import CardInfo from "../components/CardInfo";
 import RevenueIcon from "../assets/icons/RevenueIcon";
 import InvestmentIcon from "../assets/icons/InvestmentIcon";
+import BarChartEx from "@/components/ui/bar-chart";
 import { DataTable } from "../components/ui/data-table";
 import { columnsRSP } from "../components/ui/columnsRSP";
 import { columnsAR } from "../components/ui/columnsAR";
@@ -44,15 +44,6 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
       setInstallDate(installDate);
     });
   }, []);
-
-  const dataTSC = [
-    { category: "Edredones", sales: 14 },
-    { category: "Maquillaje", sales: 39 },
-    { category: "Jueguetes", sales: 26 },
-    { category: "Dulces", sales: 53 },
-    { category: "Peluches", sales: 42 },
-  ];
-
   const dataTAPC = [
     { category: "Edredones", products: 100, fill: "#F57C00" },
     { category: "Maquillaje", products: 203, fill: "#FFA726" },
@@ -63,6 +54,24 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
   const chartConfigTAPC = {
     category: {
       label: "Category",
+    },
+  };
+
+  //* Example data pie chart
+
+  //* Example data bar chart
+  const chartDataTCS = [
+    { category: "Maquillaje", sales: 186 },
+    { category: "Regalos", sales: 305 },
+    { category: "Edredones", sales: 237 },
+    { category: "Dulces", sales: 73 },
+    { category: "Zapatos", sales: 209 },
+  ];
+
+  const chartConfigTCS = {
+    sales: {
+      label: "Sales",
+      color: "#F57C00",
     },
   };
 
@@ -153,15 +162,13 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
           <div className="h-fit p-2">
             <div className="h-[35vh] w-full flex justify-between gap-2 min-w-0">
               <div className="max-w-[600px] min-w-0 w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-                <p className="font-semibold">Top 5 - Total Sales Categories</p>
-                {/*
-                <BarChartExample
-                  chartData={dataTSC}
-                  chartConfig={chartConfigTSC}
-                  xKey={"category"}
-                  yKey={"sales"}
+                <p className="font-semibold mb-2">Top 5 - Sales by Category</p>
+                <BarChartEx
+                  chartData={chartDataTCS}
+                  chartConfig={chartConfigTCS}
+                  xAxis="category"
+                  yAxis="sales"
                 />
-                */}
               </div>
               <div className="max-w-[300px] min-w-0 h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
                 <p className="font-semibold">
@@ -206,13 +213,6 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                   delete: false,
                 }}
               />
-              {/*
-              <TableDemo
-                dataTable={dataRSPF}
-                activeTotal={false}
-                actions={{ view: true }}
-              />
-              */}
             </div>
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
               <p className="font-semibold mb-2">Accounts Receivable</p>
