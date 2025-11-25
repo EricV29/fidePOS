@@ -2,11 +2,20 @@ import { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { Outlet } from "react-router-dom";
 
+type ContextType = { installDate: string };
+
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(true);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
+  const [installDate, setInstallDate] = useState<ContextType>({
+    installDate: "",
+  });
 
   useEffect(() => {
+    window.electronAPI.installDate().then((date) => {
+      setInstallDate({ installDate: date });
+    });
+
     function handleResize() {
       const large = window.innerWidth >= 1024;
 
@@ -59,7 +68,7 @@ export default function MainPage() {
       <div className="w-screen h-screen overflow-hidden flex p-[13px] gap-[15px]">
         <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
         <main className="h-full min-h-0 w-full min-w-0 p-5 rounded-[30px] bg-[#ffffff] border border-[#B3B3B340] flex flex-col overflow-hidden">
-          <Outlet />
+          <Outlet context={installDate} />
         </main>
       </div>
     </>

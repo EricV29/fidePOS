@@ -68,7 +68,7 @@ export function DataTable<TData, TValue>({
         ) : (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">
-              No results.
+              There is no data yet.
             </TableCell>
           </TableRow>
         )}

@@ -1,51 +1,60 @@
-"use client";
-
-import * as React from "react";
 import { Label, Pie, PieChart } from "recharts";
-import type { ChartConfig } from "@/components/ui/chart";
-
 import {
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
 interface DataItem {
+  fill: string;
   [key: string]: string | number;
 }
 
-interface ChartPieDonutTextProps {
+interface ChartPieExProp {
   chartData: DataItem[];
   chartConfig: ChartConfig;
-  xKey: string;
-  yKey: string;
 }
 
-const ChartPieDonutText: React.FC<ChartPieDonutTextProps> = ({
+const ChartPieDonut: React.FC<ChartPieExProp> = ({
   chartData,
   chartConfig,
-  yKey,
-  xKey,
 }) => {
-  const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + Number(curr.products), 0);
-  }, [chartData]);
+  if (!chartData || chartData.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center font-extralight">
+        There is no data yet.
+      </div>
+    );
+  }
+  const sample = chartData[0];
+
+  const keys = Object.keys(sample).filter((k) => k !== "fill");
+
+  const nameKey = keys.find((k) => typeof sample[k] === "string") || keys[0];
+  const dataKey = keys.find((k) => typeof sample[k] === "number") || keys[1];
+
+  const totalItems = chartData.reduce(
+    (acc, item) => acc + Number(item[dataKey]),
+    0
+  );
 
   return (
     <ChartContainer
       config={chartConfig}
-      className="max-w-full min-w-[190px] w-[290px] max-h-full h-[200px]"
+      className="aspect-square min-h-0 w-full"
     >
       <PieChart>
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent hideLabel />}
         />
+
         <Pie
           data={chartData}
-          dataKey={yKey}
-          nameKey={xKey}
-          innerRadius={50}
+          dataKey={dataKey}
+          nameKey={nameKey}
+          innerRadius={60}
           strokeWidth={5}
         >
           <Label
@@ -63,14 +72,15 @@ const ChartPieDonutText: React.FC<ChartPieDonutTextProps> = ({
                       y={viewBox.cy}
                       className="fill-foreground text-3xl font-bold"
                     >
-                      {totalVisitors.toLocaleString()}
+                      {totalItems.toLocaleString()}
                     </tspan>
+
                     <tspan
                       x={viewBox.cx}
                       y={(viewBox.cy || 0) + 24}
-                      className="font-extralight"
+                      className="fill-muted-foreground"
                     >
-                      Total Stock
+                      {dataKey}
                     </tspan>
                   </text>
                 );
@@ -82,4 +92,5 @@ const ChartPieDonutText: React.FC<ChartPieDonutTextProps> = ({
     </ChartContainer>
   );
 };
-export default ChartPieDonutText;
+
+export default ChartPieDonut;

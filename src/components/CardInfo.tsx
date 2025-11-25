@@ -46,9 +46,15 @@ const CardInfo: React.FC<CardInfoProps> = ({
             </p>
           )}
 
-          <p className="text-[clamp(20px,3vw,35px)]" style={{ color }}>
-            {formatNumber(number)}
-          </p>
+          {number ? (
+            <p className="text-[clamp(20px,3vw,35px)]" style={{ color }}>
+              {formatNumber(number)}
+            </p>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center font-extralight">
+              There is no data yet.
+            </div>
+          )}
         </div>
       </div>
     </>
