@@ -5,9 +5,21 @@ import CardInfo from "../components/CardInfo";
 import RevenueIcon from "../assets/icons/RevenueIcon";
 import InvestmentIcon from "../assets/icons/InvestmentIcon";
 import BarChartEx from "@/components/ui/bar-chart";
+import ChartPieDonutText from "@/components/ui/pie-chart";
 import { DataTable } from "../components/ui/data-table";
 import { columnsRSP } from "../components/ui/columnsRSP";
 import { columnsAR } from "../components/ui/columnsAR";
+import { addRandomFill } from "../utility/AddFill";
+import { useInstallDate } from "../hooks/useInstallDate";
+
+interface BarChartItem {
+  [key: string]: string | number;
+}
+
+interface PieChartItem {
+  fill: string;
+  [key: string]: string | number;
+}
 
 export type RecentSalesPaid = {
   id: string;
@@ -34,119 +46,130 @@ export type AccountsReceivable = {
   };
 };
 
-interface DashboardProps {}
+//* Example data bar chart
+const chartDataTCSDB = [
+  { category: "Maquillaje", sales: 186 },
+  { category: "Regalos", sales: 305 },
+  { category: "Edredones", sales: 237 },
+  { category: "Dulces", sales: 73 },
+  { category: "Zapatos", sales: 209 },
+];
 
-const Dashboard: React.FC<DashboardProps> = ({}) => {
-  const [installDate, setInstallDate] = useState(String);
+const chartConfigTCS = {
+  sales: {
+    label: "Sales",
+    color: "#F57C00",
+  },
+};
+
+//* Example data pie chart
+const chartDataTAPCDB = [
+  { category: "Maquillaje", products: 275 },
+  { category: "Dulces", products: 200 },
+  { category: "Edredones", products: 287 },
+  { category: "Zapatos", products: 173 },
+];
+
+const chartConfigTAPC = {
+  products: {
+    label: "Products",
+  },
+};
+
+//* Example data cards
+const dataRevenueBD = 100000;
+const dataInvestBD = 12238;
+
+//* Example data tables
+const dataRSPBD = [
+  {
+    id: "728ed51f",
+    date: "16/11/2025",
+    category: "Maquillaje",
+    amount: 100,
+  },
+  {
+    id: "728ed52f",
+    date: "16/11/2025",
+    category: "Dulces",
+    amount: 100,
+  },
+  {
+    id: "728ed53f",
+    date: "16/11/2025",
+    category: "Edredones",
+    amount: 100,
+  },
+  {
+    id: "728ed54f",
+    date: "16/11/2025",
+    category: "Edredones",
+    amount: 100,
+  },
+  {
+    id: "728ed55f",
+    date: "16/11/2025",
+    category: "Edredones",
+    amount: 100,
+  },
+];
+
+const dataARBD = [
+  {
+    id: "728ed51f",
+    date: "16/11/2025",
+    totalAmount: 25000,
+    paidAmount: 5000,
+    debtPending: 20000,
+  },
+  {
+    id: "728ed51f",
+    date: "16/11/2025",
+    totalAmount: 25000,
+    paidAmount: 5000,
+    debtPending: 20000,
+  },
+
+  {
+    id: "728ed51f",
+    date: "16/11/2025",
+    totalAmount: 25000,
+    paidAmount: 5000,
+    debtPending: 20000,
+  },
+  {
+    id: "728ed51f",
+    date: "16/11/2025",
+    totalAmount: 25000,
+    paidAmount: 5000,
+    debtPending: 20000,
+  },
+  {
+    id: "728ed51f",
+    date: "16/11/2025",
+    totalAmount: 25000,
+    paidAmount: 5000,
+    debtPending: 20000,
+  },
+];
+
+export default function Dashboard() {
+  const { installDate } = useInstallDate();
+  const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
+  const [chartDataTAPCF, setChartDataTAPCF] = useState<PieChartItem[]>([]);
+  const [revenueCard, setRevenueCard] = useState(Number);
+  const [investCard, setInvestCard] = useState(Number);
+  const [dataTableRSP, setDataTableRSP] = useState<RecentSalesPaid[]>([]);
+  const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
 
   useEffect(() => {
-    window.electronAPI.installDate().then((installDate) => {
-      setInstallDate(installDate);
-    });
+    setChartDataTSC(chartDataTCSDB);
+    setChartDataTAPCF(addRandomFill(chartDataTAPCDB));
+    setRevenueCard(dataRevenueBD);
+    setInvestCard(dataInvestBD);
+    setDataTableRSP(dataRSPBD);
+    setDataTableAR(dataARBD);
   }, []);
-  const dataTAPC = [
-    { category: "Edredones", products: 100, fill: "#F57C00" },
-    { category: "Maquillaje", products: 203, fill: "#FFA726" },
-    { category: "Juguetes", products: 387, fill: "#4A4A4A" },
-    { category: "Dulces", products: 73, fill: "#0277BD" },
-  ];
-
-  const chartConfigTAPC = {
-    category: {
-      label: "Category",
-    },
-  };
-
-  //* Example data pie chart
-
-  //* Example data bar chart
-  const chartDataTCS = [
-    { category: "Maquillaje", sales: 186 },
-    { category: "Regalos", sales: 305 },
-    { category: "Edredones", sales: 237 },
-    { category: "Dulces", sales: 73 },
-    { category: "Zapatos", sales: 209 },
-  ];
-
-  const chartConfigTCS = {
-    sales: {
-      label: "Sales",
-      color: "#F57C00",
-    },
-  };
-
-  //* Example data tables
-  const dataAR: AccountsReceivable[] = [
-    {
-      id: "728ed51f",
-      date: "16/11/2025",
-      totalAmount: 25000,
-      paidAmount: 5000,
-      debtPending: 20000,
-    },
-    {
-      id: "728ed51f",
-      date: "16/11/2025",
-      totalAmount: 25000,
-      paidAmount: 5000,
-      debtPending: 20000,
-    },
-
-    {
-      id: "728ed51f",
-      date: "16/11/2025",
-      totalAmount: 25000,
-      paidAmount: 5000,
-      debtPending: 20000,
-    },
-    {
-      id: "728ed51f",
-      date: "16/11/2025",
-      totalAmount: 25000,
-      paidAmount: 5000,
-      debtPending: 20000,
-    },
-    {
-      id: "728ed51f",
-      date: "16/11/2025",
-      totalAmount: 25000,
-      paidAmount: 5000,
-      debtPending: 20000,
-    },
-  ];
-
-  const dataRSP: RecentSalesPaid[] = [
-    {
-      id: "728ed51f",
-      date: "16/11/2025",
-      category: "Maquillaje",
-      amount: 100,
-    },
-    {
-      id: "728ed52f",
-      date: "16/11/2025",
-      category: "Dulces",
-      amount: 100,
-    },
-    {
-      id: "728ed53f",
-      date: "16/11/2025",
-      category: "Edredones",
-      amount: 100,
-    },
-    {
-      id: "728ed54f",
-      date: "16/11/2025",
-      category: "Edredones",
-      amount: 100,
-    },
-    {
-      id: "728ed55f",
-      date: "16/11/2025",
-      category: "Edredones",
-      amount: 100,
-    },
-  ];
 
   if (!installDate) return null;
 
@@ -174,28 +197,24 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
                 <p className="font-semibold">
                   Total Active Products Categories
                 </p>
-                {/*
                 <ChartPieDonutText
-                  chartData={dataTAPC}
+                  chartData={chartDataTAPCF}
                   chartConfig={chartConfigTAPC}
-                  xKey={"category"}
-                  yKey={"products"}
                 />
-                */}
               </div>
               <div className="max-w-[300px] min-w-0 w-[300px] h-full flex flex-col gap-2 justify-between items-center">
                 <CardInfo
                   icon={RevenueIcon}
                   title="Revenue"
                   icond={null}
-                  number={1000}
+                  number={revenueCard}
                   color="#43A047"
                 />
                 <CardInfo
                   icon={InvestmentIcon}
                   title="Investment"
                   icond={null}
-                  number={120238}
+                  number={investCard}
                   color="#F57C00"
                 />
               </div>
@@ -206,7 +225,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
               <p className="font-semibold mb-2">Recent Sales Paid</p>
               <DataTable
                 columns={columnsRSP}
-                data={dataRSP}
+                data={dataTableRSP}
                 actions={{
                   view: true,
                   edit: false,
@@ -218,7 +237,7 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
               <p className="font-semibold mb-2">Accounts Receivable</p>
               <DataTable
                 columns={columnsAR}
-                data={dataAR}
+                data={dataTableAR}
                 actions={{
                   view: true,
                   edit: false,
@@ -231,6 +250,4 @@ const Dashboard: React.FC<DashboardProps> = ({}) => {
       </div>
     </>
   );
-};
-
-export default Dashboard;
+}

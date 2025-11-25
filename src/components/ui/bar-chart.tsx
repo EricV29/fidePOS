@@ -1,12 +1,12 @@
 import { Bar, BarChart, CartesianGrid, XAxis, LabelList } from "recharts";
 import {
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
 } from "@/components/ui/chart";
-import type { ChartConfig } from "@/components/ui/chart";
 
 interface DataItem {
   [key: string]: string | number;
@@ -25,6 +25,14 @@ const BarChartEx: React.FC<BarChartExProps> = ({
   xAxis,
   yAxis,
 }) => {
+  if (!chartData || chartData.length === 0) {
+    return (
+      <div className="w-full h-full flex items-center justify-center font-extralight">
+        There is no data yet.
+      </div>
+    );
+  }
+
   return (
     <ChartContainer config={chartConfig} className="min-h-0 w-full">
       <BarChart accessibilityLayer data={chartData}>
