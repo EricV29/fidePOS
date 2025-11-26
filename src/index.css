@@ -24,10 +24,9 @@ body {
 }
 
 h1 {
-  font-size: 2.25rem;
+  font-size: clamp(1.5rem, 2.5vw, 2.25rem);
   font-weight: 700;
   line-height: 1.2;
-  margin-bottom: 0.5em;
   color: #f57c00;
 }
 
@@ -43,16 +42,26 @@ button {
 }
 
 .bnormal {
-  min-width: 150px;
-  height: 48px;
+  min-width: 100px;
+  height: clamp(40px, 4vw, 48px);
   border-radius: 10px;
   border: 2px solid #f57c00;
-  padding: 0px 15px;
+  padding-left: clamp(6px, 3vw, 20px);
+  padding-right: clamp(6px, 3vw, 20px);
+  gap: clamp(2px, 1vw, 5px);
   font-weight: 600;
   background-color: #ffffff;
   color: #f57c00;
   cursor: pointer;
   box-shadow: 0px 2px 0px rgba(245, 124, 0, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+
+.bnormal svg {
+  flex-shrink: 0;
 }
 
 .sideitem {

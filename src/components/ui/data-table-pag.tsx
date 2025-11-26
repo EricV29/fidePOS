@@ -1,14 +1,9 @@
-import { useState } from "react";
 import {
   flexRender,
   getCoreRowModel,
   useReactTable,
-  getPaginationRowModel,
 } from "@tanstack/react-table";
-
 import type { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-
 import {
   Table,
   TableBody,
@@ -18,102 +13,66 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface DataTableProps<TData, TValue> {
+interface DataTablePageProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  actions?: TableActions;
 }
 
-export function DataTable<TData, TValue>({
+export interface TableActions {
+  view?: boolean;
+  edit?: boolean;
+  delete?: boolean;
+}
+
+export function DataTablePage<TData, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
-  const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 4 });
-
+  actions,
+}: DataTablePageProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
-    state: {
-      pagination,
-    },
-    onPaginationChange: setPagination,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    pageCount: Math.ceil(data.length / pagination.pageSize), // opcional
+    meta: { actions },
   });
 
   return (
-    <div className="flex flex-col flex-1 h-full min-h-0 bg-amber-200">
-      <div className="rounded-md border overflow-hidden flex-1 bg-amber-600">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-              </TableRow>
+    <Table>
+      <TableHeader className="bg-[#FFEFDE] sticky top-0">
+        {table.getHeaderGroups().map((headerGroup) => (
+          <TableRow key={headerGroup.id}>
+            {headerGroup.headers.map((header) => (
+              <TableHead key={header.id} className="font-semibold">
+                {flexRender(
+                  header.column.columnDef.header,
+                  header.getContext()
+                )}
+              </TableHead>
             ))}
-          </TableHeader>
-          <TableBody className="overflow-y-scroll">
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
+          </TableRow>
+        ))}
+      </TableHeader>
+
+      <TableBody>
+        {table.getRowModel().rows.length ? (
+          table.getRowModel().rows.map((row) => (
+            <TableRow key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <TableCell key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex h-fit items-center justify-end space-x-2 py-2">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
-        <span>
-          Page {pagination.pageIndex + 1} of {table.getPageCount()}
-        </span>
-      </div>
-    </div>
+              ))}
+            </TableRow>
+          ))
+        ) : (
+          <TableRow>
+            <TableCell colSpan={columns.length} className="text-center">
+              There is no data yet.
+            </TableCell>
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }
