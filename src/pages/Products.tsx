@@ -64,6 +64,71 @@ const dataProductsDB = [
     status: "inactive",
     created_at: "01/10/2025",
   },
+  {
+    id: "34235",
+    code_sku: "JW0013",
+    name: "Carrito",
+    description: "Yuya - Rojo",
+    category: "Toys",
+    ccolor: "#ff49ff",
+    cost_price: 15000,
+    unit_price: 20000,
+    stock: 5,
+    status: "inactive",
+    created_at: "01/10/2025",
+  },
+  {
+    id: "34235",
+    code_sku: "JW0013",
+    name: "Carrito",
+    description: "Yuya - Rojo",
+    category: "Toys",
+    ccolor: "#ff49ff",
+    cost_price: 15000,
+    unit_price: 20000,
+    stock: 5,
+    status: "inactive",
+    created_at: "01/10/2025",
+  },
+  {
+    id: "34235",
+    code_sku: "JW0013",
+    name: "Carrito",
+    description: "Yuya - Rojo",
+    category: "Toys",
+    ccolor: "#ff49ff",
+    cost_price: 15000,
+    unit_price: 20000,
+    stock: 5,
+    status: "inactive",
+    created_at: "01/10/2025",
+  },
+  {
+    id: "34235",
+    code_sku: "JW0013",
+    name: "Carrito",
+    description: "Yuya - Rojo",
+    category: "Toys",
+    ccolor: "#ff49ff",
+    cost_price: 15000,
+    unit_price: 20000,
+    stock: 5,
+    status: "inactive",
+    created_at: "01/10/2025",
+  },
+  {
+    id: "34235",
+    code_sku: "JW0013",
+    name: "Carrito",
+    description: "Yuya - Rojo",
+    category: "Toys",
+    ccolor: "#ff49ff",
+    cost_price: 15000,
+    unit_price: 20000,
+    stock: 5,
+    status: "inactive",
+    created_at: "01/10/2025",
+  },
 ];
 
 interface ProductsProps {}
@@ -81,7 +146,12 @@ const Products: React.FC<ProductsProps> = ({}) => {
     <>
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
-          <h1 className="mb-0">Products Inventory</h1>
+          <h1
+            className="mb-0"
+            style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)" }}
+          >
+            Products Inventory
+          </h1>
           <div className="flex gap-2">
             <button className="bnormal">
               <ExportIcon /> <p>Export</p>
@@ -121,7 +191,7 @@ const Products: React.FC<ProductsProps> = ({}) => {
               color="#1976D2"
             />
           </div>
-          <div className="w-full flex flex-col flex-1 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
+          <div className="w-full min-h-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
             <p className="font-semibold">Inventory Table</p>
             <DataTablePage
               data={dataProducts}

@@ -96,6 +96,34 @@ const dataRSPBD = [
     ccolor: "#ff49ff",
     total_amount: 50,
   },
+  {
+    id: "728ed52f",
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
+  },
+  {
+    id: "728ed52f",
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
+  },
+  {
+    id: "728ed52f",
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
+  },
+  {
+    id: "728ed52f",
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
+  },
 ];
 
 const dataARBD = [
@@ -139,7 +167,7 @@ export default function Dashboard() {
     <>
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
-          <h1 className="text-[30px] mb-0">Dashboard</h1>
+          <h1 className="text-[30px]">Dashboard</h1>
           <DatePicker installDate={installDate} />
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
