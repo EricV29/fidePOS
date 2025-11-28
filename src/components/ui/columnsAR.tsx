@@ -6,9 +6,9 @@ import EditIcon from "../../assets/icons/EditIcon";
 
 export type AccountsReceivable = {
   id: string;
-  date: string;
-  totalAmount: number;
-  paidAmount: number;
+  created_at: string;
+  total_amount: number;
+  paid_amount: number;
   debtPending: number;
   actions?: {
     view?: boolean;
@@ -29,46 +29,38 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "date",
+    accessorKey: "created_at",
     header: "Date",
   },
   {
-    accessorKey: "totalAmount",
-    header: () => <div className="text-center">Total Amount</div>,
+    accessorKey: "total_amount",
+    header: "Total Amount",
     cell: ({ row }) => {
-      const totalAmount = parseFloat(row.getValue("totalAmount"));
+      const total_amount = parseFloat(row.getValue("total_amount"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-      }).format(totalAmount);
+      }).format(total_amount);
 
-      return (
-        <div className="text-center font-semibold text-[#F57C00]">
-          {formatted}
-        </div>
-      );
+      return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
     },
   },
   {
-    accessorKey: "paidAmount",
-    header: () => <div className="text-center">Paid Amount</div>,
+    accessorKey: "paid_amount",
+    header: "Paid Amount",
     cell: ({ row }) => {
-      const paidAmount = parseFloat(row.getValue("paidAmount"));
+      const paid_amount = parseFloat(row.getValue("paid_amount"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-      }).format(paidAmount);
+      }).format(paid_amount);
 
-      return (
-        <div className="text-center font-semibold text-[#43A047]">
-          +{formatted}
-        </div>
-      );
+      return <div className="font-semibold text-[#43A047]">+{formatted}</div>;
     },
   },
   {
     accessorKey: "debtPending",
-    header: () => <div className="text-center">Debt Pending</div>,
+    header: "Debt Pending",
     cell: ({ row }) => {
       const debtPending = parseFloat(row.getValue("debtPending"));
       const formatted = new Intl.NumberFormat("en-US", {
@@ -76,11 +68,7 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
         currency: "USD",
       }).format(debtPending);
 
-      return (
-        <div className="text-center font-semibold text-[#D32F2F]">
-          -{formatted}
-        </div>
-      );
+      return <div className="font-semibold text-[#D32F2F]">-{formatted}</div>;
     },
   },
   {

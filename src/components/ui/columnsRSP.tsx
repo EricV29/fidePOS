@@ -7,8 +7,10 @@ import EditIcon from "../../assets/icons/EditIcon";
 
 export type RecentSalesPaid = {
   id: string;
-  date: string;
-  amount: number;
+  created_at: string;
+  category: string;
+  ccolor: string;
+  total_amount: number;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -28,22 +30,36 @@ export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "date",
-    header: "Date",
+    accessorKey: "created_at",
+    header: () => <div className="text-center">Date</div>,
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("created_at")}</div>;
+    },
   },
   {
     accessorKey: "category",
     header: "Category",
+    cell: ({ row }) => {
+      const ccolor = row.original.ccolor;
+      return (
+        <div
+          style={{ background: ccolor }}
+          className="rounded-full px-1 text-center font-semibold"
+        >
+          {row.getValue("category")}
+        </div>
+      );
+    },
   },
   {
-    accessorKey: "amount",
+    accessorKey: "total_amount",
     header: () => <div className="text-center">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
+      const total_amount = parseFloat(row.getValue("total_amount"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
-      }).format(amount);
+      }).format(total_amount);
 
       return (
         <div className="text-center font-semibold text-[#43A047]">

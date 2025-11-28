@@ -10,6 +10,7 @@ export type Products = {
   name: string;
   description: string;
   category: string;
+  ccolor: string;
   cost_price: number;
   unit_price: number;
   stock: number;
@@ -48,10 +49,21 @@ export const columnsP: ColumnDef<Products>[] = [
   {
     accessorKey: "category",
     header: "Category",
+    cell: ({ row }) => {
+      const ccolor = row.original.ccolor;
+      return (
+        <div
+          style={{ background: ccolor }}
+          className="rounded-full px-1 text-center font-semibold"
+        >
+          {row.getValue("category")}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "cost_price",
-    header: () => <div className="text-center">Cost Price</div>,
+    header: "Cost Price",
     cell: ({ row }) => {
       const cost_price = parseFloat(row.getValue("cost_price"));
       const formatted = new Intl.NumberFormat("en-US", {
@@ -59,16 +71,12 @@ export const columnsP: ColumnDef<Products>[] = [
         currency: "USD",
       }).format(cost_price);
 
-      return (
-        <div className="text-center font-semibold text-[#F57C00]">
-          {formatted}
-        </div>
-      );
+      return <div className="font-semibold text-[#D32F2F]">{formatted}</div>;
     },
   },
   {
     accessorKey: "unit_price",
-    header: () => <div className="text-center">Unit Price</div>,
+    header: "Unit Price",
     cell: ({ row }) => {
       const unit_price = parseFloat(row.getValue("unit_price"));
       const formatted = new Intl.NumberFormat("en-US", {
@@ -76,24 +84,44 @@ export const columnsP: ColumnDef<Products>[] = [
         currency: "USD",
       }).format(unit_price);
 
+      return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "stock",
+    header: () => <div className="text-center">Stock</div>,
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("stock")}</div>;
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+
+      const bgColor =
+        status === "active"
+          ? "bg-[#43A047]"
+          : status === "inactive"
+          ? "bg-[#D32F2F]"
+          : "bg-gray-400";
+
       return (
-        <div className="text-center font-semibold text-[#F57C00]">
-          {formatted}
+        <div
+          className={`rounded-full px-1 text-center font-semibold text-white ${bgColor}`}
+        >
+          {status}
         </div>
       );
     },
   },
   {
-    accessorKey: "stock",
-    header: "Stock",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
     accessorKey: "created_at",
-    header: "Created Date",
+    header: () => <div className="text-center">Created Date</div>,
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("created_at")}</div>;
+    },
   },
   {
     id: "actions",

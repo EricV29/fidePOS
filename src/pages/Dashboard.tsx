@@ -84,71 +84,33 @@ const dataInvestBD = 12238;
 const dataRSPBD = [
   {
     id: "728ed51f",
-    date: "16/11/2025",
+    created_at: "16/11/2025",
     category: "Maquillaje",
-    amount: 100,
+    ccolor: "#5b49ff",
+    total_amount: 100,
   },
   {
     id: "728ed52f",
-    date: "16/11/2025",
-    category: "Dulces",
-    amount: 100,
-  },
-  {
-    id: "728ed53f",
-    date: "16/11/2025",
-    category: "Edredones",
-    amount: 100,
-  },
-  {
-    id: "728ed54f",
-    date: "16/11/2025",
-    category: "Edredones",
-    amount: 100,
-  },
-  {
-    id: "728ed55f",
-    date: "16/11/2025",
-    category: "Edredones",
-    amount: 100,
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
   },
 ];
 
 const dataARBD = [
   {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
+    id: "728ed511f",
+    created_at: "16/11/2025",
+    total_amount: 25000,
+    paid_amount: 5000,
     debtPending: 20000,
   },
   {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
-    debtPending: 20000,
-  },
-
-  {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
-    debtPending: 20000,
-  },
-  {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
-    debtPending: 20000,
-  },
-  {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
+    id: "728ed522f",
+    created_at: "16/11/2025",
+    total_amount: 25000,
+    paid_amount: 5000,
     debtPending: 20000,
   },
 ];
