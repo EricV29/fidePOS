@@ -4,11 +4,11 @@ import DatePicker from "../components/DatePicker";
 import CardInfo from "../components/CardInfo";
 import RevenueIcon from "../assets/icons/RevenueIcon";
 import InvestmentIcon from "../assets/icons/InvestmentIcon";
-import BarChartEx from "@/components/ui/bar-chart";
-import ChartPieDonutText from "@/components/ui/pie-chart";
-import { DataTable } from "../components/ui/data-table";
-import { columnsRSP } from "../components/ui/columnsRSP";
-import { columnsAR } from "../components/ui/columnsAR";
+import BarChartEx from "@/components/bar-chart";
+import ChartPieDonutText from "@/components/pie-chart";
+import { DataTable } from "../components/data-table";
+import { columnsRSP } from "../components/columns/columnsRSP";
+import { columnsAR } from "../components/columns/columnsAR";
 import { addRandomFill } from "../utility/AddFill";
 import { useInstallDate } from "../hooks/useInstallDate";
 
@@ -84,71 +84,61 @@ const dataInvestBD = 12238;
 const dataRSPBD = [
   {
     id: "728ed51f",
-    date: "16/11/2025",
+    created_at: "16/11/2025",
     category: "Maquillaje",
-    amount: 100,
+    ccolor: "#5b49ff",
+    total_amount: 100,
   },
   {
     id: "728ed52f",
-    date: "16/11/2025",
-    category: "Dulces",
-    amount: 100,
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
   },
   {
-    id: "728ed53f",
-    date: "16/11/2025",
-    category: "Edredones",
-    amount: 100,
+    id: "728ed52f",
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
   },
   {
-    id: "728ed54f",
-    date: "16/11/2025",
-    category: "Edredones",
-    amount: 100,
+    id: "728ed52f",
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
   },
   {
-    id: "728ed55f",
-    date: "16/11/2025",
-    category: "Edredones",
-    amount: 100,
+    id: "728ed52f",
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
+  },
+  {
+    id: "728ed52f",
+    created_at: "16/11/2025",
+    category: "toys",
+    ccolor: "#ff49ff",
+    total_amount: 50,
   },
 ];
 
 const dataARBD = [
   {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
+    id: "728ed511f",
+    created_at: "16/11/2025",
+    total_amount: 25000,
+    paid_amount: 5000,
     debtPending: 20000,
   },
   {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
-    debtPending: 20000,
-  },
-
-  {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
-    debtPending: 20000,
-  },
-  {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
-    debtPending: 20000,
-  },
-  {
-    id: "728ed51f",
-    date: "16/11/2025",
-    totalAmount: 25000,
-    paidAmount: 5000,
+    id: "728ed522f",
+    created_at: "16/11/2025",
+    total_amount: 25000,
+    paid_amount: 5000,
     debtPending: 20000,
   },
 ];
@@ -177,7 +167,7 @@ export default function Dashboard() {
     <>
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
-          <h1 className="text-[30px] mb-0">Dashboard</h1>
+          <h1 className="text-[30px]">Dashboard</h1>
           <DatePicker installDate={installDate} />
         </div>
         <hr className="border border-[#b3b3b3] my-2" />

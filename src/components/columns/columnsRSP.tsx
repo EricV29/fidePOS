@@ -4,11 +4,15 @@ import { Button } from "@/components/ui/button";
 import EyeIcon from "../../assets/icons/EyeIcon";
 import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
+import { partialNumberFilter } from "@/utility/table-filter";
+import { currencyFormat } from "@/utility/currencyFormat";
 
 export type RecentSalesPaid = {
   id: string;
-  date: string;
-  amount: number;
+  created_at: string;
+  category: string;
+  ccolor: string;
+  total_amount: number;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -20,41 +24,53 @@ export type RecentSalesPaid = {
 export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
   {
     id: "rowNumber",
-    header: () => <div className="text-center">No.</div>,
+    header: "No",
+    meta: {
+      headerClassName: "text-center",
+    },
     cell: ({ row }) => {
       return <div className="text-center font-semibold">{row.index + 1}</div>;
     },
-    enableSorting: false,
-    enableHiding: false,
   },
   {
-    accessorKey: "date",
-    header: "Date",
+    accessorKey: "created_at",
+    header: "Created Date",
+    meta: {
+      headerClassName: "text-center",
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("created_at")}</div>;
+    },
   },
   {
     accessorKey: "category",
     header: "Category",
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-center">Amount</div>,
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount);
-
+      const category = row.getValue("category") as string;
+      const ccolor = row.original.ccolor;
       return (
-        <div className="text-center font-semibold text-[#43A047]">
-          +{formatted}
+        <div style={{ background: ccolor }} className="categoryB">
+          {category.toLocaleUpperCase()}
         </div>
       );
     },
   },
   {
+    accessorKey: "total_amount",
+    header: "Amount",
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("total_amount")));
+
+      return <div className="font-semibold text-[#43A047]">{formatted}</div>;
+    },
+    filterFn: partialNumberFilter,
+  },
+  {
     id: "actions",
-    header: () => <div className="text-center">Actions</div>,
+    header: "Actions",
+    meta: {
+      headerClassName: "text-center",
+    },
     cell: ({ row, table }) => {
       const actions = table.options.meta?.actions;
 
@@ -72,19 +88,17 @@ export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
 
           {actions?.edit && (
             <Button variant="outline" size="icon" onClick={handleDescription}>
-              <EditIcon />
+              <EditIcon color="#F57C00" />
             </Button>
           )}
 
           {actions?.delete && (
             <Button variant="outline" size="icon" onClick={handleDescription}>
-              <DeleteIcon />
+              <DeleteIcon color="#D32F2F" />
             </Button>
           )}
         </div>
       );
     },
-    enableSorting: false,
-    enableHiding: false,
   },
 ];
