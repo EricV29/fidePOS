@@ -26,7 +26,7 @@ export type Products = {
 };
 
 // Columns Products
-export const columnsP: ColumnDef<Products>[] = [
+export const columnsTest: ColumnDef<Products>[] = [
   {
     id: "rowNumber",
     header: "No",
@@ -48,21 +48,18 @@ export const columnsP: ColumnDef<Products>[] = [
   {
     accessorKey: "description",
     header: "Description",
-    cell: ({ getValue }) => (
-      <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
-        {getValue() as string}
-      </div>
-    ),
   },
   {
     accessorKey: "category",
     header: "Category",
     cell: ({ row }) => {
-      const category = row.getValue("category") as string;
       const ccolor = row.original.ccolor;
       return (
-        <div style={{ background: ccolor }} className="categoryB">
-          {category.toLocaleUpperCase()}
+        <div
+          style={{ background: ccolor }}
+          className="rounded-full px-1 text-center font-semibold"
+        >
+          {row.getValue("category")}
         </div>
       );
     },
@@ -103,14 +100,21 @@ export const columnsP: ColumnDef<Products>[] = [
     header: "Status",
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
+
       const bgColor =
         status === "active"
-          ? "statusActiveB"
+          ? "bg-[#43A047]"
           : status === "inactive"
-          ? "statusInactiveB"
+          ? "bg-[#D32F2F]"
           : "bg-gray-400";
 
-      return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
+      return (
+        <div
+          className={`rounded-full px-1 text-center font-semibold text-white ${bgColor}`}
+        >
+          {status}
+        </div>
+      );
     },
   },
   {
@@ -158,5 +162,7 @@ export const columnsP: ColumnDef<Products>[] = [
         </div>
       );
     },
+    enableSorting: false,
+    enableHiding: false,
   },
 ];

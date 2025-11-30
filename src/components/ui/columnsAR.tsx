@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import EyeIcon from "../../assets/icons/EyeIcon";
 import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
+import { currencyFormat } from "@/utility/currencyFormat";
+import { partialNumberFilter } from "@/utility/table-filter";
 
 export type AccountsReceivable = {
   id: string;
@@ -21,59 +23,60 @@ export type AccountsReceivable = {
 export const columnsAR: ColumnDef<AccountsReceivable>[] = [
   {
     id: "rowNumber",
-    header: () => <div className="text-center">No.</div>,
+    header: "No",
+    meta: {
+      headerClassName: "text-center",
+    },
     cell: ({ row }) => {
       return <div className="text-center font-semibold">{row.index + 1}</div>;
     },
-    enableSorting: false,
-    enableHiding: false,
   },
   {
     accessorKey: "created_at",
-    header: "Date",
+    header: "Created Date",
+    meta: {
+      headerClassName: "text-center",
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("created_at")}</div>;
+    },
   },
   {
     accessorKey: "total_amount",
     header: "Total Amount",
     cell: ({ row }) => {
-      const total_amount = parseFloat(row.getValue("total_amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(total_amount);
+      const formatted = currencyFormat(Number(row.getValue("total_amount")));
 
       return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
     },
+    filterFn: partialNumberFilter,
   },
   {
     accessorKey: "paid_amount",
     header: "Paid Amount",
     cell: ({ row }) => {
-      const paid_amount = parseFloat(row.getValue("paid_amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(paid_amount);
+      const formatted = currencyFormat(Number(row.getValue("paid_amount")));
 
       return <div className="font-semibold text-[#43A047]">+{formatted}</div>;
     },
+    filterFn: partialNumberFilter,
   },
   {
     accessorKey: "debtPending",
     header: "Debt Pending",
     cell: ({ row }) => {
-      const debtPending = parseFloat(row.getValue("debtPending"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(debtPending);
+      const formatted = currencyFormat(Number(row.getValue("paid_amount")));
 
       return <div className="font-semibold text-[#D32F2F]">-{formatted}</div>;
     },
+    filterFn: partialNumberFilter,
   },
   {
     id: "actions",
-    header: () => <div className="text-center">Actions</div>,
+    header: "Actions",
+    meta: {
+      headerClassName: "text-center",
+    },
     cell: ({ row, table }) => {
       const actions = table.options.meta?.actions;
 
@@ -103,7 +106,5 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
         </div>
       );
     },
-    enableSorting: false,
-    enableHiding: false,
   },
 ];

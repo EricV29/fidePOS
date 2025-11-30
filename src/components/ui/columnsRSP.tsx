@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import EyeIcon from "../../assets/icons/EyeIcon";
 import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
+import { partialNumberFilter } from "@/utility/table-filter";
+import { currencyFormat } from "@/utility/currencyFormat";
 
 export type RecentSalesPaid = {
   id: string;
@@ -22,16 +24,20 @@ export type RecentSalesPaid = {
 export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
   {
     id: "rowNumber",
-    header: () => <div className="text-center">No.</div>,
+    header: "No",
+    meta: {
+      headerClassName: "text-center",
+    },
     cell: ({ row }) => {
       return <div className="text-center font-semibold">{row.index + 1}</div>;
     },
-    enableSorting: false,
-    enableHiding: false,
   },
   {
     accessorKey: "created_at",
-    header: () => <div className="text-center">Date</div>,
+    header: "Created Date",
+    meta: {
+      headerClassName: "text-center",
+    },
     cell: ({ row }) => {
       return <div className="text-center">{row.getValue("created_at")}</div>;
     },
@@ -40,37 +46,31 @@ export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
     accessorKey: "category",
     header: "Category",
     cell: ({ row }) => {
+      const category = row.getValue("category") as string;
       const ccolor = row.original.ccolor;
       return (
-        <div
-          style={{ background: ccolor }}
-          className="rounded-full px-1 text-center font-semibold"
-        >
-          {row.getValue("category")}
+        <div style={{ background: ccolor }} className="categoryB">
+          {category.toLocaleUpperCase()}
         </div>
       );
     },
   },
   {
     accessorKey: "total_amount",
-    header: () => <div className="text-center">Amount</div>,
+    header: "Amount",
     cell: ({ row }) => {
-      const total_amount = parseFloat(row.getValue("total_amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(total_amount);
+      const formatted = currencyFormat(Number(row.getValue("total_amount")));
 
-      return (
-        <div className="text-center font-semibold text-[#43A047]">
-          +{formatted}
-        </div>
-      );
+      return <div className="font-semibold text-[#43A047]">{formatted}</div>;
     },
+    filterFn: partialNumberFilter,
   },
   {
     id: "actions",
-    header: () => <div className="text-center">Actions</div>,
+    header: "Actions",
+    meta: {
+      headerClassName: "text-center",
+    },
     cell: ({ row, table }) => {
       const actions = table.options.meta?.actions;
 
@@ -88,19 +88,17 @@ export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
 
           {actions?.edit && (
             <Button variant="outline" size="icon" onClick={handleDescription}>
-              <EditIcon />
+              <EditIcon color="#F57C00" />
             </Button>
           )}
 
           {actions?.delete && (
             <Button variant="outline" size="icon" onClick={handleDescription}>
-              <DeleteIcon />
+              <DeleteIcon color="#D32F2F" />
             </Button>
           )}
         </div>
       );
     },
-    enableSorting: false,
-    enableHiding: false,
   },
 ];

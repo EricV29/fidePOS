@@ -14,13 +14,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import SearchIcon from "@/assets/icons/SearchIcon";
+import CustomSelect from "../Select";
 
-interface DataTablePageProps<TData, TValue> {
+interface DataTableSearchProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   actions?: TableActions;
+}
+
+interface TableColumns {
+  header: string;
+  id: string;
+  accessorKey?: string;
 }
 
 export interface TableActions {
@@ -29,14 +36,15 @@ export interface TableActions {
   delete?: boolean;
 }
 
-export function DataTablePage<TData, TValue>({
+export function DataTableSearch<TData, TValue>({
   columns,
   data,
   actions,
-}: DataTablePageProps<TData, TValue>) {
+}: DataTableSearchProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [selectedColumn, setSelectedColumn] = useState("");
 
   const table = useReactTable({
     data,
@@ -50,19 +58,39 @@ export function DataTablePage<TData, TValue>({
     },
   });
 
+  const columnOptions = (columns as TableColumns[])
+    .filter((col) => col.accessorKey)
+    .map((col) => ({
+      label: typeof col.header === "string" ? col.header : col.id,
+      value: col.accessorKey!,
+    }));
+
+  const currentColumn = selectedColumn || columnOptions[0]?.value;
+
+  useEffect(() => {
+    table.resetColumnFilters();
+  }, [table, selectedColumn]);
+
   return (
     <>
-      <div className="inputtext w-[400px]">
-        <SearchIcon />
-        <input
-          placeholder="Filter emails..."
-          value={
-            (table.getColumn("description")?.getFilterValue() as string) ?? ""
-          }
-          onChange={(event) =>
-            table.getColumn("description")?.setFilterValue(event.target.value)
-          }
-          className="w-full"
+      <div className="w-full flex justify-between">
+        <div className="inputtext w-[400px]">
+          <SearchIcon />
+          <input
+            placeholder="Search register..."
+            value={
+              (table.getColumn(currentColumn)?.getFilterValue() as string) ?? ""
+            }
+            onChange={(event) =>
+              table.getColumn(currentColumn)?.setFilterValue(event.target.value)
+            }
+            className="w-full"
+          />
+        </div>
+        <CustomSelect
+          options={columnOptions}
+          placeholder="Choose a column"
+          onChange={setSelectedColumn}
         />
       </div>
       <Table>
@@ -70,7 +98,12 @@ export function DataTablePage<TData, TValue>({
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
-                <TableHead key={header.id} className="font-semibold">
+                <TableHead
+                  key={header.id}
+                  className={`font-semibold ${
+                    header.column.columnDef.meta?.headerClassName ?? ""
+                  }`}
+                >
                   {flexRender(
                     header.column.columnDef.header,
                     header.getContext()

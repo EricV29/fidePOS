@@ -8,7 +8,7 @@ import InvestmentIcon from "@/assets/icons/InvestmentIcon";
 import RevenueIcon from "@/assets/icons/RevenueIcon";
 import CardInfo from "../components/CardInfo";
 import CardInfoDetail from "../components/CardInfoDetail";
-import { DataTablePage } from "@/components/ui/data-table-pag";
+import { DataTableSearch } from "@/components/ui/data-table-search";
 import { columnsP } from "@/components/ui/columnsP";
 
 interface dataStockI {
@@ -21,6 +21,7 @@ export type dataProductI = {
   name: string;
   description: string;
   category: string;
+  ccolor: string;
   cost_price: number;
   unit_price: number;
   stock: number;
@@ -42,92 +43,40 @@ const dataProductsDB = [
     id: "34234",
     code_sku: "JW0012",
     name: "Labial",
-    description: "Yuya - Rojo asdaskfjbdfkb",
+    description: "Yuya rojo",
     category: "Maquillaje",
     ccolor: "#5b49ff",
-    cost_price: 15000,
+    cost_price: 123.5,
     unit_price: 20000,
-    stock: 5,
+    stock: 1,
     status: "active",
-    created_at: "01/10/2025",
+    created_at: "01/01/2025",
   },
   {
     id: "34235",
     code_sku: "JW0013",
     name: "Carrito",
-    description: "Yuya - Rojo",
+    description: "hotweels",
     category: "Toys",
     ccolor: "#ff49ff",
-    cost_price: 15000,
-    unit_price: 20000,
-    stock: 5,
+    cost_price: 12000,
+    unit_price: 30000,
+    stock: 2,
     status: "inactive",
     created_at: "01/10/2025",
   },
   {
     id: "34235",
-    code_sku: "JW0013",
-    name: "Carrito",
-    description: "Yuya - Rojo",
+    code_sku: "JW0014",
+    name: "Edredon 2",
+    description: "osito",
     category: "Toys",
     ccolor: "#ff49ff",
-    cost_price: 15000,
-    unit_price: 20000,
-    stock: 5,
+    cost_price: 13000,
+    unit_price: 10000,
+    stock: 3,
     status: "inactive",
-    created_at: "01/10/2025",
-  },
-  {
-    id: "34235",
-    code_sku: "JW0013",
-    name: "Carrito",
-    description: "Yuya - Rojo",
-    category: "Toys",
-    ccolor: "#ff49ff",
-    cost_price: 15000,
-    unit_price: 20000,
-    stock: 5,
-    status: "inactive",
-    created_at: "01/10/2025",
-  },
-  {
-    id: "34235",
-    code_sku: "JW0013",
-    name: "Carrito",
-    description: "Yuya - Rojo",
-    category: "Toys",
-    ccolor: "#ff49ff",
-    cost_price: 15000,
-    unit_price: 20000,
-    stock: 5,
-    status: "inactive",
-    created_at: "01/10/2025",
-  },
-  {
-    id: "34235",
-    code_sku: "JW0013",
-    name: "Carrito",
-    description: "Yuya - Rojo",
-    category: "Toys",
-    ccolor: "#ff49ff",
-    cost_price: 15000,
-    unit_price: 20000,
-    stock: 5,
-    status: "inactive",
-    created_at: "01/10/2025",
-  },
-  {
-    id: "34235",
-    code_sku: "JW0013",
-    name: "Carrito",
-    description: "Yuya - Rojo",
-    category: "Toys",
-    ccolor: "#ff49ff",
-    cost_price: 15000,
-    unit_price: 20000,
-    stock: 5,
-    status: "inactive",
-    created_at: "01/10/2025",
+    created_at: "01/03/2025",
   },
 ];
 
@@ -146,10 +95,7 @@ const Products: React.FC<ProductsProps> = ({}) => {
     <>
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
-          <h1
-            className="mb-0"
-            style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)" }}
-          >
+          <h1 style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)" }}>
             Products Inventory
           </h1>
           <div className="flex gap-2">
@@ -193,7 +139,7 @@ const Products: React.FC<ProductsProps> = ({}) => {
           </div>
           <div className="w-full min-h-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
             <p className="font-semibold">Inventory Table</p>
-            <DataTablePage
+            <DataTableSearch
               data={dataProducts}
               columns={columnsP}
               actions={{
