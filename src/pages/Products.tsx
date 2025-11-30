@@ -8,8 +8,8 @@ import InvestmentIcon from "@/assets/icons/InvestmentIcon";
 import RevenueIcon from "@/assets/icons/RevenueIcon";
 import CardInfo from "../components/CardInfo";
 import CardInfoDetail from "../components/CardInfoDetail";
-import { DataTableSearch } from "@/components/ui/data-table-search";
-import { columnsP } from "@/components/ui/columnsP";
+import { DataTableSearch } from "@/components/data-table-search";
+import { columnsP } from "@/components/columns/columnsP";
 
 interface dataStockI {
   [key: string]: number;

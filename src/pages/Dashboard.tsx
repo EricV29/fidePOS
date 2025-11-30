@@ -4,11 +4,11 @@ import DatePicker from "../components/DatePicker";
 import CardInfo from "../components/CardInfo";
 import RevenueIcon from "../assets/icons/RevenueIcon";
 import InvestmentIcon from "../assets/icons/InvestmentIcon";
-import BarChartEx from "@/components/ui/bar-chart";
-import ChartPieDonutText from "@/components/ui/pie-chart";
-import { DataTable } from "../components/ui/data-table";
-import { columnsRSP } from "../components/ui/columnsRSP";
-import { columnsAR } from "../components/ui/columnsAR";
+import BarChartEx from "@/components/bar-chart";
+import ChartPieDonutText from "@/components/pie-chart";
+import { DataTable } from "../components/data-table";
+import { columnsRSP } from "../components/columns/columnsRSP";
+import { columnsAR } from "../components/columns/columnsAR";
 import { addRandomFill } from "../utility/AddFill";
 import { useInstallDate } from "../hooks/useInstallDate";
 

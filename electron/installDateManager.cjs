@@ -6,7 +6,6 @@ function registerInstallDate() {
   const userData = app.getPath("userData");
   const filePath = path.join(userData, "install.json");
 
-  // Si no existe, se crea
   if (!fs.existsSync(filePath)) {
     const data = {
       installed: new Date().toISOString(),
@@ -14,15 +13,11 @@ function registerInstallDate() {
 
     fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
 
-    //console.log("Install Date Inexist:", data.installed);
     return data.installed;
   }
 
-  // Si existe, la leemos
   const raw = fs.readFileSync(filePath, "utf-8");
   const json = JSON.parse(raw);
-
-  //console.log("Install Date Exist:", json.installed);
   return json.installed;
 }
 

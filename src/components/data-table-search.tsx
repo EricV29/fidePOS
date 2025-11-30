@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/table";
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@/assets/icons/SearchIcon";
-import CustomSelect from "../Select";
+import CustomSelect from "./Select";
 
 interface DataTableSearchProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
