@@ -6,7 +6,7 @@ import CategoryIcon from "@/assets/icons/CategoryIcon";
 import PlusIcon from "@/assets/icons/PlusIcon";
 import InvestmentIcon from "@/assets/icons/InvestmentIcon";
 import RevenueIcon from "@/assets/icons/RevenueIcon";
-import CardInfo from "../components/CardInfo";
+import CardInfoNumber from "../components/CardInfoNumber";
 import CardInfoDetail from "../components/CardInfoDetail";
 import { DataTableSearch } from "@/components/data-table-search";
 import { columnsP } from "@/components/columns/columnsP";
@@ -115,20 +115,22 @@ const Products: React.FC<ProductsProps> = ({}) => {
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <div className="flex-1 min-h-0 w-full flex flex-col gap-2">
-          <div className="w-full h-fit flex justify-between gap-2">
-            <CardInfo
+          <div className="w-full h-[120px] flex justify-between gap-2">
+            <CardInfoNumber
               icon={InvestmentIcon}
               title="Investment"
               icond={null}
               number={100000}
+              format={true}
               color="#F57C00"
             />
 
-            <CardInfo
+            <CardInfoNumber
               icon={RevenueIcon}
               title="Inventory Value"
               icond={null}
               number={100000}
+              format={true}
               color="#FFC107"
             />
             <CardInfoDetail

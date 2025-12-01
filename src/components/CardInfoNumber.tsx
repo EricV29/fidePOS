@@ -1,18 +1,20 @@
 import React from "react";
 
-interface CardInfoProps {
-  icon: React.ComponentType<any>;
+interface CardInfoNumberProps {
+  icon: React.ComponentType<any> | null;
   title: string;
   icond: React.ComponentType<any> | null;
   number: number;
+  format: boolean;
   color: string;
 }
 
-const CardInfo: React.FC<CardInfoProps> = ({
+const CardInfoNumber: React.FC<CardInfoNumberProps> = ({
   icon: Icon,
   title,
   icond: Icond,
   number,
+  format,
   color,
 }) => {
   const formatNumber = (value: number) => {
@@ -33,7 +35,7 @@ const CardInfo: React.FC<CardInfoProps> = ({
         style={{ borderColor: color }}
       >
         <div className="flex gap-2 items-center">
-          <Icon size={clampSize(24, 30, 40)} color={color} />
+          {Icon && <Icon size={clampSize(24, 30, 40)} color={color} />}
           <p className="font-bold text-[clamp(14px,2vw,20px)]">{title}</p>
         </div>
 
@@ -48,7 +50,7 @@ const CardInfo: React.FC<CardInfoProps> = ({
 
           {number ? (
             <p className="text-[clamp(20px,3vw,35px)]" style={{ color }}>
-              {formatNumber(number)}
+              {format ? formatNumber(number) : number}
             </p>
           ) : (
             <div className="w-full h-full flex items-center justify-center font-extralight">
@@ -61,4 +63,4 @@ const CardInfo: React.FC<CardInfoProps> = ({
   );
 };
 
-export default CardInfo;
+export default CardInfoNumber;

@@ -93,7 +93,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <Sidebaitem
               icon={CustIcon}
               label="Customers"
-              active={location.pathname === "/main/customers"}
+              active={location.pathname.startsWith("/main/customers")}
               onClick={() => navigate("/main/customers")}
               isOpen={isOpen}
             />
@@ -106,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             />
           </div>
         </div>
-        <div className="h-auto w-auto flex flex-col justify-center items-center 2xl:gap-[50px] gap-[20px]">
+        <div className="h-auto w-auto flex flex-col justify-center items-center 2xl:gap-[50px] gap-5">
           <div className="flex flex-col items-center text-center">
             <img
               src={userImage}

@@ -8,6 +8,8 @@ import Products from "./pages/Products";
 import Reports from "./pages/Reports";
 import Customers from "./pages/Customers";
 import Settings from "./pages/Settings";
+import CustomersGeneral from "./pages/CustomersGeneral";
+import CustomersPayments from "./pages/CustomersPayments";
 
 function App() {
   return (
@@ -22,7 +24,11 @@ function App() {
           <Route path="newsale" element={<NewSale />} />
           <Route path="products" element={<Products />} />
           <Route path="reports" element={<Reports />} />
-          <Route path="customers" element={<Customers />} />
+          <Route path="customers" element={<Customers />}>
+            <Route index element={<Navigate to="general" replace />} />
+            <Route path="general" element={<CustomersGeneral />} />
+            <Route path="payments" element={<CustomersPayments />} />
+          </Route>
           <Route path="settings" element={<Settings />} />
         </Route>
 

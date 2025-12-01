@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import DatePicker from "../components/DatePicker";
-//import ChartPieDonutText from "@/components/PieChart";
-import CardInfo from "../components/CardInfo";
+import CardInfoNumber from "../components/CardInfoNumber";
 import RevenueIcon from "../assets/icons/RevenueIcon";
 import InvestmentIcon from "../assets/icons/InvestmentIcon";
 import BarChartEx from "@/components/bar-chart";
@@ -193,18 +192,20 @@ export default function Dashboard() {
                 />
               </div>
               <div className="max-w-[300px] min-w-0 w-[300px] h-full flex flex-col gap-2 justify-between items-center">
-                <CardInfo
+                <CardInfoNumber
                   icon={RevenueIcon}
                   title="Revenue"
                   icond={null}
                   number={revenueCard}
+                  format={true}
                   color="#43A047"
                 />
-                <CardInfo
+                <CardInfoNumber
                   icon={InvestmentIcon}
                   title="Investment"
                   icond={null}
                   number={investCard}
+                  format={true}
                   color="#F57C00"
                 />
               </div>
