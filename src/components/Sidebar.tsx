@@ -1,5 +1,4 @@
 import React from "react";
-import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuIcon from "../assets/icons/MenuIcon";
 import DashIcon from "../assets/icons/DashboardIcon";
@@ -21,7 +20,6 @@ const Sidebar: React.FC<SidebarProps> = ({
   isOpen,
   toggleSidebar,
 }: SidebarProps) => {
-  const [activeItem, setActiveItem] = useState("dashboard");
   const handleLogout = () => {
     window.electronAPI.logoutSuccess();
   };
@@ -34,11 +32,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       <aside
         className={`
         h-full bg-[#ffffff] rounded-[30px] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)] flex flex-col justify-between items-center
-        ${
-          isOpen
-            ? "w-[200px] px-[15px] py-[20px]"
-            : "w-[70px] px-[5px] py-[15px]"
-        }
+        ${isOpen ? "w-[200px] px-[15px] py-5" : "w-[70px] px-[5px] py-[15px]"}
       `}
       >
         <div className="w-full h-auto flex flex-col justify-center items-center gap-[30px]">
@@ -51,17 +45,17 @@ const Sidebar: React.FC<SidebarProps> = ({
               <img
                 src="../../public/fidelogoc.png"
                 alt="LogoFidePOS"
-                className="h-[48px] block "
+                className="h-12 block "
               />
             )}
             <button
-              className="transition-transform duration-200 hover:scale-110 hover:-translate-y-[2px]"
+              className="transition-transform duration-200 hover:scale-110 hover:-translate-y-0.5"
               onClick={toggleSidebar}
             >
               <MenuIcon size={30} color="#5D5D5D" />
             </button>
           </div>
-          <div className="h-auto w-full flex flex-col justify-start items-center gap-[10px]">
+          <div className="h-auto w-full flex flex-col justify-start items-center gap-2.5">
             <Sidebaitem
               icon={DashIcon}
               label="Dashboard"

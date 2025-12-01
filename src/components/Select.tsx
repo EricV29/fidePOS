@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import CaretDIcon from "../assets/icons/CaretDIcon";
-import CalendarIcon from "../assets/icons/CalendarIcon";
 
 interface SelectOption {
   label: string;
