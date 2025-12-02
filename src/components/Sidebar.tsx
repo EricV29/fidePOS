@@ -80,7 +80,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             <Sidebaitem
               icon={RepIcon}
               label="Reports"
-              active={location.pathname === "/main/reports"}
+              active={location.pathname.startsWith("/main/reports")}
               onClick={() => navigate("/main/reports")}
               isOpen={isOpen}
             />
