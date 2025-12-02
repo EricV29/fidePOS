@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { DataTableSearch } from "@/components/data-table-search";
 import { columnsC } from "@/components/columns/columnsC";
 import CustomSelect from "../components/Select";
+import CardInfoNumber from "@/components/CardInfoNumber";
+import FlagIcon from "../assets/icons/FlagIcon";
 
 export type dataPaymentI = {
   id: string;
@@ -58,6 +60,40 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
           options={optionsCustomers}
           placeholder="Select your customer"
         />
+        <div className="flex gap-2 h-[100px]">
+          <CardInfoNumber
+            icon={null}
+            title="Debts"
+            icond={FlagIcon}
+            number={5}
+            format={false}
+            color="#D32F2F"
+          />
+          <CardInfoNumber
+            icon={null}
+            title="Paids"
+            icond={FlagIcon}
+            number={5}
+            format={false}
+            color="#43A047"
+          />
+          <CardInfoNumber
+            icon={null}
+            title="Unpaid"
+            icond={null}
+            number={500}
+            format={true}
+            color="#D32F2F"
+          />
+          <CardInfoNumber
+            icon={null}
+            title="Paid"
+            icond={null}
+            number={500}
+            format={true}
+            color="#43A047"
+          />
+        </div>
         <div className="w-full min-w-0 h-full min-h-0 flex gap-2">
           <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
             <p className="font-semibold">Debts Table</p>
