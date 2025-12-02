@@ -1,7 +1,7 @@
 import React from "react";
 import ExportIcon from "@/assets/icons/ExportIcon";
 import DatePicker from "@/components/DatePicker";
-import { useInstallDate } from "../hooks/useInstallDate";
+import { useInstallDate } from "../../hooks/useInstallDate";
 import Switch from "@/components/Switch";
 import { Outlet, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -11,9 +11,16 @@ interface ReportsProps {}
 const Reports: React.FC<ReportsProps> = ({}) => {
   const { installDate } = useInstallDate();
   const navigate = useNavigate();
-  const location = useLocation();
-  const last = location.pathname.split("/").pop();
-  const activeTab = last === "sales" ? 1 : 0;
+
+  const optionsReports = [
+    { label: "General", value: "general" },
+    { label: "Sales", value: "sales" },
+    { label: "Products", value: "products" },
+    { label: "Customers", value: "customers" },
+  ];
+  const currentTab =
+    optionsReports.find((op) => location.pathname.includes(op.value))?.value ||
+    optionsReports[0].value;
 
   if (!installDate) return null;
 
@@ -31,12 +38,9 @@ const Reports: React.FC<ReportsProps> = ({}) => {
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <Switch
-          opa="General"
-          opb="Sales"
-          active={activeTab}
-          onChange={(index) => {
-            navigate(index === 0 ? "general" : "sales");
-          }}
+          options={optionsReports}
+          active={currentTab}
+          onChange={(value) => navigate(`./${value}`)}
         />
         <div className="flex-1 w-full h-full min-h-0 pt-3">
           <Outlet />

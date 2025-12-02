@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { DataTableSearch } from "@/components/data-table-search";
 import { columnsC } from "@/components/columns/columnsC";
-import CustomSelect from "../components/Select";
+import CustomSelect from "@/components/Select";
 import CardInfoNumber from "@/components/CardInfoNumber";
-import FlagIcon from "../assets/icons/FlagIcon";
+import FlagIcon from "@/assets/icons/FlagIcon";
 
 export type dataPaymentI = {
   id: string;
