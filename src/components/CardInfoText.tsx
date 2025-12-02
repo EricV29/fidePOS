@@ -22,8 +22,10 @@ const CardInfoText: React.FC<CardInfoTextProps> = ({
     return `clamp(${min}px, ${mid}px + 1vw, ${max}px)`;
   }
 
-  const [first, last] = text.split(" ");
-  const textf = `${first} ${last[0]}.`;
+  function splitName(text: string) {
+    const [first, last] = text.split(" ");
+    return `${first} ${last[0]}.`;
+  }
 
   const datef = dateFormat(date);
 
@@ -47,16 +49,16 @@ const CardInfoText: React.FC<CardInfoTextProps> = ({
                 className="font-bold text-[clamp(20px,3vw,35px)] leading-none"
                 style={{ color }}
               >
-                {textf}
+                {splitName(text)}
               </p>
               <p className="leading-none font-semibold" style={{ color }}>
                 {datef}
               </p>
             </>
           ) : (
-            <div className="w-full h-full flex items-center justify-center font-extralight">
-              There is no data yet.
-            </div>
+            <p className="text-[clamp(20px,3vw,35px)]" style={{ color }}>
+              ---
+            </p>
           )}
         </div>
       </div>
