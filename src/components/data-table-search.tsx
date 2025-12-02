@@ -73,8 +73,8 @@ export function DataTableSearch<TData, TValue>({
 
   return (
     <>
-      <div className="w-full flex justify-between">
-        <div className="inputtext w-[400px]">
+      <div className="w-full flex justify-between gap-5">
+        <div className="inputtext">
           <SearchIcon />
           <input
             placeholder="Search register..."
@@ -89,7 +89,7 @@ export function DataTableSearch<TData, TValue>({
         </div>
         <CustomSelect
           options={columnOptions}
-          placeholder="Choose a column"
+          placeholder="Choose"
           onChange={setSelectedColumn}
         />
       </div>

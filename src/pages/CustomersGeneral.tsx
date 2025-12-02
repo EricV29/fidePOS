@@ -87,7 +87,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
           />
         </div>
         <div className="w-full min-h-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-          <p className="font-semibold">Inventory Table</p>
+          <p className="font-semibold">Customers Table</p>
           <DataTableSearch
             data={dataCustomers}
             columns={columnsC}
