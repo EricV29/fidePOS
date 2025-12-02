@@ -69,11 +69,15 @@ async function initDatabase() {
     ]);
     db.run("INSERT INTO status (code, description) VALUES (?, ?);", [
       "3",
-      "paid",
+      "debt",
     ]);
     db.run("INSERT INTO status (code, description) VALUES (?, ?);", [
       "4",
-      "debt",
+      "paid",
+    ]);
+    db.run("INSERT INTO status (code, description) VALUES (?, ?);", [
+      "5",
+      "unpaid",
     ]);
     console.log("✅ Status inserted (desactive, active, paid, debt)");
   } else {
@@ -103,7 +107,7 @@ async function initDatabase() {
     CREATE TABLE IF NOT EXISTS customer (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
-      lastname TEXT NOT NULL,
+      last_name TEXT NOT NULL,
       phone TEXT UNIQUE,
       status_id INTEGER NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

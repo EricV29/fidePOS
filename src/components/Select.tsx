@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import CaretDIcon from "../assets/icons/CaretDIcon";
-import CalendarIcon from "../assets/icons/CalendarIcon";
 
 interface SelectOption {
   label: string;
@@ -44,25 +43,20 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     options.find((opt) => opt.value === selectedValue)?.label || placeholder;
 
   return (
-    <div className="w-[250px] relative z-10" ref={selectRef}>
-      <div className="relative flex items-center">
-        <div
-          onClick={toggleSelect}
-          className="w-full cursor-pointer rounded-[10px] border-2 bg-white py-2.5 pl-3 pr-8 text-[#f57c00] outline-none transition border-[#f57c00] shadow-[0px_2px_0px_#F57C00]"
-        >
-          {selectedLabel}
-        </div>
+    <div
+      className="w-full min-w-[100px] max-w-[400px] relative"
+      ref={selectRef}
+    >
+      <div onClick={toggleSelect} className="inputselect">
+        <p>{selectedLabel}</p>
 
-        <span
-          className="absolute right-0 cursor-pointer pr-4 text-[#f57c00]"
-          onClick={toggleSelect}
-        >
+        <span onClick={toggleSelect}>
           <CaretDIcon size={20} color="#f57c00" />
         </span>
       </div>
 
       {isOpen && (
-        <div className="shadow-datepicker absolute mt-2 w-full rounded-xl border-2 border-[#f57c00] bg-white py-3">
+        <div className="w-full absolute z-10 mt-2 rounded-xl border-2 border-[#f57c00] bg-white max-h-60 overflow-y-auto ">
           {options.map((option) => (
             <div
               key={option.value}

@@ -32,7 +32,11 @@ const CardInfoDetail: React.FC<CardInfoDetailProps> = ({
             <p className="text-[clamp(15px,3vw,30px)]">{totalItems}</p>
             <p className="text-[clamp(10px,2vw,20px)]">{title}</p>
           </div>
-          <ProgressBar chartData={chartData} totalItems={totalItems} />
+          {Object.keys(chartData).length ? (
+            <ProgressBar chartData={chartData} totalItems={totalItems} />
+          ) : (
+            <p>---</p>
+          )}
           <div className="w-full flex justify-between gap-1 font-regular text-[clamp(5px,2vw,15px)]">
             <p className="flex gap-1 items-center">
               <span className="bg-[#1976D2] rounded-full w-2 h-2 block"></span>
