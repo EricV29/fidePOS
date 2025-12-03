@@ -22,9 +22,10 @@ interface PieChartItem {
 
 export type RecentSalesPaid = {
   id: string;
-  date: string;
+  created_at: string;
   category: string;
-  amount: number;
+  ccolor: string;
+  total_amount: number;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -34,9 +35,9 @@ export type RecentSalesPaid = {
 
 export type AccountsReceivable = {
   id: string;
-  date: string;
-  totalAmount: number;
-  paidAmount: number;
+  created_at: string;
+  total_amount: number;
+  paid_amount: number;
   debtPending: number;
   actions?: {
     view?: boolean;

@@ -24,7 +24,7 @@ const CardInfoDetail: React.FC<CardInfoDetailProps> = ({
   return (
     <>
       <div
-        className="min-w-[200] min-h-[100px] max-h-full w-full flex flex-col justify-center items-center px-6 py-4 rounded-xl border-[3px] bg-white transition-all"
+        className="min-w-[300px] min-h-[100px] max-h-full w-full flex flex-col justify-center items-center px-6 py-4 rounded-xl border-[3px] bg-white transition-all"
         style={{ borderColor: color }}
       >
         <div className="w-full flex flex-col justify-center items-start">

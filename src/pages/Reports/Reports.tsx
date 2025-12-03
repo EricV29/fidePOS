@@ -3,7 +3,7 @@ import ExportIcon from "@/assets/icons/ExportIcon";
 import DatePicker from "@/components/DatePicker";
 import { useInstallDate } from "../../hooks/useInstallDate";
 import Switch from "@/components/Switch";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 interface ReportsProps {}
