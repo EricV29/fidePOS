@@ -1,9 +1,10 @@
 import React from "react";
+import type { IconProps } from "@/types/icons";
 
 interface CardInfoNumberProps {
-  icon: React.ComponentType<any> | null;
+  icon: React.ComponentType<IconProps> | null;
   title: string;
-  icond: React.ComponentType<any> | null;
+  icond: React.ComponentType<IconProps> | null;
   number: number;
   format: boolean;
   color: string;

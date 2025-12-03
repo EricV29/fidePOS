@@ -1,9 +1,5 @@
 import React from "react";
-
-interface IconProps {
-  size?: number;
-  color?: string;
-}
+import type { IconProps } from "@/types/icons";
 
 const EditIcon: React.FC<IconProps> = ({
   size = 24,
