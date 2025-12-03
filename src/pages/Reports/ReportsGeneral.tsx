@@ -48,9 +48,6 @@ export type RecentSalesPaid = {
 
 interface ReportsGeneralProps {}
 
-//* Example data stock products
-const dataCustomerDB = { Total: 40, "In Debt": 15 };
-
 //* Example data pie chart
 const chartDataCSDB = [
   { category: "Maquillaje", sales: 10 },
@@ -81,8 +78,11 @@ const chartConfigTCS = {
   },
 };
 
+//* Example data stock products
+const dataCustomerDB = { Total: 40, "In Debt": 15 };
+
 //* Example data status products
-const dataStatusPDB = { Total: 40, "In Debt": 15 };
+const dataStatusPSDB = { Active: 40, Desactive: 15 };
 
 //* Example data accounts receivable
 const dataARBD = [
@@ -111,12 +111,14 @@ const dataARBD = [
 
 const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [dataCustomer, setCustomer] = useState<dataCustomerI>();
+  const [dataProductsS, setDataProductsS] = useState<dataCustomerI>();
   const [chartDataCSF, setChartDataCSF] = useState<PieChartItem[]>([]);
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
 
   useEffect(() => {
     setCustomer(dataCustomerDB);
+    setDataProductsS(dataStatusPSDB);
     setChartDataCSF(addRandomFill(chartDataCSDB));
     setChartDataTSC(chartDataTCSDB);
     setDataTableAR(dataARBD);
@@ -193,7 +195,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
               />
 
               <CardInfoDetail
-                chartData={dataStatusPDB!}
+                chartData={dataProductsS!}
                 title={"Products (active/desactive)"}
                 color="#1976D2"
               />
