@@ -1,24 +1,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import EyeIcon from "../../assets/icons/EyeIcon";
-import DeleteIcon from "../../assets/icons/DeleteIcon";
-import EditIcon from "../../assets/icons/EditIcon";
-import { partialNumberFilter } from "@/utility/table-filter";
-import { currencyFormat } from "@/utility/currencyFormat";
-
-export type RecentSalesPaid = {
-  id: string;
-  created_at: string;
-  category: string;
-  ccolor: string;
-  total_amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
+import EyeIcon from "@icons/EyeIcon";
+import DeleteIcon from "@icons/DeleteIcon";
+import EditIcon from "@icons/EditIcon";
+import { partialNumberFilter } from "@utility/table-filter";
+import { currencyFormat } from "@utility/currencyFormat";
+import type { RecentSalesPaid } from "@typesm/sales";
 
 // Columns Recent Sales Paid
 export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [

@@ -1,11 +1,7 @@
 import React from "react";
+import type { IconProps } from "@typesm/icons";
 
-interface IconProps {
-  size?: number;
-  color?: string;
-}
-
-const BoxIcon: React.FC<IconProps> = ({
+const ReportIcon: React.FC<IconProps> = ({
   size = 24,
   color = "currentColor",
 }) => (
@@ -41,4 +37,4 @@ const BoxIcon: React.FC<IconProps> = ({
   </svg>
 );
 
-export default BoxIcon;
+export default ReportIcon;

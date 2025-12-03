@@ -1,9 +1,5 @@
 import React from "react";
-
-interface IconProps {
-  size?: number;
-  color?: string;
-}
+import type { IconProps } from "@typesm/icons";
 
 const BoxIcon: React.FC<IconProps> = ({
   size = 24,

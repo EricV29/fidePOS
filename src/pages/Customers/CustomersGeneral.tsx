@@ -1,28 +1,12 @@
 import React, { useEffect, useState } from "react";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import CardInfoText from "@/components/CardInfoText";
-import UserMinusIcon from "@/assets/icons/UserMinusIcon";
-import UsersIcon from "@/assets/icons/UsersIcon";
-import { DataTableSearch } from "@/components/data-table-search";
-import { columnsC } from "@/components/columns/columnsC";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
-
-export type dataCustomerI = {
-  id: string;
-  name: string;
-  last_name: string;
-  phone: string;
-  status: string;
-  debts: number;
-  debts_amount: number;
-  debts_paid: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
+import CardInfoNumber from "@components/CardInfoNumber";
+import CardInfoText from "@components/CardInfoText";
+import UserMinusIcon from "@icons/UserMinusIcon";
+import UsersIcon from "@icons/UsersIcon";
+import { DataTableSearch } from "@components/data-table-search";
+import { columnsC } from "@columns/columnsC";
+import type { Customers } from "@typesm/customers";
+import InvestmentIcon from "@icons/InvestmentIcon";
 
 interface CustomersGeneralProps {}
 
@@ -42,7 +26,7 @@ const dataCustomersDB = [
 ];
 
 const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
-  const [dataCustomers, setCustomers] = useState<dataCustomerI[]>([]);
+  const [dataCustomers, setCustomers] = useState<Customers[]>([]);
 
   useEffect(() => {
     setCustomers(dataCustomersDB);

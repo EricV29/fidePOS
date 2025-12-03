@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import BoxIcon from "@/assets/icons/BoxIcon";
-import ShoppingCar from "@/assets/icons/ShoppingCar";
-import ChartPieDonutText from "@/components/pie-chart";
-import { addRandomFill } from "../../utility/AddFill";
-import BarChartEx from "@/components/bar-chart";
-import { DataTable } from "@/components/data-table";
-import { columnsS } from "@/components/columns/columnsS";
+import CardInfoNumber from "@components/CardInfoNumber";
+import BoxIcon from "@icons/BoxIcon";
+import ShoppingCar from "@icons/ShoppingCar";
+import ChartPieDonutText from "@components/chart-pie-donut";
+import { addRandomFill } from "@utility/AddFill";
+import ChartBarLabel from "@components/char-bar-label";
+import { DataTable } from "@components/data-table";
+import { columnsS } from "@columns/columnsS";
+import type { Sales } from "@typesm/sales";
 
 interface PieChartItem {
   fill: string;
@@ -15,25 +16,6 @@ interface PieChartItem {
 interface BarChartItem {
   [key: string]: string | number;
 }
-
-export type Sales = {
-  id: string;
-  name: string;
-  last_name: string;
-  code_sku: string;
-  product: string;
-  category: string;
-  ccolor: string;
-  total_amount: number;
-  paid_amount: number;
-  status: "active" | "inactive" | "debt" | "paid" | "unpaid";
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
 
 //* Example data pie chart
 const chartDataCSDB = [
@@ -140,7 +122,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
             </div>
             <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
               <p className="font-semibold mb-2">Sales by Category</p>
-              <BarChartEx
+              <ChartBarLabel
                 chartData={chartDataTCS}
                 chartConfig={chartConfigTCS}
                 xAxis="category"

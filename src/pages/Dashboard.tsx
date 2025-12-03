@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import DatePicker from "../components/DatePicker";
-import CardInfoNumber from "../components/CardInfoNumber";
-import RevenueIcon from "../assets/icons/RevenueIcon";
-import InvestmentIcon from "../assets/icons/InvestmentIcon";
-import BarChartEx from "@/components/bar-chart";
-import ChartPieDonutText from "@/components/pie-chart";
-import { DataTable } from "../components/data-table";
-import { columnsRSP } from "../components/columns/columnsRSP";
-import { columnsAR } from "../components/columns/columnsAR";
-import { addRandomFill } from "../utility/AddFill";
-import { useInstallDate } from "../hooks/useInstallDate";
+import DatePicker from "@components/DatePicker";
+import CardInfoNumber from "@components/CardInfoNumber";
+import RevenueIcon from "@icons/RevenueIcon";
+import InvestmentIcon from "@icons/InvestmentIcon";
+import ChartBarLabel from "@components/char-bar-label";
+import ChartPieDonutText from "@components/chart-pie-donut";
+import { DataTable } from "@components/data-table";
+import { columnsRSP } from "@columns/columnsRSP";
+import type { RecentSalesPaid } from "@typesm/sales";
+import { columnsAR } from "@columns/columnsAR";
+import type { AccountsReceivable } from "@typesm/accounts";
+import { addRandomFill } from "@utility/AddFill";
+import { useInstallDate } from "@hooks/useInstallDate";
 
 interface BarChartItem {
   [key: string]: string | number;
@@ -19,35 +21,6 @@ interface PieChartItem {
   fill: string;
   [key: string]: string | number;
 }
-
-export type RecentSalesPaid = {
-  id: string;
-  created_at: string;
-  category: string;
-  ccolor: string;
-  total_amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
-
-export type AccountsReceivable = {
-  id: string;
-  name: string;
-  last_name: string;
-  code_sku: string;
-  debt_amount: number;
-  debt_paid: number;
-  debt_pending: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
 
 //* Example data bar chart
 const chartDataTCSDB = [
@@ -175,7 +148,7 @@ export default function Dashboard() {
             <div className="h-[35vh] w-full flex justify-between gap-2 min-w-0">
               <div className="max-w-[600px] min-w-0 w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
                 <p className="font-semibold mb-2">Top 5 - Sales by Category</p>
-                <BarChartEx
+                <ChartBarLabel
                   chartData={chartDataTCS}
                   chartConfig={chartConfigTCS}
                   xAxis="category"

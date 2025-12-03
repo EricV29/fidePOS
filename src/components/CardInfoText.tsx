@@ -1,10 +1,11 @@
 import React from "react";
-import { dateFormat } from "../utility/dateFormat";
+import { dateFormat } from "@utility/dateFormat";
+import type { IconProps } from "@typesm/icons";
 
 interface CardInfoTextProps {
-  icon: React.ComponentType<any> | null;
+  icon: React.ComponentType<IconProps> | null;
   title: string;
-  icond: React.ComponentType<any> | null;
+  icond: React.ComponentType<IconProps> | null;
   text: string;
   date: string;
   color: string;

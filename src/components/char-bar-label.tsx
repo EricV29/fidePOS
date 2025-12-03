@@ -6,20 +6,20 @@ import {
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
-} from "@/components/ui/chart";
+} from "@components/ui/chart";
 
 interface DataItem {
   [key: string]: string | number;
 }
 
-interface BarChartExProps {
+interface ChartBarLabelProps {
   chartData: DataItem[];
   chartConfig: ChartConfig;
   xAxis: string;
   yAxis: string;
 }
 
-const BarChartEx: React.FC<BarChartExProps> = ({
+const ChartBarLabel: React.FC<ChartBarLabelProps> = ({
   chartData,
   chartConfig,
   xAxis,
@@ -59,4 +59,4 @@ const BarChartEx: React.FC<BarChartExProps> = ({
   );
 };
 
-export default BarChartEx;
+export default ChartBarLabel;

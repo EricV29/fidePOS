@@ -1,15 +1,15 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import MenuIcon from "../assets/icons/MenuIcon";
-import DashIcon from "../assets/icons/DashboardIcon";
-import ShopCarIcon from "../assets/icons/ShoppingCar";
-import BoxIcon from "../assets/icons/BoxIcon";
-import RepIcon from "../assets/icons/ReportIcon";
-import CustIcon from "../assets/icons/CustomerIcon";
-import SettIcon from "../assets/icons/SettingsIcon";
-import LogoutIcon from "../assets/icons/LogoutIcon";
-import Sidebaitem from "./SidebarItem";
-import userImage from "../assets/images/user.webp";
+import MenuIcon from "@icons/MenuIcon";
+import DashIcon from "@icons/DashboardIcon";
+import ShopCarIcon from "@icons/ShoppingCar";
+import BoxIcon from "@icons/BoxIcon";
+import RepIcon from "@icons/ReportIcon";
+import CustIcon from "@icons/CustomerIcon";
+import SettIcon from "@icons/SettingsIcon";
+import LogoutIcon from "@icons/LogoutIcon";
+import Sidebaitem from "@components/SidebarItem";
+import userImage from "@img/user.webp";
 
 interface SidebarProps {
   isOpen: boolean;

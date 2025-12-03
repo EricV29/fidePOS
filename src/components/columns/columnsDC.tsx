@@ -1,28 +1,11 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import EyeIcon from "../../assets/icons/EyeIcon";
-import DeleteIcon from "../../assets/icons/DeleteIcon";
-import EditIcon from "../../assets/icons/EditIcon";
-import { partialNumberFilter } from "@/utility/table-filter";
-import { currencyFormat } from "@/utility/currencyFormat";
-
-export type DebtsCustomer = {
-  id: string;
-  code_sku: string;
-  product: string;
-  description: string;
-  category: string;
-  ccolor: string;
-  status: string;
-  debt_amount: number;
-  debt_paid: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
+import { Button } from "@components/ui/button";
+import EyeIcon from "@icons/EyeIcon";
+import DeleteIcon from "@icons/DeleteIcon";
+import EditIcon from "@icons/EditIcon";
+import { partialNumberFilter } from "@utility/table-filter";
+import { currencyFormat } from "@utility/currencyFormat";
+import type { DebtsCustomer } from "@typesm/customers";
 
 // Columns Debts Customer
 export const columnsDC: ColumnDef<DebtsCustomer>[] = [

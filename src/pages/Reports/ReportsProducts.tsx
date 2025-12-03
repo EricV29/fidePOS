@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
-import RevenueIcon from "@/assets/icons/RevenueIcon";
-import ChartPieDonutText from "@/components/pie-chart";
-import { addRandomFill } from "../../utility/AddFill";
-import BarChartEx from "@/components/bar-chart";
-import { DataTable } from "@/components/data-table";
-import { columnsP } from "@/components/columns/columnsP";
-import CardInfoDetail from "@/components/CardInfoDetail";
+import CardInfoNumber from "@components/CardInfoNumber";
+import InvestmentIcon from "@icons/InvestmentIcon";
+import RevenueIcon from "@icons/RevenueIcon";
+import ChartPieDonutText from "@components/chart-pie-donut";
+import { addRandomFill } from "@utility/AddFill";
+import ChartBarLabel from "@components/char-bar-label";
+import { DataTable } from "@components/data-table";
+import { columnsP } from "@columns/columnsP";
+import type { Products } from "@typesm/products";
+import CardInfoDetail from "@components/CardInfoDetail";
 
 interface PieChartItem {
   fill: string;
@@ -16,25 +17,6 @@ interface PieChartItem {
 interface BarChartItem {
   [key: string]: string | number;
 }
-
-export type Products = {
-  id: string;
-  code_sku: string;
-  product: string;
-  description: string;
-  category: string;
-  ccolor: string;
-  cost_price: number;
-  unit_price: number;
-  stock: number;
-  status: string;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
 
 //* Example data pie chart
 const chartDataCPDB = [
@@ -138,7 +120,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
             </div>
             <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
               <p className="font-semibold mb-2">Top Selling Products</p>
-              <BarChartEx
+              <ChartBarLabel
                 chartData={chartDataTSP}
                 chartConfig={chartConfigTSP}
                 xAxis="product"

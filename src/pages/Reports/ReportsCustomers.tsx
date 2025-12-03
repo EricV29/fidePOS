@@ -1,71 +1,25 @@
 import React, { useEffect, useState } from "react";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import ChartPieDonutText from "@/components/pie-chart";
-import { addRandomFill } from "../../utility/AddFill";
-import { DataTable } from "@/components/data-table";
-import { columnsC } from "@/components/columns/columnsC";
-import { columnsDC } from "@/components/columns/columnsDC";
-import { columnsPC } from "@/components/columns/columnsPC";
-import CardInfoDetail from "@/components/CardInfoDetail";
-import { DataTableSearch } from "@/components/data-table-search";
-import CustomSelect from "@/components/Select";
-import ChartAreaDefault from "@/components/chart-area";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
-import ShoppingCar from "@/assets/icons/ShoppingCar";
+import CardInfoNumber from "@components/CardInfoNumber";
+import ChartPieDonutText from "@components/chart-pie-donut";
+import { addRandomFill } from "@utility/AddFill";
+import { DataTable } from "@components/data-table";
+import { columnsC } from "@columns/columnsC";
+import type { Customers } from "@typesm/customers";
+import { columnsDC } from "@columns/columnsDC";
+import type { DebtsCustomer } from "@typesm/customers";
+import { columnsPC } from "@columns/columnsPC";
+import type { PaymentsCustomer } from "@typesm/customers";
+import CardInfoDetail from "@components/CardInfoDetail";
+import { DataTableSearch } from "@components/data-table-search";
+import CustomSelect from "@components/Select";
+import ChartAreaDefault from "@components/chart-area-default";
+import InvestmentIcon from "@icons/InvestmentIcon";
+import ShoppingCar from "@icons/ShoppingCar";
 
 interface PieChartItem {
   fill: string;
   [key: string]: string | number;
 }
-
-export type Customers = {
-  id: string;
-  name: string;
-  last_name: string;
-  phone: string;
-  status: string;
-  debts: number;
-  debts_amount: number;
-  debts_paid: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
-
-export type DebtsCustomer = {
-  id: string;
-  code_sku: string;
-  product: string;
-  description: string;
-  category: string;
-  ccolor: string;
-  status: string;
-  debt_amount: number;
-  debt_paid: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
-
-export type PaymentsCustomer = {
-  id: string;
-  created_at: string;
-  code_sku: string;
-  product: string;
-  note: string;
-  amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
 
 export type dataPaymentI = {
   id: string;
@@ -178,7 +132,7 @@ interface ReportsCustomersProps {}
 
 const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   const [chartDataDDC, setChartDataDDC] = useState<PieChartItem[]>([]);
-  const [dataTableC, setDataTableC] = useState<DebtsCustomersCustomer[]>([]);
+  const [dataTableC, setDataTableC] = useState<Customers[]>([]);
   const [dataTableDC, setDataTableDC] = useState<DebtsCustomer[]>([]);
   const [dataTablePC, setDataTablePC] = useState<PaymentsCustomer[]>([]);
 

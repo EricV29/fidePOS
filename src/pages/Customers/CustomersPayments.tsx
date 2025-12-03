@@ -1,43 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { DataTableSearch } from "@/components/data-table-search";
-import { columnsPC } from "@/components/columns/columnsPC";
-import { columnsDC } from "@/components/columns/columnsDC";
-import CustomSelect from "@/components/Select";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import FlagIcon from "@/assets/icons/FlagIcon";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
-
-export type dataDebtCustomerI = {
-  id: string;
-  code_sku: string;
-  product: string;
-  description: string;
-  category: string;
-  ccolor: string;
-  status: string;
-  debt_amount: number;
-  debt_paid: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
-
-export type dataPaymentsCustomersI = {
-  id: string;
-  created_at: string;
-  code_sku: string;
-  product: string;
-  note: string;
-  amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
+import { DataTableSearch } from "@components/data-table-search";
+import { columnsPC } from "@columns/columnsPC";
+import type { PaymentsCustomer } from "@typesm/customers";
+import { columnsDC } from "@columns/columnsDC";
+import type { DebtsCustomer } from "@typesm/customers";
+import CustomSelect from "@components/Select";
+import CardInfoNumber from "@components/CardInfoNumber";
+import FlagIcon from "@icons/FlagIcon";
+import InvestmentIcon from "@icons/InvestmentIcon";
 
 interface CustomersPaymentsProps {}
 
@@ -86,9 +56,9 @@ const optionsCustomers = [
 ];
 
 const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
-  const [dataDebtCustomer, setDebtCustomer] = useState<dataDebtCustomerI[]>([]);
+  const [dataDebtCustomer, setDebtCustomer] = useState<DebtsCustomer[]>([]);
   const [dataPaymentsCustomers, setPaymentsCustomers] = useState<
-    dataPaymentsCustomersI[]
+    PaymentsCustomer[]
   >([]);
 
   useEffect(() => {

@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import CalendarIcon from "../assets/icons/CalendarIcon";
-import CaretDIcon from "../assets/icons/CaretDIcon";
-import LeftIcon from "../assets/icons/LeftIcon";
-import RightIcon from "../assets/icons/RightIcon";
+import CalendarIcon from "@icons/CalendarIcon";
+import CaretDIcon from "@icons/CaretDIcon";
+import LeftIcon from "@icons/LeftIcon";
+import RightIcon from "@icons/RightIcon";
 
 interface DatePickerProps {
   installDate: string;

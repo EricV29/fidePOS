@@ -1,21 +1,11 @@
 import React from "react";
-
-interface IconProps {
-  size?: number;
-  color?: string;
-}
+import type { IconProps } from "@typesm/icons";
 
 const DashboardIcon: React.FC<IconProps> = ({
   size = 24,
   color = "currentColor",
 }) => (
-  <svg
-    width={size}
-    stroke={color}
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
+  <svg width={size} stroke={color} viewBox="0 0 24 24" fill="none">
     <path
       d="M8.55694 2.75H4.68222C4.16976 2.75 3.6783 2.95357 3.31593 3.31593C2.95357 3.6783 2.75 4.16976 2.75 4.68222V8.55694C2.74999 9.07035 2.95324 9.56288 3.31531 9.92687C3.67738 10.2909 4.16882 10.4967 4.68222 10.4994H8.55694C9.07212 10.4994 9.56621 10.2948 9.9305 9.9305C10.2948 9.56621 10.4994 9.07212 10.4994 8.55694V4.68222C10.4967 4.16882 10.2909 3.67738 9.92687 3.31531C9.56288 2.95324 9.07035 2.74999 8.55694 2.75Z"
       stroke="currentColor"
