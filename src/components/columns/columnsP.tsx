@@ -9,7 +9,7 @@ import { currencyFormat } from "@/utility/currencyFormat";
 export type Products = {
   id: string;
   code_sku: string;
-  name: string;
+  product: string;
   description: string;
   category: string;
   ccolor: string;
@@ -42,8 +42,8 @@ export const columnsP: ColumnDef<Products>[] = [
     header: "Code SKU",
   },
   {
-    accessorKey: "name",
-    header: "Name",
+    accessorKey: "product",
+    header: "Product",
   },
   {
     accessorKey: "description",
@@ -104,10 +104,12 @@ export const columnsP: ColumnDef<Products>[] = [
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
       const bgColor =
-        status === "active"
+        status === "active" || status === "paid"
           ? "statusActiveB"
-          : status === "inactive"
+          : status === "inactive" || status == "unpaid"
           ? "statusInactiveB"
+          : status === "debt"
+          ? "statusDebtB"
           : "bg-gray-400";
 
       return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;

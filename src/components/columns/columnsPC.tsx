@@ -1,5 +1,4 @@
 import type { ColumnDef } from "@tanstack/react-table";
-
 import { Button } from "@/components/ui/button";
 import EyeIcon from "../../assets/icons/EyeIcon";
 import DeleteIcon from "../../assets/icons/DeleteIcon";
@@ -7,12 +6,13 @@ import EditIcon from "../../assets/icons/EditIcon";
 import { partialNumberFilter } from "@/utility/table-filter";
 import { currencyFormat } from "@/utility/currencyFormat";
 
-export type Sales = {
+export type PaymentsCustomer = {
   id: string;
   created_at: string;
-  category: string;
-  ccolor: string;
-  total_amount: number;
+  code_sku: string;
+  product: string;
+  note: string;
+  amount: number;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -20,8 +20,8 @@ export type Sales = {
   };
 };
 
-// Columns Sales
-export const columnsS: ColumnDef<Sales>[] = [
+// Columns Payments Customer
+export const columnsPC: ColumnDef<PaymentsCustomer>[] = [
   {
     id: "rowNumber",
     header: "No",
@@ -43,25 +43,29 @@ export const columnsS: ColumnDef<Sales>[] = [
     },
   },
   {
-    accessorKey: "category",
-    header: "Category",
-    cell: ({ row }) => {
-      const category = row.getValue("category") as string;
-      const ccolor = row.original.ccolor;
-      return (
-        <div style={{ background: ccolor }} className="categoryB">
-          {category.toLocaleUpperCase()}
-        </div>
-      );
-    },
+    accessorKey: "code_sku",
+    header: "Code SKU",
   },
   {
-    accessorKey: "total_amount",
+    accessorKey: "product",
+    header: "Product",
+  },
+  {
+    accessorKey: "note",
+    header: "Note",
+    cell: ({ getValue }) => (
+      <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
+        {getValue() as string}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "amount",
     header: "Amount",
     cell: ({ row }) => {
-      const formatted = currencyFormat(Number(row.getValue("total_amount")));
+      const formatted = currencyFormat(Number(row.getValue("amount")));
 
-      return <div className="font-semibold text-[#43A047]">{formatted}</div>;
+      return <div className="font-semibold text-[#D32F2F]">{formatted}</div>;
     },
     filterFn: partialNumberFilter,
   },
