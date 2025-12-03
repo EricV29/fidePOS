@@ -18,10 +18,16 @@ interface BarChartItem {
 
 export type Sales = {
   id: string;
-  created_at: string;
+  name: string;
+  last_name: string;
+  code_sku: string;
+  product: string;
   category: string;
   ccolor: string;
   total_amount: number;
+  paid_amount: number;
+  status: "active" | "inactive" | "debt" | "paid" | "unpaid";
+  created_at: string;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -63,17 +69,29 @@ const chartConfigTCS = {
 const dataSBD = [
   {
     id: "728ed51f",
-    created_at: "16/11/2025",
+    name: "Eric",
+    last_name: "Villeda",
+    code_sku: "ASD2344",
+    product: "Carrito 12",
     category: "Maquillaje",
     ccolor: "#5b49ff",
     total_amount: 100,
+    paid_amount: 100,
+    status: "paid",
+    created_at: "16/11/2025",
   },
   {
-    id: "728ed52f",
+    id: "728ed51f",
+    name: "",
+    last_name: "",
+    code_sku: "ASD2344",
+    product: "Carrito 12",
+    category: "Maquillaje",
+    ccolor: "#5b49ff",
+    total_amount: 100,
+    paid_amount: 100,
+    status: "paid",
     created_at: "16/11/2025",
-    category: "toys",
-    ccolor: "#ff49ff",
-    total_amount: 50,
   },
 ];
 

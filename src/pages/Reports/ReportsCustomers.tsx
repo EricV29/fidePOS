@@ -4,6 +4,8 @@ import ChartPieDonutText from "@/components/pie-chart";
 import { addRandomFill } from "../../utility/AddFill";
 import { DataTable } from "@/components/data-table";
 import { columnsC } from "@/components/columns/columnsC";
+import { columnsDC } from "@/components/columns/columnsDC";
+import { columnsPC } from "@/components/columns/columnsPC";
 import CardInfoDetail from "@/components/CardInfoDetail";
 import { DataTableSearch } from "@/components/data-table-search";
 import CustomSelect from "@/components/Select";
@@ -26,6 +28,38 @@ export type Customers = {
   debts_amount: number;
   debts_paid: number;
   created_at: string;
+  actions?: {
+    view?: boolean;
+    delete?: boolean;
+    edit?: boolean;
+  };
+};
+
+export type DebtsCustomer = {
+  id: string;
+  code_sku: string;
+  product: string;
+  description: string;
+  category: string;
+  ccolor: string;
+  status: string;
+  debt_amount: number;
+  debt_paid: number;
+  created_at: string;
+  actions?: {
+    view?: boolean;
+    delete?: boolean;
+    edit?: boolean;
+  };
+};
+
+export type PaymentsCustomer = {
+  id: string;
+  created_at: string;
+  code_sku: string;
+  product: string;
+  note: string;
+  amount: number;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -62,7 +96,8 @@ const chartConfigDDC = {
 };
 
 //* Example data table
-const dataCBD = [
+
+const dataCustomersDB = [
   {
     id: "728ed51f",
     name: "Eric",
@@ -76,22 +111,41 @@ const dataCBD = [
   },
 ];
 
-const dataPaymentsDB = [
+const dataCBD = [
   {
     id: "34234",
-    name: "Eric",
-    last_name: "Villeda",
-    phone: "7713940793",
-    status: "active",
-    created_at: "01/01/2025",
+    code_sku: "ASD345",
+    product: "Carrito",
+    description: "Hotweels rojo",
+    category: "toys",
+    ccolor: "#ff49ff",
+    status: "unpaid",
+    debt_amount: 100,
+    debt_paid: 50,
+    created_at: "01/02/2025",
   },
   {
     id: "34234",
-    name: "Eric",
-    last_name: "Reyes",
-    phone: "7713940793",
-    status: "debt",
+    code_sku: "ASD345",
+    product: "Muñeco",
+    description: "Max Steel",
+    category: "toys",
+    ccolor: "#ff49ff",
+    status: "paid",
+    debt_amount: 100,
+    debt_paid: 100,
+    created_at: "01/02/2025",
+  },
+];
+
+const dataPaymentsDB = [
+  {
+    id: "34234",
     created_at: "01/01/2025",
+    code_sku: "SFAS34",
+    product: "Carrito2",
+    note: "La siguiente semana liquida",
+    amount: 40,
   },
 ];
 
@@ -124,13 +178,15 @@ interface ReportsCustomersProps {}
 
 const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   const [chartDataDDC, setChartDataDDC] = useState<PieChartItem[]>([]);
-  const [dataTableC, setDataTableC] = useState<Customers[]>([]);
-  const [dataPayment, setPayment] = useState<dataPaymentI[]>([]);
+  const [dataTableC, setDataTableC] = useState<DebtsCustomersCustomer[]>([]);
+  const [dataTableDC, setDataTableDC] = useState<DebtsCustomer[]>([]);
+  const [dataTablePC, setDataTablePC] = useState<PaymentsCustomer[]>([]);
 
   useEffect(() => {
     setChartDataDDC(addRandomFill(chartDataDDCDB));
-    setDataTableC(dataCBD);
-    setPayment(dataPaymentsDB);
+    setDataTableC(dataCustomersDB);
+    setDataTableDC(dataCBD);
+    setDataTablePC(dataPaymentsDB);
   }, []);
 
   return (
@@ -196,8 +252,8 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
             <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
               <p className="font-semibold">Debts Table</p>
               <DataTableSearch
-                data={dataPayment}
-                columns={columnsC}
+                data={dataTableDC}
+                columns={columnsDC}
                 actions={{
                   view: true,
                   edit: true,
@@ -208,8 +264,8 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
             <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
               <p className="font-semibold">Payments Table</p>
               <DataTableSearch
-                data={dataPayment}
-                columns={columnsC}
+                data={dataTablePC}
+                columns={columnsPC}
                 actions={{
                   view: true,
                   edit: true,

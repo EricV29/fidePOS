@@ -9,10 +9,16 @@ import { currencyFormat } from "@/utility/currencyFormat";
 
 export type Sales = {
   id: string;
-  created_at: string;
+  name: string | null;
+  last_name: string | null;
+  code_sku: string;
+  product: string;
   category: string;
   ccolor: string;
   total_amount: number;
+  paid_amount: number;
+  status: string;
+  created_at: string;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -33,14 +39,20 @@ export const columnsS: ColumnDef<Sales>[] = [
     },
   },
   {
-    accessorKey: "created_at",
-    header: "Created Date",
-    meta: {
-      headerClassName: "text-center",
-    },
+    accessorKey: "customer",
+    header: "Customer",
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("created_at")}</div>;
+      return `${row.original.name} ${row.original.last_name}`;
     },
+    accessorFn: (row) => `${row.name} ${row.last_name}`,
+  },
+  {
+    accessorKey: "code_sku",
+    header: "Code SKU",
+  },
+  {
+    accessorKey: "product",
+    header: "Product",
   },
   {
     accessorKey: "category",
@@ -64,6 +76,43 @@ export const columnsS: ColumnDef<Sales>[] = [
       return <div className="font-semibold text-[#43A047]">{formatted}</div>;
     },
     filterFn: partialNumberFilter,
+  },
+  {
+    accessorKey: "paid_amount",
+    header: "Paid Amount",
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("paid_amount")));
+
+      return <div className="font-semibold text-[#43A047]">{formatted}</div>;
+    },
+    filterFn: partialNumberFilter,
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+      const bgColor =
+        status === "active" || status === "paid"
+          ? "statusActiveB"
+          : status === "inactive" || status == "unpaid"
+          ? "statusInactiveB"
+          : status === "debt"
+          ? "statusDebtB"
+          : "bg-gray-400";
+
+      return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
+    },
+  },
+  {
+    accessorKey: "created_at",
+    header: "Created Date",
+    meta: {
+      headerClassName: "text-center",
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("created_at")}</div>;
+    },
   },
   {
     id: "actions",

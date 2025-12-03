@@ -6,7 +6,7 @@ import ChartPieDonutText from "@/components/pie-chart";
 import { addRandomFill } from "../../utility/AddFill";
 import BarChartEx from "@/components/bar-chart";
 import { DataTable } from "@/components/data-table";
-import { columnsAP } from "@/components/columns/columnsAP";
+import { columnsP } from "@/components/columns/columnsP";
 import CardInfoDetail from "@/components/CardInfoDetail";
 
 interface PieChartItem {
@@ -17,13 +17,18 @@ interface BarChartItem {
   [key: string]: string | number;
 }
 
-export type Sales = {
+export type Products = {
   id: string;
-  created_at: string;
+  code_sku: string;
+  product: string;
+  description: string;
   category: string;
   ccolor: string;
+  cost_price: number;
+  unit_price: number;
   stock: number;
-  last_sale: string;
+  status: string;
+  created_at: string;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -62,14 +67,19 @@ const chartConfigTSP = {
 };
 
 //* Example data table
-const dataAPBD = [
+const dataPBD = [
   {
-    id: "728ed51f",
-    created_at: "16/11/2025",
-    category: "Maquillaje",
-    ccolor: "#5b49ff",
-    stock: 10,
-    last_sale: "16/11/2025",
+    id: "123123",
+    code_sku: "DASD45",
+    product: "Carrito",
+    description: "Hotweels",
+    category: "toys",
+    ccolor: "#ff49ff",
+    cost_price: 100,
+    unit_price: 120,
+    stock: 2,
+    status: "active",
+    created_at: "01/01/2025",
   },
 ];
 
@@ -81,12 +91,12 @@ interface ReportsProductsProps {}
 const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
   const [chartDataCP, setChartDataCP] = useState<PieChartItem[]>([]);
   const [chartDataTSP, setChartDataTSP] = useState<BarChartItem[]>([]);
-  const [dataTableAP, setDataTableAP] = useState<Sales[]>([]);
+  const [dataTableP, setDataTableP] = useState<Products[]>([]);
 
   useEffect(() => {
     setChartDataCP(addRandomFill(chartDataCPDB));
     setChartDataTSP(chartDataTSPDB);
-    setDataTableAP(dataAPBD);
+    setDataTableP(dataPBD);
   }, []);
   return (
     <>
@@ -144,10 +154,10 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
             </div>
           </div>
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
-            <p className="font-semibold mb-2">Sales</p>
+            <p className="font-semibold mb-2">Products</p>
             <DataTable
-              columns={columnsAP}
-              data={dataTableAP}
+              columns={columnsP}
+              data={dataTableP}
               actions={{
                 view: true,
                 edit: false,

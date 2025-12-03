@@ -35,10 +35,13 @@ export type RecentSalesPaid = {
 
 export type AccountsReceivable = {
   id: string;
+  name: string;
+  last_name: string;
+  code_sku: string;
+  debt_amount: number;
+  debt_paid: number;
+  debt_pending: number;
   created_at: string;
-  total_amount: number;
-  paid_amount: number;
-  debtPending: number;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -129,17 +132,13 @@ const dataRSPBD = [
 const dataARBD = [
   {
     id: "728ed511f",
-    created_at: "16/11/2025",
-    total_amount: 25000,
-    paid_amount: 5000,
-    debtPending: 20000,
-  },
-  {
-    id: "728ed522f",
-    created_at: "16/11/2025",
-    total_amount: 25000,
-    paid_amount: 5000,
-    debtPending: 20000,
+    name: "Eric",
+    last_name: "Villeda",
+    code_sku: "SAD2435",
+    debt_amount: 500,
+    debt_paid: 200,
+    debt_pending: 300,
+    created_at: "01/01/2025",
   },
 ];
 
