@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CardInfoNumber from "@/components/CardInfoNumber";
 import BoxIcon from "@/assets/icons/BoxIcon";
-import PayStrkeIcon from "@/assets/icons/PayStrkeIcon";
+import ShoppingCar from "@/assets/icons/ShoppingCar";
 import ChartPieDonutText from "@/components/pie-chart";
 import { addRandomFill } from "../../utility/AddFill";
 import BarChartEx from "@/components/bar-chart";
@@ -103,7 +103,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
             color="#FFC107"
           />
           <CardInfoNumber
-            icon={PayStrkeIcon}
+            icon={ShoppingCar}
             title="Sales: 10"
             icond={null}
             number={1500}

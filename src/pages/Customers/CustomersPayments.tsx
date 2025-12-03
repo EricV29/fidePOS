@@ -4,6 +4,7 @@ import { columnsC } from "@/components/columns/columnsC";
 import CustomSelect from "@/components/Select";
 import CardInfoNumber from "@/components/CardInfoNumber";
 import FlagIcon from "@/assets/icons/FlagIcon";
+import InvestmentIcon from "@/assets/icons/InvestmentIcon";
 
 export type dataPaymentI = {
   id: string;
@@ -78,7 +79,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             color="#43A047"
           />
           <CardInfoNumber
-            icon={null}
+            icon={InvestmentIcon}
             title="Unpaid"
             icond={null}
             number={500}
@@ -86,7 +87,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             color="#D32F2F"
           />
           <CardInfoNumber
-            icon={null}
+            icon={InvestmentIcon}
             title="Paid"
             icond={null}
             number={500}

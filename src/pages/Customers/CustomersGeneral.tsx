@@ -5,6 +5,7 @@ import UserMinusIcon from "@/assets/icons/UserMinusIcon";
 import UsersIcon from "@/assets/icons/UsersIcon";
 import { DataTableSearch } from "@/components/data-table-search";
 import { columnsC } from "@/components/columns/columnsC";
+import InvestmentIcon from "@/assets/icons/InvestmentIcon";
 
 export type dataCustomerI = {
   id: string;
@@ -68,7 +69,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
             color="#D32F2F"
           />
           <CardInfoNumber
-            icon={null}
+            icon={InvestmentIcon}
             title="Total Owed"
             icond={null}
             number={12000}

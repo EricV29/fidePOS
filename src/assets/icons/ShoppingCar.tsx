@@ -9,7 +9,7 @@ const ShoppingCarIcon: React.FC<IconProps> = ({
   size = 24,
   color = "currentColor",
 }) => (
-  <svg width={size} stroke={color} viewBox="0 0 24 24" fill="none">
+  <svg width={size} color={color} viewBox="0 0 24 24" fill="none">
     <path
       d="M7.53657 21.25H7.54758"
       stroke="currentColor"

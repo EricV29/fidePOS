@@ -3,12 +3,13 @@ import CardInfoNumber from "@/components/CardInfoNumber";
 import ChartPieDonutText from "@/components/pie-chart";
 import { addRandomFill } from "../../utility/AddFill";
 import { DataTable } from "@/components/data-table";
-import { columnsCc } from "@/components/columns/columnsC";
 import { columnsC } from "@/components/columns/columnsC";
 import CardInfoDetail from "@/components/CardInfoDetail";
 import { DataTableSearch } from "@/components/data-table-search";
 import CustomSelect from "@/components/Select";
 import ChartAreaDefault from "@/components/chart-area";
+import InvestmentIcon from "@/assets/icons/InvestmentIcon";
+import ShoppingCar from "@/assets/icons/ShoppingCar";
 
 interface PieChartItem {
   fill: string;
@@ -137,7 +138,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
       <div className="w-full h-full flex flex-col gap-2">
         <div className="flex gap-2 h-[110px] overflow-x-auto overflow-y-hidden">
           <CardInfoNumber
-            icon={null}
+            icon={InvestmentIcon}
             title="Owed"
             icond={null}
             number={12000}
@@ -145,7 +146,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
             color="#1976D2"
           />
           <CardInfoNumber
-            icon={null}
+            icon={ShoppingCar}
             title="Sales: 10"
             icond={null}
             number={1500}
@@ -178,7 +179,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
             <p className="font-semibold mb-2">Customers</p>
             <DataTable
-              columns={columnsCc}
+              columns={columnsC}
               data={dataTableC}
               actions={{
                 view: true,

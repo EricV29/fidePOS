@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import CardInfoNumber from "@/components/CardInfoNumber";
 import CardInfoDetail from "@/components/CardInfoDetail";
 import InvestmentIcon from "@/assets/icons/InvestmentIcon";
+import ShoppingCar from "@/assets/icons/ShoppingCar";
 import RevenueIcon from "@/assets/icons/RevenueIcon";
 import ChartPieDonutText from "@/components/pie-chart";
 import { addRandomFill } from "../../utility/AddFill";
@@ -145,7 +146,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             color="#D32F2F"
           />
           <CardInfoNumber
-            icon={null}
+            icon={InvestmentIcon}
             title="Inventory value"
             icond={null}
             number={100000}
@@ -153,7 +154,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             color="#FFC107"
           />
           <CardInfoNumber
-            icon={null}
+            icon={ShoppingCar}
             title="Sales: 10"
             icond={null}
             number={1500}
@@ -161,7 +162,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             color="#1976D2"
           />
           <CardInfoNumber
-            icon={null}
+            icon={InvestmentIcon}
             title="Owed"
             icond={null}
             number={12000}
