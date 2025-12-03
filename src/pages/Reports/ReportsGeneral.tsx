@@ -4,9 +4,9 @@ import CardInfoDetail from "@/components/CardInfoDetail";
 import InvestmentIcon from "@/assets/icons/InvestmentIcon";
 import ShoppingCar from "@/assets/icons/ShoppingCar";
 import RevenueIcon from "@/assets/icons/RevenueIcon";
-import ChartPieDonutText from "@/components/pie-chart";
+import ChartPieDonutText from "@/components/pie-chart-donut";
 import { addRandomFill } from "../../utility/AddFill";
-import BarChartEx from "@/components/bar-chart";
+import ChartBarLabel from "@/components/char-bar-label";
 import { DataTable } from "../../components/data-table";
 import { columnsAR } from "../../components/columns/columnsAR";
 
@@ -173,7 +173,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             </div>
             <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
               <p className="font-semibold mb-2">Sales by Category</p>
-              <BarChartEx
+              <ChartBarLabel
                 chartData={chartDataTCS}
                 chartConfig={chartConfigTCS}
                 xAxis="category"
