@@ -1,18 +1,22 @@
 import React from "react";
 import ExportIcon from "@/assets/icons/ExportIcon";
 import PlusIcon from "@/assets/icons/PlusIcon";
-import PayIcon from "@/assets/icons/PayIcon";
-import Switch from "../components/Switch";
-import { Outlet, useLocation } from "react-router-dom";
+import PayIcon from "@/assets/icons/PayFillIcon";
+import Switch from "@/components/Switch";
+import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 interface CustomersProps {}
 
 const Customers: React.FC<CustomersProps> = ({}) => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const last = location.pathname.split("/").pop();
-  const activeTab = last === "payments" ? 1 : 0;
+  const optionsCustomers = [
+    { label: "General", value: "general" },
+    { label: "Payments", value: "payments" },
+  ];
+  const currentTab =
+    optionsCustomers.find((op) => location.pathname.includes(op.value))
+      ?.value || optionsCustomers[0].value;
 
   return (
     <>
@@ -33,12 +37,9 @@ const Customers: React.FC<CustomersProps> = ({}) => {
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <Switch
-          opa="General"
-          opb="Payments"
-          active={activeTab}
-          onChange={(index) => {
-            navigate(index === 0 ? "general" : "payments");
-          }}
+          options={optionsCustomers}
+          active={currentTab}
+          onChange={(value) => navigate(`./${value}`)}
         />
         <div className="flex-1 w-full h-full min-h-0 pt-3">
           <Outlet />

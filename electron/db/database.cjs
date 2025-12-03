@@ -134,7 +134,7 @@ async function initDatabase() {
     CREATE TABLE IF NOT EXISTS product (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       code_sku TEXT UNIQUE NOT NULL,
-      name TEXT NOT NULL,
+      product TEXT NOT NULL,
       description TEXT NOT NULL,
       category_id INTEGER NOT NULL,
       cost_price INTEGER NOT NULL,

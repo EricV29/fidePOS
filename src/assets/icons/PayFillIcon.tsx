@@ -5,7 +5,7 @@ interface IconProps {
   color?: string;
 }
 
-const PayIcon: React.FC<IconProps> = ({
+const PayFillIcon: React.FC<IconProps> = ({
   size = 24,
   color = "currentColor",
 }) => (
@@ -17,4 +17,4 @@ const PayIcon: React.FC<IconProps> = ({
   </svg>
 );
 
-export default PayIcon;
+export default PayFillIcon;

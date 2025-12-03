@@ -5,11 +5,15 @@ import Main from "./pages/MainPage";
 import Dashboard from "./pages/Dashboard";
 import NewSale from "./pages/NewSale";
 import Products from "./pages/Products";
-import Reports from "./pages/Reports";
-import Customers from "./pages/Customers";
+import Reports from "./pages/Reports/Reports";
+import Customers from "./pages/Customers/Customers";
 import Settings from "./pages/Settings";
-import CustomersGeneral from "./pages/CustomersGeneral";
-import CustomersPayments from "./pages/CustomersPayments";
+import CustomersGeneral from "./pages/Customers/CustomersGeneral";
+import CustomersPayments from "./pages/Customers/CustomersPayments";
+import ReportsGeneral from "./pages/Reports/ReportsGeneral";
+import ReportsSales from "./pages/Reports/ReportsSales";
+import ReportsProducts from "./pages/Reports/ReportsProducts";
+import ReportsCustomers from "./pages/Reports/ReportsCustomers";
 
 function App() {
   return (
@@ -23,7 +27,13 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="newsale" element={<NewSale />} />
           <Route path="products" element={<Products />} />
-          <Route path="reports" element={<Reports />} />
+          <Route path="reports" element={<Reports />}>
+            <Route index element={<Navigate to="general" replace />} />
+            <Route path="general" element={<ReportsGeneral />} />
+            <Route path="sales" element={<ReportsSales />} />
+            <Route path="products" element={<ReportsProducts />} />
+            <Route path="customers" element={<ReportsCustomers />} />
+          </Route>
           <Route path="customers" element={<Customers />}>
             <Route index element={<Navigate to="general" replace />} />
             <Route path="general" element={<CustomersGeneral />} />

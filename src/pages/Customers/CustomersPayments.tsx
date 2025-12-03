@@ -1,17 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { DataTableSearch } from "@/components/data-table-search";
-import { columnsC } from "@/components/columns/columnsC";
-import CustomSelect from "../components/Select";
+import { columnsPC } from "@/components/columns/columnsPC";
+import { columnsDC } from "@/components/columns/columnsDC";
+import CustomSelect from "@/components/Select";
 import CardInfoNumber from "@/components/CardInfoNumber";
-import FlagIcon from "../assets/icons/FlagIcon";
+import FlagIcon from "@/assets/icons/FlagIcon";
+import InvestmentIcon from "@/assets/icons/InvestmentIcon";
 
-export type dataPaymentI = {
+export type dataDebtCustomerI = {
   id: string;
-  name: string;
-  last_name: string;
-  phone: string;
+  code_sku: string;
+  product: string;
+  description: string;
+  category: string;
+  ccolor: string;
   status: string;
+  debt_amount: number;
+  debt_paid: number;
   created_at: string;
+  actions?: {
+    view?: boolean;
+    delete?: boolean;
+    edit?: boolean;
+  };
+};
+
+export type dataPaymentsCustomersI = {
+  id: string;
+  created_at: string;
+  code_sku: string;
+  product: string;
+  note: string;
+  amount: number;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -22,22 +42,41 @@ export type dataPaymentI = {
 interface CustomersPaymentsProps {}
 
 //* Example data products
-const dataPaymentsDB = [
+const dataDCDB = [
   {
     id: "34234",
-    name: "Eric",
-    last_name: "Villeda",
-    phone: "7713940793",
-    status: "active",
-    created_at: "01/01/2025",
+    code_sku: "ASD345",
+    product: "Carrito",
+    description: "Hotweels rojo",
+    category: "toys",
+    ccolor: "#ff49ff",
+    status: "unpaid",
+    debt_amount: 100,
+    debt_paid: 50,
+    created_at: "01/02/2025",
   },
   {
     id: "34234",
-    name: "Eric",
-    last_name: "Reyes",
-    phone: "7713940793",
-    status: "debt",
+    code_sku: "ASD345",
+    product: "Muñeco",
+    description: "Max Steel",
+    category: "toys",
+    ccolor: "#ff49ff",
+    status: "paid",
+    debt_amount: 100,
+    debt_paid: 100,
+    created_at: "01/02/2025",
+  },
+];
+
+const dataPaymentsCustomersDB = [
+  {
+    id: "34234",
     created_at: "01/01/2025",
+    code_sku: "SFAS34",
+    product: "Carrito2",
+    note: "La siguiente semana liquida",
+    amount: 40,
   },
 ];
 
@@ -47,10 +86,14 @@ const optionsCustomers = [
 ];
 
 const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
-  const [dataPayment, setPayment] = useState<dataPaymentI[]>([]);
+  const [dataDebtCustomer, setDebtCustomer] = useState<dataDebtCustomerI[]>([]);
+  const [dataPaymentsCustomers, setPaymentsCustomers] = useState<
+    dataPaymentsCustomersI[]
+  >([]);
 
   useEffect(() => {
-    setPayment(dataPaymentsDB);
+    setDebtCustomer(dataDCDB);
+    setPaymentsCustomers(dataPaymentsCustomersDB);
   }, []);
 
   return (
@@ -78,7 +121,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             color="#43A047"
           />
           <CardInfoNumber
-            icon={null}
+            icon={InvestmentIcon}
             title="Unpaid"
             icond={null}
             number={500}
@@ -86,7 +129,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             color="#D32F2F"
           />
           <CardInfoNumber
-            icon={null}
+            icon={InvestmentIcon}
             title="Paid"
             icond={null}
             number={500}
@@ -98,8 +141,8 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
           <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
             <p className="font-semibold">Debts Table</p>
             <DataTableSearch
-              data={dataPayment}
-              columns={columnsC}
+              data={dataDebtCustomer}
+              columns={columnsDC}
               actions={{
                 view: true,
                 edit: true,
@@ -110,8 +153,8 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
           <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
             <p className="font-semibold">Payments Table</p>
             <DataTableSearch
-              data={dataPayment}
-              columns={columnsC}
+              data={dataPaymentsCustomers}
+              columns={columnsPC}
               actions={{
                 view: true,
                 edit: true,

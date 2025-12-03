@@ -1,19 +1,23 @@
 import type { ColumnDef } from "@tanstack/react-table";
+
 import { Button } from "@/components/ui/button";
 import EyeIcon from "../../assets/icons/EyeIcon";
 import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
-import { currencyFormat } from "@/utility/currencyFormat";
 import { partialNumberFilter } from "@/utility/table-filter";
+import { currencyFormat } from "@/utility/currencyFormat";
 
-export type AccountsReceivable = {
+export type Sales = {
   id: string;
-  name: string;
-  last_name: string;
+  name: string | null;
+  last_name: string | null;
   code_sku: string;
-  debt_amount: number;
-  debt_paid: number;
-  debt_pending: number;
+  product: string;
+  category: string;
+  ccolor: string;
+  total_amount: number;
+  paid_amount: number;
+  status: string;
   created_at: string;
   actions?: {
     view?: boolean;
@@ -22,8 +26,8 @@ export type AccountsReceivable = {
   };
 };
 
-// Columns Accounts Receivable
-export const columnsAR: ColumnDef<AccountsReceivable>[] = [
+// Columns Sales
+export const columnsS: ColumnDef<Sales>[] = [
   {
     id: "rowNumber",
     header: "No",
@@ -47,34 +51,58 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
     header: "Code SKU",
   },
   {
-    accessorKey: "debt_amount",
-    header: "Debt Amount",
+    accessorKey: "product",
+    header: "Product",
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
     cell: ({ row }) => {
-      const formatted = currencyFormat(Number(row.getValue("debt_amount")));
+      const category = row.getValue("category") as string;
+      const ccolor = row.original.ccolor;
+      return (
+        <div style={{ background: ccolor }} className="categoryB">
+          {category.toLocaleUpperCase()}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "total_amount",
+    header: "Amount",
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("total_amount")));
 
-      return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
+      return <div className="font-semibold text-[#43A047]">{formatted}</div>;
     },
     filterFn: partialNumberFilter,
   },
   {
-    accessorKey: "debt_paid",
-    header: "Debt Paid",
+    accessorKey: "paid_amount",
+    header: "Paid Amount",
     cell: ({ row }) => {
-      const formatted = currencyFormat(Number(row.getValue("debt_paid")));
+      const formatted = currencyFormat(Number(row.getValue("paid_amount")));
 
-      return <div className="font-semibold text-[#43A047]">+{formatted}</div>;
+      return <div className="font-semibold text-[#43A047]">{formatted}</div>;
     },
     filterFn: partialNumberFilter,
   },
   {
-    accessorKey: "debt_pending",
-    header: "Debt Pending",
+    accessorKey: "status",
+    header: "Status",
     cell: ({ row }) => {
-      const formatted = currencyFormat(Number(row.getValue("debt_pending")));
+      const status = row.getValue("status") as string;
+      const bgColor =
+        status === "active" || status === "paid"
+          ? "statusActiveB"
+          : status === "inactive" || status == "unpaid"
+          ? "statusInactiveB"
+          : status === "debt"
+          ? "statusDebtB"
+          : "bg-gray-400";
 
-      return <div className="font-semibold text-[#D32F2F]">-{formatted}</div>;
+      return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
     },
-    filterFn: partialNumberFilter,
   },
   {
     accessorKey: "created_at",

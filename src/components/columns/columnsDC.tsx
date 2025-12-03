@@ -3,17 +3,19 @@ import { Button } from "@/components/ui/button";
 import EyeIcon from "../../assets/icons/EyeIcon";
 import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
-import { currencyFormat } from "@/utility/currencyFormat";
 import { partialNumberFilter } from "@/utility/table-filter";
+import { currencyFormat } from "@/utility/currencyFormat";
 
-export type AccountsReceivable = {
+export type DebtsCustomer = {
   id: string;
-  name: string;
-  last_name: string;
   code_sku: string;
+  product: string;
+  description: string;
+  category: string;
+  ccolor: string;
+  status: string;
   debt_amount: number;
   debt_paid: number;
-  debt_pending: number;
   created_at: string;
   actions?: {
     view?: boolean;
@@ -22,8 +24,8 @@ export type AccountsReceivable = {
   };
 };
 
-// Columns Accounts Receivable
-export const columnsAR: ColumnDef<AccountsReceivable>[] = [
+// Columns Debts Customer
+export const columnsDC: ColumnDef<DebtsCustomer>[] = [
   {
     id: "rowNumber",
     header: "No",
@@ -35,16 +37,51 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
     },
   },
   {
-    accessorKey: "customer",
-    header: "Customer",
-    cell: ({ row }) => {
-      return `${row.original.name} ${row.original.last_name}`;
-    },
-    accessorFn: (row) => `${row.name} ${row.last_name}`,
-  },
-  {
     accessorKey: "code_sku",
     header: "Code SKU",
+  },
+  {
+    accessorKey: "product",
+    header: "Product",
+  },
+  {
+    accessorKey: "description",
+    header: "Description",
+    cell: ({ getValue }) => (
+      <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
+        {getValue() as string}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "category",
+    header: "Category",
+    cell: ({ row }) => {
+      const category = row.getValue("category") as string;
+      const ccolor = row.original.ccolor;
+      return (
+        <div style={{ background: ccolor }} className="categoryB">
+          {category.toLocaleUpperCase()}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+      const bgColor =
+        status === "active" || status === "paid"
+          ? "statusActiveB"
+          : status === "inactive" || status == "unpaid"
+          ? "statusInactiveB"
+          : status === "debt"
+          ? "statusDebtB"
+          : "bg-gray-400";
+
+      return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
+    },
   },
   {
     accessorKey: "debt_amount",
@@ -62,17 +99,7 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("debt_paid")));
 
-      return <div className="font-semibold text-[#43A047]">+{formatted}</div>;
-    },
-    filterFn: partialNumberFilter,
-  },
-  {
-    accessorKey: "debt_pending",
-    header: "Debt Pending",
-    cell: ({ row }) => {
-      const formatted = currencyFormat(Number(row.getValue("debt_pending")));
-
-      return <div className="font-semibold text-[#D32F2F]">-{formatted}</div>;
+      return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
     },
     filterFn: partialNumberFilter,
   },

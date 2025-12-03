@@ -3,18 +3,16 @@ import { Button } from "@/components/ui/button";
 import EyeIcon from "../../assets/icons/EyeIcon";
 import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
-import { currencyFormat } from "@/utility/currencyFormat";
 import { partialNumberFilter } from "@/utility/table-filter";
+import { currencyFormat } from "@/utility/currencyFormat";
 
-export type AccountsReceivable = {
+export type PaymentsCustomer = {
   id: string;
-  name: string;
-  last_name: string;
-  code_sku: string;
-  debt_amount: number;
-  debt_paid: number;
-  debt_pending: number;
   created_at: string;
+  code_sku: string;
+  product: string;
+  note: string;
+  amount: number;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -22,8 +20,8 @@ export type AccountsReceivable = {
   };
 };
 
-// Columns Accounts Receivable
-export const columnsAR: ColumnDef<AccountsReceivable>[] = [
+// Columns Payments Customer
+export const columnsPC: ColumnDef<PaymentsCustomer>[] = [
   {
     id: "rowNumber",
     header: "No",
@@ -35,48 +33,6 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
     },
   },
   {
-    accessorKey: "customer",
-    header: "Customer",
-    cell: ({ row }) => {
-      return `${row.original.name} ${row.original.last_name}`;
-    },
-    accessorFn: (row) => `${row.name} ${row.last_name}`,
-  },
-  {
-    accessorKey: "code_sku",
-    header: "Code SKU",
-  },
-  {
-    accessorKey: "debt_amount",
-    header: "Debt Amount",
-    cell: ({ row }) => {
-      const formatted = currencyFormat(Number(row.getValue("debt_amount")));
-
-      return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
-    },
-    filterFn: partialNumberFilter,
-  },
-  {
-    accessorKey: "debt_paid",
-    header: "Debt Paid",
-    cell: ({ row }) => {
-      const formatted = currencyFormat(Number(row.getValue("debt_paid")));
-
-      return <div className="font-semibold text-[#43A047]">+{formatted}</div>;
-    },
-    filterFn: partialNumberFilter,
-  },
-  {
-    accessorKey: "debt_pending",
-    header: "Debt Pending",
-    cell: ({ row }) => {
-      const formatted = currencyFormat(Number(row.getValue("debt_pending")));
-
-      return <div className="font-semibold text-[#D32F2F]">-{formatted}</div>;
-    },
-    filterFn: partialNumberFilter,
-  },
-  {
     accessorKey: "created_at",
     header: "Created Date",
     meta: {
@@ -85,6 +41,33 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
     cell: ({ row }) => {
       return <div className="text-center">{row.getValue("created_at")}</div>;
     },
+  },
+  {
+    accessorKey: "code_sku",
+    header: "Code SKU",
+  },
+  {
+    accessorKey: "product",
+    header: "Product",
+  },
+  {
+    accessorKey: "note",
+    header: "Note",
+    cell: ({ getValue }) => (
+      <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
+        {getValue() as string}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "amount",
+    header: "Amount",
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("amount")));
+
+      return <div className="font-semibold text-[#D32F2F]">{formatted}</div>;
+    },
+    filterFn: partialNumberFilter,
   },
   {
     id: "actions",
