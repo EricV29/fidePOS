@@ -5,25 +5,7 @@ import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
 import { partialNumberFilter } from "@/utility/table-filter";
 import { currencyFormat } from "@/utility/currencyFormat";
-
-export type Products = {
-  id: string;
-  code_sku: string;
-  product: string;
-  description: string;
-  category: string;
-  ccolor: string;
-  cost_price: number;
-  unit_price: number;
-  stock: number;
-  status: string;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
+import type { Products } from "@/types/products";
 
 // Columns Products
 export const columnsP: ColumnDef<Products>[] = [

@@ -6,19 +6,7 @@ import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
 import { partialNumberFilter } from "@/utility/table-filter";
 import { currencyFormat } from "@/utility/currencyFormat";
-
-export type RecentSalesPaid = {
-  id: string;
-  created_at: string;
-  category: string;
-  ccolor: string;
-  total_amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
+import type { RecentSalesPaid } from "@/types/sales";
 
 // Columns Recent Sales Paid
 export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [

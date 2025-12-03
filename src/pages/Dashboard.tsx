@@ -7,7 +7,9 @@ import BarChartEx from "@/components/bar-chart";
 import ChartPieDonutText from "@/components/pie-chart";
 import { DataTable } from "../components/data-table";
 import { columnsRSP } from "../components/columns/columnsRSP";
+import type { RecentSalesPaid } from "@/types/sales";
 import { columnsAR } from "../components/columns/columnsAR";
+import type { AccountsReceivable } from "@/types/accounts";
 import { addRandomFill } from "../utility/AddFill";
 import { useInstallDate } from "../hooks/useInstallDate";
 
@@ -19,35 +21,6 @@ interface PieChartItem {
   fill: string;
   [key: string]: string | number;
 }
-
-export type RecentSalesPaid = {
-  id: string;
-  created_at: string;
-  category: string;
-  ccolor: string;
-  total_amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
-
-export type AccountsReceivable = {
-  id: string;
-  name: string;
-  last_name: string;
-  code_sku: string;
-  debt_amount: number;
-  debt_paid: number;
-  debt_pending: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
 
 //* Example data bar chart
 const chartDataTCSDB = [

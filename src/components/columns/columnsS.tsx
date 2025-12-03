@@ -6,25 +6,7 @@ import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
 import { partialNumberFilter } from "@/utility/table-filter";
 import { currencyFormat } from "@/utility/currencyFormat";
-
-export type Sales = {
-  id: string;
-  name: string | null;
-  last_name: string | null;
-  code_sku: string;
-  product: string;
-  category: string;
-  ccolor: string;
-  total_amount: number;
-  paid_amount: number;
-  status: string;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
+import type { Sales } from "@/types/sales";
 
 // Columns Sales
 export const columnsS: ColumnDef<Sales>[] = [

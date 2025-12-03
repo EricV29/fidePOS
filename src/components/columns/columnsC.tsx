@@ -5,23 +5,7 @@ import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
 import { partialNumberFilter } from "@/utility/table-filter";
 import { currencyFormat } from "@/utility/currencyFormat";
-
-export type Customers = {
-  id: string;
-  name: string;
-  last_name: string;
-  phone: string;
-  status: string;
-  debts: number;
-  debts_amount: number;
-  debts_paid: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
+import type { Customers } from "@/types/customers";
 
 // Columns Customers
 export const columnsC: ColumnDef<Customers>[] = [

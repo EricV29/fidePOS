@@ -5,22 +5,7 @@ import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
 import { currencyFormat } from "@/utility/currencyFormat";
 import { partialNumberFilter } from "@/utility/table-filter";
-
-export type AccountsReceivable = {
-  id: string;
-  name: string;
-  last_name: string;
-  code_sku: string;
-  debt_amount: number;
-  debt_paid: number;
-  debt_pending: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
+import type { AccountsReceivable } from "@/types/accounts";
 
 // Columns Accounts Receivable
 export const columnsAR: ColumnDef<AccountsReceivable>[] = [

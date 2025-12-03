@@ -10,29 +10,11 @@ import CardInfoNumber from "../components/CardInfoNumber";
 import CardInfoDetail from "../components/CardInfoDetail";
 import { DataTableSearch } from "@/components/data-table-search";
 import { columnsP } from "@/components/columns/columnsP";
+import type { Products } from "@/types/products";
 
 interface dataStockI {
   [key: string]: number;
 }
-
-export type dataProductI = {
-  id: string;
-  code_sku: string;
-  name: string;
-  description: string;
-  category: string;
-  ccolor: string;
-  cost_price: number;
-  unit_price: number;
-  stock: number;
-  status: string;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
 
 //* Example data stock products
 const dataStockDB = { Stock: 100, "Out Stock": 40 };
@@ -42,7 +24,7 @@ const dataProductsDB = [
   {
     id: "34234",
     code_sku: "JW0012",
-    name: "Labial",
+    product: "Labial",
     description: "Yuya rojo",
     category: "Maquillaje",
     ccolor: "#5b49ff",
@@ -55,7 +37,7 @@ const dataProductsDB = [
   {
     id: "34235",
     code_sku: "JW0013",
-    name: "Carrito",
+    product: "Carrito",
     description: "hotweels",
     category: "Toys",
     ccolor: "#ff49ff",
@@ -65,26 +47,13 @@ const dataProductsDB = [
     status: "inactive",
     created_at: "01/10/2025",
   },
-  {
-    id: "34235",
-    code_sku: "JW0014",
-    name: "Edredon 2",
-    description: "osito",
-    category: "Toys",
-    ccolor: "#ff49ff",
-    cost_price: 13000,
-    unit_price: 10000,
-    stock: 3,
-    status: "inactive",
-    created_at: "01/03/2025",
-  },
 ];
 
 interface ProductsProps {}
 
 const Products: React.FC<ProductsProps> = ({}) => {
   const [dataStock, setStock] = useState<dataStockI>();
-  const [dataProducts, setProducts] = useState<dataProductI[]>([]);
+  const [dataProducts, setProducts] = useState<Products[]>([]);
 
   useEffect(() => {
     setStock(dataStockDB);

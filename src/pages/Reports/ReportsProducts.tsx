@@ -7,6 +7,7 @@ import { addRandomFill } from "../../utility/AddFill";
 import BarChartEx from "@/components/bar-chart";
 import { DataTable } from "@/components/data-table";
 import { columnsP } from "@/components/columns/columnsP";
+import type { Products } from "@/types/products";
 import CardInfoDetail from "@/components/CardInfoDetail";
 
 interface PieChartItem {
@@ -16,25 +17,6 @@ interface PieChartItem {
 interface BarChartItem {
   [key: string]: string | number;
 }
-
-export type Products = {
-  id: string;
-  code_sku: string;
-  product: string;
-  description: string;
-  category: string;
-  ccolor: string;
-  cost_price: number;
-  unit_price: number;
-  stock: number;
-  status: string;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
 
 //* Example data pie chart
 const chartDataCPDB = [
