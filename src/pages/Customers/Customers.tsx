@@ -1,7 +1,7 @@
 import React from "react";
 import ExportIcon from "@/assets/icons/ExportIcon";
 import PlusIcon from "@/assets/icons/PlusIcon";
-import PayIcon from "@/assets/icons/PayFillIcon";
+import PayIcon from "@/assets/icons/PayIcon";
 import Switch from "@/components/Switch";
 import { Outlet } from "react-router-dom";
 import { useNavigate } from "react-router-dom";

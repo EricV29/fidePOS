@@ -9,7 +9,7 @@ const MenuIcon: React.FC<IconProps> = ({
   size = 24,
   color = "currentColor",
 }) => (
-  <svg width={size} viewBox="0 0 24 24" fill={color}>
+  <svg width={size} color={color} viewBox="0 0 24 24" fill="none">
     <path
       d="M4.5 12H19.5"
       stroke="currentColor"
