@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import EyeIcon from "../../assets/icons/EyeIcon";
 import DeleteIcon from "../../assets/icons/DeleteIcon";
 import EditIcon from "../../assets/icons/EditIcon";
+import { partialNumberFilter } from "@/utility/table-filter";
+import { currencyFormat } from "@/utility/currencyFormat";
 
 export type Customers = {
   id: string;
@@ -10,6 +12,9 @@ export type Customers = {
   last_name: string;
   phone: string;
   status: string;
+  debts: number;
+  debts_amount: number;
+  debts_paid: number;
   created_at: string;
   actions?: {
     view?: boolean;
@@ -55,6 +60,37 @@ export const columnsC: ColumnDef<Customers>[] = [
 
       return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
     },
+  },
+  {
+    accessorKey: "debts",
+    header: "Debts",
+    meta: {
+      headerClassName: "text-center",
+    },
+    cell: ({ row }) => {
+      return <div className="text-center">{row.getValue("debts")}</div>;
+    },
+    filterFn: partialNumberFilter,
+  },
+  {
+    accessorKey: "debts_amount",
+    header: "Debts Amount",
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("debts_amount")));
+
+      return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
+    },
+    filterFn: partialNumberFilter,
+  },
+  {
+    accessorKey: "debts_paid",
+    header: "Debts Paid",
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("debts_paid")));
+
+      return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
+    },
+    filterFn: partialNumberFilter,
   },
   {
     accessorKey: "created_at",

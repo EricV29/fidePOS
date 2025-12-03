@@ -12,6 +12,9 @@ export type dataCustomerI = {
   last_name: string;
   phone: string;
   status: string;
+  debts: number;
+  debts_amount: number;
+  debts_paid: number;
   created_at: string;
   actions?: {
     view?: boolean;
@@ -25,20 +28,15 @@ interface CustomersGeneralProps {}
 //* Example data products
 const dataCustomersDB = [
   {
-    id: "34234",
+    id: "728ed51f",
     name: "Eric",
     last_name: "Villeda",
     phone: "7713940793",
     status: "active",
-    created_at: "01/01/2025",
-  },
-  {
-    id: "34234",
-    name: "Eric",
-    last_name: "Reyes",
-    phone: "7713940793",
-    status: "debt",
-    created_at: "01/01/2025",
+    debts: 0,
+    debts_amount: 0,
+    debts_paid: 500,
+    created_at: "03/03/2025",
   },
 ];
 

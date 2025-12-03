@@ -12,8 +12,6 @@ interface SwitchProps {
 }
 
 const Switch: React.FC<SwitchProps> = ({ options, active, onChange }) => {
-  console.log(active);
-
   return (
     <>
       <div className="flex justify-between gap-3 bg-[#FFEFDE] border border-[#f57c00] py-1 px-1 rounded-lg w-fit">
