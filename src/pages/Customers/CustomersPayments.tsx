@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { DataTableSearch } from "@/components/data-table-search";
-import { columnsPC } from "@/components/columns/columnsPC";
-import type { PaymentsCustomer } from "@/types/customers";
-import { columnsDC } from "@/components/columns/columnsDC";
-import type { DebtsCustomer } from "@/types/customers";
-import CustomSelect from "@/components/Select";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import FlagIcon from "@/assets/icons/FlagIcon";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
+import { DataTableSearch } from "@components/data-table-search";
+import { columnsPC } from "@columns/columnsPC";
+import type { PaymentsCustomer } from "@typesm/customers";
+import { columnsDC } from "@columns/columnsDC";
+import type { DebtsCustomer } from "@typesm/customers";
+import CustomSelect from "@components/Select";
+import CardInfoNumber from "@components/CardInfoNumber";
+import FlagIcon from "@icons/FlagIcon";
+import InvestmentIcon from "@icons/InvestmentIcon";
 
 interface CustomersPaymentsProps {}
 

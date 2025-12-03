@@ -1,16 +1,16 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import ExportIcon from "@/assets/icons/ExportIcon";
-import ImportIcon from "@/assets/icons/ImportIcon";
-import CategoryIcon from "@/assets/icons/CategoryIcon";
-import PlusIcon from "@/assets/icons/PlusIcon";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
-import RevenueIcon from "@/assets/icons/RevenueIcon";
-import CardInfoNumber from "../components/CardInfoNumber";
-import CardInfoDetail from "../components/CardInfoDetail";
-import { DataTableSearch } from "@/components/data-table-search";
-import { columnsP } from "@/components/columns/columnsP";
-import type { Products } from "@/types/products";
+import ExportIcon from "@icons/ExportIcon";
+import ImportIcon from "@icons/ImportIcon";
+import CategoryIcon from "@icons/CategoryIcon";
+import PlusIcon from "@icons/PlusIcon";
+import InvestmentIcon from "@icons/InvestmentIcon";
+import RevenueIcon from "@icons/RevenueIcon";
+import CardInfoNumber from "@components/CardInfoNumber";
+import CardInfoDetail from "@components/CardInfoDetail";
+import { DataTableSearch } from "@components/data-table-search";
+import { columnsP } from "@columns/columnsP";
+import type { Products } from "@typesm/products";
 
 interface dataStockI {
   [key: string]: number;

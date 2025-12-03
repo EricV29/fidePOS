@@ -6,7 +6,7 @@ import {
   ChartTooltipContent,
   ChartLegend,
   ChartLegendContent,
-} from "@/components/ui/chart";
+} from "@components/ui/chart";
 
 interface DataItem {
   [key: string]: string | number;

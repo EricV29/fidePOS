@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import CardInfoDetail from "@/components/CardInfoDetail";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
-import ShoppingCar from "@/assets/icons/ShoppingCar";
-import RevenueIcon from "@/assets/icons/RevenueIcon";
-import ChartPieDonutText from "@/components/pie-chart-donut";
-import { addRandomFill } from "../../utility/AddFill";
-import ChartBarLabel from "@/components/char-bar-label";
-import { DataTable } from "../../components/data-table";
-import { columnsAR } from "../../components/columns/columnsAR";
+import CardInfoNumber from "@components/CardInfoNumber";
+import CardInfoDetail from "@components/CardInfoDetail";
+import InvestmentIcon from "@icons/InvestmentIcon";
+import ShoppingCar from "@icons/ShoppingCar";
+import RevenueIcon from "@icons/RevenueIcon";
+import ChartPieDonutText from "@components/chart-pie-donut";
+import { addRandomFill } from "@utility/AddFill";
+import ChartBarLabel from "@components/char-bar-label";
+import { DataTable } from "@components/data-table";
+import { columnsAR } from "@columns/columnsAR";
 
 interface dataCustomerI {
   [key: string]: number;

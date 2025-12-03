@@ -1,11 +1,11 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import EyeIcon from "../../assets/icons/EyeIcon";
-import DeleteIcon from "../../assets/icons/DeleteIcon";
-import EditIcon from "../../assets/icons/EditIcon";
-import { currencyFormat } from "@/utility/currencyFormat";
-import { partialNumberFilter } from "@/utility/table-filter";
-import type { AccountsReceivable } from "@/types/accounts";
+import { Button } from "@components/ui/button";
+import EyeIcon from "@icons/EyeIcon";
+import DeleteIcon from "@icons/DeleteIcon";
+import EditIcon from "@icons/EditIcon";
+import { currencyFormat } from "@utility/currencyFormat";
+import { partialNumberFilter } from "@utility/table-filter";
+import type { AccountsReceivable } from "@typesm/accounts";
 
 // Columns Accounts Receivable
 export const columnsAR: ColumnDef<AccountsReceivable>[] = [

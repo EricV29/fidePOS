@@ -1,5 +1,5 @@
 import React from "react";
-import type { IconProps } from "@/types/icons";
+import type { IconProps } from "@typesm/icons";
 
 interface CardInfoNumberProps {
   icon: React.ComponentType<IconProps> | null;

@@ -1,5 +1,5 @@
 import React from "react";
-import type { IconProps } from "@/types/icons";
+import type { IconProps } from "@typesm/icons";
 
 const CalendarIcon: React.FC<IconProps> = ({
   size = 24,

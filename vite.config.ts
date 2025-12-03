@@ -12,6 +12,13 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@icons": path.resolve(__dirname, "./src/assets/icons"),
+      "@img": path.resolve(__dirname, "./src/assets/images"),
+      "@components": path.resolve(__dirname, "./src/components"),
+      "@utility": path.resolve(__dirname, "./src/utility"),
+      "@typesm": path.resolve(__dirname, "./src/types"),
+      "@hooks": path.resolve(__dirname, "./src/hooks"),
+      "@columns": path.resolve(__dirname, "./src/components/columns"),
     },
   },
 });

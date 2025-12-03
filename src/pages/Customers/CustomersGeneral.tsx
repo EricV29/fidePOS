@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import CardInfoText from "@/components/CardInfoText";
-import UserMinusIcon from "@/assets/icons/UserMinusIcon";
-import UsersIcon from "@/assets/icons/UsersIcon";
-import { DataTableSearch } from "@/components/data-table-search";
-import { columnsC } from "@/components/columns/columnsC";
-import type { Customers } from "@/types/customers";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
+import CardInfoNumber from "@components/CardInfoNumber";
+import CardInfoText from "@components/CardInfoText";
+import UserMinusIcon from "@icons/UserMinusIcon";
+import UsersIcon from "@icons/UsersIcon";
+import { DataTableSearch } from "@components/data-table-search";
+import { columnsC } from "@columns/columnsC";
+import type { Customers } from "@typesm/customers";
+import InvestmentIcon from "@icons/InvestmentIcon";
 
 interface CustomersGeneralProps {}
 

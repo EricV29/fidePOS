@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import BoxIcon from "@/assets/icons/BoxIcon";
-import ShoppingCar from "@/assets/icons/ShoppingCar";
-import ChartPieDonutText from "@/components/pie-chart-donut";
-import { addRandomFill } from "../../utility/AddFill";
-import ChartBarLabel from "@/components/char-bar-label";
-import { DataTable } from "@/components/data-table";
-import { columnsS } from "@/components/columns/columnsS";
-import type { Sales } from "@/types/sales";
+import CardInfoNumber from "@components/CardInfoNumber";
+import BoxIcon from "@icons/BoxIcon";
+import ShoppingCar from "@icons/ShoppingCar";
+import ChartPieDonutText from "@components/chart-pie-donut";
+import { addRandomFill } from "@utility/AddFill";
+import ChartBarLabel from "@components/char-bar-label";
+import { DataTable } from "@components/data-table";
+import { columnsS } from "@columns/columnsS";
+import type { Sales } from "@typesm/sales";
 
 interface PieChartItem {
   fill: string;

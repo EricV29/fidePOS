@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import DatePicker from "../components/DatePicker";
-import CardInfoNumber from "../components/CardInfoNumber";
-import RevenueIcon from "../assets/icons/RevenueIcon";
-import InvestmentIcon from "../assets/icons/InvestmentIcon";
-import ChartBarLabel from "@/components/char-bar-label";
-import ChartPieDonutText from "@/components/pie-chart-donut";
-import { DataTable } from "../components/data-table";
-import { columnsRSP } from "../components/columns/columnsRSP";
-import type { RecentSalesPaid } from "@/types/sales";
-import { columnsAR } from "../components/columns/columnsAR";
-import type { AccountsReceivable } from "@/types/accounts";
-import { addRandomFill } from "../utility/AddFill";
-import { useInstallDate } from "../hooks/useInstallDate";
+import DatePicker from "@components/DatePicker";
+import CardInfoNumber from "@components/CardInfoNumber";
+import RevenueIcon from "@icons/RevenueIcon";
+import InvestmentIcon from "@icons/InvestmentIcon";
+import ChartBarLabel from "@components/char-bar-label";
+import ChartPieDonutText from "@components/chart-pie-donut";
+import { DataTable } from "@components/data-table";
+import { columnsRSP } from "@columns/columnsRSP";
+import type { RecentSalesPaid } from "@typesm/sales";
+import { columnsAR } from "@columns/columnsAR";
+import type { AccountsReceivable } from "@typesm/accounts";
+import { addRandomFill } from "@utility/AddFill";
+import { useInstallDate } from "@hooks/useInstallDate";
 
 interface BarChartItem {
   [key: string]: string | number;

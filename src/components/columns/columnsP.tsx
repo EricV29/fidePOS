@@ -1,11 +1,11 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import EyeIcon from "../../assets/icons/EyeIcon";
-import DeleteIcon from "../../assets/icons/DeleteIcon";
-import EditIcon from "../../assets/icons/EditIcon";
-import { partialNumberFilter } from "@/utility/table-filter";
-import { currencyFormat } from "@/utility/currencyFormat";
-import type { Products } from "@/types/products";
+import { Button } from "@components/ui/button";
+import EyeIcon from "@icons/EyeIcon";
+import DeleteIcon from "@icons/DeleteIcon";
+import EditIcon from "@icons/EditIcon";
+import { partialNumberFilter } from "@utility/table-filter";
+import { currencyFormat } from "@utility/currencyFormat";
+import type { Products } from "@typesm/products";
 
 // Columns Products
 export const columnsP: ColumnDef<Products>[] = [

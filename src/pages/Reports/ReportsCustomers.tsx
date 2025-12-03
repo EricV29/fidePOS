@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import CardInfoNumber from "@/components/CardInfoNumber";
-import ChartPieDonutText from "@/components/pie-chart-donut";
-import { addRandomFill } from "../../utility/AddFill";
-import { DataTable } from "@/components/data-table";
-import { columnsC } from "@/components/columns/columnsC";
-import type { Customers } from "@/types/customers";
-import { columnsDC } from "@/components/columns/columnsDC";
-import type { DebtsCustomer } from "@/types/customers";
-import { columnsPC } from "@/components/columns/columnsPC";
-import type { PaymentsCustomer } from "@/types/customers";
-import CardInfoDetail from "@/components/CardInfoDetail";
-import { DataTableSearch } from "@/components/data-table-search";
-import CustomSelect from "@/components/Select";
-import ChartAreaDefault from "@/components/chart-area-default";
-import InvestmentIcon from "@/assets/icons/InvestmentIcon";
-import ShoppingCar from "@/assets/icons/ShoppingCar";
+import CardInfoNumber from "@components/CardInfoNumber";
+import ChartPieDonutText from "@components/chart-pie-donut";
+import { addRandomFill } from "@utility/AddFill";
+import { DataTable } from "@components/data-table";
+import { columnsC } from "@columns/columnsC";
+import type { Customers } from "@typesm/customers";
+import { columnsDC } from "@columns/columnsDC";
+import type { DebtsCustomer } from "@typesm/customers";
+import { columnsPC } from "@columns/columnsPC";
+import type { PaymentsCustomer } from "@typesm/customers";
+import CardInfoDetail from "@components/CardInfoDetail";
+import { DataTableSearch } from "@components/data-table-search";
+import CustomSelect from "@components/Select";
+import ChartAreaDefault from "@components/chart-area-default";
+import InvestmentIcon from "@icons/InvestmentIcon";
+import ShoppingCar from "@icons/ShoppingCar";
 
 interface PieChartItem {
   fill: string;
