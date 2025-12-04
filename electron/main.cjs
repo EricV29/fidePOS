@@ -1,6 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
+const { getRoles } = require("./db/queries.cjs");
 
 const isDev = !app.isPackaged;
 
@@ -120,6 +121,13 @@ ipcMain.on("logout-success", () => {
 // Get Install Date
 ipcMain.handle("installDate", () => {
   return getInstallDate();
+});
+
+//* DATABASE CONSULTS
+
+// Consult getRoles
+ipcMain.handle("getRoles", async () => {
+  return await getRoles();
 });
 
 // Global message

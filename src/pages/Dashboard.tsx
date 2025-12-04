@@ -131,7 +131,13 @@ export default function Dashboard() {
     setInvestCard(dataInvestBD);
     setDataTableRSP(dataRSPBD);
     setDataTableAR(dataARBD);
+    loadRoles();
   }, []);
+
+  async function loadRoles() {
+    const roles = await window.electronAPI.getRoles();
+    console.log(roles);
+  }
 
   if (!installDate) return null;
 
