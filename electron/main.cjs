@@ -1,12 +1,24 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
-const { initDatabase } = require("./db/database.cjs");
+
+const isDev = !app.isPackaged;
+
+const dbModulePath = isDev
+  ? path.join(__dirname, "db", "database.cjs")
+  : path.join(process.resourcesPath, "db", "database.cjs");
+
+let dbModule = null;
+try {
+  dbModule = require(dbModulePath);
+} catch (err) {
+  console.error("Error loading DB module:", err);
+}
+
 const {
   registerInstallDate,
   getInstallDate,
 } = require("./installDateManager.cjs");
 
-const isDev = !app.isPackaged;
 let mainWindow = null;
 let loginWindow = null;
 let signupWindow = null;
@@ -121,7 +133,7 @@ ipcMain.on("message_private", (event, msg) => {
 
 //* INITIALIZATION
 app.whenReady().then(async () => {
-  await initDatabase();
+  await dbModule.initDatabase();
   registerInstallDate();
   createSignupWindow();
 

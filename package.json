@@ -43,7 +43,10 @@
       "buildResources": "dist"
     },
     "extraResources": [
-      "./demo_table.db"
+      {
+        "from": "database.cjs",
+        "to": "database.cjs"
+      }
     ]
   },
   "dependencies": {
