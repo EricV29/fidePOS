@@ -1,6 +1,6 @@
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
-import Login from "./login/Login";
-import Signup from "./signup/Signup";
+import Login from "./pages/login/Login";
+import Signup from "./pages/signup/Signup";
 import Main from "./pages/MainPage";
 import Dashboard from "./pages/Dashboard";
 import NewSale from "./pages/NewSale";
