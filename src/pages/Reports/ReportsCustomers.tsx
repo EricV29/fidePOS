@@ -201,6 +201,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
           <CustomSelect
             options={optionsCustomers}
             placeholder="Select your customer"
+            color="#F57C00"
           />
           <div className="w-full min-w-0 flex gap-2">
             <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">

@@ -7,12 +7,14 @@ interface SelectOption {
 }
 
 interface CustomSelectProps {
+  color: string;
   options: SelectOption[];
   placeholder?: string;
   onChange?: (value: string) => void;
 }
 
 const CustomSelect: React.FC<CustomSelectProps> = ({
+  color,
   options,
   placeholder = "Select an option",
   onChange,
@@ -47,21 +49,32 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
       className="w-full min-w-[100px] max-w-[400px] relative"
       ref={selectRef}
     >
-      <div onClick={toggleSelect} className="inputselect">
+      <div
+        onClick={toggleSelect}
+        className="inputselect"
+        style={{ borderColor: color, color: color, boxShadow: color }}
+      >
         <p>{selectedLabel}</p>
 
         <span onClick={toggleSelect}>
-          <CaretDIcon size={20} color="#f57c00" />
+          <CaretDIcon size={20} color={color} />
         </span>
       </div>
 
       {isOpen && (
-        <div className="w-full absolute z-10 mt-2 rounded-xl border-2 border-[#f57c00] bg-white max-h-60 overflow-y-auto ">
+        <div
+          className="w-full absolute z-10 mt-2 rounded-xl border-2 bg-white max-h-60 overflow-y-auto"
+          style={{ borderColor: color }}
+        >
           {options.map((option) => (
             <div
               key={option.value}
-              className="cursor-pointer px-5 py-2 text-black hover:bg-[#f57c00] hover:text-white"
+              className="cursor-pointer px-5 py-2 text-black transition-colors hover:text-white"
               onClick={() => handleSelect(option)}
+              onMouseEnter={(e) =>
+                (e.currentTarget.style.backgroundColor = color)
+              }
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "")}
             >
               {option.label}
             </div>

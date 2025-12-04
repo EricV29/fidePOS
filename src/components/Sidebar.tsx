@@ -78,19 +78,20 @@ const Sidebar: React.FC<SidebarProps> = ({
               isOpen={isOpen}
             />
             <Sidebaitem
-              icon={RepIcon}
-              label="Reports"
-              active={location.pathname.startsWith("/main/reports")}
-              onClick={() => navigate("/main/reports")}
-              isOpen={isOpen}
-            />
-            <Sidebaitem
               icon={CustIcon}
               label="Customers"
               active={location.pathname.startsWith("/main/customers")}
               onClick={() => navigate("/main/customers")}
               isOpen={isOpen}
             />
+            <Sidebaitem
+              icon={RepIcon}
+              label="Reports"
+              active={location.pathname.startsWith("/main/reports")}
+              onClick={() => navigate("/main/reports")}
+              isOpen={isOpen}
+            />
+
             <Sidebaitem
               icon={SettIcon}
               label="Settings"

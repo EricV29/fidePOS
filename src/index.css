@@ -69,6 +69,78 @@ input:focus {
   flex-shrink: 0;
 }
 
+.bblack {
+  min-width: 100px;
+  height: clamp(40px, 4vw, 48px);
+  border-radius: 10px;
+  border: 2px solid #fff;
+  padding-left: clamp(6px, 3vw, 20px);
+  padding-right: clamp(6px, 3vw, 20px);
+  gap: clamp(2px, 1vw, 5px);
+  font-weight: 600;
+  background-color: #000;
+  color: #fff;
+  box-shadow: 0px 2px 0px rgba(0, 0, 0, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+
+.bwhite {
+  min-width: 100px;
+  height: clamp(40px, 4vw, 48px);
+  border-radius: 10px;
+  border: 2px solid #000;
+  padding-left: clamp(6px, 3vw, 20px);
+  padding-right: clamp(6px, 3vw, 20px);
+  gap: clamp(2px, 1vw, 5px);
+  font-weight: 600;
+  background-color: #fff;
+  color: #000;
+  box-shadow: 0px 2px 0px rgba(0, 0, 0, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+
+.bgreen {
+  min-width: 100px;
+  height: clamp(40px, 4vw, 48px);
+  border-radius: 10px;
+  border: 2px solid #fff;
+  padding-left: clamp(6px, 3vw, 20px);
+  padding-right: clamp(6px, 3vw, 20px);
+  gap: clamp(2px, 1vw, 5px);
+  font-weight: 600;
+  background-color: #43a047;
+  color: #fff;
+  box-shadow: 0px 2px 0px rgba(67, 160, 71, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+
+.bred {
+  min-width: 100px;
+  height: clamp(40px, 4vw, 48px);
+  border-radius: 10px;
+  border: 2px solid #fff;
+  padding-left: clamp(6px, 3vw, 20px);
+  padding-right: clamp(6px, 3vw, 20px);
+  gap: clamp(2px, 1vw, 5px);
+  font-weight: 600;
+  background-color: #d32f2f;
+  color: #fff;
+  box-shadow: 0px 2px 0px rgba(211, 47, 47, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+}
+
 .inputtext {
   width: 100%;
   min-width: 200px;
@@ -90,6 +162,27 @@ input:focus {
   align-items: center;
 }
 
+.inputtextw {
+  width: 100%;
+  min-width: 200px;
+  max-width: 400px;
+  max-height: 40px;
+  min-height: 35px;
+  border-radius: 10px;
+  border: 2px solid #000;
+  padding-left: clamp(6px, 3vw, 20px);
+  padding-right: clamp(6px, 3vw, 20px);
+  gap: clamp(2px, 1vw, 5px);
+  font-weight: 400;
+  background-color: #ffffff;
+  color: #000;
+  cursor: text;
+  box-shadow: 0px 2px 0px rgba(0, 0, 0, 1);
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
 .inputselect {
   width: 100%;
   min-width: 100px;
@@ -97,15 +190,14 @@ input:focus {
   max-height: 40px;
   min-height: 35px;
   border-radius: 10px;
-  border: 2px solid #f57c00;
+  border: 2px solid;
   padding-left: clamp(6px, 3vw, 20px);
   padding-right: clamp(6px, 3vw, 20px);
   gap: clamp(2px, 1vw, 5px);
   font-weight: 600;
   background-color: #ffffff;
-  color: #f57c00;
   cursor: pointer;
-  box-shadow: 0px 2px 0px rgba(245, 124, 0, 1);
+  box-shadow: 0px 2px 0px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -133,9 +225,21 @@ input:focus {
   color: #f57c00;
 }
 
+.rolAdmin {
+  background-color: #c2e0ff;
+  color: #1976d2;
+}
+
+.rolUser {
+  background-color: #fff0c2;
+  color: #ffc107;
+}
+
 .statusActiveB,
 .statusInactiveB,
-.statusDebtB {
+.statusDebtB,
+.rolAdmin,
+.rolUser {
   font-weight: 600;
   text-align: center;
   border-radius: 9999px;

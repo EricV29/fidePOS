@@ -72,6 +72,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
         <CustomSelect
           options={optionsCustomers}
           placeholder="Select your customer"
+          color="#F57C00"
         />
         <div className="flex gap-2 h-[100px]">
           <CardInfoNumber
