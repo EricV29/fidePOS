@@ -99,16 +99,28 @@ npm run package
 📁 project/
 ┣ 📂 electron/ -> Electron backend
 ┃ ┣ 📜 main.cjs
-┃ ┗ 📜 preload.js
+┃ ┣ 📜 preload.js
+┃ ┣ 📜 intallDateManager.cjs
+┃ ┗ 📂 db/
+┃   ┣ 📜 database.js
+┃   ┗ 📜 queries.js
+┃
 ┣ 📂 src/ → React frontend
 ┃ ┣ 📜 App.tsx
 ┃ ┣ 📜 main.tsx
 ┃ ┣ 📜 index.css
-┃ ┣ 📂 types/
-┃   ┗ 📜 electron.d.ts
+┃ ┣ 📂 assets/
+┃ ┣ 📂 components/
+┃ ┣ 📂 hooks/
+┃ ┣ 📂 lib/
+┃ ┣ 📂 pages/
+┃ ┗ 📂 types/
+┃ ┗ 📂 utility/
+┃
 ┣ 📦 dist/ → Vite build output
 ┣ 📦 releases/ → Electron Builder output (installers)
 ┣ 📜 package.json
+┣ ⚙️ tsconfig.ts
 ┣ ⚙️ tailwind.config.js
 ┗ ⚙️ vite.config.ts
 ```
