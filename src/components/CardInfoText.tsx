@@ -19,10 +19,6 @@ const CardInfoText: React.FC<CardInfoTextProps> = ({
   date,
   color,
 }) => {
-  function clampSize(min: number, mid: number, max: number) {
-    return `clamp(${min}px, ${mid}px + 1vw, ${max}px)`;
-  }
-
   function splitName(text: string) {
     const [first, last] = text.split(" ");
     return `${first} ${last[0]}.`;
@@ -37,12 +33,12 @@ const CardInfoText: React.FC<CardInfoTextProps> = ({
         style={{ borderColor: color }}
       >
         <div className="flex gap-2 items-center">
-          {Icon && <Icon size={clampSize(24, 30, 40)} color={color} />}
+          {Icon && <Icon color={color} />}
           <p className="font-bold text-[clamp(14px,2vw,20px)]">{title}</p>
         </div>
 
         <div className="flex flex-col items-center justify-center">
-          {Icond && <Icond size={clampSize(24, 30, 40)} color={color} />}
+          {Icond && <Icond color={color} />}
 
           {text ? (
             <>

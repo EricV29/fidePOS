@@ -5,7 +5,7 @@ import {
   type ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, ColumnMeta } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
@@ -28,6 +28,12 @@ interface TableColumns {
   header: string;
   id: string;
   accessorKey?: string;
+}
+
+declare module "@tanstack/react-table" {
+  interface ColumnMeta<TData, TValue> {
+    headerClassName?: string;
+  }
 }
 
 export interface TableActions {
