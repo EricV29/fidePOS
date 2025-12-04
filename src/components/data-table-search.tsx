@@ -91,6 +91,7 @@ export function DataTableSearch<TData, TValue>({
           options={columnOptions}
           placeholder="Choose"
           onChange={setSelectedColumn}
+          color="#F57C00"
         />
       </div>
       <Table>

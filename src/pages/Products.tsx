@@ -1,4 +1,3 @@
-import React from "react";
 import { useState, useEffect } from "react";
 import ExportIcon from "@icons/ExportIcon";
 import ImportIcon from "@icons/ImportIcon";
@@ -49,9 +48,7 @@ const dataProductsDB = [
   },
 ];
 
-interface ProductsProps {}
-
-const Products: React.FC<ProductsProps> = ({}) => {
+export default function Products() {
   const [dataStock, setStock] = useState<dataStockI>();
   const [dataProducts, setProducts] = useState<Products[]>([]);
 
@@ -124,6 +121,4 @@ const Products: React.FC<ProductsProps> = ({}) => {
       </div>
     </>
   );
-};
-
-export default Products;
+}
