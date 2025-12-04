@@ -5,7 +5,7 @@ import {
   type ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import type { ColumnDef, ColumnMeta } from "@tanstack/react-table";
+import type { ColumnDef } from "@tanstack/react-table";
 import {
   Table,
   TableBody,
