@@ -1,12 +1,29 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
+const { getRoles } = require("./db/queries.cjs");
+
+const isDev = !app.isPackaged;
+
+function getPageUrl(route = "") {
+  if (isDev) {
+    return `http://localhost:6969/#/${route}`;
+  } else {
+    const distPath = path.join(
+      process.resourcesPath,
+      "app.asar",
+      "dist",
+      "index.html"
+    );
+    return `file://${distPath}#/${route}`;
+  }
+}
+
 const {
   registerInstallDate,
   getInstallDate,
 } = require("./installDateManager.cjs");
 
-const isDev = !app.isPackaged;
 let mainWindow = null;
 let loginWindow = null;
 let signupWindow = null;
@@ -27,7 +44,9 @@ function createSignupWindow() {
     },
   });
 
-  signupWindow.loadURL("http://localhost:6969/signup");
+  const url = getPageUrl("signup");
+  signupWindow.loadURL(url);
+
   signupWindow.on("closed", () => {
     signupWindow = null;
   });
@@ -47,7 +66,9 @@ function createLoginWindow() {
     },
   });
 
-  loginWindow.loadURL("http://localhost:6969/login");
+  const url = getPageUrl("login");
+  loginWindow.loadURL(url);
+
   loginWindow.on("closed", () => {
     loginWindow = null;
   });
@@ -68,8 +89,10 @@ function createMainWindow() {
     },
   });
 
+  const url = getPageUrl("main");
   mainWindow.maximize();
-  mainWindow.loadURL("http://localhost:6969/main");
+  mainWindow.loadURL(url);
+
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
@@ -100,6 +123,13 @@ ipcMain.handle("installDate", () => {
   return getInstallDate();
 });
 
+//* DATABASE CONSULTS
+
+// Consult getRoles
+ipcMain.handle("getRoles", async () => {
+  return await getRoles();
+});
+
 // Global message
 ipcMain.on("message", (event, msg) => {
   console.log("Message received:", msg);
@@ -122,7 +152,7 @@ ipcMain.on("message_private", (event, msg) => {
 //* INITIALIZATION
 app.whenReady().then(async () => {
   await initDatabase();
-  registerInstallDate();
+  //registerInstallDate();
   createSignupWindow();
 
   app.on("activate", () => {

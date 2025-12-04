@@ -10,6 +10,7 @@ import SettIcon from "@icons/SettingsIcon";
 import LogoutIcon from "@icons/LogoutIcon";
 import Sidebaitem from "@components/SidebarItem";
 import userImage from "@img/user.webp";
+import fidelogoc from "@img/fidelogoc.png";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -42,11 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             }`}
           >
             {isOpen && (
-              <img
-                src="../../public/fidelogoc.png"
-                alt="LogoFidePOS"
-                className="h-12 block "
-              />
+              <img src={fidelogoc} alt="LogoFidePOS" className="h-12 block " />
             )}
             <button
               className="transition-transform duration-200 hover:scale-110 hover:-translate-y-0.5"

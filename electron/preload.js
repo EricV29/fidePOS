@@ -5,6 +5,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Install Date bridge
   installDate: () => ipcRenderer.invoke("installDate"),
 
+  // getRoles bridge
+  getRoles: () => ipcRenderer.invoke("getRoles"),
+
   // Singup bridge
   signupSuccess: () => ipcRenderer.send("signup-success"),
 

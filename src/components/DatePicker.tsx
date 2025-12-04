@@ -12,8 +12,8 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
   installDate,
 }) => {
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [selectedStartDate, setSelectedStartDate] = useState(null);
-  const [selectedEndDate, setSelectedEndDate] = useState(null);
+  const [selectedStartDate, setSelectedStartDate] = useState("");
+  const [selectedEndDate, setSelectedEndDate] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const datepickerRef = useRef(null);
@@ -66,12 +66,12 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
     return daysArray;
   };
 
-  const handleDayClick = (selectedDay) => {
+  const handleDayClick = (selectedDay: Date) => {
     const dayString = selectedDay.toLocaleDateString("en-US");
 
     if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
       setSelectedStartDate(dayString);
-      setSelectedEndDate(null);
+      setSelectedEndDate("");
     } else {
       if (new Date(selectedDay) < new Date(selectedStartDate)) {
         setSelectedEndDate(selectedStartDate);
@@ -104,8 +104,8 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
   };
 
   const handleCancel = () => {
-    setSelectedStartDate(null);
-    setSelectedEndDate(null);
+    setSelectedStartDate("");
+    setSelectedEndDate("");
     setIsOpen(false);
   };
 

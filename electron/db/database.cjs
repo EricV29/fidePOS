@@ -9,6 +9,8 @@ async function initDatabase() {
   const dbPath = path.join(app.getPath("userData"), "app.db");
   let db;
 
+  //C:\Users\jared\AppData\Roaming\fidepos
+
   // CREATE DB IF NOT EXISTING
   if (fs.existsSync(dbPath)) {
     const fileBuffer = fs.readFileSync(dbPath);

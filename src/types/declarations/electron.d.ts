@@ -1,9 +1,11 @@
 export {};
+import { Rol } from "@typesm/users";
 
 declare global {
   interface Window {
     electronAPI: {
       installDate: () => Promise<string>;
+      getRoles: () => Promise<Rol>;
       signupSuccess: () => void;
       loginSuccess: () => void;
       logoutSuccess: () => void;

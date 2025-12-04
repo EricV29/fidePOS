@@ -25,10 +25,6 @@ const CardInfoNumber: React.FC<CardInfoNumberProps> = ({
     }).format(value);
   };
 
-  function clampSize(min: number, mid: number, max: number) {
-    return `clamp(${min}px, ${mid}px + 1vw, ${max}px)`;
-  }
-
   return (
     <>
       <div
@@ -36,13 +32,13 @@ const CardInfoNumber: React.FC<CardInfoNumberProps> = ({
         style={{ borderColor: color }}
       >
         <div className="flex gap-2 items-center">
-          {Icon && <Icon size={clampSize(24, 30, 40)} color={color} />}
+          {Icon && <Icon size={40} color={color} />}
           <p className="font-bold text-[clamp(14px,2vw,20px)]">{title}</p>
         </div>
 
         <div className="flex items-center gap-1">
           {Icond ? (
-            <Icond size={clampSize(24, 30, 40)} color={color} />
+            <Icond size={40} color={color} />
           ) : (
             <p className="text-[clamp(20px,4vw,35px)]" style={{ color }}>
               $
