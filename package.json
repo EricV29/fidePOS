@@ -22,32 +22,29 @@
     "win": {
       "target": [
         "nsis"
-      ]
+      ],
+      "icon": "dist/fidelogo.ico"
     },
     "files": [
       "dist/**/*",
-      "electron/main.cjs",
-      "node_modules/**/*",
-      "public/fidelogo.ico",
-      "public/*",
+      "electron/**/*",
       "package.json"
     ],
     "nsis": {
-      "uninstallDisplayName": "Uninstall this app",
+      "installerIcon": "dist/fidelogo.ico",
+      "installerHeaderIcon": "dist/fidelogo.ico",
+      "uninstallDisplayName": "FidePOS",
       "license": "license.txt",
-      "oneClick": "false",
-      "allowToChangeInstallationDirectory": "true"
+      "oneClick": false,
+      "perMachine": true,
+      "allowElevation": true,
+      "runAfterFinish": true,
+      "allowToChangeInstallationDirectory": true
     },
     "directories": {
       "output": "releases",
-      "buildResources": "dist"
-    },
-    "extraResources": [
-      {
-        "from": "database.cjs",
-        "to": "database.cjs"
-      }
-    ]
+      "buildResources": "build"
+    }
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "5.2.10",

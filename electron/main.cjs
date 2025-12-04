@@ -1,17 +1,21 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
+const { initDatabase } = require("./db/database.cjs");
 
 const isDev = !app.isPackaged;
 
-const dbModulePath = isDev
-  ? path.join(__dirname, "db", "database.cjs")
-  : path.join(process.resourcesPath, "db", "database.cjs");
-
-let dbModule = null;
-try {
-  dbModule = require(dbModulePath);
-} catch (err) {
-  console.error("Error loading DB module:", err);
+function getPageUrl(route = "") {
+  if (isDev) {
+    return `http://localhost:6969/#/${route}`;
+  } else {
+    const distPath = path.join(
+      process.resourcesPath,
+      "app.asar",
+      "dist",
+      "index.html"
+    );
+    return `file://${distPath}#/${route}`;
+  }
 }
 
 const {
@@ -39,7 +43,9 @@ function createSignupWindow() {
     },
   });
 
-  signupWindow.loadURL("http://localhost:6969/signup");
+  const url = getPageUrl("signup");
+  signupWindow.loadURL(url);
+
   signupWindow.on("closed", () => {
     signupWindow = null;
   });
@@ -59,7 +65,9 @@ function createLoginWindow() {
     },
   });
 
-  loginWindow.loadURL("http://localhost:6969/login");
+  const url = getPageUrl("login");
+  loginWindow.loadURL(url);
+
   loginWindow.on("closed", () => {
     loginWindow = null;
   });
@@ -80,8 +88,10 @@ function createMainWindow() {
     },
   });
 
+  const url = getPageUrl("main");
   mainWindow.maximize();
-  mainWindow.loadURL("http://localhost:6969/main");
+  mainWindow.loadURL(url);
+
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
@@ -133,8 +143,8 @@ ipcMain.on("message_private", (event, msg) => {
 
 //* INITIALIZATION
 app.whenReady().then(async () => {
-  await dbModule.initDatabase();
-  registerInstallDate();
+  await initDatabase();
+  //registerInstallDate();
   createSignupWindow();
 
   app.on("activate", () => {
