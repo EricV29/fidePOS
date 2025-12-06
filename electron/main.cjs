@@ -33,9 +33,12 @@ let signupWindow = null;
 // Signup Window
 function createSignupWindow() {
   signupWindow = new BrowserWindow({
-    width: 650,
-    height: 700,
-    resizable: false,
+    width: 600,
+    height: 650,
+    frame: false,
+    frame: false,
+    titleBarStyle: "hidden",
+    titleBarOverlay: false,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "../public/fidelogo.ico"),
     webPreferences: {
