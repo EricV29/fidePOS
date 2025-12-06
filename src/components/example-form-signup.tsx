@@ -5,7 +5,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -13,7 +12,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-export const profileSchema = z
+const profileSchema = z
   .object({
     name: z.string().min(2, "Min 2 caracters").max(50),
     lastname: z.string().min(2, "Min 2 caracters").max(50),
