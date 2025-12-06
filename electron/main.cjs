@@ -35,7 +35,7 @@ function createSignupWindow() {
   signupWindow = new BrowserWindow({
     width: 600,
     height: 650,
-    frame: false,
+    resizable: false,
     frame: false,
     titleBarStyle: "hidden",
     titleBarOverlay: false,
@@ -58,9 +58,12 @@ function createSignupWindow() {
 // Login Window
 function createLoginWindow() {
   loginWindow = new BrowserWindow({
-    width: 650,
-    height: 700,
+    width: 600,
+    height: 450,
     resizable: false,
+    frame: false,
+    titleBarStyle: "hidden",
+    titleBarOverlay: false,
     autoHideMenuBar: true,
     icon: path.join(__dirname, "../public/fidelogo.ico"),
     webPreferences: {
@@ -155,8 +158,9 @@ ipcMain.on("message_private", (event, msg) => {
 //* INITIALIZATION
 app.whenReady().then(async () => {
   await initDatabase();
-  //registerInstallDate();
+  registerInstallDate();
   createSignupWindow();
+  //createLoginWindow();
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createSignupWindow();
