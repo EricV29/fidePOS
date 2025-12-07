@@ -10,6 +10,7 @@ import UserPlusIcon from "@icons/UserPlusIcon";
 import { ShoppingCar } from "@components/shopping-car";
 import { columnsSC } from "@columns/columnsSC";
 import type { ShoppingCarT } from "@typesm/sales";
+import { currencyFormat } from "@utility/currencyFormat";
 
 interface NewSaleProps {}
 
@@ -33,7 +34,7 @@ const dataProductsSaleDB = [
     description: "Yuya rojo",
     category: "Maquillaje",
     ccolor: "#5b49ff",
-    unit_price: 20000,
+    unit_price: 200,
   },
   {
     id: "34235",
@@ -42,7 +43,7 @@ const dataProductsSaleDB = [
     description: "hotweels",
     category: "Toys",
     ccolor: "#ff49ff",
-    unit_price: 30000,
+    unit_price: 30,
   },
 ];
 
@@ -60,6 +61,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const [dataProducts, setDataProducts] = useState<ProductsSale[]>([]);
   const [dataCustomers, setDataCustomers] = useState<CustomersSale[]>([]);
   const [dataCar, setCar] = useState<ShoppingCarT[]>([]);
+  const [amount, setAmount] = useState("");
 
   useEffect(() => {
     setCategories(categoriesDB);
@@ -71,6 +73,50 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const handleCategory = (id: string) => {
     setActiveCategory(id);
   };
+
+  const addProductToCart = (product: ProductsSale) => {
+    setCar((old) => {
+      const existing = old.find((item) => item.id === product.id);
+
+      // Si ya existe, actualiza quantity y total_amount
+      if (existing) {
+        return old.map((item) =>
+          item.id === product.id
+            ? {
+                ...item,
+                quantity: item.quantity + 1,
+                total_amount: (item.quantity + 1) * item.unit_price,
+              }
+            : item
+        );
+      }
+
+      // Si NO existe, agregarlo con cantidad 1
+      return [
+        ...old,
+        {
+          ...product,
+          quantity: 1,
+          total_amount: product.unit_price,
+        },
+      ];
+    });
+  };
+
+  const deleteProductFromCart = (id: string) => {
+    setCar((old) => old.filter((item) => item.id !== id));
+  };
+
+  const subtotalGeneral = dataCar.reduce(
+    (sum, item) => sum + item.total_amount,
+    0
+  );
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setAmount(e.target.value);
+  };
+
+  const totalGeneral = subtotalGeneral - Number(amount);
 
   if (!categories) return null;
   return (
@@ -104,23 +150,11 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               data={dataProducts}
               columns={columnsPS}
               actions={{ add: true }}
-              addProduct={(product) => {
-                // Aquí se agrega al carrito
-                setCar((prev) => [
-                  ...prev,
-                  {
-                    id: product.id,
-                    product: product.product,
-                    unit_price: product.unit_price,
-                    quantity: 1,
-                    total_amount: product.unit_price * 1,
-                  },
-                ]);
-              }}
+              addProduct={addProductToCart}
             />
           </div>
         </div>
-        <div className="w-1/3 p-2 flex flex-col gap-2 border border-amber-600">
+        <div className="w-1/3 p-2 flex flex-col gap-2 bg-white drop-shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-2xl ">
           <p className="font-semibold text-[20px] text-[#F57C00]">
             Sale: #0001
           </p>
@@ -134,23 +168,56 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               <UserPlusIcon /> <p className="lg:block sm:hidden">Customer</p>
             </button>
           </div>
-          <div className="w-full h-[500px] py-2 bg-[#FFEFDE] overflow-y-auto">
+          <div className="w-full h-[500px] py-2 bg-[#FFEFDE] rounded-2xl overflow-y-auto">
             {" "}
             <ShoppingCar
               data={dataCar}
               columns={columnsSC}
               actions={{ delete: true }}
+              deleteProduct={deleteProductFromCart}
               updateData={(rowIndex, columnId, value) => {
                 setCar((old) =>
-                  old.map((row, index) =>
-                    index === rowIndex ? { ...row, [columnId]: value } : row
-                  )
+                  old.map((row, index) => {
+                    if (index !== rowIndex) return row;
+
+                    const updated = { ...row, [columnId]: value };
+
+                    // Recalcular total_amount si cambia quantity
+                    if (columnId === "quantity") {
+                      updated.total_amount =
+                        updated.quantity * updated.unit_price;
+                    }
+
+                    return updated;
+                  })
                 );
               }}
             />
           </div>
-          <div>Data Pricing</div>
-          <div>Buttons Payment</div>
+          <div className="w-full flex flex-col">
+            <div className="w-full flex justify-between">
+              <p>Subtotal</p>
+              <p>{currencyFormat(subtotalGeneral)}</p>
+            </div>
+            <div className="w-full flex justify-between">
+              <p>Discount</p>
+              <div className="inputnumber">
+                <input
+                  type="text"
+                  className="w-full text-center"
+                  onChange={handleAmountChange}
+                />
+              </div>
+            </div>
+            <hr className="border border-[#b3b3b3] my-2" />
+            <div className="w-full flex justify-between">
+              <p className="font-bold">Total</p>
+              <p className="font-bold">{currencyFormat(totalGeneral)}</p>
+            </div>
+          </div>
+          <div className="w-full">
+            <button className="borange">Complete sale</button>
+          </div>
         </div>
       </div>
     </>

@@ -18,6 +18,7 @@ interface ShoppingCarProps<TData, TValue> {
   data: TData[];
   actions?: TableActions;
   updateData?: (rowIndex: number, columnId: string, value: any) => void;
+  deleteProduct?: (id: string) => void;
 }
 
 export interface TableActions {
@@ -31,6 +32,7 @@ export function ShoppingCar<TData, TValue>({
   data,
   actions,
   updateData,
+  deleteProduct,
 }: ShoppingCarProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -39,6 +41,7 @@ export function ShoppingCar<TData, TValue>({
     meta: {
       actions,
       updateData,
+      deleteProduct,
     },
   });
 
@@ -78,7 +81,7 @@ export function ShoppingCar<TData, TValue>({
         ) : (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">
-              There is no data yet.
+              No products in the cart yet.
             </TableCell>
           </TableRow>
         )}

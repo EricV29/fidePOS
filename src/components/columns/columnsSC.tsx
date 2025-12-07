@@ -1,9 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@components/ui/button";
 import DeleteIcon from "@icons/DeleteIcon";
-import EditIcon from "@icons/EditIcon";
-import EyeIcon from "@icons/EyeIcon";
-import PlusIcon from "@icons/PlusIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { ShoppingCar } from "@typesm/sales";
@@ -14,12 +11,12 @@ export const columnsSC: ColumnDef<ShoppingCar>[] = [
     accessorKey: "product",
     header: "Product",
     cell: ({ row }) => {
+      const unit_priceF = currencyFormat(Number(row.original.unit_price));
+
       return (
         <div>
           <p className="font-bold text-[20px]">{row.original.product}</p>
-          <p className="font-extralight">
-            Unit price: {row.original.unit_price}
-          </p>
+          <p className="font-extralight">Unit price: {unit_priceF}</p>
         </div>
       );
     },
@@ -30,7 +27,6 @@ export const columnsSC: ColumnDef<ShoppingCar>[] = [
     cell: ({ row, table }) => {
       const quantity = row.original.quantity;
 
-      // Función para actualizar la cantidad en la tabla (usando meta.updateData)
       const updateQuantity = (newValue: number) => {
         const update = table.options.meta?.updateData;
         if (!update) return;
@@ -75,16 +71,16 @@ export const columnsSC: ColumnDef<ShoppingCar>[] = [
     },
     cell: ({ row, table }) => {
       const actions = table.options.meta?.actions;
-
+      const deleteProduct = table.options.meta?.deleteProduct;
       return (
         <div className="flex justify-center items-center space-x-2">
-          {actions?.add && (
+          {actions?.delete && (
             <Button
               variant="outline"
               size="icon"
-              onClick={() => actions.add(row.original.id)}
+              onClick={() => deleteProduct?.(row.original.id)}
             >
-              <PlusIcon color="#43A047" />
+              <DeleteIcon color="#D32F2F" />
             </Button>
           )}
         </div>
