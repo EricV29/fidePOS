@@ -29,3 +29,16 @@ export type RecentSalesPaid = {
     edit?: boolean;
   };
 };
+
+export type ShoppingCar = {
+  id: string;
+  product: string;
+  unit_price: number;
+  quantity: number;
+  total_amount: number;
+  actions?: {
+    view?: boolean;
+    delete?: boolean;
+    edit?: boolean;
+  };
+};

@@ -159,8 +159,9 @@ ipcMain.on("message_private", (event, msg) => {
 app.whenReady().then(async () => {
   await initDatabase();
   registerInstallDate();
-  createSignupWindow();
+  //createSignupWindow();
   //createLoginWindow();
+  createMainWindow();
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createSignupWindow();
