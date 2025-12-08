@@ -38,9 +38,6 @@ declare module "@tanstack/react-table" {
 }
 
 export interface TableActions {
-  view?: boolean;
-  edit?: boolean;
-  delete?: boolean;
   add?: boolean;
 }
 

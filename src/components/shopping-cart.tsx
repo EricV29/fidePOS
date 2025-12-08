@@ -13,11 +13,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-interface ShoppingCarProps<TData, TValue> {
+interface ShoppingCartProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   actions?: TableActions;
-  updateData?: (rowIndex: number, columnId: string, value: any) => void;
+  updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
   deleteProduct?: (id: string) => void;
 }
 
@@ -27,13 +27,13 @@ export interface TableActions {
   delete?: boolean;
 }
 
-export function ShoppingCar<TData, TValue>({
+export function ShoppingCart<TData, TValue>({
   columns,
   data,
   actions,
   updateData,
   deleteProduct,
-}: ShoppingCarProps<TData, TValue>) {
+}: ShoppingCartProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,

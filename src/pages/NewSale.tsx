@@ -7,7 +7,7 @@ import { columnsPS } from "@columns/columnsPS";
 import CustomSelect from "@components/Select";
 import type { CustomersSale } from "@typesm/customers";
 import UserPlusIcon from "@icons/UserPlusIcon";
-import { ShoppingCar } from "@components/shopping-car";
+import { ShoppingCart } from "@/components/shopping-cart";
 import { columnsSC } from "@columns/columnsSC";
 import type { ShoppingCarT } from "@typesm/sales";
 import { currencyFormat } from "@utility/currencyFormat";
@@ -61,7 +61,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const [dataProducts, setDataProducts] = useState<ProductsSale[]>([]);
   const [dataCustomers, setDataCustomers] = useState<CustomersSale[]>([]);
   const [dataCar, setCar] = useState<ShoppingCarT[]>([]);
-  const [amount, setAmount] = useState("");
+  const [discount, setDisacount] = useState("");
 
   useEffect(() => {
     setCategories(categoriesDB);
@@ -78,7 +78,6 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     setCar((old) => {
       const existing = old.find((item) => item.id === product.id);
 
-      // Si ya existe, actualiza quantity y total_amount
       if (existing) {
         return old.map((item) =>
           item.id === product.id
@@ -91,7 +90,6 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
         );
       }
 
-      // Si NO existe, agregarlo con cantidad 1
       return [
         ...old,
         {
@@ -107,16 +105,16 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     setCar((old) => old.filter((item) => item.id !== id));
   };
 
-  const subtotalGeneral = dataCar.reduce(
+  const subtotalCart = dataCar.reduce(
     (sum, item) => sum + item.total_amount,
     0
   );
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAmount(e.target.value);
+    setDisacount(e.target.value);
   };
 
-  const totalGeneral = subtotalGeneral - Number(amount);
+  const totalCart = subtotalCart - Number(discount);
 
   if (!categories) return null;
   return (
@@ -168,9 +166,9 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               <UserPlusIcon /> <p className="lg:block sm:hidden">Customer</p>
             </button>
           </div>
-          <div className="w-full h-[500px] py-2 bg-[#FFEFDE] rounded-2xl overflow-y-auto">
+          <div className="w-full h-[500px] py-2 overflow-y-auto">
             {" "}
-            <ShoppingCar
+            <ShoppingCart
               data={dataCar}
               columns={columnsSC}
               actions={{ delete: true }}
@@ -181,8 +179,6 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
                     if (index !== rowIndex) return row;
 
                     const updated = { ...row, [columnId]: value };
-
-                    // Recalcular total_amount si cambia quantity
                     if (columnId === "quantity") {
                       updated.total_amount =
                         updated.quantity * updated.unit_price;
@@ -197,7 +193,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
           <div className="w-full flex flex-col">
             <div className="w-full flex justify-between">
               <p>Subtotal</p>
-              <p>{currencyFormat(subtotalGeneral)}</p>
+              <p>{currencyFormat(subtotalCart)}</p>
             </div>
             <div className="w-full flex justify-between">
               <p>Discount</p>
@@ -212,7 +208,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             <hr className="border border-[#b3b3b3] my-2" />
             <div className="w-full flex justify-between">
               <p className="font-bold">Total</p>
-              <p className="font-bold">{currencyFormat(totalGeneral)}</p>
+              <p className="font-bold">{currencyFormat(totalCart)}</p>
             </div>
           </div>
           <div className="w-full">

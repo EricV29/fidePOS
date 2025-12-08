@@ -27,11 +27,10 @@ declare module "@tanstack/react-table" {
     };
     updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
     addProduct?: (product: TData) => void;
+    deleteProduct?: (id: string) => void;
   }
-}
 
-declare module "@tanstack/table-core" {
-  interface TableMeta<TData extends unknown> {
-    addProduct?: (product: any) => void;
+  interface ColumnMeta<TData, TValue> {
+    headerClassName?: string;
   }
 }

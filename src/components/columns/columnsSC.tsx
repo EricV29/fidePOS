@@ -3,10 +3,10 @@ import { Button } from "@components/ui/button";
 import DeleteIcon from "@icons/DeleteIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
-import type { ShoppingCar } from "@typesm/sales";
+import type { ShoppingCarT } from "@typesm/sales";
 
 // Columns Shooping Car
-export const columnsSC: ColumnDef<ShoppingCar>[] = [
+export const columnsSC: ColumnDef<ShoppingCarT>[] = [
   {
     accessorKey: "product",
     header: "Product",
@@ -34,20 +34,17 @@ export const columnsSC: ColumnDef<ShoppingCar>[] = [
       };
 
       return (
-        <div className="flex items-center gap-2">
+        <div className="w-[70px] flex items-center justify-between border border-white rounded bg-[#F57C00] text-white text-[17px]">
           <button
-            className="px-2 py-1 border rounded"
+            className="px-2"
             onClick={() => updateQuantity(Math.max(1, quantity - 1))}
           >
             −
           </button>
 
-          <span className="min-w-[30px] text-center">{quantity}</span>
+          <span className="text-center">{quantity}</span>
 
-          <button
-            className="px-2 py-1 border rounded"
-            onClick={() => updateQuantity(quantity + 1)}
-          >
+          <button className="px-2" onClick={() => updateQuantity(quantity + 1)}>
             +
           </button>
         </div>

@@ -30,7 +30,7 @@ export type RecentSalesPaid = {
   };
 };
 
-export type ShoppingCar = {
+export type ShoppingCarT = {
   id: string;
   product: string;
   unit_price: number;

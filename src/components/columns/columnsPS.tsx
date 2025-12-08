@@ -1,8 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@components/ui/button";
-import DeleteIcon from "@icons/DeleteIcon";
-import EditIcon from "@icons/EditIcon";
-import EyeIcon from "@icons/EyeIcon";
 import PlusIcon from "@icons/PlusIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
