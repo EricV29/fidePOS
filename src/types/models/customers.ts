@@ -46,3 +46,8 @@ export type PaymentsCustomer = {
     edit?: boolean;
   };
 };
+
+export type CustomersSale = {
+  label: string;
+  value: string;
+};

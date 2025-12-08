@@ -4,19 +4,21 @@ import PlusIcon from "@icons/PlusIcon";
 import PayIcon from "@icons/PayIcon";
 import Switch from "@components/Switch";
 import { Outlet } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface CustomersProps {}
 
 const Customers: React.FC<CustomersProps> = ({}) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const optionsCustomers = [
     { label: "General", value: "general" },
     { label: "Payments", value: "payments" },
   ];
+  const currentSegment = location.pathname.split("/").pop();
   const currentTab =
-    optionsCustomers.find((op) => location.pathname.includes(op.value))
-      ?.value || optionsCustomers[0].value;
+    optionsCustomers.find((op) => op.value === currentSegment)?.value ||
+    optionsCustomers[0].value;
 
   return (
     <>

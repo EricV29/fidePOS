@@ -54,7 +54,9 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
         className="inputselect"
         style={{ borderColor: color, color: color, boxShadow: color }}
       >
-        <p>{selectedLabel}</p>
+        <p className="truncate whitespace-nowrap overflow-hidden">
+          {selectedLabel}
+        </p>
 
         <span onClick={toggleSelect}>
           <CaretDIcon size={20} color={color} />

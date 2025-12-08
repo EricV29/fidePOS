@@ -23,6 +23,14 @@ declare module "@tanstack/react-table" {
       view?: boolean;
       delete?: boolean;
       edit?: boolean;
+      add?: boolean;
     };
+    updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
+    addProduct?: (product: TData) => void;
+    deleteProduct?: (id: string) => void;
+  }
+
+  interface ColumnMeta<TData, TValue> {
+    headerClassName?: string;
   }
 }

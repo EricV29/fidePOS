@@ -27,7 +27,6 @@ export const columnsC: ColumnDef<Customers>[] = [
     },
     accessorFn: (row) => `${row.name} ${row.last_name}`,
   },
-
   { accessorKey: "phone", header: "Phone" },
   {
     accessorKey: "status",

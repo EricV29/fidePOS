@@ -4,13 +4,14 @@ import DatePicker from "@components/DatePicker";
 import { useInstallDate } from "@hooks/useInstallDate";
 import Switch from "@components/Switch";
 import { Outlet } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 interface ReportsProps {}
 
 const Reports: React.FC<ReportsProps> = ({}) => {
   const { installDate } = useInstallDate();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const optionsReports = [
     { label: "General", value: "general" },
@@ -18,8 +19,10 @@ const Reports: React.FC<ReportsProps> = ({}) => {
     { label: "Products", value: "products" },
     { label: "Customers", value: "customers" },
   ];
+
+  const currentSegment = location.pathname.split("/").pop();
   const currentTab =
-    optionsReports.find((op) => location.pathname.includes(op.value))?.value ||
+    optionsReports.find((op) => op.value === currentSegment)?.value ||
     optionsReports[0].value;
 
   if (!installDate) return null;
