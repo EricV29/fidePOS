@@ -14,7 +14,8 @@
       "@utility/*": ["./src/utility/*"],
       "@typesm/*": ["./src/types/models/*"],
       "@hooks/*": ["./src/hooks/*"],
-      "@columns/*": ["./src/components/columns/*"]
+      "@columns/*": ["./src/components/columns/*"],
+      "@modals/*": ["./src/components/modals/*"]
     }
   }
 }
