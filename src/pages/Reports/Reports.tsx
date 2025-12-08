@@ -1,10 +1,12 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import ExportIcon from "@icons/ExportIcon";
 import DatePicker from "@components/DatePicker";
 import { useInstallDate } from "@hooks/useInstallDate";
 import Switch from "@components/Switch";
 import { Outlet } from "react-router-dom";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useModal } from "@/context/ModalContext";
+import { ModalExport } from "@modals/ModalExport";
 
 interface ReportsProps {}
 
@@ -12,6 +14,7 @@ const Reports: React.FC<ReportsProps> = ({}) => {
   const { installDate } = useInstallDate();
   const navigate = useNavigate();
   const location = useLocation();
+  const { setModal } = useModal();
 
   const optionsReports = [
     { label: "General", value: "general" },
@@ -33,7 +36,12 @@ const Reports: React.FC<ReportsProps> = ({}) => {
         <div className="w-full h-fit flex justify-between items-end">
           <h1>Reports</h1>
           <div className="flex gap-2">
-            <button className="bnormal">
+            <button
+              className="bnormal"
+              onClick={() =>
+                setModal(<ModalExport data={{ data: "Products Statistics" }} />)
+              }
+            >
               <ExportIcon /> <p>Export</p>
             </button>
             <DatePicker installDate={installDate} />

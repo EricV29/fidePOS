@@ -10,6 +10,8 @@ import CardInfoDetail from "@components/CardInfoDetail";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsP } from "@columns/columnsP";
 import type { Products } from "@typesm/products";
+import { useModal } from "@/context/ModalContext";
+import { ModalExport } from "@modals/ModalExport";
 
 interface dataStockI {
   [key: string]: number;
@@ -51,6 +53,7 @@ const dataProductsDB = [
 export default function Products() {
   const [dataStock, setStock] = useState<dataStockI>();
   const [dataProducts, setProducts] = useState<Products[]>([]);
+  const { setModal } = useModal();
 
   useEffect(() => {
     setStock(dataStockDB);
@@ -65,7 +68,12 @@ export default function Products() {
             Products Inventory
           </h1>
           <div className="flex gap-2">
-            <button className="bnormal">
+            <button
+              className="bnormal"
+              onClick={() =>
+                setModal(<ModalExport data={{ data: "Products Statistics" }} />)
+              }
+            >
               <ExportIcon /> <p>Export</p>
             </button>
             <button className="bnormal">

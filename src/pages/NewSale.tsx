@@ -11,6 +11,8 @@ import { ShoppingCart } from "@/components/shopping-cart";
 import { columnsSC } from "@columns/columnsSC";
 import type { ShoppingCarT } from "@typesm/sales";
 import { currencyFormat } from "@utility/currencyFormat";
+import { useModal } from "@/context/ModalContext";
+import { ModalAddCustomer } from "@modals/ModalAddCustomer";
 
 interface NewSaleProps {}
 
@@ -62,6 +64,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const [dataCustomers, setDataCustomers] = useState<CustomersSale[]>([]);
   const [dataCar, setCar] = useState<ShoppingCarT[]>([]);
   const [discount, setDisacount] = useState("");
+  const { setModal } = useModal();
 
   useEffect(() => {
     setCategories(categoriesDB);
@@ -162,7 +165,10 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               placeholder="Choose a customer"
               color="#F57C00"
             />
-            <button className="bnormal">
+            <button
+              className="bnormal"
+              onClick={() => setModal(<ModalAddCustomer />)}
+            >
               <UserPlusIcon /> <p className="lg:block sm:hidden">Customer</p>
             </button>
           </div>

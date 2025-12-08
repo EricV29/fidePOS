@@ -19,6 +19,7 @@ export default defineConfig({
       "@typesm": path.resolve(__dirname, "./src/types"),
       "@hooks": path.resolve(__dirname, "./src/hooks"),
       "@columns": path.resolve(__dirname, "./src/components/columns"),
+      "@modals": path.resolve(__dirname, "./src/components/modals"),
     },
   },
 });
