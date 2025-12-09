@@ -14,6 +14,7 @@ import { useModal } from "@context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
 import { ModalImport } from "@modals/ModalImport";
 import { ModalAddProduct } from "@modals/ModalAddProduct";
+import { ModalAddCategory } from "@modals/ModalAddCategory";
 
 interface dataStockI {
   [key: string]: number;
@@ -90,7 +91,10 @@ export default function Products() {
             >
               <BoxPlusIcon /> <p>Product</p>
             </button>
-            <button className="bnormal">
+            <button
+              className="bnormal"
+              onClick={() => setModal(<ModalAddCategory />)}
+            >
               <CategoryIcon /> <p>Category</p>
             </button>
           </div>

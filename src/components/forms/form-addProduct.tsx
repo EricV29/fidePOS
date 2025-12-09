@@ -83,7 +83,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                 <FormLabel className="font-semibold">Name Product</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="prodcut..."
+                    placeholder="product..."
                     {...field}
                     className="bg-white"
                   />
