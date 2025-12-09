@@ -20,6 +20,8 @@ export default defineConfig({
       "@hooks": path.resolve(__dirname, "./src/hooks"),
       "@columns": path.resolve(__dirname, "./src/components/columns"),
       "@modals": path.resolve(__dirname, "./src/components/modals"),
+      "@forms": path.resolve(__dirname, "./src/components/forms"),
+      "@context": path.resolve(__dirname, "./src/context"),
     },
   },
 });

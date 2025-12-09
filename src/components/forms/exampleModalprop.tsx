@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom";
-import { useModal } from "@/context/ModalContext";
+import { useModal } from "@context/ModalContext";
 import UserPlusIcon from "@icons/UserPlusIcon";
-import AddCustomerForm from "@components/form-addCustomer";
+import AddCustomerForm from "@forms/form-addCustomer";
 
 interface Customer {
   name: string;

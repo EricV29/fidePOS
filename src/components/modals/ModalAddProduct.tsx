@@ -1,17 +1,17 @@
 import ReactDOM from "react-dom";
 import { useModal } from "@context/ModalContext";
-import ImportIcon from "@icons/ImportIcon";
+import BoxPlusIcon from "@icons/BoxPlusIcon";
 import CloseIcon from "@icons/CloseIcon";
-import FileDropZone from "@components/FileDropZone";
+import AddProductForm from "@forms/form-addProduct";
 
-export function ModalImport() {
+export function ModalAddProduct() {
   const { setModal } = useModal();
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleExportStatistics = () => {
-    window.electronAPI.signupSuccess();
+  const handleAddProduct = () => {
+    //window.electronAPI.signupSuccess();
   };
 
   return ReactDOM.createPortal(
@@ -25,13 +25,11 @@ export function ModalImport() {
       >
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-5">
-            <ImportIcon size={40} color="#F57C00" />
+            <BoxPlusIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>Import your products</h2>
+              <h2>Add new product</h2>
               <p className="font-extralight">
-                Data will be import in a{" "}
-                <span className="font-semibold">.csv</span> y{" "}
-                <span className="font-semibold">.xlsx</span> file.
+                Add individual products to your product list.
               </p>
             </div>
           </div>
@@ -40,30 +38,9 @@ export function ModalImport() {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
+        <p>Enter the main information of your new product.</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
-          <p>Your file must include the following columns:</p>
-          <ul className="list-disc pl-5">
-            <li>
-              <strong>code_sku</strong>
-            </li>
-            <li>
-              <strong>product</strong>
-            </li>
-            <li>
-              <strong>category</strong>
-            </li>
-            <li>
-              <strong>cost_price</strong>
-            </li>
-            <li>
-              <strong>unit_price</strong>
-            </li>
-            <li>
-              <strong>stock</strong>
-            </li>
-          </ul>
-
-          <FileDropZone />
+          <AddProductForm onSuccess={handleAddProduct} />
         </div>
       </div>
     </div>,

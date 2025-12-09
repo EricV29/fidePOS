@@ -1,8 +1,8 @@
 import ReactDOM from "react-dom";
-import { useModal } from "@/context/ModalContext";
+import { useModal } from "@context/ModalContext";
 import UserPlusIcon from "@icons/UserPlusIcon";
 import CloseIcon from "@icons/CloseIcon";
-import AddCustomerForm from "@components/form-addCustomer";
+import AddCustomerForm from "@forms/form-addCustomer";
 
 export function ModalAddCustomer() {
   const { setModal } = useModal();
