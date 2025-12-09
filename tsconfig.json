@@ -15,7 +15,9 @@
       "@typesm/*": ["./src/types/models/*"],
       "@hooks/*": ["./src/hooks/*"],
       "@columns/*": ["./src/components/columns/*"],
-      "@modals/*": ["./src/components/modals/*"]
+      "@modals/*": ["./src/components/modals/*"],
+      "@forms/*": ["./src/components/forms/*"],
+      "@context/*": ["./src/context/*"]
     }
   }
 }

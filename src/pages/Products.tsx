@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import ExportIcon from "@icons/ExportIcon";
 import ImportIcon from "@icons/ImportIcon";
 import CategoryIcon from "@icons/CategoryIcon";
-import PlusIcon from "@icons/PlusIcon";
+import BoxPlusIcon from "@icons/BoxPlusIcon";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import RevenueIcon from "@icons/RevenueIcon";
 import CardInfoNumber from "@components/CardInfoNumber";
@@ -10,9 +10,10 @@ import CardInfoDetail from "@components/CardInfoDetail";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsP } from "@columns/columnsP";
 import type { Products } from "@typesm/products";
-import { useModal } from "@/context/ModalContext";
+import { useModal } from "@context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
 import { ModalImport } from "@modals/ModalImport";
+import { ModalAddProduct } from "@modals/ModalAddProduct";
 
 interface dataStockI {
   [key: string]: number;
@@ -83,8 +84,11 @@ export default function Products() {
             >
               <ImportIcon /> <p>Import</p>
             </button>
-            <button className="bnormal">
-              <PlusIcon /> <p>Product</p>
+            <button
+              className="bnormal"
+              onClick={() => setModal(<ModalAddProduct />)}
+            >
+              <BoxPlusIcon /> <p>Product</p>
             </button>
             <button className="bnormal">
               <CategoryIcon /> <p>Category</p>

@@ -9,8 +9,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@components/ui/form";
+import { Input } from "@components/ui/input";
 
 const addCustomerSchema = z.object({
   name: z.string().min(2, "Min 2 caracters").max(50),
@@ -20,11 +20,11 @@ const addCustomerSchema = z.object({
 
 export type AddCustomerFormValues = z.infer<typeof addCustomerSchema>;
 
-interface LoginFormProps {
+interface AddCustomerFormProps {
   onSuccess?: () => void;
 }
 
-export default function AddCustomerForm({ onSuccess }: LoginFormProps) {
+export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
   const form = useForm<AddCustomerFormValues>({
     resolver: zodResolver(addCustomerSchema),
     defaultValues: {

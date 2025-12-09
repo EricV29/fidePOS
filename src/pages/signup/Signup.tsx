@@ -1,5 +1,5 @@
 import React from "react";
-import ProfileForm from "@/components/example-form-signup";
+import ProfileForm from "@/components/forms/form-signup";
 import fidelogoc from "@img/fidelogoc.png";
 
 const Signup: React.FC = () => {

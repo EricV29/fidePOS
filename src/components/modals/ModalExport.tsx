@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom";
-import { useModal } from "@/context/ModalContext";
+import { useModal } from "@context/ModalContext";
 import ChartBarIcon from "@icons/ChartBarIcon";
 import CloseIcon from "@icons/CloseIcon";
 import CustomSelect from "@components/Select";
@@ -37,7 +37,7 @@ export function ModalExport({ data }: { data: Data }) {
           <div className="flex gap-5">
             <ChartBarIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>Add new customer</h2>
+              <h2>Export statistics</h2>
               <p className="font-extralight">
                 Data will be exported in a{" "}
                 <span className="font-semibold">.csv</span>,{" "}
