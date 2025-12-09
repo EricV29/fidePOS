@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@components/ui/button";
-import EyeIcon from "@icons/EyeIcon";
+import EyeIcon from "@/assets/icons/PreviewIcon";
 import DeleteIcon from "@icons/DeleteIcon";
 import EditIcon from "@icons/EditIcon";
 import { partialNumberFilter } from "@utility/table-filter";
