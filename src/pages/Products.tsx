@@ -12,6 +12,7 @@ import { columnsP } from "@columns/columnsP";
 import type { Products } from "@typesm/products";
 import { useModal } from "@/context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
+import { ModalImport } from "@modals/ModalImport";
 
 interface dataStockI {
   [key: string]: number;
@@ -76,7 +77,10 @@ export default function Products() {
             >
               <ExportIcon /> <p>Export</p>
             </button>
-            <button className="bnormal">
+            <button
+              className="bnormal"
+              onClick={() => setModal(<ModalImport />)}
+            >
               <ImportIcon /> <p>Import</p>
             </button>
             <button className="bnormal">
