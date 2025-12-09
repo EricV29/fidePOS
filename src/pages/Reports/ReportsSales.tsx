@@ -3,7 +3,7 @@ import CardInfoNumber from "@components/CardInfoNumber";
 import BoxIcon from "@icons/BoxIcon";
 import ShoppingCar from "@icons/ShoppingCar";
 import ChartPieDonutText from "@components/chart-pie-donut";
-import { addRandomFill } from "@utility/AddFill";
+import { addRandomFill } from "@/utility/addFill";
 import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsS } from "@columns/columnsS";

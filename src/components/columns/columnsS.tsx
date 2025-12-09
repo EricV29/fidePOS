@@ -7,6 +7,7 @@ import EditIcon from "@icons/EditIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { Sales } from "@typesm/sales";
+import { shadenHexColor } from "@utility/shadenHexColor";
 
 // Columns Sales
 export const columnsS: ColumnDef<Sales>[] = [
@@ -42,9 +43,17 @@ export const columnsS: ColumnDef<Sales>[] = [
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       const ccolor = row.original.ccolor;
+      const background = shadenHexColor(ccolor);
+
       return (
-        <div style={{ background: ccolor }} className="categoryB">
-          {category.toLocaleUpperCase()}
+        <div
+          style={{
+            background,
+            color: ccolor,
+          }}
+          className="categoryB"
+        >
+          {category.toUpperCase()}
         </div>
       );
     },

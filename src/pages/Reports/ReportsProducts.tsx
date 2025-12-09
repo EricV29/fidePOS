@@ -3,7 +3,7 @@ import CardInfoNumber from "@components/CardInfoNumber";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import RevenueIcon from "@icons/RevenueIcon";
 import ChartPieDonutText from "@components/chart-pie-donut";
-import { addRandomFill } from "@utility/AddFill";
+import { addRandomFill } from "@/utility/addFill";
 import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsP } from "@columns/columnsP";
