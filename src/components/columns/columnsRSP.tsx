@@ -1,12 +1,13 @@
 import type { ColumnDef } from "@tanstack/react-table";
 
 import { Button } from "@/components/ui/button";
-import EyeIcon from "@icons/EyeIcon";
+import PreviewIcon from "@/assets/icons/PreviewIcon";
 import DeleteIcon from "@icons/DeleteIcon";
 import EditIcon from "@icons/EditIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { RecentSalesPaid } from "@typesm/sales";
+import { shadenHexColor } from "@utility/shadenHexColor";
 
 // Columns Recent Sales Paid
 export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
@@ -36,9 +37,17 @@ export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       const ccolor = row.original.ccolor;
+      const background = shadenHexColor(ccolor);
+
       return (
-        <div style={{ background: ccolor }} className="categoryB">
-          {category.toLocaleUpperCase()}
+        <div
+          style={{
+            background,
+            color: ccolor,
+          }}
+          className="categoryB"
+        >
+          {category.toUpperCase()}
         </div>
       );
     },
@@ -70,7 +79,7 @@ export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
         <div className="flex justify-center items-center space-x-2">
           {actions?.view && (
             <Button variant="outline" size="icon" onClick={handleDescription}>
-              <EyeIcon />
+              <PreviewIcon />
             </Button>
           )}
 

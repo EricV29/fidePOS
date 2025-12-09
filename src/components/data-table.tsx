@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { currencyFormat } from "@utility/currencyFormat";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -35,6 +36,23 @@ export function DataTable<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: { actions },
+  });
+
+  const numericTotals: Record<string, number> = {};
+  columns.forEach((col) => {
+    const key = col.accessorKey as string;
+    const excluded = ["stock"];
+
+    if (
+      key &&
+      !excluded.includes(key) &&
+      typeof (data[0] as any)?.[key] === "number"
+    ) {
+      numericTotals[key] = data.reduce(
+        (sum, row) => sum + (row as any)[key],
+        0
+      );
+    }
   });
 
   return (
@@ -61,15 +79,33 @@ export function DataTable<TData, TValue>({
 
       <TableBody>
         {table.getRowModel().rows.length ? (
-          table.getRowModel().rows.map((row) => (
-            <TableRow key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-              ))}
+          <>
+            {table.getRowModel().rows.map((row) => (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => (
+                  <TableCell key={cell.id}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </TableCell>
+                ))}
+              </TableRow>
+            ))}
+
+            <TableRow className="sticky bottom-0 bg-[#FFF8ED] font-semibold">
+              {table.getVisibleFlatColumns().map((column, index) => {
+                const key = column.id;
+
+                return (
+                  <TableCell key={key}>
+                    {numericTotals[key] !== undefined
+                      ? currencyFormat(numericTotals[key])
+                      : index === 0
+                      ? "Totals"
+                      : ""}
+                  </TableCell>
+                );
+              })}
             </TableRow>
-          ))
+          </>
         ) : (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">

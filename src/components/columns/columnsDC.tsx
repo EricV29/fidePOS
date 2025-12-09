@@ -1,11 +1,12 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@components/ui/button";
-import EyeIcon from "@icons/EyeIcon";
+import EyeIcon from "@/assets/icons/PreviewIcon";
 import DeleteIcon from "@icons/DeleteIcon";
 import EditIcon from "@icons/EditIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { DebtsCustomer } from "@typesm/customers";
+import { shadenHexColor } from "@utility/shadenHexColor";
 
 // Columns Debts Customer
 export const columnsDC: ColumnDef<DebtsCustomer>[] = [
@@ -42,9 +43,17 @@ export const columnsDC: ColumnDef<DebtsCustomer>[] = [
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       const ccolor = row.original.ccolor;
+      const background = shadenHexColor(ccolor);
+
       return (
-        <div style={{ background: ccolor }} className="categoryB">
-          {category.toLocaleUpperCase()}
+        <div
+          style={{
+            background,
+            color: ccolor,
+          }}
+          className="categoryB"
+        >
+          {category.toUpperCase()}
         </div>
       );
     },

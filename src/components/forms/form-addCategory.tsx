@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { useState } from "react";
 
 const addCategorySchema = z.object({
   name: z.string().min(2, "Min 2 caracters").max(50),

@@ -1,6 +1,6 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@components/ui/button";
-import EyeIcon from "@icons/EyeIcon";
+import PreviewIcon from "@/assets/icons/PreviewIcon";
 import DeleteIcon from "@icons/DeleteIcon";
 import EditIcon from "@icons/EditIcon";
 import { partialNumberFilter } from "@utility/table-filter";
@@ -103,7 +103,7 @@ export const columnsC: ColumnDef<Customers>[] = [
         <div className="flex justify-center items-center space-x-2">
           {actions?.view && (
             <Button variant="outline" size="icon" onClick={handleDescription}>
-              <EyeIcon />
+              <PreviewIcon />
             </Button>
           )}
 
