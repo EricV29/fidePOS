@@ -38,14 +38,16 @@ export function DataTable<TData, TValue>({
     meta: { actions },
   });
 
-  // Detectar columnas numéricas y sumar valores
   const numericTotals: Record<string, number> = {};
-
   columns.forEach((col) => {
     const key = col.accessorKey as string;
+    const excluded = ["stock"];
 
-    // Solo columnas con accessor y números
-    if (key && typeof (data[0] as any)?.[key] === "number") {
+    if (
+      key &&
+      !excluded.includes(key) &&
+      typeof (data[0] as any)?.[key] === "number"
+    ) {
       numericTotals[key] = data.reduce(
         (sum, row) => sum + (row as any)[key],
         0
