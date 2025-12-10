@@ -12,6 +12,7 @@ import { columnsAR } from "@columns/columnsAR";
 import type { AccountsReceivable } from "@typesm/accounts";
 import { addRandomFill } from "@utility/addFill";
 import { useInstallDate } from "@hooks/useInstallDate";
+import { useTranslation } from "react-i18next";
 
 interface BarChartItem {
   [key: string]: string | number;
@@ -31,13 +32,6 @@ const chartDataTCSDB = [
   { category: "Zapatos", sales: 209 },
 ];
 
-const chartConfigTCS = {
-  sales: {
-    label: "Sales",
-    color: "#F57C00",
-  },
-};
-
 //* Example data pie chart
 const chartDataTAPCDB = [
   { category: "Maquillaje", products: 275 },
@@ -45,12 +39,6 @@ const chartDataTAPCDB = [
   { category: "Edredones", products: 287 },
   { category: "Zapatos", products: 173 },
 ];
-
-const chartConfigTAPC = {
-  products: {
-    label: "Products",
-  },
-};
 
 //* Example data cards
 const dataRevenueBD = 100000;
@@ -117,6 +105,7 @@ const dataARBD = [
 
 export default function Dashboard() {
   const { installDate } = useInstallDate();
+  const { t } = useTranslation();
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [chartDataTAPCF, setChartDataTAPCF] = useState<PieChartItem[]>([]);
   const [revenueCard, setRevenueCard] = useState(Number);
@@ -134,6 +123,19 @@ export default function Dashboard() {
     loadRoles();
   }, []);
 
+  const chartConfigTCS = {
+    sales: {
+      label: t("charts.chartTCS"),
+      color: "#F57C00",
+    },
+  };
+
+  const chartConfigTAPC = {
+    products: {
+      label: t("charts.chartAPC"),
+    },
+  };
+
   async function loadRoles() {
     const roles = await window.electronAPI.getRoles();
     console.log(roles);
@@ -145,7 +147,7 @@ export default function Dashboard() {
     <>
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
-          <h1 className="text-[30px]">Dashboard</h1>
+          <h1 className="text-[30px]">{t("dashboard.title")}</h1>
           <DatePicker installDate={installDate} />
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
@@ -153,7 +155,7 @@ export default function Dashboard() {
           <div className="h-fit p-2">
             <div className="h-[35vh] w-full flex justify-between gap-2 min-w-0">
               <div className="max-w-[600px] min-w-0 w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-                <p className="font-semibold mb-2">Top 5 - Sales by Category</p>
+                <p className="font-semibold mb-2">{t("dashboard.chart1")}</p>
                 <ChartBarLabel
                   chartData={chartDataTCS}
                   chartConfig={chartConfigTCS}
@@ -162,9 +164,7 @@ export default function Dashboard() {
                 />
               </div>
               <div className="max-w-[300px] min-w-0 h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-                <p className="font-semibold">
-                  Total Active Products Categories
-                </p>
+                <p className="font-semibold">{t("dashboard.chart2")}</p>
                 <ChartPieDonutText
                   chartData={chartDataTAPCF}
                   chartConfig={chartConfigTAPC}
@@ -173,7 +173,7 @@ export default function Dashboard() {
               <div className="max-w-[300px] min-w-0 w-[300px] h-full flex flex-col gap-2 justify-between items-center">
                 <CardInfoNumber
                   icon={RevenueIcon}
-                  title="Revenue"
+                  title={t("cards.revenuetitle")}
                   icond={null}
                   number={revenueCard}
                   format={true}
@@ -181,7 +181,7 @@ export default function Dashboard() {
                 />
                 <CardInfoNumber
                   icon={InvestmentIcon}
-                  title="Investment"
+                  title={t("cards.investmenttitle")}
                   icond={null}
                   number={investCard}
                   format={true}
@@ -192,7 +192,7 @@ export default function Dashboard() {
           </div>
           <div className="flex-1 min-h-0 p-2 flex gap-2">
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
-              <p className="font-semibold mb-2">Recent Sales Paid</p>
+              <p className="font-semibold mb-2">{t("dashboard.table1")}</p>
               <DataTable
                 columns={columnsRSP}
                 data={dataTableRSP}
@@ -204,7 +204,7 @@ export default function Dashboard() {
               />
             </div>
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
-              <p className="font-semibold mb-2">Accounts Receivable</p>
+              <p className="font-semibold mb-2">{t("dashboard.table2")}</p>
               <DataTable
                 columns={columnsAR}
                 data={dataTableAR}

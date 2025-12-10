@@ -5,6 +5,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useTranslation } from "react-i18next";
 
 interface DataItem {
   fill: string;
@@ -20,10 +21,11 @@ const ChartPieDonut: React.FC<ChartPieExProp> = ({
   chartData,
   chartConfig,
 }) => {
+  const { t } = useTranslation();
   if (!chartData || chartData.length === 0) {
     return (
       <div className="w-full h-full flex items-center justify-center font-extralight">
-        There is no data yet.
+        {t("charts.noData")}
       </div>
     );
   }
@@ -80,7 +82,7 @@ const ChartPieDonut: React.FC<ChartPieExProp> = ({
                       y={(viewBox.cy || 0) + 24}
                       className="fill-muted-foreground"
                     >
-                      {dataKey}
+                      {chartConfig.products.label}
                     </tspan>
                   </text>
                 );

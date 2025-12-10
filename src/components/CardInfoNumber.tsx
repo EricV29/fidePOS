@@ -1,5 +1,6 @@
 import React from "react";
 import type { IconProps } from "@typesm/icons";
+import { useTranslation } from "react-i18next";
 
 interface CardInfoNumberProps {
   icon: React.ComponentType<IconProps> | null;
@@ -18,6 +19,8 @@ const CardInfoNumber: React.FC<CardInfoNumberProps> = ({
   format,
   color,
 }) => {
+  const { i18n } = useTranslation();
+
   const formatNumber = (value: number) => {
     return new Intl.NumberFormat("en-US", {
       minimumFractionDigits: 2,

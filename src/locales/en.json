@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "chart1": "Top 5 - Sales by Category",
+    "chart2": "Active Products by Category",
+    "table1": "Recent Sales",
+    "table2": "Accounts Receivable"
+  },
+  "datePicker": {
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "days": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "button1": "Cancel",
+    "button2": "Apply"
+  },
+  "charts": {
+    "noData": "There is no data yet.",
+    "chartTCS": "Sales",
+    "chartAPC": "Products"
+  },
+  "cards": {
+    "revenuetitle": "Revenue",
+    "investmenttitle": "Investment"
+  }
+}

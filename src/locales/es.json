@@ -1,0 +1,45 @@
+{
+  "dashboard": {
+    "title": "Panel",
+    "chart1": "Top 5 - Ventas por categoria",
+    "chart2": "Productos Activos por Categoria",
+    "table1": "Ventas Recientes",
+    "table2": "Cuentas por Cobrar"
+  },
+  "datePicker": {
+    "months": {
+      "january": "Enero",
+      "february": "Febrero",
+      "march": "Marzo",
+      "april": "Abril",
+      "may": "Mayo",
+      "june": "Junio",
+      "july": "Julio",
+      "august": "Agosto",
+      "september": "Septiembre",
+      "october": "Octubre",
+      "november": "Noviembre",
+      "december": "Diciembre"
+    },
+    "days": {
+      "sun": "Dom",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb"
+    },
+    "button1": "Cancelar",
+    "button2": "Aplicar"
+  },
+  "charts": {
+    "noData": "Aún no hay datos.",
+    "chartTCS": "Ventas",
+    "chartAPC": "Productos"
+  },
+  "cards": {
+    "revenuetitle": "Ganancias",
+    "investmenttitle": "Inversión"
+  }
+}

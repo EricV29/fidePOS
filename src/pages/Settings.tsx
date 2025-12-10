@@ -8,12 +8,13 @@ import UserPlusIcon from "@icons/UserPlusIcon";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsU } from "@columns/columnsU";
 import type { Users } from "@typesm/users";
+import { useTranslation } from "react-i18next";
 
 interface SettingsProps {}
 
 const optionsLanguage = [
-  { label: "English", value: "english" },
-  { label: "Spanish", value: "spanish" },
+  { label: "English", value: "en" },
+  { label: "Spanish", value: "es" },
 ];
 
 const optionsTheme = [
@@ -49,10 +50,16 @@ const dataUsersDB = [
 
 const Settings: React.FC<SettingsProps> = ({}) => {
   const [dataUsers, setUsers] = useState<Users[]>([]);
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     setUsers(dataUsersDB);
   }, []);
+
+  const handleLanguageChange = (value: string) => {
+    i18n.changeLanguage(value);
+    localStorage.setItem("lang", value);
+  };
   return (
     <>
       <div className="w-full h-full flex flex-col min-h-0">
@@ -95,6 +102,8 @@ const Settings: React.FC<SettingsProps> = ({}) => {
                 options={optionsLanguage}
                 color="#000"
                 placeholder="Language"
+                value={i18n.language}
+                onChange={handleLanguageChange}
               />
             </div>
           </div>

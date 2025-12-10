@@ -10,6 +10,7 @@ interface CustomSelectProps {
   color: string;
   options: SelectOption[];
   placeholder?: string;
+  value?: string;
   onChange?: (value: string) => void;
 }
 
@@ -17,10 +18,11 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
   color,
   options,
   placeholder = "Select an option",
+  value,
   onChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedValue, setSelectedValue] = useState<string | undefined>();
+  const [selectedValue, setSelectedValue] = useState<string | undefined>(value);
   const selectRef = useRef<HTMLDivElement>(null);
 
   const toggleSelect = () => setIsOpen(!isOpen);
@@ -30,6 +32,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     onChange?.(option.value);
     setIsOpen(false);
   };
+
+  useEffect(() => {
+    setSelectedValue(value);
+  }, [value]);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
