@@ -1,0 +1,116 @@
+import ReactDOM from "react-dom";
+import { useModal } from "@context/ModalContext";
+import PayIcon from "@icons/PayIcon";
+import CloseIcon from "@icons/CloseIcon";
+import NewPaymentForm from "@forms/form-newPayment";
+import CustomSelect from "@components/Select";
+import { DataTable } from "@components/data-table";
+import { useState, useEffect } from "react";
+import type { PaymentsDebt } from "@typesm/customers";
+import { columnsPD } from "@columns/columnsPD";
+
+const optionsDebts = [
+  { label: "0001 Carrito $30.00", value: "id" },
+  { label: "0002 Cobija $50.00", value: "idd" },
+  { label: "0003 Labial $60.00", value: "iddd" },
+];
+
+const optionsCustomers = [
+  { label: "Eric Villeda", value: "id" },
+  { label: "Manuel Angas", value: "idd" },
+  { label: "Juan Perez", value: "iddd" },
+];
+
+const dataPaymentsDB = [
+  {
+    id: "00001",
+    code_sku: "12234",
+    created_at: "01/01/2025",
+    amount: 30,
+    note: "Proxima semana liquida",
+  },
+];
+
+export function ModalNewPayment() {
+  const { setModal } = useModal();
+
+  const close = () => setModal(null);
+  const modalRoot = document.getElementById("modal-root") as HTMLElement;
+  const [dataPayments, setDataPayments] = useState<PaymentsDebt[]>([]);
+
+  useEffect(() => {
+    setDataPayments(dataPaymentsDB);
+  }, []);
+
+  const handleNewPayment = () => {
+    //window.electronAPI.signupSuccess();
+  };
+
+  return ReactDOM.createPortal(
+    <div
+      className="fixed inset-0 flex justify-center items-center z-30 bg-white/30 backdrop-blur-sm"
+      onClick={close}
+    >
+      <div
+        className="w-[700px] flex flex-col p-5 gap-2 bg-white rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="w-full flex justify-between items-center">
+          <div className="flex gap-5">
+            <PayIcon size={40} color="#F57C00" />
+            <div className="flex flex-col">
+              <h2>New payment</h2>
+              <p className="font-extralight">
+                Register new payment of your customer.
+              </p>
+            </div>
+          </div>
+          <button className="bicon" onClick={close}>
+            <CloseIcon />
+          </button>
+        </div>
+        <hr className="border border-[#b3b3b3] my-2" />
+        <p>Ensure all fields are correctly filled before saving.</p>
+        <div className="w-full flex justify-between items-center gap-2">
+          <div className="w-full">
+            <p className="font-semibold">Customer</p>
+            <CustomSelect
+              options={optionsCustomers}
+              color="#000"
+              placeholder="Select"
+            />
+          </div>
+          <div className="w-full">
+            <p className="font-semibold">Customer debt</p>
+            <CustomSelect
+              options={optionsDebts}
+              color="#000"
+              placeholder="Select"
+            />
+          </div>
+        </div>
+        <div className="w-full flex justify-between px-2">
+          <div className="flex gap-2 font-semibold">
+            <p>Total debt</p>
+            <p className="text-[#F57C00]">$2393.00</p>
+          </div>
+          <div className="flex gap-2 font-semibold">
+            <p>Total payment</p>
+            <p className="text-[#43A047]">$200.00</p>
+          </div>
+          <div className="flex gap-2 font-semibold">
+            <p>Total debt</p>
+            <p className="text-[#D32F2F]">$1938.00</p>
+          </div>
+        </div>
+        <div className="w-full h-[400px] flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 overflow-y-auto">
+          <NewPaymentForm onSuccess={handleNewPayment} />
+          <div>
+            <DataTable data={dataPayments} columns={columnsPD} />
+          </div>
+        </div>
+      </div>
+    </div>,
+    modalRoot
+  );
+}

@@ -51,3 +51,11 @@ export type CustomersSale = {
   label: string;
   value: string;
 };
+
+export type PaymentsDebt = {
+  id: string;
+  created_at: string;
+  code_sku: string;
+  amount: number;
+  note: string;
+};

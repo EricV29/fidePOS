@@ -157,6 +157,7 @@ async function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       total_amount INTEGER NOT NULL,
       paid_amount INTEGER NOT NULL,
+      discount INTEGER NOT NULL,
       customer_id INTEGER,
       status_id INTEGER NOT NULL,
       user_id INTEGER NOT NULL,

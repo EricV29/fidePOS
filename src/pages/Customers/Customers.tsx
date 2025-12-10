@@ -8,6 +8,7 @@ import { Outlet } from "react-router-dom";
 import { useModal } from "@/context/ModalContext";
 import { ModalAddCustomer } from "@/components/modals/ModalAddCustomer";
 import { ModalExport } from "@modals/ModalExport";
+import { ModalNewPayment } from "@modals/ModalNewPayment";
 
 interface CustomersProps {}
 
@@ -44,7 +45,10 @@ const Customers: React.FC<CustomersProps> = ({}) => {
             >
               <UserPlusIcon /> <p>Customer</p>
             </button>
-            <button className="bnormal">
+            <button
+              className="bnormal"
+              onClick={() => setModal(<ModalNewPayment />)}
+            >
               <PayIcon /> <p>Payment</p>
             </button>
           </div>
