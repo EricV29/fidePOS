@@ -12,6 +12,7 @@ import { columnsAR } from "@columns/columnsAR";
 import type { AccountsReceivable } from "@typesm/accounts";
 import { addRandomFill } from "@utility/addFill";
 import { useInstallDate } from "@hooks/useInstallDate";
+
 interface BarChartItem {
   [key: string]: string | number;
 }

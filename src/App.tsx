@@ -15,39 +15,42 @@ import ReportsSales from "./pages/Reports/ReportsSales";
 import ReportsProducts from "./pages/Reports/ReportsProducts";
 import ReportsCustomers from "./pages/Reports/ReportsCustomers";
 import { ModalProvider } from "./context/ModalContext";
+import { LoadingProvider } from "./context/LoadingContext";
 
 function App() {
   return (
-    <ModalProvider>
-      <HashRouter>
-        <Routes>
-          <Route path="/Signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
+    <LoadingProvider>
+      <ModalProvider>
+        <HashRouter>
+          <Routes>
+            <Route path="/Signup" element={<Signup />} />
+            <Route path="/login" element={<Login />} />
 
-          <Route path="/main" element={<Main />}>
-            <Route index element={<Navigate to="dashboard" />} />
-            <Route path="dashboard" element={<Dashboard />} />
-            <Route path="newsale" element={<NewSale />} />
-            <Route path="products" element={<Products />} />
-            <Route path="reports" element={<Reports />}>
-              <Route index element={<Navigate to="general" replace />} />
-              <Route path="general" element={<ReportsGeneral />} />
-              <Route path="sales" element={<ReportsSales />} />
-              <Route path="products" element={<ReportsProducts />} />
-              <Route path="customers" element={<ReportsCustomers />} />
+            <Route path="/main" element={<Main />}>
+              <Route index element={<Navigate to="dashboard" />} />
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="newsale" element={<NewSale />} />
+              <Route path="products" element={<Products />} />
+              <Route path="reports" element={<Reports />}>
+                <Route index element={<Navigate to="general" replace />} />
+                <Route path="general" element={<ReportsGeneral />} />
+                <Route path="sales" element={<ReportsSales />} />
+                <Route path="products" element={<ReportsProducts />} />
+                <Route path="customers" element={<ReportsCustomers />} />
+              </Route>
+              <Route path="customers" element={<Customers />}>
+                <Route index element={<Navigate to="general" replace />} />
+                <Route path="general" element={<CustomersGeneral />} />
+                <Route path="payments" element={<CustomersPayments />} />
+              </Route>
+              <Route path="settings" element={<Settings />} />
             </Route>
-            <Route path="customers" element={<Customers />}>
-              <Route index element={<Navigate to="general" replace />} />
-              <Route path="general" element={<CustomersGeneral />} />
-              <Route path="payments" element={<CustomersPayments />} />
-            </Route>
-            <Route path="settings" element={<Settings />} />
-          </Route>
 
-          <Route path="*" element={<Navigate to="/login" />} />
-        </Routes>
-      </HashRouter>
-    </ModalProvider>
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Routes>
+        </HashRouter>
+      </ModalProvider>
+    </LoadingProvider>
   );
 }
 

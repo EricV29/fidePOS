@@ -32,6 +32,14 @@ let signupWindow = null;
 
 // Signup Window
 function createSignupWindow() {
+  splash = new BrowserWindow({
+    width: 300,
+    height: 300,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+  });
+
   signupWindow = new BrowserWindow({
     width: 600,
     height: 650,
@@ -45,10 +53,16 @@ function createSignupWindow() {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
     },
+    show: false,
   });
 
   const url = getPageUrl("signup");
   signupWindow.loadURL(url);
+
+  signupWindow.webContents.on("did-finish-load", () => {
+    splash.close();
+    signupWindow.show();
+  });
 
   signupWindow.on("closed", () => {
     signupWindow = null;
@@ -57,6 +71,14 @@ function createSignupWindow() {
 
 // Login Window
 function createLoginWindow() {
+  splash = new BrowserWindow({
+    width: 300,
+    height: 300,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+  });
+
   loginWindow = new BrowserWindow({
     width: 600,
     height: 450,
@@ -70,10 +92,16 @@ function createLoginWindow() {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
     },
+    show: false,
   });
 
   const url = getPageUrl("login");
   loginWindow.loadURL(url);
+
+  loginWindow.webContents.on("did-finish-load", () => {
+    splash.close();
+    loginWindow.show();
+  });
 
   loginWindow.on("closed", () => {
     loginWindow = null;
@@ -93,6 +121,7 @@ function createMainWindow() {
       preload: path.join(__dirname, "preload.js"),
       contextIsolation: true,
     },
+    show: false,
   });
 
   const url = getPageUrl("main");
