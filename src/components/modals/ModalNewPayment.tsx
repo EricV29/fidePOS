@@ -52,7 +52,7 @@ export function ModalNewPayment() {
       onClick={close}
     >
       <div
-        className="w-[700px] flex flex-col p-5 gap-2 bg-white rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
+        className="max-w-[700px] h-[500px] lg:h-[700px] flex flex-col p-5 gap-2 bg-white rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full flex justify-between items-center">

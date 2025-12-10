@@ -11,7 +11,6 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import CustomSelect from "@components/Select";
 
 const newPaymentSchema = z.object({
   payment_amount: z
@@ -39,11 +38,6 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
     console.log("Form submitted:", values);
     if (onSuccess) onSuccess();
   }
-
-  const optionsCategory = [
-    { label: "Toys", value: "toys" },
-    { label: "Maquillaje", value: "maquillaje" },
-  ];
 
   return (
     <Form {...form}>
