@@ -48,7 +48,7 @@ export function ModalNewPayment() {
 
   return ReactDOM.createPortal(
     <div
-      className="fixed inset-0 flex justify-center items-center z-30 bg-white/30 backdrop-blur-sm"
+      className="fixed inset-0 flex justify-center items-center z-30 bg-black/10 backdrop-blur-sm"
       onClick={close}
     >
       <div
