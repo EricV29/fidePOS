@@ -6,9 +6,14 @@ import EditIcon from "@icons/EditIcon";
 import { currencyFormat } from "@utility/currencyFormat";
 import { partialNumberFilter } from "@utility/table-filter";
 import type { AccountsReceivable } from "@typesm/accounts";
+import type { TFunction } from "i18next";
+import { formatDateColumns } from "@utility/dateFormatColumns";
 
 // Columns Accounts Receivable
-export const columnsAR: ColumnDef<AccountsReceivable>[] = [
+export const columnsAR = (
+  t: TFunction,
+  language: string
+): ColumnDef<AccountsReceivable>[] => [
   {
     id: "rowNumber",
     header: "No",
@@ -21,7 +26,7 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
   },
   {
     accessorKey: "customer",
-    header: "Customer",
+    header: t("columns.customer"),
     cell: ({ row }) => {
       return `${row.original.name} ${row.original.last_name}`;
     },
@@ -29,11 +34,11 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
   },
   {
     accessorKey: "code_sku",
-    header: "Code SKU",
+    header: t("columns.code"),
   },
   {
     accessorKey: "debt_amount",
-    header: "Debt Amount",
+    header: t("columns.debt_amount"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("debt_amount")));
 
@@ -43,7 +48,7 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
   },
   {
     accessorKey: "debt_paid",
-    header: "Debt Paid",
+    header: t("columns.debt_paid"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("debt_paid")));
 
@@ -53,7 +58,7 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
   },
   {
     accessorKey: "debt_pending",
-    header: "Debt Pending",
+    header: t("columns.debt_pending"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("debt_pending")));
 
@@ -63,17 +68,21 @@ export const columnsAR: ColumnDef<AccountsReceivable>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Created Date",
+    header: t("columns.created_at"),
     meta: {
       headerClassName: "text-center",
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("created_at")}</div>;
+      return (
+        <div className="text-center">
+          {formatDateColumns(row.getValue("created_at"), language)}
+        </div>
+      );
     },
   },
   {
     id: "actions",
-    header: "Actions",
+    header: t("columns.actions"),
     meta: {
       headerClassName: "text-center",
     },

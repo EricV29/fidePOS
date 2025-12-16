@@ -1,4 +1,7 @@
 {
+  "global": {
+    "noData": "Aún no hay datos."
+  },
   "dashboard": {
     "title": "Panel",
     "chart1": "Top 5 - Ventas por categoria",
@@ -34,12 +37,23 @@
     "button2": "Aplicar"
   },
   "charts": {
-    "noData": "Aún no hay datos.",
     "chartTCS": "Ventas",
-    "chartAPC": "Productos"
+    "chartAPC": "Productos",
+    "totals": "Totales"
   },
   "cards": {
     "revenuetitle": "Ganancias",
     "investmenttitle": "Inversión"
+  },
+  "columns": {
+    "created_at": "Fecha Creación",
+    "category": "Categoria",
+    "actions": "Acciones",
+    "total_amount": "Monto",
+    "customer": "Cliente",
+    "code": "Código SKU",
+    "debt_amount": "Deuda",
+    "debt_paid": "Monto Pagado",
+    "debt_pending": "Monto Pendiente"
   }
 }

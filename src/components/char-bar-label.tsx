@@ -31,7 +31,7 @@ const ChartBarLabel: React.FC<ChartBarLabelProps> = ({
   if (!chartData || chartData.length === 0) {
     return (
       <div className="w-full h-full flex items-center justify-center font-extralight">
-        {t("charts.noData")}
+        {t("global.noData")}
       </div>
     );
   }

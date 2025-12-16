@@ -1,4 +1,7 @@
 {
+  "global": {
+    "noData": "There is no data yet."
+  },
   "dashboard": {
     "title": "Dashboard",
     "chart1": "Top 5 - Sales by Category",
@@ -34,12 +37,23 @@
     "button2": "Apply"
   },
   "charts": {
-    "noData": "There is no data yet.",
     "chartTCS": "Sales",
-    "chartAPC": "Products"
+    "chartAPC": "Products",
+    "totals": "Totals"
   },
   "cards": {
     "revenuetitle": "Revenue",
     "investmenttitle": "Investment"
+  },
+  "columns": {
+    "created_at": "Created Date",
+    "category": "Category",
+    "actions": "Actions",
+    "total_amount": "Amount",
+    "customer": "Customer",
+    "code": "Code SKU",
+    "debt_amount": "Debt Amount",
+    "debt_paid": "Debt Paid",
+    "debt_pending": "Debt Pending"
   }
 }

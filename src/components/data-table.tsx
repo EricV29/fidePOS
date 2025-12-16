@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { currencyFormat } from "@utility/currencyFormat";
+import { useTranslation } from "react-i18next";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -37,7 +38,7 @@ export function DataTable<TData, TValue>({
     getCoreRowModel: getCoreRowModel(),
     meta: { actions },
   });
-
+  const { t } = useTranslation();
   const numericTotals: Record<string, number> = {};
   columns.forEach((col) => {
     const key = col.accessorKey as string;
@@ -99,7 +100,7 @@ export function DataTable<TData, TValue>({
                     {numericTotals[key] !== undefined
                       ? currencyFormat(numericTotals[key])
                       : index === 0
-                      ? "Totals"
+                      ? t("charts.totals")
                       : ""}
                   </TableCell>
                 );
@@ -109,7 +110,7 @@ export function DataTable<TData, TValue>({
         ) : (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">
-              There is no data yet.
+              {t("global.noData")}
             </TableCell>
           </TableRow>
         )}

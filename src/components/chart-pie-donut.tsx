@@ -25,7 +25,7 @@ const ChartPieDonut: React.FC<ChartPieExProp> = ({
   if (!chartData || chartData.length === 0) {
     return (
       <div className="w-full h-full flex items-center justify-center font-extralight">
-        {t("charts.noData")}
+        {t("global.noData")}
       </div>
     );
   }

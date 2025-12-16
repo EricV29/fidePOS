@@ -48,42 +48,14 @@ const dataInvestBD = 12238;
 const dataRSPBD = [
   {
     id: "728ed51f",
-    created_at: "16/11/2025",
+    created_at: "2025-11-16 00:00:00",
     category: "Maquillaje",
     ccolor: "#5b49ff",
     total_amount: 100,
   },
   {
     id: "728ed52f",
-    created_at: "16/11/2025",
-    category: "toys",
-    ccolor: "#ff49ff",
-    total_amount: 50,
-  },
-  {
-    id: "728ed52f",
-    created_at: "16/11/2025",
-    category: "toys",
-    ccolor: "#ff49ff",
-    total_amount: 50,
-  },
-  {
-    id: "728ed52f",
-    created_at: "16/11/2025",
-    category: "toys",
-    ccolor: "#ff49ff",
-    total_amount: 50,
-  },
-  {
-    id: "728ed52f",
-    created_at: "16/11/2025",
-    category: "toys",
-    ccolor: "#ff49ff",
-    total_amount: 50,
-  },
-  {
-    id: "728ed52f",
-    created_at: "16/11/2025",
+    created_at: "2025-11-16 00:00:00",
     category: "toys",
     ccolor: "#ff49ff",
     total_amount: 50,
@@ -99,13 +71,13 @@ const dataARBD = [
     debt_amount: 500,
     debt_paid: 200,
     debt_pending: 300,
-    created_at: "01/01/2025",
+    created_at: "2025-02-15 00:00:00",
   },
 ];
 
 export default function Dashboard() {
   const { installDate } = useInstallDate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [chartDataTAPCF, setChartDataTAPCF] = useState<PieChartItem[]>([]);
   const [revenueCard, setRevenueCard] = useState(Number);
@@ -123,6 +95,9 @@ export default function Dashboard() {
     loadRoles();
   }, []);
 
+  const columnsrsp = columnsRSP(t, i18n.language);
+  const columnsar = columnsAR(t, i18n.language);
+
   const chartConfigTCS = {
     sales: {
       label: t("charts.chartTCS"),
@@ -138,7 +113,6 @@ export default function Dashboard() {
 
   async function loadRoles() {
     const roles = await window.electronAPI.getRoles();
-    console.log(roles);
   }
 
   if (!installDate) return null;
@@ -194,7 +168,7 @@ export default function Dashboard() {
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
               <p className="font-semibold mb-2">{t("dashboard.table1")}</p>
               <DataTable
-                columns={columnsRSP}
+                columns={columnsrsp}
                 data={dataTableRSP}
                 actions={{
                   view: true,
@@ -206,7 +180,7 @@ export default function Dashboard() {
             <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
               <p className="font-semibold mb-2">{t("dashboard.table2")}</p>
               <DataTable
-                columns={columnsAR}
+                columns={columnsar}
                 data={dataTableAR}
                 actions={{
                   view: true,

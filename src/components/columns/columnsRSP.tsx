@@ -8,9 +8,14 @@ import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { RecentSalesPaid } from "@typesm/sales";
 import { shadenHexColor } from "@utility/shadenHexColor";
+import type { TFunction } from "i18next";
+import { formatDateColumns } from "@utility/dateFormatColumns";
 
 // Columns Recent Sales Paid
-export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
+export const columnsRSP = (
+  t: TFunction,
+  language: string
+): ColumnDef<RecentSalesPaid>[] => [
   {
     id: "rowNumber",
     header: "No",
@@ -23,17 +28,21 @@ export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Created Date",
+    header: t("columns.created_at"),
     meta: {
       headerClassName: "text-center",
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("created_at")}</div>;
+      return (
+        <div className="text-center">
+          {formatDateColumns(row.getValue("created_at"), language)}
+        </div>
+      );
     },
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: t("columns.category"),
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       const ccolor = row.original.ccolor;
@@ -54,7 +63,7 @@ export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
   },
   {
     accessorKey: "total_amount",
-    header: "Amount",
+    header: t("columns.total_amount"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("total_amount")));
 
@@ -64,7 +73,7 @@ export const columnsRSP: ColumnDef<RecentSalesPaid>[] = [
   },
   {
     id: "actions",
-    header: "Actions",
+    header: t("columns.actions"),
     meta: {
       headerClassName: "text-center",
     },
