@@ -37,13 +37,13 @@
     "button2": "Aplicar"
   },
   "charts": {
-    "chartTCS": "Ventas",
-    "chartAPC": "Productos",
+    "chart_tcs": "Ventas",
+    "chart_apc": "Productos",
     "totals": "Totales"
   },
   "cards": {
-    "revenuetitle": "Ganancias",
-    "investmenttitle": "Inversión"
+    "revenue_title": "Ganancias",
+    "investment_title": "Inversión"
   },
   "columns": {
     "created_at": "Fecha Creación",
@@ -73,7 +73,7 @@
     "options": "Opciones"
   },
   "tableSearch": {
-    "inputSearch": "Busca un registro...",
-    "inputSelect": "Elige una columna"
+    "input_search": "Busca un registro...",
+    "input_select": "Elige una columna"
   }
 }

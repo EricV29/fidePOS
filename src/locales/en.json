@@ -37,13 +37,13 @@
     "button2": "Apply"
   },
   "charts": {
-    "chartTCS": "Sales",
-    "chartAPC": "Products",
+    "chart_tcs": "Sales",
+    "chart_apc": "Products",
     "totals": "Totals"
   },
   "cards": {
-    "revenuetitle": "Revenue",
-    "investmenttitle": "Investment"
+    "revenue_title": "Revenue",
+    "investment_title": "Investment"
   },
   "columns": {
     "created_at": "Created Date",
@@ -73,7 +73,7 @@
     "options": "Options"
   },
   "tableSearch": {
-    "inputSearch": "Search register...",
-    "inputSelect": "Choose a column"
+    "input_search": "Search register...",
+    "input_select": "Choose a column"
   }
 }

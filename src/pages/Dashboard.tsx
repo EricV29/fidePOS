@@ -100,14 +100,14 @@ export default function Dashboard() {
 
   const chartConfigTCS = {
     sales: {
-      label: t("charts.chartTCS"),
+      label: t("charts.chart_tcs"),
       color: "#F57C00",
     },
   };
 
   const chartConfigTAPC = {
     products: {
-      label: t("charts.chartAPC"),
+      label: t("charts.chart_apc"),
     },
   };
 
@@ -147,7 +147,7 @@ export default function Dashboard() {
               <div className="max-w-[300px] min-w-0 w-[300px] h-full flex flex-col gap-2 justify-between items-center">
                 <CardInfoNumber
                   icon={RevenueIcon}
-                  title={t("cards.revenuetitle")}
+                  title={t("cards.revenue_title")}
                   icond={null}
                   number={revenueCard}
                   format={true}
@@ -155,7 +155,7 @@ export default function Dashboard() {
                 />
                 <CardInfoNumber
                   icon={InvestmentIcon}
-                  title={t("cards.investmenttitle")}
+                  title={t("cards.investment_title")}
                   icond={null}
                   number={investCard}
                   format={true}

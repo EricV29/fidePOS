@@ -85,7 +85,7 @@ export function DataTableSearch<TData, TValue>({
         <div className="inputtext">
           <SearchIcon />
           <input
-            placeholder={t("tableSearch.inputSearch")}
+            placeholder={t("tableSearch.input_search")}
             value={
               (table.getColumn(currentColumn)?.getFilterValue() as string) ?? ""
             }

@@ -85,7 +85,7 @@ export function DataTableSale<TData, TValue>({
         <div className="inputtext">
           <SearchIcon />
           <input
-            placeholder={t("tableSearch.inputSearch")}
+            placeholder={t("tableSearch.input_search")}
             value={
               (table.getColumn(currentColumn)?.getFilterValue() as string) ?? ""
             }
@@ -97,7 +97,7 @@ export function DataTableSale<TData, TValue>({
         </div>
         <CustomSelect
           options={columnOptions}
-          placeholder={t("tableSearch.inputSelect")}
+          placeholder={t("tableSearch.input_select")}
           onChange={setSelectedColumn}
           color="#F57C00"
         />
