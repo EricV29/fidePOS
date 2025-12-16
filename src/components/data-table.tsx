@@ -110,7 +110,7 @@ export function DataTable<TData, TValue>({
         ) : (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">
-              {t("global.noData")}
+              {t("global.no_data")}
             </TableCell>
           </TableRow>
         )}

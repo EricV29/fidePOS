@@ -1,6 +1,6 @@
 {
   "global": {
-    "noData": "There is no data yet."
+    "no_data": "There is no data yet."
   },
   "dashboard": {
     "title": "Dashboard",
@@ -54,6 +54,26 @@
     "code": "Code SKU",
     "debt_amount": "Debt Amount",
     "debt_paid": "Debt Paid",
-    "debt_pending": "Debt Pending"
+    "debt_pending": "Debt Pending",
+    "product": "Product",
+    "description": "Description",
+    "unit_price": "Unit Price",
+    "quantity": "Quantity"
+  },
+  "newSale": {
+    "title": "Products",
+    "input_code": "Search by SKU code...",
+    "num_sale": "Sale",
+    "btn_add_customer": "Customer",
+    "discount": "Discount",
+    "btn_sale": "Complete sale",
+    "input_select": "Choose a customer"
+  },
+  "cardCategory": {
+    "options": "Options"
+  },
+  "tableSearch": {
+    "inputSearch": "Search register...",
+    "inputSelect": "Choose a column"
   }
 }

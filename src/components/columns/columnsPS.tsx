@@ -5,9 +5,10 @@ import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { ProductsSale } from "@typesm/products";
 import { shadenHexColor } from "@utility/shadenHexColor";
+import type { TFunction } from "i18next";
 
 // Columns Products Sale
-export const columnsPS: ColumnDef<ProductsSale>[] = [
+export const columnsPS = (t: TFunction): ColumnDef<ProductsSale>[] => [
   {
     id: "rowNumber",
     header: "No",
@@ -20,15 +21,15 @@ export const columnsPS: ColumnDef<ProductsSale>[] = [
   },
   {
     accessorKey: "code_sku",
-    header: "Code SKU",
+    header: t("columns.code"),
   },
   {
     accessorKey: "product",
-    header: "Product",
+    header: t("columns.product"),
   },
   {
     accessorKey: "description",
-    header: "Description",
+    header: t("columns.description"),
     cell: ({ getValue }) => (
       <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
         {getValue() as string}
@@ -37,7 +38,7 @@ export const columnsPS: ColumnDef<ProductsSale>[] = [
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: t("columns.category"),
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       const ccolor = row.original.ccolor;
@@ -58,7 +59,7 @@ export const columnsPS: ColumnDef<ProductsSale>[] = [
   },
   {
     accessorKey: "unit_price",
-    header: "Unit Price",
+    header: t("columns.unit_price"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("unit_price")));
 

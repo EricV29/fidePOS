@@ -1,6 +1,6 @@
 {
   "global": {
-    "noData": "Aún no hay datos."
+    "no_data": "Aún no hay datos."
   },
   "dashboard": {
     "title": "Panel",
@@ -54,6 +54,26 @@
     "code": "Código SKU",
     "debt_amount": "Deuda",
     "debt_paid": "Monto Pagado",
-    "debt_pending": "Monto Pendiente"
+    "debt_pending": "Monto Pendiente",
+    "product": "Producto",
+    "description": "Descripción",
+    "unit_price": "Precio unidad",
+    "quantity": "Cantidad"
+  },
+  "newSale": {
+    "title": "Productos",
+    "input_code": "Buscar por codigo SKU...",
+    "num_sale": "Venta",
+    "btn_add_customer": "Cliente",
+    "discount": "Descuento",
+    "btn_sale": "Completar venta",
+    "input_select": "Elige un cliente"
+  },
+  "cardCategory": {
+    "options": "Opciones"
+  },
+  "tableSearch": {
+    "inputSearch": "Busca un registro...",
+    "inputSelect": "Elige una columna"
   }
 }
