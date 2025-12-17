@@ -3,10 +3,11 @@ import { useModal } from "@context/ModalContext";
 import CategoryIcon from "@icons/CategoryIcon";
 import CloseIcon from "@icons/CloseIcon";
 import AddCategoryForm from "@forms/form-addCategory";
+import { useTranslation } from "react-i18next";
 
 export function ModalAddCategory() {
   const { setModal } = useModal();
-
+  const { t } = useTranslation();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
@@ -27,9 +28,9 @@ export function ModalAddCategory() {
           <div className="flex gap-5">
             <CategoryIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>Add new category</h2>
+              <h2>{t("modalAddCategory.title")}</h2>
               <p className="font-extralight">
-                Add news cateogries to your database.
+                {t("modalAddCategory.description")}
               </p>
             </div>
           </div>
@@ -38,7 +39,7 @@ export function ModalAddCategory() {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p>Enter the main information of your new category.</p>
+        <p>{t("modalAddCategory.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
           <AddCategoryForm onSuccess={handleAddCategory} />
         </div>

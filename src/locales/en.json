@@ -148,5 +148,20 @@
     "input7": "Unit Price",
     "error7": "Only numeric characters",
     "btn": "Add product"
+  },
+  "modalAddCategory": {
+    "title": "Add new category",
+    "description": "Add news categories to your products.",
+    "subtitle": "Enter the main information of your new category."
+  },
+  "formAddCategory": {
+    "input1": "Name Category",
+    "place1": "category...",
+    "error1": "Min 2 characters",
+    "error1_max": "Max 50 characters",
+    "input3": "Description",
+    "place3": "text...",
+    "error3": "Min 2 characters",
+    "btn": "Add category"
   }
 }

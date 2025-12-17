@@ -125,7 +125,7 @@
     "text2": "o selecciona en tus archivos"
   },
   "modalAddProduct": {
-    "title": "Agregar producto",
+    "title": "Agrega un producto",
     "description": "Agrega nuevos productos a tu inventario.",
     "subtitle": "Ingresa la información de tu nuevo producto."
   },
@@ -148,5 +148,20 @@
     "input7": "Precio unidad",
     "error7": "Solo caracteres numéricos",
     "btn": "Agregar producto"
+  },
+  "modalAddCategory": {
+    "title": "Agrega una categoría",
+    "description": "Agrega nuevas categorías para tus productos.",
+    "subtitle": "Ingresa la información de tu nueva categoría."
+  },
+  "formAddCategory": {
+    "input1": "Nombre Categoría",
+    "place1": "categoría...",
+    "error1": "Min 2 caracteres",
+    "error1_max": "Max 50 caracteres",
+    "input3": "Descripción",
+    "place3": "texto...",
+    "error3": "Min 2 caracteres",
+    "btn": "Agregar categoría"
   }
 }
