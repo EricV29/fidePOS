@@ -82,7 +82,7 @@ const ChartPieDonut: React.FC<ChartPieExProp> = ({
                       y={(viewBox.cy || 0) + 24}
                       className="fill-muted-foreground"
                     >
-                      {chartConfig.products.label}
+                      {chartConfig.items.label}
                     </tspan>
                   </text>
                 );

@@ -9,6 +9,7 @@ import { addRandomFill } from "@/utility/addFill";
 import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsAR } from "@columns/columnsAR";
+import { useTranslation } from "react-i18next";
 
 interface dataCustomerI {
   [key: string]: number;
@@ -60,12 +61,6 @@ const chartDataCSDB = [
   { category: "Zapatos", sales: 73 },
 ];
 
-const chartConfigCS = {
-  sales: {
-    label: "Sales",
-  },
-};
-
 //* Example data bar chart
 const chartDataTCSDB = [
   { category: "Maquillaje", sales: 186 },
@@ -74,13 +69,6 @@ const chartDataTCSDB = [
   { category: "Dulces", sales: 73 },
   { category: "Zapatos", sales: 209 },
 ];
-
-const chartConfigTCS = {
-  sales: {
-    label: "Sales",
-    color: "#1976D2",
-  },
-};
 
 //* Example data stock products
 const dataCustomerDB = { Total: 40, "In Debt": 15 };
@@ -98,7 +86,7 @@ const dataARBD = [
     debt_amount: 500,
     debt_paid: 200,
     debt_pending: 300,
-    created_at: "01/01/2025",
+    created_at: "2025-02-15 00:00:00",
   },
 ];
 
@@ -108,6 +96,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [chartDataCSF, setChartDataCSF] = useState<PieChartItem[]>([]);
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     setCustomer(dataCustomerDB);
@@ -116,6 +105,21 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
     setChartDataTSC(chartDataTCSDB);
     setDataTableAR(dataARBD);
   }, []);
+
+  const columnsar = columnsAR(t, i18n.language);
+
+  const chartConfigCS = {
+    items: {
+      label: t("charts.chart_tcs"),
+    },
+  };
+
+  const chartConfigTCS = {
+    sales: {
+      label: t("charts.chart_tcs"),
+      color: "#1976D2",
+    },
+  };
 
   return (
     <>
@@ -197,7 +201,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
             <p className="font-semibold mb-2">Accounts Receivable</p>
             <DataTable
-              columns={columnsAR}
+              columns={columnsar}
               data={dataTableAR}
               actions={{
                 view: true,

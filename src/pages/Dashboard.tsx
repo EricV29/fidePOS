@@ -106,7 +106,7 @@ export default function Dashboard() {
   };
 
   const chartConfigTAPC = {
-    products: {
+    items: {
       label: t("charts.chart_apc"),
     },
   };

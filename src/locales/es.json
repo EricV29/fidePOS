@@ -107,7 +107,7 @@
     "table1": "Tabla de inventario"
   },
   "modalExport": {
-    "title": "Exportar estadisticas",
+    "title": "Exportar estadísticas",
     "description": "La información puede ser exportada como archivos <bold>.csv</bold>, <bold>.xlsx</bold> y <bold>.pdf</bold>.",
     "subtitle": "Elige tu configuración favorita.",
     "form_title": "Formato de archivo",
