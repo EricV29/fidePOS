@@ -3,9 +3,11 @@ import { useModal } from "@context/ModalContext";
 import UserPlusIcon from "@icons/UserPlusIcon";
 import CloseIcon from "@icons/CloseIcon";
 import AddCustomerForm from "@forms/form-addCustomer";
+import { useTranslation } from "react-i18next";
 
 export function ModalAddCustomer() {
   const { setModal } = useModal();
+  const { t } = useTranslation();
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
@@ -27,9 +29,9 @@ export function ModalAddCustomer() {
           <div className="flex gap-5">
             <UserPlusIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>Add new customer</h2>
+              <h2>{t("modalAddCustomer.title")}</h2>
               <p className="font-extralight">
-                Add individual clients to your customers list.
+                {t("modalAddCustomer.description")}
               </p>
             </div>
           </div>
@@ -38,7 +40,7 @@ export function ModalAddCustomer() {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p>Enter the main information of your new customer.</p>
+        <p>{t("modalAddCustomer.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
           <AddCustomerForm onSuccess={handleAddCustomer} />
         </div>

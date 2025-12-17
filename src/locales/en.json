@@ -75,5 +75,23 @@
   "tableSearch": {
     "input_search": "Search register...",
     "input_select": "Choose a column"
+  },
+  "modalAddCustomer": {
+    "title": "Add new customer",
+    "description": "Add individual clients to your customer list.",
+    "subtitle": "Enter the main information of your new customer"
+  },
+  "formAddCustomer": {
+    "input1": "First Name",
+    "place1": "name",
+    "error1": "Min 2 caracters",
+    "error1_max": "Max 50 caracters",
+    "input2": "Lastname",
+    "place2": "lastname",
+    "error2": "Min 2 caracters",
+    "error2_max": "Max 50 caracters",
+    "input3": "Phone",
+    "error3": "Number of 10 digits",
+    "btn": "Add customer"
   }
 }

@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -11,22 +10,21 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-
-const addCustomerSchema = z.object({
-  name: z.string().min(2, "Min 2 caracters").max(50),
-  lastname: z.string().min(2, "Min 2 caracters").max(50),
-  phone: z.string().regex(/^[0-9]{10}$/, "Number of 10 digits"),
-});
-
-export type AddCustomerFormValues = z.infer<typeof addCustomerSchema>;
+import { useTranslation } from "react-i18next";
+import {
+  type AddCustomerFormValues,
+  getAddCustomerSchema,
+} from "./schemas/customer.schema";
 
 interface AddCustomerFormProps {
   onSuccess?: () => void;
 }
 
 export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
+  const { t } = useTranslation();
+
   const form = useForm<AddCustomerFormValues>({
-    resolver: zodResolver(addCustomerSchema),
+    resolver: zodResolver(getAddCustomerSchema(t)),
     defaultValues: {
       name: "",
       lastname: "",
@@ -36,7 +34,7 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
 
   function onSubmit(values: AddCustomerFormValues) {
     console.log("Form submitted:", values);
-    if (onSuccess) onSuccess();
+    onSuccess?.();
   }
 
   return (
@@ -47,9 +45,15 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">First Name</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddCustomer.input1")}
+              </FormLabel>
               <FormControl>
-                <Input placeholder="name" {...field} className="bg-white" />
+                <Input
+                  placeholder={t("formAddCustomer.place1")}
+                  {...field}
+                  className="bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -60,9 +64,15 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
           name="lastname"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Lastname</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddCustomer.input2")}
+              </FormLabel>
               <FormControl>
-                <Input placeholder="lastname" {...field} className="bg-white" />
+                <Input
+                  placeholder={t("formAddCustomer.place2")}
+                  {...field}
+                  className="bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -73,7 +83,9 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Phone</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddCustomer.input3")}
+              </FormLabel>
               <FormControl>
                 <Input placeholder="52+" {...field} className="bg-white" />
               </FormControl>
@@ -82,7 +94,7 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
           )}
         />
         <button type="submit" className="borange">
-          Add Customer
+          {t("formAddCustomer.btn")}
         </button>
       </form>
     </Form>

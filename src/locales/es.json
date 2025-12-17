@@ -33,8 +33,8 @@
       "fri": "Vie",
       "sat": "Sáb"
     },
-    "button1": "Cancelar",
-    "button2": "Aplicar"
+    "btn1": "Cancelar",
+    "btn2": "Aplicar"
   },
   "charts": {
     "chart_tcs": "Ventas",
@@ -75,5 +75,23 @@
   "tableSearch": {
     "input_search": "Busca un registro...",
     "input_select": "Elige una columna"
+  },
+  "modalAddCustomer": {
+    "title": "Agregar nuevo cliente",
+    "description": "Agrega un nuevo cliente a tu lista.",
+    "subtitle": "Ingresa la información principal del nuevo cliente."
+  },
+  "formAddCustomer": {
+    "input1": "Nombres",
+    "place1": "nombre",
+    "error1": "Min 2 caracteres",
+    "error1_max": "Max 50 caracteres",
+    "input2": "Apellidos",
+    "place2": "apellidos",
+    "error2": "Min 2 caracteres",
+    "error2_max": "Max 50 caracteres",
+    "input3": "Teléfono",
+    "error3": "Número de 10 digitos",
+    "btn": "Agregar cliente"
   }
 }

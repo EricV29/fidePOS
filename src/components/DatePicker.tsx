@@ -220,14 +220,14 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
                 className="rounded-lg border border-[#f57c00] px-5 py-2.5 text-base font-medium text-[#f57c00] hover:bg-[#f57c00] hover:text-white"
                 onClick={handleCancel}
               >
-                {t("datePicker.button1")}
+                {t("datePicker.btn1")}
               </button>
               <button
                 id="applyButton"
                 className="rounded-lg bg-[#f57c00] px-5 py-2.5 text-base font-medium text-white hover:bg-[#ce6700]"
                 onClick={handleApply}
               >
-                {t("datePicker.button2")}
+                {t("datePicker.btn2")}
               </button>
             </div>
           </div>
