@@ -3,14 +3,16 @@ import { useModal } from "@context/ModalContext";
 import ImportIcon from "@icons/ImportIcon";
 import CloseIcon from "@icons/CloseIcon";
 import FileDropZone from "@components/FileDropZone";
+import { useTranslation, Trans } from "react-i18next";
 
 export function ModalImport() {
   const { setModal } = useModal();
+  const { t } = useTranslation();
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleExportStatistics = () => {
+  const handleImportStatistics = () => {
     window.electronAPI.signupSuccess();
   };
 
@@ -27,11 +29,14 @@ export function ModalImport() {
           <div className="flex gap-5">
             <ImportIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>Import your products</h2>
+              <h2>{t("modalImport.title")}</h2>
               <p className="font-extralight">
-                Data will be import in a{" "}
-                <span className="font-semibold">.csv</span> y{" "}
-                <span className="font-semibold">.xlsx</span> file.
+                <Trans
+                  i18nKey="modalImport.description"
+                  components={{
+                    bold: <span className="font-semibold" />,
+                  }}
+                />
               </p>
             </div>
           </div>
@@ -41,7 +46,7 @@ export function ModalImport() {
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
-          <p>Your file must include the following columns:</p>
+          <p>{t("modalImport.subtitle")}</p>
           <ul className="list-disc pl-5">
             <li>
               <strong>code_sku</strong>
@@ -62,7 +67,6 @@ export function ModalImport() {
               <strong>stock</strong>
             </li>
           </ul>
-
           <FileDropZone />
         </div>
       </div>

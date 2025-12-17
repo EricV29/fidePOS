@@ -97,7 +97,7 @@ export function DataTableSearch<TData, TValue>({
         </div>
         <CustomSelect
           options={columnOptions}
-          placeholder="Choose"
+          placeholder={t("tableSearch.input_select")}
           onChange={setSelectedColumn}
           color="#F57C00"
         />
@@ -137,7 +137,7 @@ export function DataTableSearch<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="text-center">
-                There is no data yet.
+                {t("global.no_data")}
               </TableCell>
             </TableRow>
           )}

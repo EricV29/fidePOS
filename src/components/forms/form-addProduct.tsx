@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -12,31 +11,24 @@ import {
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import CustomSelect from "@components/Select";
-
-const addProductSchema = z.object({
-  code_sku: z.string().regex(/^[0-9]+$/, "Only numeric characteres"),
-  product: z.string().min(2, "Min 2 caracters").max(50),
-  description: z.string().min(2, "Min 2 caracters").max(50),
-  category: z.string().min(2, "Min 2 caracters").max(50),
-  cost_price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Only numeric characteres"),
-  unit_price: z.string().regex(/^\d+(\.\d{1,2})?$/, "Only numeric characteres"),
-  stock: z.string().regex(/^[0-9]+$/, "Only numeric characteres"),
-});
-
-export type AddProductFormValues = z.infer<typeof addProductSchema>;
-
+import {
+  type AddProductFormValues,
+  getAddProductSchema,
+} from "./schemas/product.schema";
+import { useTranslation } from "react-i18next";
 interface ProductFormProps {
   onSuccess?: () => void;
 }
 
 export default function AddProductForm({ onSuccess }: ProductFormProps) {
+  const { t } = useTranslation();
+
   const form = useForm<AddProductFormValues>({
-    resolver: zodResolver(addProductSchema),
+    resolver: zodResolver(getAddProductSchema(t)),
     defaultValues: {
       code_sku: "",
       product: "",
       description: "",
-      category: "",
       cost_price: "",
       unit_price: "",
       stock: "",
@@ -62,7 +54,9 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
             name="code_sku"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Code SKU</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddProduct.input1")}
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -80,10 +74,12 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
             name="product"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Name Product</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddProduct.input2")}
+                </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="product..."
+                    placeholder={t("formAddProduct.place2")}
                     {...field}
                     className="bg-white"
                   />
@@ -98,9 +94,15 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Description</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddProduct.input3")}
+              </FormLabel>
               <FormControl>
-                <Input placeholder="text..." {...field} className="bg-white" />
+                <Input
+                  placeholder={t("formAddProduct.place3")}
+                  {...field}
+                  className="bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -108,11 +110,11 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
         />
         <div className="w-full flex justify-between">
           <div className="flex flex-col gap-1">
-            <p className="font-semibold">Category</p>
+            <p className="font-semibold">{t("formAddProduct.input4")}</p>
             <CustomSelect
               options={optionsCategory}
               color="#000"
-              placeholder="Language"
+              placeholder={t("formAddProduct.place4")}
             />
           </div>
           <FormField
@@ -120,7 +122,9 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
             name="stock"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Stock</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddProduct.input5")}
+                </FormLabel>
                 <FormControl>
                   <Input
                     type="number"
@@ -140,7 +144,9 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
             name="cost_price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Cost Price</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddProduct.input6")}
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="$" {...field} className="bg-white" />
                 </FormControl>
@@ -153,7 +159,9 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
             name="unit_price"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Unit Price</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddProduct.input7")}
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="$" {...field} className="bg-white" />
                 </FormControl>
@@ -163,7 +171,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
           />{" "}
         </div>
         <button type="submit" className="borange">
-          Add Product
+          {t("formAddProduct.btn")}
         </button>
       </form>
     </Form>

@@ -4,8 +4,8 @@
   },
   "dashboard": {
     "title": "Panel",
-    "chart1": "Top 5 - Ventas por categoria",
-    "chart2": "Productos Activos por Categoria",
+    "chart1": "Top 5 - Ventas por categoría",
+    "chart2": "Productos Activos por Categoría",
     "table1": "Ventas Recientes",
     "table2": "Cuentas por Cobrar"
   },
@@ -43,22 +43,26 @@
   },
   "cards": {
     "revenue_title": "Ganancias",
-    "investment_title": "Inversión"
+    "investment_title": "Inversión",
+    "inventory_value_title": "Valor de Inventario",
+    "stock_title": "Productos"
   },
   "columns": {
-    "created_at": "Fecha Creación",
-    "category": "Categoria",
+    "created_at": "Fecha creación",
+    "category": "Categoría",
     "actions": "Acciones",
     "total_amount": "Monto",
     "customer": "Cliente",
     "code": "Código SKU",
     "debt_amount": "Deuda",
-    "debt_paid": "Monto Pagado",
-    "debt_pending": "Monto Pendiente",
+    "debt_paid": "Monto pagado",
+    "debt_pending": "Monto pendiente",
     "product": "Producto",
     "description": "Descripción",
     "unit_price": "Precio unidad",
-    "quantity": "Cantidad"
+    "quantity": "Cantidad",
+    "cost_price": "Precio compra",
+    "status": "Estado"
   },
   "newSale": {
     "title": "Productos",
@@ -93,5 +97,56 @@
     "input3": "Teléfono",
     "error3": "Número de 10 digitos",
     "btn": "Agregar cliente"
+  },
+  "products": {
+    "title": "Inventario de Productos",
+    "btn_export": "Exportar",
+    "btn_import": "Importar",
+    "btn_add_product": "Producto",
+    "btn_add_category": "Categoría",
+    "table1": "Tabla de inventario"
+  },
+  "modalExport": {
+    "title": "Exportar estadisticas",
+    "description": "La información puede ser exportada como archivos <bold>.csv</bold>, <bold>.xlsx</bold> y <bold>.pdf</bold>.",
+    "subtitle": "Elige tu configuración favorita.",
+    "form_title": "Formato de archivo",
+    "form_description": "Elige tu formato de archivo",
+    "form_input_place": "Formato",
+    "form_btn": "Exportar"
+  },
+  "modalImport": {
+    "title": "Importa tus productos",
+    "description": "Los datos pueden ser importados como archivos <bold>.csv</bold> o <bold>.xlsx</bold>.",
+    "subtitle": "Las columnas de tu archivo debe de incluir los siguientes nombres:"
+  },
+  "dropZone": {
+    "text1": "Arrastra tus archivos .csv o .xlsx aquí",
+    "text2": "o selecciona en tus archivos"
+  },
+  "modalAddProduct": {
+    "title": "Agregar producto",
+    "description": "Agrega nuevos productos a tu inventario.",
+    "subtitle": "Ingresa la información de tu nuevo producto."
+  },
+  "formAddProduct": {
+    "input1": "Código SKU",
+    "error1": "Solo caracteres numéricos",
+    "input2": "Nombre Producto",
+    "place2": "producto...",
+    "error2": "Min 2 caracteres",
+    "error2_max": "Max 50 caracteres",
+    "input3": "Descripción",
+    "place3": "texto...",
+    "error3": "Min 2 caracteres",
+    "input4": "Categoría",
+    "place4": "selecciona",
+    "input5": "Stock",
+    "error5": "Solo caracteres numéricos",
+    "input6": "Precio compra",
+    "error6": "Solo caracteres numéricos",
+    "input7": "Precio unidad",
+    "error7": "Solo caracteres numéricos",
+    "btn": "Agregar producto"
   }
 }

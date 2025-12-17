@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export default function FileDropZone() {
   const [isDragging, setIsDragging] = useState(false);
+  const { t } = useTranslation();
 
   const handleFiles = (files: FileList) => {
     const file = files[0];
@@ -30,12 +32,12 @@ export default function FileDropZone() {
         ${isDragging ? "border-[#F57C00] bg-[#FFEFDE]" : "border-[#F57C00]"}
       `}
     >
-      <p className="text-gray-500">Drop file .csv o .xlsx here</p>
+      <p className="text-gray-500">{t("dropZone.text1")}</p>
       <label
         htmlFor="fileInput"
         className="text-blue-600 underline cursor-pointer font-medium"
       >
-        or select in your files
+        {t("dropZone.text2")}
       </label>
       <input
         id="fileInput"

@@ -43,22 +43,26 @@
   },
   "cards": {
     "revenue_title": "Revenue",
-    "investment_title": "Investment"
+    "investment_title": "Investment",
+    "inventory_value_title": "Inventory Value",
+    "stock_title": "Products"
   },
   "columns": {
-    "created_at": "Created Date",
+    "created_at": "Created date",
     "category": "Category",
     "actions": "Actions",
     "total_amount": "Amount",
     "customer": "Customer",
     "code": "Code SKU",
-    "debt_amount": "Debt Amount",
-    "debt_paid": "Debt Paid",
-    "debt_pending": "Debt Pending",
+    "debt_amount": "Debt amount",
+    "debt_paid": "Debt paid",
+    "debt_pending": "Debt pending",
     "product": "Product",
     "description": "Description",
-    "unit_price": "Unit Price",
-    "quantity": "Quantity"
+    "unit_price": "Unit price",
+    "quantity": "Quantity",
+    "cost_price": "Cost price",
+    "status": "Status"
   },
   "newSale": {
     "title": "Products",
@@ -93,5 +97,56 @@
     "input3": "Phone",
     "error3": "Number of 10 digits",
     "btn": "Add customer"
+  },
+  "products": {
+    "title": "Products Inventory",
+    "btn_export": "Export",
+    "btn_import": "Import",
+    "btn_add_product": "Product",
+    "btn_add_category": "Category",
+    "table1": "Inventory Table"
+  },
+  "modalExport": {
+    "title": "Export statistics",
+    "description": "Data will be exported in a <bold>.csv</bold>, <bold>.xlsx</bold> and <bold>.pdf</bold> file.",
+    "subtitle": "Choose yout favorite configuration.",
+    "form_title": "File format",
+    "form_description": "Choose a file format",
+    "form_input_place": "Format",
+    "form_btn": "Export"
+  },
+  "modalImport": {
+    "title": "Import your products",
+    "description": "Data will be exported in a <bold>.csv</bold> or <bold>.xlsx</bold> file.",
+    "subtitle": "Your file must include the following columns."
+  },
+  "dropZone": {
+    "text1": "Drop file .csv or .xlsx here",
+    "text2": "or select in your files"
+  },
+  "modalAddProduct": {
+    "title": "Add new product",
+    "description": "Add individual products to your product list.",
+    "subtitle": "Enter the main information of your new product."
+  },
+  "formAddProduct": {
+    "input1": "Code SKU",
+    "error1": "Only numeric characters",
+    "input2": "Name Product",
+    "place2": "product...",
+    "error2": "Min 2 characters",
+    "error2_max": "Max 50 characters",
+    "input3": "Description",
+    "place3": "text...",
+    "error3": "Min 2 characters",
+    "input4": "Category",
+    "place4": "select",
+    "input5": "Stock",
+    "error5": "Only numeric characters",
+    "input6": "Cost Price",
+    "error6": "Only numeric characters",
+    "input7": "Unit Price",
+    "error7": "Only numeric characters",
+    "btn": "Add product"
   }
 }

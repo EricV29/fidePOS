@@ -3,13 +3,14 @@ import { useModal } from "@context/ModalContext";
 import ChartBarIcon from "@icons/ChartBarIcon";
 import CloseIcon from "@icons/CloseIcon";
 import CustomSelect from "@components/Select";
-
+import { useTranslation, Trans } from "react-i18next";
 interface Data {
   data: string;
 }
 
 export function ModalExport({ data }: { data: Data }) {
   const { setModal } = useModal();
+  const { t } = useTranslation();
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
@@ -37,12 +38,14 @@ export function ModalExport({ data }: { data: Data }) {
           <div className="flex gap-5">
             <ChartBarIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>Export statistics</h2>
+              <h2>{t("modalExport.title")}</h2>
               <p className="font-extralight">
-                Data will be exported in a{" "}
-                <span className="font-semibold">.csv</span>,{" "}
-                <span className="font-semibold">.xlsx</span> y{" "}
-                <span className="font-semibold">.pdf</span> file.
+                <Trans
+                  i18nKey="modalExport.description"
+                  components={{
+                    bold: <span className="font-semibold" />,
+                  }}
+                />
               </p>
             </div>
           </div>
@@ -52,21 +55,23 @@ export function ModalExport({ data }: { data: Data }) {
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <p>{data.data}</p>
-        <p>Choose your favorite configuration.</p>
+        <p>{t("modalExport.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
           <div className="w-full flex justify-between items-center">
             <div className="w-full">
-              <p className="font-semibold">File format</p>
-              <p className="font-extralight">Choose a file format</p>
+              <p className="font-semibold">{t("modalExport.form_title")}</p>
+              <p className="font-extralight">
+                {t("modalExport.form_description")}
+              </p>
             </div>
             <CustomSelect
               options={optionsExport}
               color="#000"
-              placeholder="Format"
+              placeholder={t("modalExport.form_input_place")}
             />
           </div>
           <button className="borange" onClick={handleExportStatistics}>
-            Export
+            {t("modalExport.form_btn")}
           </button>
         </div>
       </div>

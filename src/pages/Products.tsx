@@ -15,13 +15,13 @@ import { ModalExport } from "@modals/ModalExport";
 import { ModalImport } from "@modals/ModalImport";
 import { ModalAddProduct } from "@modals/ModalAddProduct";
 import { ModalAddCategory } from "@modals/ModalAddCategory";
-
+import { useTranslation } from "react-i18next";
 interface dataStockI {
   [key: string]: number;
 }
 
 //* Example data stock products
-const dataStockDB = { Stock: 100, "Out Stock": 40 };
+const dataStockDB = { Stock: 100, "No Stock": 40 };
 
 //* Example data products
 const dataProductsDB = [
@@ -54,6 +54,7 @@ const dataProductsDB = [
 ];
 
 export default function Products() {
+  const { t, i18n } = useTranslation();
   const [dataStock, setStock] = useState<dataStockI>();
   const [dataProducts, setProducts] = useState<Products[]>([]);
   const { setModal } = useModal();
@@ -63,12 +64,14 @@ export default function Products() {
     setProducts(dataProductsDB);
   }, []);
 
+  const columnsp = columnsP(t, i18n.language);
+
   return (
     <>
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
           <h1 style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)" }}>
-            Products Inventory
+            {t("products.title")}
           </h1>
           <div className="flex gap-2">
             <button
@@ -77,25 +80,25 @@ export default function Products() {
                 setModal(<ModalExport data={{ data: "Products Statistics" }} />)
               }
             >
-              <ExportIcon /> <p>Export</p>
+              <ExportIcon /> <p> {t("products.btn_export")}</p>
             </button>
             <button
               className="bnormal"
               onClick={() => setModal(<ModalImport />)}
             >
-              <ImportIcon /> <p>Import</p>
+              <ImportIcon /> <p> {t("products.btn_import")}</p>
             </button>
             <button
               className="bnormal"
               onClick={() => setModal(<ModalAddProduct />)}
             >
-              <BoxPlusIcon /> <p>Product</p>
+              <BoxPlusIcon /> <p> {t("products.btn_add_product")}</p>
             </button>
             <button
               className="bnormal"
               onClick={() => setModal(<ModalAddCategory />)}
             >
-              <CategoryIcon /> <p>Category</p>
+              <CategoryIcon /> <p> {t("products.btn_add_category")}</p>
             </button>
           </div>
         </div>
@@ -104,7 +107,7 @@ export default function Products() {
           <div className="w-full h-[120px] flex justify-between gap-2">
             <CardInfoNumber
               icon={InvestmentIcon}
-              title="Investment"
+              title={t("cards.investment_title")}
               icond={null}
               number={100000}
               format={true}
@@ -113,7 +116,7 @@ export default function Products() {
 
             <CardInfoNumber
               icon={RevenueIcon}
-              title="Inventory Value"
+              title={t("cards.inventory_value_title")}
               icond={null}
               number={100000}
               format={true}
@@ -121,15 +124,15 @@ export default function Products() {
             />
             <CardInfoDetail
               chartData={dataStock!}
-              title={"Products"}
+              title={t("cards.stock_title")}
               color="#1976D2"
             />
           </div>
           <div className="w-full min-h-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-            <p className="font-semibold">Inventory Table</p>
+            <p className="font-semibold"> {t("products.table1")}</p>
             <DataTableSearch
               data={dataProducts}
-              columns={columnsP}
+              columns={columnsp}
               actions={{
                 view: false,
                 edit: true,
