@@ -88,7 +88,7 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
           )}
         />
         <button type="submit" className="borange">
-          Add Category
+          {t("formAddCategory.btn")}
         </button>
       </form>
     </Form>
