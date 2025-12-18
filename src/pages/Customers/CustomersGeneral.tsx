@@ -7,6 +7,7 @@ import { DataTableSearch } from "@components/data-table-search";
 import { columnsC } from "@columns/columnsC";
 import type { Customers } from "@typesm/customers";
 import InvestmentIcon from "@icons/InvestmentIcon";
+import { useTranslation } from "react-i18next";
 
 interface CustomersGeneralProps {}
 
@@ -27,10 +28,12 @@ const dataCustomersDB = [
 
 const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
   const [dataCustomers, setCustomers] = useState<Customers[]>([]);
-
+  const { t, i18n } = useTranslation();
   useEffect(() => {
     setCustomers(dataCustomersDB);
   }, []);
+
+  const columnsc = columnsC(t, i18n.language);
 
   return (
     <>
@@ -38,7 +41,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
         <div className="flex gap-2 h-[120px]">
           <CardInfoNumber
             icon={null}
-            title="Customers"
+            title={t("cards.customers_title")}
             icond={UsersIcon}
             number={124}
             format={false}
@@ -46,7 +49,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
           />
           <CardInfoNumber
             icon={null}
-            title="Customers in Debt"
+            title={t("cards.customers_debt_title")}
             icond={UserMinusIcon}
             number={36}
             format={false}
@@ -54,7 +57,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
           />
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Total Owed"
+            title={t("cards.owed_title")}
             icond={null}
             number={12000}
             format={true}
@@ -62,18 +65,18 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
           />
           <CardInfoText
             icon={null}
-            title="Last Payment"
+            title={t("cards.payment_title")}
             icond={null}
             text="Eric Villeda"
-            date="01/01/2025"
+            date="2025-11-16T00:00:00Z"
             color="#43A047"
           />
         </div>
         <div className="w-full min-h-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-          <p className="font-semibold">Customers Table</p>
+          <p className="font-semibold">{t("customers.table1")}</p>
           <DataTableSearch
             data={dataCustomers}
-            columns={columnsC}
+            columns={columnsc}
             actions={{
               view: true,
               edit: true,

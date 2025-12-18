@@ -1,22 +1,13 @@
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+export function dateFormat(date: string | Date, locale: string) {
+  const parsedDate = typeof date === "string" ? new Date(date) : date;
 
-export function dateFormat(dateStr: string) {
-  const [day, month, year] = dateStr.split("/");
+  if (isNaN(parsedDate.getTime())) {
+    return "";
+  }
 
-  const monthName = months[parseInt(month) - 1];
-
-  return `${monthName} ${day} - ${year}`;
+  return new Intl.DateTimeFormat(locale, {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(parsedDate);
 }

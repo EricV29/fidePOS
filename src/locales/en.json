@@ -1,6 +1,11 @@
 {
   "global": {
-    "no_data": "There is no data yet."
+    "no_data": "There is no data yet.",
+    "status_active": "ACTIVE",
+    "status_inactive": "INACTIVE",
+    "status_paid": "PAID",
+    "status_unpaid": "UNPAID",
+    "status_debt": "DEBT"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -45,7 +50,15 @@
     "revenue_title": "Revenue",
     "investment_title": "Investment",
     "inventory_value_title": "Inventory Value",
-    "stock_title": "Products"
+    "stock_title": "Products",
+    "customers_title": "Customers",
+    "customers_debt_title": "Customers in Debt",
+    "owed_title": "Total Owed",
+    "payment_title": "Last Payment",
+    "debts_title": "Debts",
+    "paids_title": "Paids",
+    "unpaid_title": "Unpaid",
+    "paid_title": "Paid"
   },
   "columns": {
     "created_at": "Created date",
@@ -62,7 +75,11 @@
     "unit_price": "Unit price",
     "quantity": "Quantity",
     "cost_price": "Cost price",
-    "status": "Status"
+    "status": "Status",
+    "name": "Name",
+    "phone": "Phone",
+    "debts": "Debts",
+    "note": "Note"
   },
   "newSale": {
     "title": "Products",
@@ -163,5 +180,37 @@
     "place3": "text...",
     "error3": "Min 2 characters",
     "btn": "Add category"
+  },
+  "customers": {
+    "title": "Customers",
+    "btn_export": "Export",
+    "btn_add_customer": "Customer",
+    "btn_add_payment": "Payment",
+    "switch_option2": "Payments",
+    "table1": "Customers Table",
+    "table2": "Debts Table",
+    "table3": "Payments Table",
+    "input1": "Select your customer"
+  },
+  "modalNewPayment": {
+    "title": "New payment",
+    "description": "Register new payment of your customer.",
+    "subtitle": "Ensure all fields are correctly filled before saving.",
+    "input1": "Customer",
+    "place1": "Select",
+    "input2": "Customer debt",
+    "place2": "Select",
+    "total_debt": "Total debt",
+    "total_payment": "Total payment",
+    "total_debts": "Total debts"
+  },
+  "formNewPayment": {
+    "input1": "Payment Amount",
+    "error1": "Only numeric characters",
+    "input2": "Note",
+    "place2": "text...",
+    "error2": "Min 2 characters",
+    "error2_max": "Max 200 characters",
+    "btn": "Add payment"
   }
 }

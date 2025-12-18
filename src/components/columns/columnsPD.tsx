@@ -2,9 +2,14 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { PaymentsDebt } from "@typesm/customers";
+import type { TFunction } from "i18next";
+import { formatDateColumns } from "@utility/dateFormatColumns";
 
 // Columns Payments Debts for Customers
-export const columnsPD: ColumnDef<PaymentsDebt>[] = [
+export const columnsPD = (
+  t: TFunction,
+  language: string
+): ColumnDef<PaymentsDebt>[] => [
   {
     id: "rowNumber",
     header: "No",
@@ -17,21 +22,25 @@ export const columnsPD: ColumnDef<PaymentsDebt>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Created Date",
+    header: t("columns.created_at"),
     meta: {
       headerClassName: "text-center",
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("created_at")}</div>;
+      return (
+        <div className="text-center">
+          {formatDateColumns(row.getValue("created_at"), language)}
+        </div>
+      );
     },
   },
   {
     accessorKey: "code_sku",
-    header: "Code SKU",
+    header: t("columns.code"),
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: t("columns.total_amount"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("amount")));
 
@@ -41,7 +50,7 @@ export const columnsPD: ColumnDef<PaymentsDebt>[] = [
   },
   {
     accessorKey: "note",
-    header: "Notes",
+    header: t("columns.note"),
     cell: ({ getValue }) => (
       <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
         {getValue() as string}
