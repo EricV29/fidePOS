@@ -127,7 +127,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
         <div className="flex gap-2 h-[110px] overflow-x-auto overflow-y-hidden">
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Investment"
+            title={t("cards.investment_title")}
             icond={null}
             number={120238}
             format={true}
@@ -135,15 +135,15 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           />
           <CardInfoNumber
             icon={RevenueIcon}
-            title="Revenue"
+            title={t("cards.revenue_title")}
             icond={null}
             number={10500}
             format={true}
-            color="#D32F2F"
+            color="#43A047"
           />
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Inventory value"
+            title={t("cards.inventory_value_title")}
             icond={null}
             number={100000}
             format={true}
@@ -151,7 +151,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           />
           <CardInfoNumber
             icon={ShoppingCar}
-            title="Sales: 10"
+            title={t("cards.sales_title") + ": 10"}
             icond={null}
             number={1500}
             format={true}
@@ -159,7 +159,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           />
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Owed"
+            title={t("cards.owed_title")}
             icond={null}
             number={12000}
             format={true}
@@ -169,14 +169,14 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
         <div className="w-full h-auto flex-1 flex flex-col overflow-y-auto gap-2">
           <div className="w-full flex gap-2 h-[280px]">
             <div className="max-w-[300px] min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold">Categories Sales</p>
+              <p className="font-semibold">{t("reports.chart1")}</p>
               <ChartPieDonutText
                 chartData={chartDataCSF}
                 chartConfig={chartConfigCS}
               />
             </div>
             <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold mb-2">Sales by Category</p>
+              <p className="font-semibold mb-2">{t("reports.chart2")}</p>
               <ChartBarLabel
                 chartData={chartDataTCS}
                 chartConfig={chartConfigTCS}
@@ -187,13 +187,13 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             <div className="flex flex-1 flex-col justify-between">
               <CardInfoDetail
                 chartData={dataCustomer!}
-                title={"Customers"}
+                title={t("cards.customers_title")}
                 color="#1976D2"
               />
 
               <CardInfoDetail
                 chartData={dataProductsS!}
-                title={"Products (active/desactive)"}
+                title={t("cards.products_status_title")}
                 color="#1976D2"
               />
             </div>

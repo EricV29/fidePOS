@@ -44,7 +44,8 @@
   "charts": {
     "chart_tcs": "Ventas",
     "chart_apc": "Productos",
-    "totals": "Totales"
+    "totals": "Totales",
+    "chart_cs": "Ventas"
   },
   "cards": {
     "revenue_title": "Ganancias",
@@ -58,7 +59,9 @@
     "debts_title": "Deudas",
     "paids_title": "Pagos",
     "unpaid_title": "Deuda Total",
-    "paid_title": "Total Pagado"
+    "paid_title": "Total Pagado",
+    "sales_title": "Ventas",
+    "products_status_title": "Productos (activo/inactivo)"
   },
   "columns": {
     "created_at": "Fecha creación",
@@ -79,7 +82,8 @@
     "name": "Nombre",
     "phone": "Teléfono",
     "debts": "Deudas",
-    "note": "Nota"
+    "note": "Nota",
+    "paid_amount": "Monto Pagado"
   },
   "newSale": {
     "title": "Productos",
@@ -212,5 +216,30 @@
     "error2": "Min 2 caracteres",
     "error2_max": "Max 200 caracteres",
     "btn": "Agregar pago"
+  },
+  "reports": {
+    "title": "Reportes",
+    "btn_export": "Exportar",
+    "switch": {
+      "general": "General",
+      "sales": "Ventas",
+      "products": "Productos",
+      "customers": "Clientes"
+    },
+    "chart1": "Ventas por Categoría",
+    "chart2": "Ventas por Producto",
+    "table1": "Accounts Receivable",
+    "table2": "Ventas",
+    "chart3": "Productos por Categoría",
+    "chart4": "Top Productos Vendidos",
+    "table3": "Productos",
+    "chart5": "Deudas por Cliente",
+    "chart5_place": "Deudas",
+    "chart6": "Total de Deudas Durante el Tiempo",
+    "chart6_place": "Deudas",
+    "table4": "Clientes",
+    "input1": "Selecciona tu cliente",
+    "table5": "Tabla de Deudas",
+    "table6": "Tabla de Pagos"
   }
 }

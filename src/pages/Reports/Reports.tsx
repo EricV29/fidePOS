@@ -7,6 +7,7 @@ import Switch from "@components/Switch";
 import { Outlet } from "react-router-dom";
 import { useModal } from "@/context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
+import { useTranslation } from "react-i18next";
 
 interface ReportsProps {}
 
@@ -15,13 +16,19 @@ const Reports: React.FC<ReportsProps> = ({}) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { setModal } = useModal();
+  const { t } = useTranslation();
 
-  const optionsReports = [
-    { label: "General", value: "general" },
-    { label: "Sales", value: "sales" },
-    { label: "Products", value: "products" },
-    { label: "Customers", value: "customers" },
-  ];
+  const reportOptions = [
+    { value: "general" },
+    { value: "sales" },
+    { value: "products" },
+    { value: "customers" },
+  ] as const;
+
+  const optionsReports = reportOptions.map((option) => ({
+    value: option.value,
+    label: t(`reports.switch.${option.value}`),
+  }));
 
   const currentSegment = location.pathname.split("/").pop();
   const currentTab =
@@ -34,7 +41,7 @@ const Reports: React.FC<ReportsProps> = ({}) => {
     <>
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
-          <h1>Reports</h1>
+          <h1>{t("reports.title")}</h1>
           <div className="flex gap-2">
             <button
               className="bnormal"
@@ -42,7 +49,7 @@ const Reports: React.FC<ReportsProps> = ({}) => {
                 setModal(<ModalExport data={{ data: "Products Statistics" }} />)
               }
             >
-              <ExportIcon /> <p>Export</p>
+              <ExportIcon /> <p>{t("reports.btn_export")}</p>
             </button>
             <DatePicker installDate={installDate} />
           </div>

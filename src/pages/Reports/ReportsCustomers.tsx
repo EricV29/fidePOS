@@ -15,6 +15,7 @@ import CustomSelect from "@components/Select";
 import ChartAreaDefault from "@components/chart-area-default";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import ShoppingCar from "@icons/ShoppingCar";
+import { useTranslation } from "react-i18next";
 
 interface PieChartItem {
   fill: string;
@@ -42,12 +43,6 @@ const chartDataDDCDB = [
   { customer: "Wendy", debts: 3 },
   { customer: "Lucy", debts: 2 },
 ];
-
-const chartConfigDDC = {
-  debts: {
-    label: "Debts",
-  },
-};
 
 //* Example data table
 
@@ -121,13 +116,6 @@ const chartDataTDOT = [
   { month: "June", debts: 4 },
 ];
 
-const chartConfigTDOT = {
-  debts: {
-    label: "Debts",
-    color: "#F57C00",
-  },
-};
-
 interface ReportsCustomersProps {}
 
 const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
@@ -135,6 +123,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   const [dataTableC, setDataTableC] = useState<Customers[]>([]);
   const [dataTableDC, setDataTableDC] = useState<DebtsCustomer[]>([]);
   const [dataTablePC, setDataTablePC] = useState<PaymentsCustomer[]>([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     setChartDataDDC(addRandomFill(chartDataDDCDB));
@@ -143,13 +132,30 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
     setDataTablePC(dataPaymentsDB);
   }, []);
 
+  const columnsc = columnsC(t, i18n.language);
+  const columnsdc = columnsDC(t, i18n.language);
+  const columnspc = columnsPC(t, i18n.language);
+
+  const chartConfigDDC = {
+    items: {
+      label: t("reports.chart5_place"),
+    },
+  };
+
+  const chartConfigTDOT = {
+    debts: {
+      label: t("reports.chart6_place"),
+      color: "#F57C00",
+    },
+  };
+
   return (
     <>
       <div className="w-full h-full flex flex-col gap-2">
         <div className="flex gap-2 h-[110px] overflow-x-auto overflow-y-hidden">
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Owed"
+            title={t("cards.owed_title")}
             icond={null}
             number={12000}
             format={true}
@@ -157,7 +163,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
           />
           <CardInfoNumber
             icon={ShoppingCar}
-            title="Sales: 10"
+            title={t("cards.sales_title") + ": 10"}
             icond={null}
             number={1500}
             format={true}
@@ -165,21 +171,21 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
           />
           <CardInfoDetail
             chartData={dataCustomersSDB!}
-            title={"Customers"}
+            title={t("cards.customers_title")}
             color="#1976D2"
           />
         </div>
         <div className="w-full h-auto flex-1 flex flex-col overflow-y-auto gap-2">
           <div className="w-full flex gap-2 h-[280px]">
             <div className="max-w-[300px] min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold">Debt Distribution by Customers</p>
+              <p className="font-semibold">{t("reports.chart5")}</p>
               <ChartPieDonutText
                 chartData={chartDataDDC}
                 chartConfig={chartConfigDDC}
               />
             </div>
             <div className=" min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold">Total Debt Over Time</p>
+              <p className="font-semibold">{t("reports.chart6")}</p>
               <ChartAreaDefault
                 chartData={chartDataTDOT}
                 chartConfig={chartConfigTDOT}
@@ -187,9 +193,9 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
             </div>
           </div>
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
-            <p className="font-semibold mb-2">Customers</p>
+            <p className="font-semibold mb-2">{t("reports.table4")}</p>
             <DataTable
-              columns={columnsC}
+              columns={columnsc}
               data={dataTableC}
               actions={{
                 view: true,
@@ -200,15 +206,15 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
           </div>
           <CustomSelect
             options={optionsCustomers}
-            placeholder="Select your customer"
+            placeholder={t("reports.input1")}
             color="#F57C00"
           />
           <div className="w-full min-w-0 flex gap-2">
             <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold">Debts Table</p>
+              <p className="font-semibold">{t("reports.table5")}</p>
               <DataTableSearch
                 data={dataTableDC}
-                columns={columnsDC}
+                columns={columnsdc}
                 actions={{
                   view: true,
                   edit: true,
@@ -217,10 +223,10 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
               />
             </div>
             <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold">Payments Table</p>
+              <p className="font-semibold">{t("reports.table6")}</p>
               <DataTableSearch
                 data={dataTablePC}
-                columns={columnsPC}
+                columns={columnspc}
                 actions={{
                   view: true,
                   edit: true,

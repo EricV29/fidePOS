@@ -44,7 +44,8 @@
   "charts": {
     "chart_tcs": "Sales",
     "chart_apc": "Products",
-    "totals": "Totals"
+    "totals": "Totals",
+    "chart_cs": "Sales"
   },
   "cards": {
     "revenue_title": "Revenue",
@@ -58,7 +59,9 @@
     "debts_title": "Debts",
     "paids_title": "Paids",
     "unpaid_title": "Unpaid",
-    "paid_title": "Paid"
+    "paid_title": "Paid",
+    "sales_title": "Sales",
+    "products_status_title": "Products (active/inactive)"
   },
   "columns": {
     "created_at": "Created date",
@@ -79,7 +82,8 @@
     "name": "Name",
     "phone": "Phone",
     "debts": "Debts",
-    "note": "Note"
+    "note": "Note",
+    "paid_amount": "Paid Amount"
   },
   "newSale": {
     "title": "Products",
@@ -212,5 +216,30 @@
     "error2": "Min 2 characters",
     "error2_max": "Max 200 characters",
     "btn": "Add payment"
+  },
+  "reports": {
+    "title": "Reports",
+    "btn_export": "Export",
+    "switch": {
+      "general": "General",
+      "sales": "Sales",
+      "products": "Products",
+      "customers": "Customers"
+    },
+    "chart1": "Sales by Category",
+    "chart2": "Sales by Products",
+    "table1": "Accounts Receivable",
+    "table2": "Sales",
+    "chart3": "Products by Category",
+    "chart4": "Top Selling Products",
+    "table3": "Products",
+    "chart5": "Debt Distribution by Customer",
+    "chart5_place": "Debt",
+    "chart6": "Total Debt Over Time",
+    "chart6_place": "Debt",
+    "table4": "Customers",
+    "input1": "Select your customer",
+    "table5": "Debts Table",
+    "table6": "Payments Table"
   }
 }
