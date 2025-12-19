@@ -11,23 +11,21 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-
-const newPaymentSchema = z.object({
-  payment_amount: z
-    .string()
-    .regex(/^\d+(\.\d{1,2})?$/, "Only numeric characteres"),
-  note: z.string().min(2, "Min 2 caracters").max(50),
-});
-
-export type NewPaymentFormValues = z.infer<typeof newPaymentSchema>;
+import {
+  type NewPaymentFormValues,
+  getNewPaymentSchema,
+} from "./schemas/payment.schema";
+import { useTranslation } from "react-i18next";
 
 interface ProductFormProps {
   onSuccess?: () => void;
 }
 
 export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
+  const { t } = useTranslation();
+
   const form = useForm<NewPaymentFormValues>({
-    resolver: zodResolver(newPaymentSchema),
+    resolver: zodResolver(getNewPaymentSchema(t)),
     defaultValues: {
       payment_amount: "",
       note: "",
@@ -47,7 +45,9 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
           name="payment_amount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Payment Amount</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formNewPayment.input1")}
+              </FormLabel>
               <FormControl>
                 <Input placeholder="$" {...field} className="bg-white" />
               </FormControl>
@@ -60,16 +60,22 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
           name="note"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Note</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formNewPayment.input2")}
+              </FormLabel>
               <FormControl>
-                <Input placeholder="text..." {...field} className="bg-white" />
+                <Input
+                  placeholder={t("formNewPayment.place2")}
+                  {...field}
+                  className="bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <button type="submit" className="borange">
-          Payment
+          {t("formNewPayment.btn")}
         </button>
       </form>
     </Form>

@@ -16,6 +16,7 @@ import ReportsProducts from "./pages/Reports/ReportsProducts";
 import ReportsCustomers from "./pages/Reports/ReportsCustomers";
 import { ModalProvider } from "./context/ModalContext";
 import { LoadingProvider } from "./context/LoadingContext";
+import "./i18n";
 
 function App() {
   return (

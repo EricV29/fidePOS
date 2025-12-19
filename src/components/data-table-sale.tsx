@@ -17,6 +17,7 @@ import {
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@icons/SearchIcon";
 import CustomSelect from "@components/Select";
+import { useTranslation } from "react-i18next";
 
 interface DataTableSaleProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,6 +52,7 @@ export function DataTableSale<TData, TValue>({
     []
   );
   const [selectedColumn, setSelectedColumn] = useState("");
+  const { t } = useTranslation();
 
   const table = useReactTable({
     data,
@@ -83,7 +85,7 @@ export function DataTableSale<TData, TValue>({
         <div className="inputtext">
           <SearchIcon />
           <input
-            placeholder="Search register..."
+            placeholder={t("tableSearch.input_search")}
             value={
               (table.getColumn(currentColumn)?.getFilterValue() as string) ?? ""
             }
@@ -95,7 +97,7 @@ export function DataTableSale<TData, TValue>({
         </div>
         <CustomSelect
           options={columnOptions}
-          placeholder="Choose a column"
+          placeholder={t("tableSearch.input_select")}
           onChange={setSelectedColumn}
           color="#F57C00"
         />
@@ -135,7 +137,7 @@ export function DataTableSale<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="text-center">
-                There is no data yet.
+                {t("global.no_data")}
               </TableCell>
             </TableRow>
           )}

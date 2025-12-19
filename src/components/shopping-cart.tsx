@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useTranslation } from "react-i18next";
 
 interface ShoppingCartProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -44,6 +45,8 @@ export function ShoppingCart<TData, TValue>({
       deleteProduct,
     },
   });
+
+  const { t } = useTranslation();
 
   return (
     <Table>
@@ -81,7 +84,7 @@ export function ShoppingCart<TData, TValue>({
         ) : (
           <TableRow>
             <TableCell colSpan={columns.length} className="text-center">
-              No products in the cart yet.
+              {t("global.no_data")}
             </TableCell>
           </TableRow>
         )}

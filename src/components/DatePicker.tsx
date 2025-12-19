@@ -3,6 +3,7 @@ import CalendarIcon from "@icons/CalendarIcon";
 import CaretDIcon from "@icons/CaretDIcon";
 import LeftIcon from "@icons/LeftIcon";
 import RightIcon from "@icons/RightIcon";
+import { useTranslation } from "react-i18next";
 
 interface DatePickerProps {
   installDate: string;
@@ -11,12 +12,25 @@ interface DatePickerProps {
 const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
   installDate,
 }) => {
+  const { t, i18n } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedStartDate, setSelectedStartDate] = useState("");
   const [selectedEndDate, setSelectedEndDate] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   const datepickerRef = useRef(null);
+
+  const monthKey = currentDate
+    .toLocaleString("en-US", { month: "long" })
+    .toLowerCase();
+
+  const formatDate = (date: Date) => {
+    return new Intl.DateTimeFormat(i18n.language, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }).format(date);
+  };
 
   const renderCalendar = () => {
     const year = currentDate.getFullYear();
@@ -32,7 +46,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
 
     for (let i = 1; i <= daysInMonth; i++) {
       const day = new Date(year, month, i);
-      const dayString = day.toLocaleDateString("en-US");
+      const dayString = formatDate(day);
       let className =
         "flex items-center justify-center cursor-pointer w-[46px] h-[46px] rounded-full hover:bg-[#f57c00] hover:text-white text-black";
 
@@ -84,12 +98,14 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
 
   const updateInput = () => {
     if (selectedStartDate && selectedEndDate) {
-      return `${selectedStartDate} - ${selectedEndDate}`;
+      return `${formatDate(new Date(selectedStartDate))} - ${formatDate(
+        new Date(selectedEndDate)
+      )}`;
     } else if (selectedStartDate) {
-      return selectedStartDate;
+      return formatDate(new Date(selectedStartDate));
     } else {
-      const today = currentDate.toLocaleDateString("en-US");
-      const iDate = new Date(installDate).toLocaleDateString("en-US");
+      const today = formatDate(currentDate);
+      const iDate = formatDate(new Date(installDate));
       return `${iDate} - ${today}`;
     }
   };
@@ -164,10 +180,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
                 id="currentMonth"
                 className="text-lg font-medium text-dark-3 text-black"
               >
-                {currentDate.toLocaleString("default", {
-                  month: "long",
-                })}{" "}
-                {currentDate.getFullYear()}
+                {t(`datePicker.months.${monthKey}`)} {currentDate.getFullYear()}
               </div>
 
               <button
@@ -184,12 +197,12 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
             </div>
 
             <div className="mb-4 mt-6 grid grid-cols-7 gap-2 px-5">
-              {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+              {["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map((day) => (
                 <div
                   key={day}
                   className="text-center text-sm font-medium text-secondary-color"
                 >
-                  {day}
+                  {t(`datePicker.days.${day}`)}
                 </div>
               ))}
             </div>
@@ -207,14 +220,14 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
                 className="rounded-lg border border-[#f57c00] px-5 py-2.5 text-base font-medium text-[#f57c00] hover:bg-[#f57c00] hover:text-white"
                 onClick={handleCancel}
               >
-                Cancel
+                {t("datePicker.btn1")}
               </button>
               <button
                 id="applyButton"
                 className="rounded-lg bg-[#f57c00] px-5 py-2.5 text-base font-medium text-white hover:bg-[#ce6700]"
                 onClick={handleApply}
               >
-                Apply
+                {t("datePicker.btn2")}
               </button>
             </div>
           </div>

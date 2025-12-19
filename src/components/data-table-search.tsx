@@ -17,6 +17,7 @@ import {
 import React, { useEffect, useState } from "react";
 import SearchIcon from "@icons/SearchIcon";
 import CustomSelect from "@components/Select";
+import { useTranslation } from "react-i18next";
 
 interface DataTableSearchProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -47,6 +48,7 @@ export function DataTableSearch<TData, TValue>({
   data,
   actions,
 }: DataTableSearchProps<TData, TValue>) {
+  const { t } = useTranslation();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
@@ -83,7 +85,7 @@ export function DataTableSearch<TData, TValue>({
         <div className="inputtext">
           <SearchIcon />
           <input
-            placeholder="Search register..."
+            placeholder={t("tableSearch.input_search")}
             value={
               (table.getColumn(currentColumn)?.getFilterValue() as string) ?? ""
             }
@@ -95,7 +97,7 @@ export function DataTableSearch<TData, TValue>({
         </div>
         <CustomSelect
           options={columnOptions}
-          placeholder="Choose"
+          placeholder={t("tableSearch.input_select")}
           onChange={setSelectedColumn}
           color="#F57C00"
         />
@@ -135,7 +137,7 @@ export function DataTableSearch<TData, TValue>({
           ) : (
             <TableRow>
               <TableCell colSpan={columns.length} className="text-center">
-                There is no data yet.
+                {t("global.no_data")}
               </TableCell>
             </TableRow>
           )}

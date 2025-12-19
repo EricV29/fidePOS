@@ -7,9 +7,15 @@ import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { Sales } from "@typesm/sales";
 import { shadenHexColor } from "@utility/shadenHexColor";
+import type { TFunction } from "i18next";
+import { getStatusConfig } from "@utility/statusColumns";
+import { formatDateColumns } from "@utility/dateFormatColumns";
 
 // Columns Sales
-export const columnsS: ColumnDef<Sales>[] = [
+export const columnsS = (
+  t: TFunction,
+  language: string
+): ColumnDef<Sales>[] => [
   {
     id: "rowNumber",
     header: "No",
@@ -22,7 +28,7 @@ export const columnsS: ColumnDef<Sales>[] = [
   },
   {
     accessorKey: "customer",
-    header: "Customer",
+    header: t("columns.customer"),
     cell: ({ row }) => {
       return `${row.original.name} ${row.original.last_name}`;
     },
@@ -30,15 +36,15 @@ export const columnsS: ColumnDef<Sales>[] = [
   },
   {
     accessorKey: "code_sku",
-    header: "Code SKU",
+    header: t("columns.code"),
   },
   {
     accessorKey: "product",
-    header: "Product",
+    header: t("columns.product"),
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: t("columns.category"),
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       const ccolor = row.original.ccolor;
@@ -59,7 +65,7 @@ export const columnsS: ColumnDef<Sales>[] = [
   },
   {
     accessorKey: "total_amount",
-    header: "Amount",
+    header: t("columns.total_amount"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("total_amount")));
 
@@ -69,7 +75,7 @@ export const columnsS: ColumnDef<Sales>[] = [
   },
   {
     accessorKey: "paid_amount",
-    header: "Paid Amount",
+    header: t("columns.paid_amount"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("paid_amount")));
 
@@ -79,34 +85,32 @@ export const columnsS: ColumnDef<Sales>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: t("columns.status"),
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
-      const bgColor =
-        status === "active" || status === "paid"
-          ? "statusActiveB"
-          : status === "inactive" || status == "unpaid"
-          ? "statusInactiveB"
-          : status === "debt"
-          ? "statusDebtB"
-          : "bg-gray-400";
 
-      return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
+      const { label, color } = getStatusConfig(status, t);
+
+      return <div className={color}>{label}</div>;
     },
   },
   {
     accessorKey: "created_at",
-    header: "Created Date",
+    header: t("columns.created_at"),
     meta: {
       headerClassName: "text-center",
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("created_at")}</div>;
+      return (
+        <div className="text-center">
+          {formatDateColumns(row.getValue("created_at"), language)}
+        </div>
+      );
     },
   },
   {
     id: "actions",
-    header: "Actions",
+    header: t("columns.actions"),
     meta: {
       headerClassName: "text-center",
     },

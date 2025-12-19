@@ -9,6 +9,7 @@ import { addRandomFill } from "@/utility/addFill";
 import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsAR } from "@columns/columnsAR";
+import { useTranslation } from "react-i18next";
 
 interface dataCustomerI {
   [key: string]: number;
@@ -60,12 +61,6 @@ const chartDataCSDB = [
   { category: "Zapatos", sales: 73 },
 ];
 
-const chartConfigCS = {
-  sales: {
-    label: "Sales",
-  },
-};
-
 //* Example data bar chart
 const chartDataTCSDB = [
   { category: "Maquillaje", sales: 186 },
@@ -74,13 +69,6 @@ const chartDataTCSDB = [
   { category: "Dulces", sales: 73 },
   { category: "Zapatos", sales: 209 },
 ];
-
-const chartConfigTCS = {
-  sales: {
-    label: "Sales",
-    color: "#1976D2",
-  },
-};
 
 //* Example data stock products
 const dataCustomerDB = { Total: 40, "In Debt": 15 };
@@ -98,7 +86,7 @@ const dataARBD = [
     debt_amount: 500,
     debt_paid: 200,
     debt_pending: 300,
-    created_at: "01/01/2025",
+    created_at: "2025-02-15 00:00:00",
   },
 ];
 
@@ -108,6 +96,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [chartDataCSF, setChartDataCSF] = useState<PieChartItem[]>([]);
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     setCustomer(dataCustomerDB);
@@ -117,13 +106,28 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
     setDataTableAR(dataARBD);
   }, []);
 
+  const columnsar = columnsAR(t, i18n.language);
+
+  const chartConfigCS = {
+    items: {
+      label: t("charts.chart_tcs"),
+    },
+  };
+
+  const chartConfigTCS = {
+    sales: {
+      label: t("charts.chart_tcs"),
+      color: "#1976D2",
+    },
+  };
+
   return (
     <>
       <div className="w-full h-full flex flex-col gap-2">
         <div className="flex gap-2 h-[110px] overflow-x-auto overflow-y-hidden">
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Investment"
+            title={t("cards.investment_title")}
             icond={null}
             number={120238}
             format={true}
@@ -131,15 +135,15 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           />
           <CardInfoNumber
             icon={RevenueIcon}
-            title="Revenue"
+            title={t("cards.revenue_title")}
             icond={null}
             number={10500}
             format={true}
-            color="#D32F2F"
+            color="#43A047"
           />
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Inventory value"
+            title={t("cards.inventory_value_title")}
             icond={null}
             number={100000}
             format={true}
@@ -147,7 +151,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           />
           <CardInfoNumber
             icon={ShoppingCar}
-            title="Sales: 10"
+            title={t("cards.sales_title") + ": 10"}
             icond={null}
             number={1500}
             format={true}
@@ -155,7 +159,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           />
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Owed"
+            title={t("cards.owed_title")}
             icond={null}
             number={12000}
             format={true}
@@ -165,14 +169,14 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
         <div className="w-full h-auto flex-1 flex flex-col overflow-y-auto gap-2">
           <div className="w-full flex gap-2 h-[280px]">
             <div className="max-w-[300px] min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold">Categories Sales</p>
+              <p className="font-semibold">{t("reports.chart1")}</p>
               <ChartPieDonutText
                 chartData={chartDataCSF}
                 chartConfig={chartConfigCS}
               />
             </div>
             <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold mb-2">Sales by Category</p>
+              <p className="font-semibold mb-2">{t("reports.chart2")}</p>
               <ChartBarLabel
                 chartData={chartDataTCS}
                 chartConfig={chartConfigTCS}
@@ -183,13 +187,13 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             <div className="flex flex-1 flex-col justify-between">
               <CardInfoDetail
                 chartData={dataCustomer!}
-                title={"Customers"}
+                title={t("cards.customers_title")}
                 color="#1976D2"
               />
 
               <CardInfoDetail
                 chartData={dataProductsS!}
-                title={"Products (active/desactive)"}
+                title={t("cards.products_status_title")}
                 color="#1976D2"
               />
             </div>
@@ -197,7 +201,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
             <p className="font-semibold mb-2">Accounts Receivable</p>
             <DataTable
-              columns={columnsAR}
+              columns={columnsar}
               data={dataTableAR}
               actions={{
                 view: true,

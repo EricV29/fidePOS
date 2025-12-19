@@ -8,6 +8,8 @@ import { DataTable } from "@components/data-table";
 import { useState, useEffect } from "react";
 import type { PaymentsDebt } from "@typesm/customers";
 import { columnsPD } from "@columns/columnsPD";
+import { useTranslation } from "react-i18next";
+import i18n from "@/i18n";
 
 const optionsDebts = [
   { label: "0001 Carrito $30.00", value: "id" },
@@ -33,7 +35,7 @@ const dataPaymentsDB = [
 
 export function ModalNewPayment() {
   const { setModal } = useModal();
-
+  const { t, i18n } = useTranslation();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
   const [dataPayments, setDataPayments] = useState<PaymentsDebt[]>([]);
@@ -41,6 +43,8 @@ export function ModalNewPayment() {
   useEffect(() => {
     setDataPayments(dataPaymentsDB);
   }, []);
+
+  const columnspd = columnsPD(t, i18n.language);
 
   const handleNewPayment = () => {
     //window.electronAPI.signupSuccess();
@@ -59,9 +63,9 @@ export function ModalNewPayment() {
           <div className="flex gap-5">
             <PayIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>New payment</h2>
+              <h2>{t("modalNewPayment.title")}</h2>
               <p className="font-extralight">
-                Register new payment of your customer.
+                {t("modalNewPayment.description")}
               </p>
             </div>
           </div>
@@ -70,43 +74,43 @@ export function ModalNewPayment() {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p>Ensure all fields are correctly filled before saving.</p>
+        <p>{t("modalNewPayment.subtitle")}</p>
         <div className="w-full flex justify-between items-center gap-2">
           <div className="w-full">
-            <p className="font-semibold">Customer</p>
+            <p className="font-semibold">{t("modalNewPayment.input1")}</p>
             <CustomSelect
               options={optionsCustomers}
               color="#000"
-              placeholder="Select"
+              placeholder={t("modalNewPayment.place1")}
             />
           </div>
           <div className="w-full">
-            <p className="font-semibold">Customer debt</p>
+            <p className="font-semibold">{t("modalNewPayment.input2")}</p>
             <CustomSelect
               options={optionsDebts}
               color="#000"
-              placeholder="Select"
+              placeholder={t("modalNewPayment.place2")}
             />
           </div>
         </div>
         <div className="w-full flex justify-between px-2">
           <div className="flex gap-2 font-semibold">
-            <p>Total debt</p>
+            <p>{t("modalNewPayment.total_debt")}</p>
             <p className="text-[#F57C00]">$2393.00</p>
           </div>
           <div className="flex gap-2 font-semibold">
-            <p>Total payment</p>
+            <p>{t("modalNewPayment.total_payment")}</p>
             <p className="text-[#43A047]">$200.00</p>
           </div>
           <div className="flex gap-2 font-semibold">
-            <p>Total debt</p>
+            <p>{t("modalNewPayment.total_debts")}</p>
             <p className="text-[#D32F2F]">$1938.00</p>
           </div>
         </div>
         <div className="w-full h-[400px] flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 overflow-y-auto">
           <NewPaymentForm onSuccess={handleNewPayment} />
           <div>
-            <DataTable data={dataPayments} columns={columnsPD} />
+            <DataTable data={dataPayments} columns={columnspd} />
           </div>
         </div>
       </div>

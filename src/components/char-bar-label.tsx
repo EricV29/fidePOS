@@ -7,6 +7,7 @@ import {
   ChartLegend,
   ChartLegendContent,
 } from "@components/ui/chart";
+import { useTranslation } from "react-i18next";
 
 interface DataItem {
   [key: string]: string | number;
@@ -25,10 +26,12 @@ const ChartBarLabel: React.FC<ChartBarLabelProps> = ({
   xAxis,
   yAxis,
 }) => {
+  const { t } = useTranslation();
+
   if (!chartData || chartData.length === 0) {
     return (
       <div className="w-full h-full flex items-center justify-center font-extralight">
-        There is no data yet.
+        {t("global.no_data")}
       </div>
     );
   }

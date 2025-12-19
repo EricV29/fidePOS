@@ -6,9 +6,14 @@ import EditIcon from "@icons/EditIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { PaymentsCustomer } from "@typesm/customers";
+import type { TFunction } from "i18next";
+import { formatDateColumns } from "@utility/dateFormatColumns";
 
 // Columns Payments Customer
-export const columnsPC: ColumnDef<PaymentsCustomer>[] = [
+export const columnsPC = (
+  t: TFunction,
+  language: string
+): ColumnDef<PaymentsCustomer>[] => [
   {
     id: "rowNumber",
     header: "No",
@@ -21,25 +26,29 @@ export const columnsPC: ColumnDef<PaymentsCustomer>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Created Date",
+    header: t("columns.created_at"),
     meta: {
       headerClassName: "text-center",
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("created_at")}</div>;
+      return (
+        <div className="text-center">
+          {formatDateColumns(row.getValue("created_at"), language)}
+        </div>
+      );
     },
   },
   {
     accessorKey: "code_sku",
-    header: "Code SKU",
+    header: t("columns.code"),
   },
   {
     accessorKey: "product",
-    header: "Product",
+    header: t("columns.product"),
   },
   {
     accessorKey: "note",
-    header: "Note",
+    header: t("columns.note"),
     cell: ({ getValue }) => (
       <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
         {getValue() as string}
@@ -48,7 +57,7 @@ export const columnsPC: ColumnDef<PaymentsCustomer>[] = [
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: t("columns.total_amount"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("amount")));
 
@@ -58,7 +67,7 @@ export const columnsPC: ColumnDef<PaymentsCustomer>[] = [
   },
   {
     id: "actions",
-    header: "Actions",
+    header: t("columns.actions"),
     meta: {
       headerClassName: "text-center",
     },

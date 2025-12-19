@@ -1,6 +1,7 @@
 import React from "react";
 import { dateFormat } from "@utility/dateFormat";
 import type { IconProps } from "@typesm/icons";
+import { useTranslation } from "react-i18next";
 
 interface CardInfoTextProps {
   icon: React.ComponentType<IconProps> | null;
@@ -19,12 +20,14 @@ const CardInfoText: React.FC<CardInfoTextProps> = ({
   date,
   color,
 }) => {
+  const { i18n } = useTranslation();
+
   function splitName(text: string) {
     const [first, last] = text.split(" ");
     return `${first} ${last[0]}.`;
   }
 
-  const datef = dateFormat(date);
+  const datef = dateFormat(date, i18n.language);
 
   return (
     <>

@@ -1,0 +1,273 @@
+{
+  "global": {
+    "no_data": "Aún no hay datos.",
+    "status_active": "ACTIVO",
+    "status_inactive": "INACTIVO",
+    "status_paid": "PAGADO",
+    "status_unpaid": "NO PAGADO",
+    "status_debt": "EN DEUDA",
+    "rol_admin": "ADMINISTRADOR",
+    "rol_user": "USUARIO"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "chart1": "Top 5 - Ventas por categoría",
+    "chart2": "Productos Activos por Categoría",
+    "table1": "Ventas Recientes",
+    "table2": "Cuentas por Cobrar"
+  },
+  "datePicker": {
+    "months": {
+      "january": "Enero",
+      "february": "Febrero",
+      "march": "Marzo",
+      "april": "Abril",
+      "may": "Mayo",
+      "june": "Junio",
+      "july": "Julio",
+      "august": "Agosto",
+      "september": "Septiembre",
+      "october": "Octubre",
+      "november": "Noviembre",
+      "december": "Diciembre"
+    },
+    "days": {
+      "sun": "Dom",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb"
+    },
+    "btn1": "Cancelar",
+    "btn2": "Aplicar"
+  },
+  "charts": {
+    "chart_tcs": "Ventas",
+    "chart_apc": "Productos",
+    "totals": "Totales",
+    "chart_cs": "Ventas"
+  },
+  "cards": {
+    "revenue_title": "Ganancias",
+    "investment_title": "Inversión",
+    "inventory_value_title": "Valor de Inventario",
+    "stock_title": "Productos",
+    "customers_title": "Clientes",
+    "customers_debt_title": "Clientes con Deuda",
+    "owed_title": "Deuda Total",
+    "payment_title": "Ultimo pago",
+    "debts_title": "Deudas",
+    "paids_title": "Pagos",
+    "unpaid_title": "Deuda Total",
+    "paid_title": "Total Pagado",
+    "sales_title": "Ventas",
+    "products_status_title": "Productos (activo/inactivo)"
+  },
+  "columns": {
+    "created_at": "Fecha creación",
+    "category": "Categoría",
+    "actions": "Acciones",
+    "total_amount": "Monto",
+    "customer": "Cliente",
+    "code": "Código SKU",
+    "debt_amount": "Deuda",
+    "debt_paid": "Monto pagado",
+    "debt_pending": "Monto pendiente",
+    "product": "Producto",
+    "description": "Descripción",
+    "unit_price": "Precio unidad",
+    "quantity": "Cantidad",
+    "cost_price": "Precio compra",
+    "status": "Estado",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "debts": "Deudas",
+    "note": "Nota",
+    "paid_amount": "Monto Pagado",
+    "email": "Correo electrónico",
+    "password": "Contraseña"
+  },
+  "newSale": {
+    "title": "Productos",
+    "input_code": "Buscar por codigo SKU...",
+    "num_sale": "Venta",
+    "btn_add_customer": "Cliente",
+    "discount": "Descuento",
+    "btn_sale": "Completar venta",
+    "input_select": "Elige un cliente"
+  },
+  "cardCategory": {
+    "options": "Opciones"
+  },
+  "tableSearch": {
+    "input_search": "Busca un registro...",
+    "input_select": "Elige una columna"
+  },
+  "modalAddCustomer": {
+    "title": "Agregar nuevo cliente",
+    "description": "Agrega un nuevo cliente a tu lista.",
+    "subtitle": "Ingresa la información principal del nuevo cliente."
+  },
+  "formAddCustomer": {
+    "input1": "Nombres",
+    "place1": "nombre",
+    "error1": "Min 2 caracteres",
+    "error1_max": "Max 50 caracteres",
+    "input2": "Apellidos",
+    "place2": "apellidos",
+    "error2": "Min 2 caracteres",
+    "error2_max": "Max 50 caracteres",
+    "input3": "Teléfono",
+    "error3": "Número de 10 digitos",
+    "btn": "Agregar cliente"
+  },
+  "products": {
+    "title": "Inventario de Productos",
+    "btn_export": "Exportar",
+    "btn_import": "Importar",
+    "btn_add_product": "Producto",
+    "btn_add_category": "Categoría",
+    "table1": "Tabla de inventario"
+  },
+  "modalExport": {
+    "title": "Exportar estadísticas",
+    "description": "La información puede ser exportada como archivos <bold>.csv</bold>, <bold>.xlsx</bold> y <bold>.pdf</bold>.",
+    "subtitle": "Elige tu configuración favorita.",
+    "form_title": "Formato de archivo",
+    "form_description": "Elige tu formato de archivo",
+    "form_input_place": "Formato",
+    "form_btn": "Exportar"
+  },
+  "modalImport": {
+    "title": "Importa tus productos",
+    "description": "Los datos pueden ser importados como archivos <bold>.csv</bold> o <bold>.xlsx</bold>.",
+    "subtitle": "Las columnas de tu archivo debe de incluir los siguientes nombres:"
+  },
+  "dropZone": {
+    "text1": "Arrastra tus archivos .csv o .xlsx aquí",
+    "text2": "o selecciona en tus archivos"
+  },
+  "modalAddProduct": {
+    "title": "Agrega un producto",
+    "description": "Agrega nuevos productos a tu inventario.",
+    "subtitle": "Ingresa la información de tu nuevo producto."
+  },
+  "formAddProduct": {
+    "input1": "Código SKU",
+    "error1": "Solo caracteres numéricos",
+    "input2": "Nombre Producto",
+    "place2": "producto...",
+    "error2": "Min 2 caracteres",
+    "error2_max": "Max 50 caracteres",
+    "input3": "Descripción",
+    "place3": "texto...",
+    "error3": "Min 2 caracteres",
+    "input4": "Categoría",
+    "place4": "selecciona",
+    "input5": "Stock",
+    "error5": "Solo caracteres numéricos",
+    "input6": "Precio compra",
+    "error6": "Solo caracteres numéricos",
+    "input7": "Precio unidad",
+    "error7": "Solo caracteres numéricos",
+    "btn": "Agregar producto"
+  },
+  "modalAddCategory": {
+    "title": "Agrega una categoría",
+    "description": "Agrega nuevas categorías para tus productos.",
+    "subtitle": "Ingresa la información de tu nueva categoría."
+  },
+  "formAddCategory": {
+    "input1": "Nombre Categoría",
+    "place1": "categoría...",
+    "error1": "Min 2 caracteres",
+    "error1_max": "Max 50 caracteres",
+    "input3": "Descripción",
+    "place3": "texto...",
+    "error3": "Min 2 caracteres",
+    "btn": "Agregar categoría"
+  },
+  "customers": {
+    "title": "Clientes",
+    "btn_export": "Exportar",
+    "btn_add_customer": "Cliente",
+    "btn_add_payment": "Pago",
+    "switch_option2": "Pagos",
+    "table1": "Tabla de Clientes",
+    "table2": "Tabla de Deudas",
+    "table3": "Tabla de Pagos",
+    "input1": "Selecciona tu cliente"
+  },
+  "modalNewPayment": {
+    "title": "Nuevo pago",
+    "description": "Registra un nuevo pago de tu cliente.",
+    "subtitle": "Asegúrese de que todos los campos estén correctamente llenados.",
+    "input1": "Cliente",
+    "place1": "Selecciona",
+    "input2": "Deuda de Cliente",
+    "place2": "Selecciona",
+    "total_debt": "Deuda total",
+    "total_payment": "Total pagado",
+    "total_debts": "Total en deudas"
+  },
+  "formNewPayment": {
+    "input1": "Monto de pago",
+    "error1": "Solo caracteres numéricos.",
+    "input2": "Nota",
+    "place2": "texto...",
+    "error2": "Min 2 caracteres",
+    "error2_max": "Max 200 caracteres",
+    "btn": "Agregar pago"
+  },
+  "reports": {
+    "title": "Reportes",
+    "btn_export": "Exportar",
+    "switch": {
+      "general": "General",
+      "sales": "Ventas",
+      "products": "Productos",
+      "customers": "Clientes"
+    },
+    "chart1": "Ventas por Categoría",
+    "chart2": "Ventas por Producto",
+    "table1": "Accounts Receivable",
+    "table2": "Ventas",
+    "chart3": "Productos por Categoría",
+    "chart4": "Top Productos Vendidos",
+    "table3": "Productos",
+    "chart5": "Deudas por Cliente",
+    "chart5_place": "Deudas",
+    "chart6": "Total de Deudas Durante el Tiempo",
+    "chart6_place": "Deudas",
+    "table4": "Clientes",
+    "input1": "Selecciona tu cliente",
+    "table5": "Tabla de Deudas",
+    "table6": "Tabla de Pagos"
+  },
+  "settings": {
+    "title": "Configuración de Cuenta",
+    "btn_add_user": "Usuario",
+    "btn_change_img": "Cambiar imagen",
+    "btn_place": "Soporta imágenes .jpg, .jpeg o .web",
+    "btn_remove_img": "Remover imagen",
+    "input1": "Idioma",
+    "description1": "Personaliza el idioma de tu preferencia.",
+    "place1": "Idioma",
+    "input1_option1": "Inglés",
+    "input1_option2": "Español",
+    "input2": "Apariencia",
+    "description2": "Peronaliza el aspecto de la aplicación.",
+    "place2": "Tema",
+    "input2_option1": "Claro",
+    "input2_option2": "Oscuro",
+    "input3": "Contraseña",
+    "description3": "Cambia tu contraseña.",
+    "input3_btn": "Cambiar",
+    "input4": "Soporte",
+    "description4": "Reporta problemas de la app con los desarrolladores.",
+    "input4_btn": "Contactar",
+    "table1": "Tabla de Usuarios"
+  }
+}

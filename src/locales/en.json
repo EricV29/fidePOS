@@ -1,0 +1,273 @@
+{
+  "global": {
+    "no_data": "There is no data yet.",
+    "status_active": "ACTIVE",
+    "status_inactive": "INACTIVE",
+    "status_paid": "PAID",
+    "status_unpaid": "UNPAID",
+    "status_debt": "DEBT",
+    "rol_admin": "ADMIN",
+    "rol_user": "USER"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "chart1": "Top 5 - Sales by Category",
+    "chart2": "Active Products by Category",
+    "table1": "Recent Sales",
+    "table2": "Accounts Receivable"
+  },
+  "datePicker": {
+    "months": {
+      "january": "January",
+      "february": "February",
+      "march": "March",
+      "april": "April",
+      "may": "May",
+      "june": "June",
+      "july": "July",
+      "august": "August",
+      "september": "September",
+      "october": "October",
+      "november": "November",
+      "december": "December"
+    },
+    "days": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "button1": "Cancel",
+    "button2": "Apply"
+  },
+  "charts": {
+    "chart_tcs": "Sales",
+    "chart_apc": "Products",
+    "totals": "Totals",
+    "chart_cs": "Sales"
+  },
+  "cards": {
+    "revenue_title": "Revenue",
+    "investment_title": "Investment",
+    "inventory_value_title": "Inventory Value",
+    "stock_title": "Products",
+    "customers_title": "Customers",
+    "customers_debt_title": "Customers in Debt",
+    "owed_title": "Total Owed",
+    "payment_title": "Last Payment",
+    "debts_title": "Debts",
+    "paids_title": "Paids",
+    "unpaid_title": "Unpaid",
+    "paid_title": "Paid",
+    "sales_title": "Sales",
+    "products_status_title": "Products (active/inactive)"
+  },
+  "columns": {
+    "created_at": "Created date",
+    "category": "Category",
+    "actions": "Actions",
+    "total_amount": "Amount",
+    "customer": "Customer",
+    "code": "Code SKU",
+    "debt_amount": "Debt amount",
+    "debt_paid": "Debt paid",
+    "debt_pending": "Debt pending",
+    "product": "Product",
+    "description": "Description",
+    "unit_price": "Unit price",
+    "quantity": "Quantity",
+    "cost_price": "Cost price",
+    "status": "Status",
+    "name": "Name",
+    "phone": "Phone",
+    "debts": "Debts",
+    "note": "Note",
+    "paid_amount": "Paid Amount",
+    "email": "Email",
+    "password": "Password"
+  },
+  "newSale": {
+    "title": "Products",
+    "input_code": "Search by SKU code...",
+    "num_sale": "Sale",
+    "btn_add_customer": "Customer",
+    "discount": "Discount",
+    "btn_sale": "Complete sale",
+    "input_select": "Choose a customer"
+  },
+  "cardCategory": {
+    "options": "Options"
+  },
+  "tableSearch": {
+    "input_search": "Search register...",
+    "input_select": "Choose a column"
+  },
+  "modalAddCustomer": {
+    "title": "Add new customer",
+    "description": "Add individual clients to your customer list.",
+    "subtitle": "Enter the main information of your new customer"
+  },
+  "formAddCustomer": {
+    "input1": "First Name",
+    "place1": "name",
+    "error1": "Min 2 caracters",
+    "error1_max": "Max 50 caracters",
+    "input2": "Lastname",
+    "place2": "lastname",
+    "error2": "Min 2 caracters",
+    "error2_max": "Max 50 caracters",
+    "input3": "Phone",
+    "error3": "Number of 10 digits",
+    "btn": "Add customer"
+  },
+  "products": {
+    "title": "Products Inventory",
+    "btn_export": "Export",
+    "btn_import": "Import",
+    "btn_add_product": "Product",
+    "btn_add_category": "Category",
+    "table1": "Inventory Table"
+  },
+  "modalExport": {
+    "title": "Export statistics",
+    "description": "Data will be exported in a <bold>.csv</bold>, <bold>.xlsx</bold> and <bold>.pdf</bold> file.",
+    "subtitle": "Choose yout favorite configuration.",
+    "form_title": "File format",
+    "form_description": "Choose a file format",
+    "form_input_place": "Format",
+    "form_btn": "Export"
+  },
+  "modalImport": {
+    "title": "Import your products",
+    "description": "Data will be exported in a <bold>.csv</bold> or <bold>.xlsx</bold> file.",
+    "subtitle": "Your file must include the following columns."
+  },
+  "dropZone": {
+    "text1": "Drop file .csv or .xlsx here",
+    "text2": "or select in your files"
+  },
+  "modalAddProduct": {
+    "title": "Add new product",
+    "description": "Add individual products to your product list.",
+    "subtitle": "Enter the main information of your new product."
+  },
+  "formAddProduct": {
+    "input1": "Code SKU",
+    "error1": "Only numeric characters",
+    "input2": "Name Product",
+    "place2": "product...",
+    "error2": "Min 2 characters",
+    "error2_max": "Max 50 characters",
+    "input3": "Description",
+    "place3": "text...",
+    "error3": "Min 2 characters",
+    "input4": "Category",
+    "place4": "select",
+    "input5": "Stock",
+    "error5": "Only numeric characters",
+    "input6": "Cost Price",
+    "error6": "Only numeric characters",
+    "input7": "Unit Price",
+    "error7": "Only numeric characters",
+    "btn": "Add product"
+  },
+  "modalAddCategory": {
+    "title": "Add new category",
+    "description": "Add news categories to your products.",
+    "subtitle": "Enter the main information of your new category."
+  },
+  "formAddCategory": {
+    "input1": "Name Category",
+    "place1": "category...",
+    "error1": "Min 2 characters",
+    "error1_max": "Max 50 characters",
+    "input3": "Description",
+    "place3": "text...",
+    "error3": "Min 2 characters",
+    "btn": "Add category"
+  },
+  "customers": {
+    "title": "Customers",
+    "btn_export": "Export",
+    "btn_add_customer": "Customer",
+    "btn_add_payment": "Payment",
+    "switch_option2": "Payments",
+    "table1": "Customers Table",
+    "table2": "Debts Table",
+    "table3": "Payments Table",
+    "input1": "Select your customer"
+  },
+  "modalNewPayment": {
+    "title": "New payment",
+    "description": "Register new payment of your customer.",
+    "subtitle": "Ensure all fields are correctly filled before saving.",
+    "input1": "Customer",
+    "place1": "Select",
+    "input2": "Customer debt",
+    "place2": "Select",
+    "total_debt": "Total debt",
+    "total_payment": "Total payment",
+    "total_debts": "Total debts"
+  },
+  "formNewPayment": {
+    "input1": "Payment Amount",
+    "error1": "Only numeric characters",
+    "input2": "Note",
+    "place2": "text...",
+    "error2": "Min 2 characters",
+    "error2_max": "Max 200 characters",
+    "btn": "Add payment"
+  },
+  "reports": {
+    "title": "Reports",
+    "btn_export": "Export",
+    "switch": {
+      "general": "General",
+      "sales": "Sales",
+      "products": "Products",
+      "customers": "Customers"
+    },
+    "chart1": "Sales by Category",
+    "chart2": "Sales by Products",
+    "table1": "Accounts Receivable",
+    "table2": "Sales",
+    "chart3": "Products by Category",
+    "chart4": "Top Selling Products",
+    "table3": "Products",
+    "chart5": "Debt Distribution by Customer",
+    "chart5_place": "Debt",
+    "chart6": "Total Debt Over Time",
+    "chart6_place": "Debt",
+    "table4": "Customers",
+    "input1": "Select your customer",
+    "table5": "Debts Table",
+    "table6": "Payments Table"
+  },
+  "settings": {
+    "title": "Account Settings",
+    "btn_add_user": "User",
+    "btn_change_img": "Change image",
+    "btn_place": "Support images .jpg, .jpeg or .web",
+    "btn_remove_img": "Remove image",
+    "input1": "Language",
+    "description1": "Customize your preferred language.",
+    "place1": "Language",
+    "input1_option1": "English",
+    "input1_option2": "Spanish",
+    "input2": "Appareance",
+    "description2": "Customize how you theams looks on your device.",
+    "place2": "Theme",
+    "input2_option1": "Light",
+    "input2_option2": "Dark",
+    "input3": "Password",
+    "description3": "Change your password.",
+    "input3_btn": "Change",
+    "input4": "Support",
+    "description4": "Report problems with the app developer.",
+    "input4_btn": "Contact",
+    "table1": "Users Table"
+  }
+}

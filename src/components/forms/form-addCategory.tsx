@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -11,26 +10,24 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-
-const addCategorySchema = z.object({
-  name: z.string().min(2, "Min 2 caracters").max(50),
-  description: z.string().min(2, "Min 2 caracters").max(50),
-  color: z.string().min(2, "Min 2 caracters").max(50),
-});
-
-export type AddCategoryFormValues = z.infer<typeof addCategorySchema>;
+import {
+  type AddCategoryFormValues,
+  getAddCategorySchema,
+} from "./schemas/category.schema";
+import { useTranslation } from "react-i18next";
 
 interface ProductFormProps {
   onSuccess?: () => void;
 }
 
 export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
+  const { t } = useTranslation();
+
   const form = useForm<AddCategoryFormValues>({
-    resolver: zodResolver(addCategorySchema),
+    resolver: zodResolver(getAddCategorySchema(t)),
     defaultValues: {
       name: "",
       description: "",
-      color: "",
     },
   });
 
@@ -48,10 +45,12 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Name Category</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddCategory.input1")}
+                </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="category..."
+                    placeholder={t("formAddCategory.place1")}
                     {...field}
                     className="bg-white"
                   />
@@ -65,7 +64,7 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
               type="color"
               className="w-6 h-6 rounded-full cursor-pointer p-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-full"
             />
-            <p className="font-semibold text-[#F57C00]">Select color</p>
+            <p className="font-semibold text-[#F57C00]">Color</p>
           </div>
         </div>
         <FormField
@@ -73,16 +72,22 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Description</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddCategory.input3")}
+              </FormLabel>
               <FormControl>
-                <Input placeholder="text..." {...field} className="bg-white" />
+                <Input
+                  placeholder={t("formAddCategory.place3")}
+                  {...field}
+                  className="bg-white"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <button type="submit" className="borange">
-          Add Category
+          {t("formAddCategory.btn")}
         </button>
       </form>
     </Form>

@@ -7,9 +7,15 @@ import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { DebtsCustomer } from "@typesm/customers";
 import { shadenHexColor } from "@utility/shadenHexColor";
+import type { TFunction } from "i18next";
+import { formatDateColumns } from "@utility/dateFormatColumns";
+import { getStatusConfig } from "@utility/statusColumns";
 
 // Columns Debts Customer
-export const columnsDC: ColumnDef<DebtsCustomer>[] = [
+export const columnsDC = (
+  t: TFunction,
+  language: string
+): ColumnDef<DebtsCustomer>[] => [
   {
     id: "rowNumber",
     header: "No",
@@ -22,15 +28,15 @@ export const columnsDC: ColumnDef<DebtsCustomer>[] = [
   },
   {
     accessorKey: "code_sku",
-    header: "Code SKU",
+    header: t("columns.code"),
   },
   {
     accessorKey: "product",
-    header: "Product",
+    header: t("columns.product"),
   },
   {
     accessorKey: "description",
-    header: "Description",
+    header: t("columns.description"),
     cell: ({ getValue }) => (
       <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
         {getValue() as string}
@@ -39,7 +45,7 @@ export const columnsDC: ColumnDef<DebtsCustomer>[] = [
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: t("columns.category"),
     cell: ({ row }) => {
       const category = row.getValue("category") as string;
       const ccolor = row.original.ccolor;
@@ -60,24 +66,18 @@ export const columnsDC: ColumnDef<DebtsCustomer>[] = [
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: t("columns.status"),
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
-      const bgColor =
-        status === "active" || status === "paid"
-          ? "statusActiveB"
-          : status === "inactive" || status == "unpaid"
-          ? "statusInactiveB"
-          : status === "debt"
-          ? "statusDebtB"
-          : "bg-gray-400";
 
-      return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
+      const { label, color } = getStatusConfig(status, t);
+
+      return <div className={color}>{label}</div>;
     },
   },
   {
     accessorKey: "debt_amount",
-    header: "Debt Amount",
+    header: t("columns.debt_amount"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("debt_amount")));
 
@@ -87,7 +87,7 @@ export const columnsDC: ColumnDef<DebtsCustomer>[] = [
   },
   {
     accessorKey: "debt_paid",
-    header: "Debt Paid",
+    header: t("columns.debt_paid"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("debt_paid")));
 
@@ -97,17 +97,21 @@ export const columnsDC: ColumnDef<DebtsCustomer>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Created Date",
+    header: t("columns.created_at"),
     meta: {
       headerClassName: "text-center",
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("created_at")}</div>;
+      return (
+        <div className="text-center">
+          {formatDateColumns(row.getValue("created_at"), language)}
+        </div>
+      );
     },
   },
   {
     id: "actions",
-    header: "Actions",
+    header: t("columns.actions"),
     meta: {
       headerClassName: "text-center",
     },

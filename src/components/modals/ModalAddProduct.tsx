@@ -3,10 +3,11 @@ import { useModal } from "@context/ModalContext";
 import BoxPlusIcon from "@icons/BoxPlusIcon";
 import CloseIcon from "@icons/CloseIcon";
 import AddProductForm from "@forms/form-addProduct";
+import { useTranslation } from "react-i18next";
 
 export function ModalAddProduct() {
   const { setModal } = useModal();
-
+  const { t } = useTranslation();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
@@ -27,9 +28,9 @@ export function ModalAddProduct() {
           <div className="flex gap-5">
             <BoxPlusIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>Add new product</h2>
+              <h2>{t("modalAddProduct.title")}</h2>
               <p className="font-extralight">
-                Add individual products to your product list.
+                {t("modalAddProduct.description")}
               </p>
             </div>
           </div>
@@ -38,7 +39,7 @@ export function ModalAddProduct() {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p>Enter the main information of your new product.</p>
+        <p>{t("modalAddProduct.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
           <AddProductForm onSuccess={handleAddProduct} />
         </div>

@@ -13,6 +13,7 @@ import type { ShoppingCarT } from "@typesm/sales";
 import { currencyFormat } from "@utility/currencyFormat";
 import { useModal } from "@/context/ModalContext";
 import { ModalAddCustomer } from "@modals/ModalAddCustomer";
+import { useTranslation } from "react-i18next";
 
 interface NewSaleProps {}
 
@@ -65,6 +66,9 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const [dataCar, setCar] = useState<ShoppingCarT[]>([]);
   const [discount, setDisacount] = useState("");
   const { setModal } = useModal();
+  const { t } = useTranslation();
+  const columnsps = columnsPS(t);
+  const columnssc = columnsSC(t);
 
   useEffect(() => {
     setCategories(categoriesDB);
@@ -127,7 +131,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
           <div className="inputtexto">
             <BarCodeIcon />
             <input
-              placeholder="Search by SKU code..."
+              placeholder={t("newSale.input_code")}
               className="w-full h-full"
             />
           </div>
@@ -144,12 +148,12 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
           </div>
           <div className="flex-5 w-full p-2 flex flex-col gap-4">
             <div>
-              <h2 className="font-semibold">Products</h2>
+              <h2 className="font-semibold">{t("newSale.title")}</h2>
               <hr className="border border-[#b3b3b3] my-2" />
             </div>
             <DataTableSale
               data={dataProducts}
-              columns={columnsPS}
+              columns={columnsps}
               actions={{ add: true }}
               addProduct={addProductToCart}
             />
@@ -157,26 +161,29 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
         </div>
         <div className="w-1/3 p-2 flex flex-col gap-2 bg-white drop-shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-2xl ">
           <p className="font-semibold text-[20px] text-[#F57C00]">
-            Sale: #0001
+            {t("newSale.num_sale")}: #0001
           </p>
           <div className="w-full flex gap-2">
             <CustomSelect
               options={dataCustomers}
-              placeholder="Choose a customer"
+              placeholder={t("newSale.input_select")}
               color="#F57C00"
             />
             <button
               className="bnormal"
               onClick={() => setModal(<ModalAddCustomer />)}
             >
-              <UserPlusIcon /> <p className="lg:block sm:hidden">Customer</p>
+              <UserPlusIcon />{" "}
+              <p className="lg:block sm:hidden">
+                {t("newSale.btn_add_customer")}
+              </p>
             </button>
           </div>
           <div className="w-full h-[500px] py-2 overflow-y-auto">
             {" "}
             <ShoppingCart
               data={dataCar}
-              columns={columnsSC}
+              columns={columnssc}
               actions={{ delete: true }}
               deleteProduct={deleteProductFromCart}
               updateData={(rowIndex, columnId, value) => {
@@ -202,7 +209,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               <p>{currencyFormat(subtotalCart)}</p>
             </div>
             <div className="w-full flex justify-between">
-              <p>Discount</p>
+              <p>{t("newSale.discount")}</p>
               <div className="inputnumber">
                 <input
                   type="text"
@@ -218,7 +225,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             </div>
           </div>
           <div className="w-full">
-            <button className="borange">Complete sale</button>
+            <button className="borange">{t("newSale.btn_sale")}</button>
           </div>
         </div>
       </div>

@@ -4,26 +4,29 @@ import DeleteIcon from "@icons/DeleteIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { ShoppingCarT } from "@typesm/sales";
+import type { TFunction } from "i18next";
 
 // Columns Shooping Car
-export const columnsSC: ColumnDef<ShoppingCarT>[] = [
+export const columnsSC = (t: TFunction): ColumnDef<ShoppingCarT>[] => [
   {
     accessorKey: "product",
-    header: "Product",
+    header: t("columns.product"),
     cell: ({ row }) => {
       const unit_priceF = currencyFormat(Number(row.original.unit_price));
 
       return (
         <div>
           <p className="font-bold text-[20px]">{row.original.product}</p>
-          <p className="font-extralight">Unit price: {unit_priceF}</p>
+          <p className="font-extralight">
+            {t("columns.unit_price")}: {unit_priceF}
+          </p>
         </div>
       );
     },
   },
   {
     accessorKey: "quantity",
-    header: "Quantity",
+    header: t("columns.quantity"),
     cell: ({ row, table }) => {
       const quantity = row.original.quantity;
 

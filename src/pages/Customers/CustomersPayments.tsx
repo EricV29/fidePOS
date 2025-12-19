@@ -8,6 +8,7 @@ import CustomSelect from "@components/Select";
 import CardInfoNumber from "@components/CardInfoNumber";
 import FlagIcon from "@icons/FlagIcon";
 import InvestmentIcon from "@icons/InvestmentIcon";
+import { useTranslation } from "react-i18next";
 
 interface CustomersPaymentsProps {}
 
@@ -60,24 +61,28 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
   const [dataPaymentsCustomers, setPaymentsCustomers] = useState<
     PaymentsCustomer[]
   >([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     setDebtCustomer(dataDCDB);
     setPaymentsCustomers(dataPaymentsCustomersDB);
   }, []);
 
+  const columnsdc = columnsDC(t, i18n.language);
+  const columnspc = columnsPC(t, i18n.language);
+
   return (
     <>
       <div className="w-full h-full flex flex-col gap-2">
         <CustomSelect
           options={optionsCustomers}
-          placeholder="Select your customer"
+          placeholder={t("customers.input1")}
           color="#F57C00"
         />
         <div className="flex gap-2 h-[100px]">
           <CardInfoNumber
             icon={null}
-            title="Debts"
+            title={t("cards.debts_title")}
             icond={FlagIcon}
             number={5}
             format={false}
@@ -85,7 +90,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
           />
           <CardInfoNumber
             icon={null}
-            title="Paids"
+            title={t("cards.paids_title")}
             icond={FlagIcon}
             number={5}
             format={false}
@@ -93,7 +98,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
           />
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Unpaid"
+            title={t("cards.unpaid_title")}
             icond={null}
             number={500}
             format={true}
@@ -101,7 +106,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
           />
           <CardInfoNumber
             icon={InvestmentIcon}
-            title="Paid"
+            title={t("cards.paid_title")}
             icond={null}
             number={500}
             format={true}
@@ -110,10 +115,10 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
         </div>
         <div className="w-full min-w-0 h-full min-h-0 flex gap-2">
           <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-            <p className="font-semibold">Debts Table</p>
+            <p className="font-semibold">{t("customers.table2")}</p>
             <DataTableSearch
               data={dataDebtCustomer}
-              columns={columnsDC}
+              columns={columnsdc}
               actions={{
                 view: true,
                 edit: true,
@@ -122,10 +127,10 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             />
           </div>
           <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-            <p className="font-semibold">Payments Table</p>
+            <p className="font-semibold">{t("customers.table3")}</p>
             <DataTableSearch
               data={dataPaymentsCustomers}
-              columns={columnsPC}
+              columns={columnspc}
               actions={{
                 view: true,
                 edit: true,

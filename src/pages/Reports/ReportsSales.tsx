@@ -8,6 +8,7 @@ import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsS } from "@columns/columnsS";
 import type { Sales } from "@typesm/sales";
+import { useTranslation } from "react-i18next";
 
 interface PieChartItem {
   fill: string;
@@ -25,12 +26,6 @@ const chartDataCSDB = [
   { category: "Zapatos", sales: 73 },
 ];
 
-const chartConfigCS = {
-  sales: {
-    label: "Sales",
-  },
-};
-
 //* Example data bar chart
 const chartDataTCSDB = [
   { category: "Maquillaje", sales: 186 },
@@ -39,13 +34,6 @@ const chartDataTCSDB = [
   { category: "Dulces", sales: 73 },
   { category: "Zapatos", sales: 209 },
 ];
-
-const chartConfigTCS = {
-  sales: {
-    label: "Sales",
-    color: "#1976D2",
-  },
-};
 
 //* Example data table
 const dataSBD = [
@@ -60,7 +48,7 @@ const dataSBD = [
     total_amount: 100,
     paid_amount: 100,
     status: "paid",
-    created_at: "16/11/2025",
+    created_at: "2025-02-15 00:00:00",
   },
   {
     id: "728ed51f",
@@ -72,8 +60,8 @@ const dataSBD = [
     ccolor: "#5b49ff",
     total_amount: 100,
     paid_amount: 100,
-    status: "paid",
-    created_at: "16/11/2025",
+    status: "unpaid",
+    created_at: "2025-02-15 00:00:00",
   },
 ];
 
@@ -83,6 +71,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
   const [chartDataCSF, setChartDataCSF] = useState<PieChartItem[]>([]);
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [dataTableS, setDataTableS] = useState<Sales[]>([]);
+  const { t, i18n } = useTranslation();
 
   useEffect(() => {
     setChartDataCSF(addRandomFill(chartDataCSDB));
@@ -90,13 +79,28 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
     setDataTableS(dataSBD);
   }, []);
 
+  const columnss = columnsS(t, i18n.language);
+
+  const chartConfigCS = {
+    items: {
+      label: t("charts.chart_cs"),
+    },
+  };
+
+  const chartConfigTCS = {
+    sales: {
+      label: t("charts.chart_tcs"),
+      color: "#1976D2",
+    },
+  };
+
   return (
     <>
       <div className="w-full h-full flex flex-col gap-2">
         <div className="flex gap-2 h-[110px] overflow-x-auto overflow-y-hidden">
           <CardInfoNumber
             icon={BoxIcon}
-            title="Inventory value"
+            title={t("cards.inventory_value_title")}
             icond={null}
             number={100000}
             format={true}
@@ -104,7 +108,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
           />
           <CardInfoNumber
             icon={ShoppingCar}
-            title="Sales: 10"
+            title={t("cards.sales_title") + ": 10"}
             icond={null}
             number={1500}
             format={true}
@@ -114,14 +118,14 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
         <div className="w-full h-auto flex-1 flex flex-col overflow-y-auto gap-2">
           <div className="w-full flex gap-2 h-[280px]">
             <div className="max-w-[300px] min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold">Categories Sales</p>
+              <p className="font-semibold">{t("reports.chart1")}</p>
               <ChartPieDonutText
                 chartData={chartDataCSF}
                 chartConfig={chartConfigCS}
               />
             </div>
             <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-              <p className="font-semibold mb-2">Sales by Category</p>
+              <p className="font-semibold mb-2">{t("reports.chart2")}</p>
               <ChartBarLabel
                 chartData={chartDataTCS}
                 chartConfig={chartConfigTCS}
@@ -131,9 +135,9 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
             </div>
           </div>
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
-            <p className="font-semibold mb-2">Sales</p>
+            <p className="font-semibold mb-2">{t("reports.table2")}</p>
             <DataTable
-              columns={columnsS}
+              columns={columnss}
               data={dataTableS}
               actions={{
                 view: true,

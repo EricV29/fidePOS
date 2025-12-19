@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface CardCategoryProps {
   name: string;
@@ -13,6 +14,8 @@ const CardCategory: React.FC<CardCategoryProps> = ({
   active,
   onClick,
 }) => {
+  const { t } = useTranslation();
+
   return (
     <>
       <button
@@ -22,7 +25,9 @@ const CardCategory: React.FC<CardCategoryProps> = ({
         onClick={onClick}
       >
         <p className="font-bold text-[1.5rem]">{name.toLocaleUpperCase()}</p>
-        <p className="font-extralight">{options} options</p>
+        <p className="font-extralight">
+          {options} {t("cardCategory.options")}
+        </p>
       </button>
     </>
   );
