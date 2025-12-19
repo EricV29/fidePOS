@@ -36,12 +36,12 @@ export const columnsU = (
   { accessorKey: "phone", header: t("columns.phone") },
   { accessorKey: "password", header: t("columns.password") },
   {
-    accessorKey: "rol",
-    header: "Rol",
+    accessorKey: "role",
+    header: "Role",
     cell: ({ row }) => {
-      const rol = row.getValue("rol") as string;
+      const role = row.getValue("role") as string;
 
-      const { label, color } = getRolConfig(rol, t);
+      const { label, color } = getRolConfig(role, t);
 
       return <div className={color}>{label}</div>;
     },
