@@ -5,7 +5,9 @@
     "status_inactive": "INACTIVO",
     "status_paid": "PAGADO",
     "status_unpaid": "NO PAGADO",
-    "status_debt": "EN DEUDA"
+    "status_debt": "EN DEUDA",
+    "rol_admin": "ADMINISTRADOR",
+    "rol_user": "USUARIO"
   },
   "dashboard": {
     "title": "Panel",
@@ -83,7 +85,9 @@
     "phone": "Teléfono",
     "debts": "Deudas",
     "note": "Nota",
-    "paid_amount": "Monto Pagado"
+    "paid_amount": "Monto Pagado",
+    "email": "Correo electrónico",
+    "password": "Contraseña"
   },
   "newSale": {
     "title": "Productos",
@@ -241,5 +245,29 @@
     "input1": "Selecciona tu cliente",
     "table5": "Tabla de Deudas",
     "table6": "Tabla de Pagos"
+  },
+  "settings": {
+    "title": "Configuración de Cuenta",
+    "btn_add_user": "Usuario",
+    "btn_change_img": "Cambiar imagen",
+    "btn_place": "Soporta imágenes .jpg, .jpeg o .web",
+    "btn_remove_img": "Remover imagen",
+    "input1": "Idioma",
+    "description1": "Personaliza el idioma de tu preferencia.",
+    "place1": "Idioma",
+    "input1_option1": "Inglés",
+    "input1_option2": "Español",
+    "input2": "Apariencia",
+    "description2": "Peronaliza el aspecto de la aplicación.",
+    "place2": "Tema",
+    "input2_option1": "Claro",
+    "input2_option2": "Oscuro",
+    "input3": "Contraseña",
+    "description3": "Cambia tu contraseña.",
+    "input3_btn": "Cambiar",
+    "input4": "Soporte",
+    "description4": "Reporta problemas de la app con los desarrolladores.",
+    "input4_btn": "Contactar",
+    "table1": "Tabla de Usuarios"
   }
 }

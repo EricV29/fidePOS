@@ -4,9 +4,16 @@ import PreviewIcon from "@/assets/icons/PreviewIcon";
 import DeleteIcon from "@icons/DeleteIcon";
 import EditIcon from "@icons/EditIcon";
 import type { Users } from "@typesm/users";
+import type { TFunction } from "i18next";
+import { formatDateColumns } from "@utility/dateFormatColumns";
+import { getStatusConfig } from "@utility/statusColumns";
+import { getRolConfig } from "@utility/rolColumns";
 
 // Columns Users
-export const columnsU: ColumnDef<Users>[] = [
+export const columnsU = (
+  t: TFunction,
+  language: string
+): ColumnDef<Users>[] => [
   {
     id: "rowNumber",
     header: "No",
@@ -19,60 +26,54 @@ export const columnsU: ColumnDef<Users>[] = [
   },
   {
     accessorKey: "name",
-    header: "Name",
+    header: t("columns.name"),
     cell: ({ row }) => {
       return `${row.original.name} ${row.original.last_name}`;
     },
     accessorFn: (row) => `${row.name} ${row.last_name}`,
   },
-  { accessorKey: "email", header: "Email" },
-  { accessorKey: "phone", header: "Phone" },
-  { accessorKey: "password", header: "Password" },
+  { accessorKey: "email", header: t("columns.email") },
+  { accessorKey: "phone", header: t("columns.phone") },
+  { accessorKey: "password", header: t("columns.password") },
   {
     accessorKey: "rol",
     header: "Rol",
     cell: ({ row }) => {
-      const status = row.getValue("rol") as string;
-      const bgColor =
-        status === "admin"
-          ? "rolAdmin"
-          : status === "user"
-          ? "rolUser"
-          : "bg-gray-400";
+      const rol = row.getValue("rol") as string;
 
-      return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
+      const { label, color } = getRolConfig(rol, t);
+
+      return <div className={color}>{label}</div>;
     },
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: t("columns.status"),
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
-      const bgColor =
-        status === "active" || status === "paid"
-          ? "statusActiveB"
-          : status === "inactive" || status == "unpaid"
-          ? "statusInactiveB"
-          : status === "debt"
-          ? "statusDebtB"
-          : "bg-gray-400";
 
-      return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
+      const { label, color } = getStatusConfig(status, t);
+
+      return <div className={color}>{label}</div>;
     },
   },
   {
     accessorKey: "created_at",
-    header: "Created Date",
+    header: t("columns.created_at"),
     meta: {
       headerClassName: "text-center",
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("created_at")}</div>;
+      return (
+        <div className="text-center">
+          {formatDateColumns(row.getValue("created_at"), language)}
+        </div>
+      );
     },
   },
   {
     id: "actions",
-    header: "Actions",
+    header: t("columns.actions"),
     meta: {
       headerClassName: "text-center",
     },

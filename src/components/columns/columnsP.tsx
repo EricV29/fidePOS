@@ -9,6 +9,7 @@ import type { Products } from "@typesm/products";
 import { shadenHexColor } from "@utility/shadenHexColor";
 import type { TFunction } from "i18next";
 import { formatDateColumns } from "@utility/dateFormatColumns";
+import { getStatusConfig } from "@utility/statusColumns";
 
 // Columns Products
 export const columnsP = (
@@ -99,16 +100,10 @@ export const columnsP = (
     header: t("columns.status"),
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
-      const bgColor =
-        status === "active" || status === "paid"
-          ? "statusActiveB"
-          : status === "inactive" || status == "unpaid"
-          ? "statusInactiveB"
-          : status === "debt"
-          ? "statusDebtB"
-          : "bg-gray-400";
 
-      return <div className={bgColor}>{status.toLocaleUpperCase()}</div>;
+      const { label, color } = getStatusConfig(status, t);
+
+      return <div className={color}>{label}</div>;
     },
   },
   {

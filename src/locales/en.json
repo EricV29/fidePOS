@@ -5,7 +5,9 @@
     "status_inactive": "INACTIVE",
     "status_paid": "PAID",
     "status_unpaid": "UNPAID",
-    "status_debt": "DEBT"
+    "status_debt": "DEBT",
+    "rol_admin": "ADMIN",
+    "rol_user": "USER"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -83,7 +85,9 @@
     "phone": "Phone",
     "debts": "Debts",
     "note": "Note",
-    "paid_amount": "Paid Amount"
+    "paid_amount": "Paid Amount",
+    "email": "Email",
+    "password": "Password"
   },
   "newSale": {
     "title": "Products",
@@ -241,5 +245,29 @@
     "input1": "Select your customer",
     "table5": "Debts Table",
     "table6": "Payments Table"
+  },
+  "settings": {
+    "title": "Account Settings",
+    "btn_add_user": "User",
+    "btn_change_img": "Change image",
+    "btn_place": "Support images .jpg, .jpeg or .web",
+    "btn_remove_img": "Remove image",
+    "input1": "Language",
+    "description1": "Customize your preferred language.",
+    "place1": "Language",
+    "input1_option1": "English",
+    "input1_option2": "Spanish",
+    "input2": "Appareance",
+    "description2": "Customize how you theams looks on your device.",
+    "place2": "Theme",
+    "input2_option1": "Light",
+    "input2_option2": "Dark",
+    "input3": "Password",
+    "description3": "Change your password.",
+    "input3_btn": "Change",
+    "input4": "Support",
+    "description4": "Report problems with the app developer.",
+    "input4_btn": "Contact",
+    "table1": "Users Table"
   }
 }
