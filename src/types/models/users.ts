@@ -5,7 +5,7 @@ export type Users = {
   email: string;
   phone: string;
   password: string;
-  rol: string;
+  role: string;
   status: string;
   created_at: string;
   actions?: {

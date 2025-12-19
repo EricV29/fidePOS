@@ -6,8 +6,17 @@
     "status_paid": "PAID",
     "status_unpaid": "UNPAID",
     "status_debt": "DEBT",
-    "rol_admin": "ADMIN",
-    "rol_user": "USER"
+    "role_admin": "ADMIN",
+    "role_user": "USER"
+  },
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "newSale": "New Sale",
+    "products": "Products",
+    "customers": "Customers",
+    "reports": "Reports",
+    "settings": "Settings",
+    "logout": "logout"
   },
   "dashboard": {
     "title": "Dashboard",

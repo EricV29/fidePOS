@@ -6,8 +6,17 @@
     "status_paid": "PAGADO",
     "status_unpaid": "NO PAGADO",
     "status_debt": "EN DEUDA",
-    "rol_admin": "ADMINISTRADOR",
-    "rol_user": "USUARIO"
+    "role_admin": "ADMINISTRADOR",
+    "role_user": "USUARIO"
+  },
+  "sidebar": {
+    "dashboard": "Panel",
+    "newSale": "Venta",
+    "products": "Productos",
+    "customers": "Clientes",
+    "reports": "Reportes",
+    "settings": "Ajustes",
+    "logout": "Cerrar Sesión"
   },
   "dashboard": {
     "title": "Panel",

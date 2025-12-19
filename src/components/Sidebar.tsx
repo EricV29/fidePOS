@@ -11,22 +11,33 @@ import LogoutIcon from "@icons/LogoutIcon";
 import Sidebaitem from "@components/SidebarItem";
 import userImage from "@img/user.webp";
 import fidelogoc from "@img/fidelogoc.png";
+import { useTranslation } from "react-i18next";
 
 interface SidebarProps {
   isOpen: boolean;
   toggleSidebar: () => void;
 }
 
+const roleDB = "admin";
+
 const Sidebar: React.FC<SidebarProps> = ({
   isOpen,
   toggleSidebar,
 }: SidebarProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { t } = useTranslation();
+
   const handleLogout = () => {
     window.electronAPI.logoutSuccess();
   };
 
-  const navigate = useNavigate();
-  const location = useLocation();
+  const roles = [
+    { label: t("global.role_admin"), value: "admin" },
+    { label: t("global.role_user"), value: "user" },
+  ];
+
+  const roleMatched = roles.find((role) => role.value === roleDB);
 
   return (
     <>
@@ -55,35 +66,35 @@ const Sidebar: React.FC<SidebarProps> = ({
           <div className="h-auto w-full flex flex-col justify-start items-center gap-2.5">
             <Sidebaitem
               icon={DashIcon}
-              label="Dashboard"
+              label={t("sidebar.dashboard")}
               active={location.pathname === "/main/dashboard"}
               onClick={() => navigate("/main/dashboard")}
               isOpen={isOpen}
             />
             <Sidebaitem
               icon={ShopCarIcon}
-              label="New Sale"
+              label={t("sidebar.newSale")}
               active={location.pathname === "/main/newsale"}
               onClick={() => navigate("/main/newsale")}
               isOpen={isOpen}
             />
             <Sidebaitem
               icon={BoxIcon}
-              label="Products"
+              label={t("sidebar.products")}
               active={location.pathname === "/main/products"}
               onClick={() => navigate("/main/products")}
               isOpen={isOpen}
             />
             <Sidebaitem
               icon={CustIcon}
-              label="Customers"
+              label={t("sidebar.customers")}
               active={location.pathname.startsWith("/main/customers")}
               onClick={() => navigate("/main/customers")}
               isOpen={isOpen}
             />
             <Sidebaitem
               icon={RepIcon}
-              label="Reports"
+              label={t("sidebar.reports")}
               active={location.pathname.startsWith("/main/reports")}
               onClick={() => navigate("/main/reports")}
               isOpen={isOpen}
@@ -91,7 +102,7 @@ const Sidebar: React.FC<SidebarProps> = ({
 
             <Sidebaitem
               icon={SettIcon}
-              label="Settings"
+              label={t("sidebar.settings")}
               active={location.pathname === "/main/settings"}
               onClick={() => navigate("/main/settings")}
               isOpen={isOpen}
@@ -108,7 +119,7 @@ const Sidebar: React.FC<SidebarProps> = ({
             {isOpen && (
               <>
                 <h1 className="mb-0 break-all block">User</h1>
-                <p className="text-[#5D5D5D] block">Rol</p>
+                <p className="text-[#5D5D5D] block">{roleMatched?.label}</p>
               </>
             )}
           </div>
@@ -118,7 +129,9 @@ const Sidebar: React.FC<SidebarProps> = ({
           >
             <LogoutIcon size={30} color="#F57C00" />
             {isOpen && (
-              <p className="text-[#F57C00] font-semibold block">Logout</p>
+              <p className="text-[#F57C00] font-semibold block">
+                {t("sidebar.logout")}
+              </p>
             )}
           </button>
         </div>

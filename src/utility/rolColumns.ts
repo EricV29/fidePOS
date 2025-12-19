@@ -1,18 +1,18 @@
-export type Rol = "admin" | "user";
+export type Role = "admin" | "user";
 
-export function getRolConfig(rol: string, t: (key: string) => string) {
-  const labelMap: Record<Rol, string> = {
-    admin: t("global.rol_admin"),
-    user: t("global.rol_user"),
+export function getRolConfig(role: string, t: (key: string) => string) {
+  const labelMap: Record<Role, string> = {
+    admin: t("global.role_admin"),
+    user: t("global.role_user"),
   };
 
-  const colorMap: Record<Rol, string> = {
+  const colorMap: Record<Role, string> = {
     admin: "rolAdmin",
     user: "rolUser",
   };
 
   return {
-    label: labelMap[rol as Rol] ?? t("global.rol_uknow"),
-    color: colorMap[rol as Rol] ?? "bg-gray-400",
+    label: labelMap[role as Role] ?? t("global.rol_uknow"),
+    color: colorMap[role as Role] ?? "bg-gray-400",
   };
 }
