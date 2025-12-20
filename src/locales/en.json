@@ -328,5 +328,17 @@
       "One uppercase letter",
       "One special character"
     ]
+  },
+  "modalContact": {
+    "title": "Contact Support",
+    "description": "Send a message describing the error o issue.",
+    "subtitle": "Enter your message and our support team will review it as soon as possible."
+  },
+  "formContact": {
+    "input1": "Text",
+    "place1": "text...",
+    "error1": "Min 10 characters",
+    "error1_max": "Max 300 characters",
+    "btn": "Send"
   }
 }
