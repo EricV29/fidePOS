@@ -278,5 +278,36 @@
     "description4": "Report problems with the app developer.",
     "input4_btn": "Contact",
     "table1": "Users Table"
+  },
+  "modalAddUser": {
+    "title": "Add new user",
+    "description": "Add individual users for your app.",
+    "subtitle": "Enter the main information of your new user."
+  },
+  "formAddUser": {
+    "input1": "First Name",
+    "place1": "name",
+    "error1": "Min 2 characters",
+    "error1_max": "Max 50 characters",
+    "input2": "Lastname",
+    "place2": "lastname",
+    "error2": "Min 2 characters",
+    "error2_max": "Max 50 characters",
+    "input3": "Email",
+    "place3": "email@.com",
+    "error3": "Invalid email address",
+    "input4": "Phone",
+    "error4": "Number of 10 digits",
+    "input5": "Password",
+    "error5": "Password does not meet the requirements",
+    "input6": "Confirm Password",
+    "error6": "Passwords dont match",
+    "btn": "Add user",
+    "password_rules": [
+      "At least 5 characters",
+      "One number",
+      "One uppercase letter",
+      "One special character"
+    ]
   }
 }

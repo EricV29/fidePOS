@@ -278,5 +278,36 @@
     "description4": "Reporta problemas de la app con los desarrolladores.",
     "input4_btn": "Contactar",
     "table1": "Tabla de Usuarios"
+  },
+  "modalAddUser": {
+    "title": "Agregar usuario",
+    "description": "Agrega usuarios a tu aplicación.",
+    "subtitle": "Ingresa la información correcta del nuevo usuario."
+  },
+  "formAddUser": {
+    "input1": "Nombre",
+    "place1": "nombre",
+    "error1": "Min 2 caracteres",
+    "error1_max": "Max 50 caracteres",
+    "input2": "Apellidos",
+    "place2": "apellidos",
+    "error2": "Min 2 caracteres",
+    "error2_max": "Max 50 caracteres",
+    "input3": "Correo electrónico",
+    "place3": "correo@.com",
+    "error3": "Dirección de correo invalida",
+    "input4": "Teléfono",
+    "error4": "Numéro de 10 digitos",
+    "input5": "Contrseña",
+    "error5": "Contraseña no cumple las reglas",
+    "input6": "Confirmar contraseña",
+    "error6": "Contraseñas no coinciden",
+    "btn": "Agregar usuario",
+    "password_rules": [
+      "Al menos 5 caracteres",
+      "Un número",
+      "Una letra mayúscula",
+      "Un carácter especial"
+    ]
   }
 }

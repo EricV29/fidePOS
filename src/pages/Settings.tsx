@@ -8,6 +8,8 @@ import UserPlusIcon from "@icons/UserPlusIcon";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsU } from "@columns/columnsU";
 import type { Users } from "@typesm/users";
+import { useModal } from "@context/ModalContext";
+import { ModalAddUser } from "@modals/ModalAddUser";
 import { useTranslation } from "react-i18next";
 
 interface SettingsProps {}
@@ -40,6 +42,7 @@ const dataUsersDB = [
 
 const Settings: React.FC<SettingsProps> = ({}) => {
   const [dataUsers, setUsers] = useState<Users[]>([]);
+  const { setModal } = useModal();
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
@@ -68,8 +71,12 @@ const Settings: React.FC<SettingsProps> = ({}) => {
         <div className="w-full h-fit flex justify-between items-end">
           <h1 className="text-[30px] mb-0">{t("settings.title")}</h1>
           <div className="flex gap-2">
-            <button className="bnormal">
-              <UserPlusIcon /> <p>{t("settings.btn_add_user")}</p>
+            <button
+              className="bnormal"
+              onClick={() => setModal(<ModalAddUser />)}
+            >
+              <UserPlusIcon />
+              <p>{t("settings.btn_add_user")}</p>
             </button>
           </div>
         </div>
