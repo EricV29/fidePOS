@@ -309,5 +309,24 @@
       "Una letra mayúscula",
       "Un carácter especial"
     ]
+  },
+  "modalChangePassword": {
+    "title": "Cambiar contraseña",
+    "description": "Cambia tu actual contraseña.",
+    "subtitle": "Ingresa tu actual y nueva contraseña."
+  },
+  "formChangePassword": {
+    "input1": "Contraseña actual",
+    "input2": "Nueva Contraseña",
+    "error2": "Contraseña no cumple las reglas",
+    "input3": "Confirma la Nueva Contraseña",
+    "error3": "Contraseñas no coinciden",
+    "btn": "Cambiar contraseña",
+    "password_rules": [
+      "Al menos 5 caracteres",
+      "Un número",
+      "Una letra mayúscula",
+      "Un carácter especial"
+    ]
   }
 }
