@@ -10,6 +10,7 @@ import { columnsU } from "@columns/columnsU";
 import type { Users } from "@typesm/users";
 import { useModal } from "@context/ModalContext";
 import { ModalAddUser } from "@modals/ModalAddUser";
+import { ModalChangePassword } from "@modals/ModalChangePassword";
 import { useTranslation } from "react-i18next";
 
 interface SettingsProps {}
@@ -132,7 +133,10 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               <p className="font-semibold">{t("settings.input3")}</p>
               <p className="font-extralight">{t("settings.description3")}</p>
             </div>
-            <button className="bgreen">
+            <button
+              className="bgreen"
+              onClick={() => setModal(<ModalChangePassword />)}
+            >
               <LockedIcon />
               <p>{t("settings.input3_btn")}</p>
             </button>

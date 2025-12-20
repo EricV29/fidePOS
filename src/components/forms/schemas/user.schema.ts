@@ -34,3 +34,26 @@ export const getAddUserSchema = (t: (key: string) => string) =>
     });
 
 export type AddUserFormValues = z.infer<ReturnType<typeof getAddUserSchema>>;
+
+export const getChangePasswordSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      currentPass: z.string(),
+
+      newPass: z
+        .string()
+        .regex(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{5,}$/,
+          t("formChangePassword.error2")
+        ),
+
+      confirmNewPass: z.string(),
+    })
+    .refine((data) => data.newPass === data.confirmNewPass, {
+      message: t("formChangePassword.error3"),
+      path: ["confirmNewPass"],
+    });
+
+export type ChangePasswordFormValues = z.infer<
+  ReturnType<typeof getChangePasswordSchema>
+>;

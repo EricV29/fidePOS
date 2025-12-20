@@ -309,5 +309,24 @@
       "One uppercase letter",
       "One special character"
     ]
+  },
+  "modalChangePassword": {
+    "title": "Change Password",
+    "description": "Change your current password.",
+    "subtitle": "Enter your current password and new password."
+  },
+  "formChangePassword": {
+    "input1": "Current Password",
+    "input2": "New Password",
+    "error2": "Password does not meet the requirements",
+    "input3": "Confirm New Password",
+    "error3": "Passwords dont match",
+    "btn": "Change Password",
+    "password_rules": [
+      "At least 5 characters",
+      "One number",
+      "One uppercase letter",
+      "One special character"
+    ]
   }
 }
