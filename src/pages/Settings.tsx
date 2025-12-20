@@ -11,6 +11,7 @@ import type { Users } from "@typesm/users";
 import { useModal } from "@context/ModalContext";
 import { ModalAddUser } from "@modals/ModalAddUser";
 import { ModalChangePassword } from "@modals/ModalChangePassword";
+import { ModalContact } from "@modals/ModalContact";
 import { useTranslation } from "react-i18next";
 
 interface SettingsProps {}
@@ -146,7 +147,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               <p className="font-semibold">{t("settings.input4")}</p>
               <p className="font-extralight">{t("settings.description4")}</p>
             </div>
-            <button className="bred">
+            <button className="bred" onClick={() => setModal(<ModalContact />)}>
               <ShieldIcon />
               <p>{t("settings.input4_btn")}</p>
             </button>

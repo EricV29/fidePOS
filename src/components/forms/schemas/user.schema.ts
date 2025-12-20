@@ -57,3 +57,13 @@ export const getChangePasswordSchema = (t: (key: string) => string) =>
 export type ChangePasswordFormValues = z.infer<
   ReturnType<typeof getChangePasswordSchema>
 >;
+
+export const getContactSchema = (t: (key: string) => string) =>
+  z.object({
+    text: z
+      .string()
+      .min(10, t("formContact.error1"))
+      .max(300, t("formContact.error1_max")),
+  });
+
+export type ContactFormValues = z.infer<ReturnType<typeof getContactSchema>>;

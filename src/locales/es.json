@@ -328,5 +328,17 @@
       "Una letra mayúscula",
       "Un carácter especial"
     ]
+  },
+  "modalContact": {
+    "title": "Contacta a soporte",
+    "description": "Envia un mensaje describiendo error, problema o sugerencia.",
+    "subtitle": "Escribe tu mensaje y nuestro equipo lo revisará lo antes posible."
+  },
+  "formContact": {
+    "input1": "Texto",
+    "place1": "texto...",
+    "error1": "Min 10 caracteres",
+    "error1_max": "Max 300 caracteres",
+    "btn": "Enviar"
   }
 }
