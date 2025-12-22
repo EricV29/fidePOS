@@ -7,29 +7,29 @@ export const getAddUserSchema = (t: (key: string) => string) =>
     .object({
       name: z
         .string()
-        .min(2, t("formAddUser.error1"))
-        .max(50, t("formAddUser.error1_max")),
+        .min(2, t("errors.min2_characters"))
+        .max(50, t("errors.max50_characters")),
 
       lastname: z
         .string()
-        .min(2, t("formAddUser.error2"))
-        .max(50, t("formAddUser.error2_max")),
+        .min(2, t("errors.min2_characters"))
+        .max(50, t("errors.max50_characters")),
 
-      email: z.string().regex(emailRegex, t("formAddUser.error3")),
+      email: z.string().regex(emailRegex, t("errors.email_invalid")),
 
-      phone: z.string().regex(/^[0-9]{10}$/, t("formAddUser.error4")),
+      phone: z.string().regex(/^[0-9]{10}$/, t("errors.number10_digits")),
 
       password: z
         .string()
         .regex(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{5,}$/,
-          t("formAddUser.error5")
+          t("errors.pass_requirements")
         ),
 
       confirmPass: z.string(),
     })
     .refine((data) => data.password === data.confirmPass, {
-      message: t("formAddUser.error6"),
+      message: t("errors.pass_match"),
       path: ["confirmPass"],
     });
 
@@ -44,13 +44,13 @@ export const getChangePasswordSchema = (t: (key: string) => string) =>
         .string()
         .regex(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{5,}$/,
-          t("formChangePassword.error2")
+          t("errors.pass_requirements")
         ),
 
       confirmNewPass: z.string(),
     })
     .refine((data) => data.newPass === data.confirmNewPass, {
-      message: t("formChangePassword.error3"),
+      message: t("errors.pass_match"),
       path: ["confirmNewPass"],
     });
 
@@ -62,8 +62,8 @@ export const getContactSchema = (t: (key: string) => string) =>
   z.object({
     text: z
       .string()
-      .min(10, t("formContact.error1"))
-      .max(300, t("formContact.error1_max")),
+      .min(10, t("errors.min10_characters"))
+      .max(300, t("errors.max300_characters")),
   });
 
 export type ContactFormValues = z.infer<ReturnType<typeof getContactSchema>>;

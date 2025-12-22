@@ -80,25 +80,25 @@ export default function Products() {
                 setModal(<ModalExport data={{ data: "Products Statistics" }} />)
               }
             >
-              <ExportIcon /> <p> {t("products.btn_export")}</p>
+              <ExportIcon /> <p> {t("buttons.btn_export")}</p>
             </button>
             <button
               className="bnormal"
               onClick={() => setModal(<ModalImport />)}
             >
-              <ImportIcon /> <p> {t("products.btn_import")}</p>
+              <ImportIcon /> <p> {t("buttons.btn_import")}</p>
             </button>
             <button
               className="bnormal"
               onClick={() => setModal(<ModalAddProduct />)}
             >
-              <BoxPlusIcon /> <p> {t("products.btn_add_product")}</p>
+              <BoxPlusIcon /> <p> {t("buttons.btn_add_product")}</p>
             </button>
             <button
               className="bnormal"
               onClick={() => setModal(<ModalAddCategory />)}
             >
-              <CategoryIcon /> <p> {t("products.btn_add_category")}</p>
+              <CategoryIcon /> <p> {t("buttons.btn_add_category")}</p>
             </button>
           </div>
         </div>

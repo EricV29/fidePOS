@@ -49,7 +49,7 @@ const Reports: React.FC<ReportsProps> = ({}) => {
                 setModal(<ModalExport data={{ data: "Products Statistics" }} />)
               }
             >
-              <ExportIcon /> <p>{t("reports.btn_export")}</p>
+              <ExportIcon /> <p>{t("buttons.btn_export")}</p>
             </button>
             <DatePicker installDate={installDate} />
           </div>

@@ -65,7 +65,7 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder={t("formNewPayment.place2")}
+                  placeholder={t("placeholders.text")}
                   {...field}
                   className="bg-white"
                 />

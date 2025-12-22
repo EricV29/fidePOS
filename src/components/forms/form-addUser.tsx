@@ -58,7 +58,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t("formAddUser.place1")}
+                    placeholder={t("placeholders.name")}
                     {...field}
                     className="bg-white"
                   />
@@ -77,7 +77,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t("formAddUser.place2")}
+                    placeholder={t("placeholders.lastname")}
                     {...field}
                     className="bg-white"
                   />
@@ -98,7 +98,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t("formAddUser.place3")}
+                    placeholder={t("placeholders.email")}
                     {...field}
                     className="bg-white"
                   />
