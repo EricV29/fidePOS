@@ -50,7 +50,7 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder={t("formAddCustomer.place1")}
+                  placeholder={t("placeholders.name")}
                   {...field}
                   className="bg-white"
                 />
@@ -69,7 +69,7 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder={t("formAddCustomer.place2")}
+                  placeholder={t("placeholders.lastname")}
                   {...field}
                   className="bg-white"
                 />

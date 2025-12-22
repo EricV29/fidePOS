@@ -67,7 +67,7 @@ export function ModalExport({ data }: { data: Data }) {
             <CustomSelect
               options={optionsExport}
               color="#000"
-              placeholder={t("modalExport.form_input_place")}
+              placeholder={t("placeholders.format")}
             />
           </div>
           <button className="borange" onClick={handleExportStatistics}>

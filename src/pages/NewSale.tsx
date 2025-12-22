@@ -175,7 +175,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             >
               <UserPlusIcon />{" "}
               <p className="lg:block sm:hidden">
-                {t("newSale.btn_add_customer")}
+                {t("buttons.btn_add_customer")}
               </p>
             </button>
           </div>

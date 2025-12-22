@@ -138,13 +138,13 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
 
   const chartConfigDDC = {
     items: {
-      label: t("reports.chart5_place"),
+      label: t("placeholders.debt"),
     },
   };
 
   const chartConfigTDOT = {
     debts: {
-      label: t("reports.chart6_place"),
+      label: t("placeholders.debt"),
       color: "#F57C00",
     },
   };

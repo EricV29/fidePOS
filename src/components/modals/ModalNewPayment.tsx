@@ -81,7 +81,7 @@ export function ModalNewPayment() {
             <CustomSelect
               options={optionsCustomers}
               color="#000"
-              placeholder={t("modalNewPayment.place1")}
+              placeholder={t("placeholders.select")}
             />
           </div>
           <div className="w-full">
@@ -89,7 +89,7 @@ export function ModalNewPayment() {
             <CustomSelect
               options={optionsDebts}
               color="#000"
-              placeholder={t("modalNewPayment.place2")}
+              placeholder={t("placeholders.select")}
             />
           </div>
         </div>

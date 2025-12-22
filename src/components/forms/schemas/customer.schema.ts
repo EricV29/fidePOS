@@ -4,15 +4,15 @@ export const getAddCustomerSchema = (t: (key: string) => string) =>
   z.object({
     name: z
       .string()
-      .min(2, t("formAddCustomer.error1"))
-      .max(50, t("formAddCustomer.error1_max")),
+      .min(2, t("errors.min2_characters"))
+      .max(50, t("errors.max50_characters")),
 
     lastname: z
       .string()
-      .min(2, t("formAddCustomer.error2"))
-      .max(50, t("formAddCustomer.error2_max")),
+      .min(2, t("errors.min2_characters"))
+      .max(50, t("errors.max50_characters")),
 
-    phone: z.string().regex(/^[0-9]{10}$/, t("formAddCustomer.error3")),
+    phone: z.string().regex(/^[0-9]{10}$/, t("errors.number10_digits")),
   });
 
 export type AddCustomerFormValues = z.infer<

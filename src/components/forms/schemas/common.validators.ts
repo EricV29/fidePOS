@@ -7,4 +7,4 @@ export const minString = (t: (k: string) => string, min: number, key: string) =>
   z.string().min(min, t(key));
 
 export const phone10 = (t: (k: string) => string) =>
-  z.string().regex(/^[0-9]{10}$/, t("errors.phone"));
+  z.string().regex(/^[0-9]{10}$/, t("errors.number10_digits"));

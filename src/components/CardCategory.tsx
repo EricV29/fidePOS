@@ -26,7 +26,7 @@ const CardCategory: React.FC<CardCategoryProps> = ({
       >
         <p className="font-bold text-[1.5rem]">{name.toLocaleUpperCase()}</p>
         <p className="font-extralight">
-          {options} {t("cardCategory.options")}
+          {options} {t("cards.options")}
         </p>
       </button>
     </>

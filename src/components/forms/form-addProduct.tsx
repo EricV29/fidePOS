@@ -79,7 +79,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t("formAddProduct.place2")}
+                    placeholder={t("placeholders.product")}
                     {...field}
                     className="bg-white"
                   />
@@ -99,7 +99,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder={t("formAddProduct.place3")}
+                  placeholder={t("placeholders.text")}
                   {...field}
                   className="bg-white"
                 />
@@ -114,7 +114,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
             <CustomSelect
               options={optionsCategory}
               color="#000"
-              placeholder={t("formAddProduct.place4")}
+              placeholder={t("placeholders.select")}
             />
           </div>
           <FormField

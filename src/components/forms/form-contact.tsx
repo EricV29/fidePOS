@@ -48,7 +48,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
               </FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder={t("formContact.place1")}
+                  placeholder={t("placeholders.text")}
                   {...field}
                   className="bg-white min-h-[120px] resize-none"
                 />

@@ -4,10 +4,10 @@ export const getAddCategorySchema = (t: (key: string) => string) =>
   z.object({
     name: z
       .string()
-      .min(2, t("formAddCategory.error1"))
-      .max(50, t("formAddCustomer.error1_max")),
+      .min(2, t("errors.min2_characters"))
+      .max(50, t("errors.max50_characters")),
 
-    description: z.string().min(2, t("formAddCategory.error3")),
+    description: z.string().min(2, t("errors.min2_characters")),
   });
 
 export type AddCategoryFormValues = z.infer<

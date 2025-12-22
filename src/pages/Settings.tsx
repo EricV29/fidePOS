@@ -78,7 +78,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               onClick={() => setModal(<ModalAddUser />)}
             >
               <UserPlusIcon />
-              <p>{t("settings.btn_add_user")}</p>
+              <p>{t("buttons.btn_add_user")}</p>
             </button>
           </div>
         </div>
@@ -95,7 +95,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
                 <ImgIcon color="#fff" />
                 <p>{t("settings.btn_change_img")}</p>
               </button>
-              <p className="font-extralight">{t("settings.btn_place")}</p>
+              <p className="font-extralight">{t("placeholders.support_img")}</p>
             </div>
             <button className="bwhite">
               <p>{t("settings.btn_remove_img")}</p>
@@ -110,7 +110,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               <CustomSelect
                 options={optionsLanguage}
                 color="#000"
-                placeholder={t("settings.place1")}
+                placeholder={t("placeholders.language")}
                 value={i18n.language}
                 onChange={handleLanguageChange}
               />
@@ -125,7 +125,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               <CustomSelect
                 options={optionsTheme}
                 color="#000"
-                placeholder={t("settings.place2")}
+                placeholder={t("placeholders.theme")}
               />
             </div>
           </div>

@@ -50,7 +50,7 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t("formAddCategory.place1")}
+                    placeholder={t("placeholders.name")}
                     {...field}
                     className="bg-white"
                   />
@@ -77,7 +77,7 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder={t("formAddCategory.place3")}
+                  placeholder={t("placeholders.text")}
                   {...field}
                   className="bg-white"
                 />

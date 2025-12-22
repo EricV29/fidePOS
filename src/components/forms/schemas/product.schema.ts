@@ -2,23 +2,19 @@ import { z } from "zod";
 
 export const getAddProductSchema = (t: (key: string) => string) =>
   z.object({
-    code_sku: z.string().regex(/^[0-9]+$/, t("formAddProduct.error1")),
+    code_sku: z.string().regex(/^[0-9]+$/, t("errors.only_numeric")),
 
     product: z
       .string()
-      .min(2, t("formAddCustomer.error2"))
-      .max(50, t("formAddCustomer.error2_max")),
+      .min(2, t("errors.min2_characters"))
+      .max(50, t("errors.max50_characters")),
 
-    description: z.string().min(2, t("formAddCustomer.error3")),
+    description: z.string().min(2, t("errors.min2_characters")),
 
-    stock: z.string().regex(/^[0-9]+$/, t("formAddProduct.error5")),
+    stock: z.string().regex(/^[0-9]+$/, t("errors.only_numeric")),
 
-    cost_price: z
-      .string()
-      .regex(/^\d+(\.\d{1,2})?$/, t("formAddProduct.error6")),
-    unit_price: z
-      .string()
-      .regex(/^\d+(\.\d{1,2})?$/, t("formAddProduct.error7")),
+    cost_price: z.string().regex(/^\d+(\.\d{1,2})?$/, t("errors.only_numeric")),
+    unit_price: z.string().regex(/^\d+(\.\d{1,2})?$/, t("errors.only_numeric")),
   });
 
 export type AddProductFormValues = z.infer<

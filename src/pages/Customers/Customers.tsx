@@ -39,19 +39,19 @@ const Customers: React.FC<CustomersProps> = ({}) => {
                 setModal(<ModalExport data={{ data: "Products Statistics" }} />)
               }
             >
-              <ExportIcon /> <p>{t("customers.btn_export")}</p>
+              <ExportIcon /> <p>{t("buttons.btn_export")}</p>
             </button>
             <button
               className="bnormal"
               onClick={() => setModal(<ModalAddCustomer />)}
             >
-              <UserPlusIcon /> <p>{t("customers.btn_add_customer")}</p>
+              <UserPlusIcon /> <p>{t("buttons.btn_add_customer")}</p>
             </button>
             <button
               className="bnormal"
               onClick={() => setModal(<ModalNewPayment />)}
             >
-              <PayIcon /> <p>{t("customers.btn_add_payment")}</p>
+              <PayIcon /> <p>{t("buttons.btn_add_payment")}</p>
             </button>
           </div>
         </div>
