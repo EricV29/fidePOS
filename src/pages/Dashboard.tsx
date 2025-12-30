@@ -48,16 +48,20 @@ const dataInvestBD = 12238;
 const dataRSPBD = [
   {
     id: "728ed51f",
+    sale_num: "0001",
     created_at: "2025-11-16 00:00:00",
     category: "Maquillaje",
     ccolor: "#5b49ff",
+    status: "paid",
     total_amount: 100,
   },
   {
     id: "728ed52f",
+    sale_num: "0002",
     created_at: "2025-11-16 00:00:00",
     category: "toys",
     ccolor: "#ff49ff",
+    status: "unpaid",
     total_amount: 50,
   },
 ];

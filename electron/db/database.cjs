@@ -155,6 +155,7 @@ async function initDatabase() {
   db.run(`
     CREATE TABLE IF NOT EXISTS sale (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sale_num INT UNIQUE NOT NULL,
       total_amount INTEGER NOT NULL,
       paid_amount INTEGER NOT NULL,
       discount INTEGER NOT NULL,
