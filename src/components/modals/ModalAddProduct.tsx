@@ -4,8 +4,13 @@ import BoxPlusIcon from "@icons/BoxPlusIcon";
 import CloseIcon from "@icons/CloseIcon";
 import AddProductForm from "@forms/form-addProduct";
 import { useTranslation } from "react-i18next";
+import type { Products } from "@typesm/products";
 
-export function ModalAddProduct() {
+interface Props {
+  data?: Products;
+}
+
+export function ModalAddProduct({ data }: Props) {
   const { setModal } = useModal();
   const { t } = useTranslation();
   const close = () => setModal(null);
@@ -14,6 +19,8 @@ export function ModalAddProduct() {
   const handleAddProduct = () => {
     //window.electronAPI.signupSuccess();
   };
+
+  console.log(data);
 
   return ReactDOM.createPortal(
     <div

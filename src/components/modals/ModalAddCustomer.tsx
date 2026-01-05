@@ -4,8 +4,13 @@ import UserPlusIcon from "@icons/UserPlusIcon";
 import CloseIcon from "@icons/CloseIcon";
 import AddCustomerForm from "@forms/form-addCustomer";
 import { useTranslation } from "react-i18next";
+import type { Customers } from "@typesm/customers";
 
-export function ModalAddCustomer() {
+interface Props {
+  data?: Customers;
+}
+
+export function ModalAddCustomer({ data }: Props) {
   const { setModal } = useModal();
   const { t } = useTranslation();
 
@@ -15,6 +20,8 @@ export function ModalAddCustomer() {
   const handleAddCustomer = () => {
     //window.electronAPI.signupSuccess();
   };
+
+  console.log(data);
 
   return ReactDOM.createPortal(
     <div

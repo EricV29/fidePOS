@@ -22,7 +22,12 @@ import { useTranslation } from "react-i18next";
 interface DataTableSearchProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  actions?: TableActions;
+  actions?: {
+    onView?: (row: TData) => void;
+    onEdit?: (row: TData) => void;
+    onDelete?: (row: TData) => void;
+    onAdd?: (row: TData) => void;
+  };
 }
 
 interface TableColumns {
@@ -35,12 +40,6 @@ declare module "@tanstack/react-table" {
   interface ColumnMeta<TData, TValue> {
     headerClassName?: string;
   }
-}
-
-export interface TableActions {
-  view?: boolean;
-  edit?: boolean;
-  delete?: boolean;
 }
 
 export function DataTableSearch<TData, TValue>({

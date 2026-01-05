@@ -1,8 +1,4 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@components/ui/button";
-import EyeIcon from "@/assets/icons/PreviewIcon";
-import DeleteIcon from "@icons/DeleteIcon";
-import EditIcon from "@icons/EditIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { PaymentsCustomer } from "@typesm/customers";
@@ -64,41 +60,5 @@ export const columnsPC = (
       return <div className="font-semibold text-[#D32F2F]">{formatted}</div>;
     },
     filterFn: partialNumberFilter,
-  },
-  {
-    id: "actions",
-    header: t("columns.actions"),
-    meta: {
-      headerClassName: "text-center",
-    },
-    cell: ({ row, table }) => {
-      const actions = table.options.meta?.actions;
-
-      const handleDescription = () => {
-        console.log("ID:", row.original.id);
-      };
-
-      return (
-        <div className="flex justify-center items-center space-x-2">
-          {actions?.view && (
-            <Button variant="outline" size="icon" onClick={handleDescription}>
-              <EyeIcon />
-            </Button>
-          )}
-
-          {actions?.edit && (
-            <Button variant="outline" size="icon" onClick={handleDescription}>
-              <EditIcon color="#F57C00" />
-            </Button>
-          )}
-
-          {actions?.delete && (
-            <Button variant="outline" size="icon" onClick={handleDescription}>
-              <DeleteIcon color="#D32F2F" />
-            </Button>
-          )}
-        </div>
-      );
-    },
   },
 ];
