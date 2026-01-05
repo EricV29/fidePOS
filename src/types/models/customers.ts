@@ -59,3 +59,8 @@ export type PaymentsDebt = {
   amount: number;
   note: string;
 };
+
+export type AccountsReceivable = {
+  idCustomer: string;
+  idSaleDetail: string;
+};

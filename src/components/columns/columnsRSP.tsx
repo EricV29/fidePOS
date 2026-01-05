@@ -1,9 +1,4 @@
 import type { ColumnDef } from "@tanstack/react-table";
-
-import { Button } from "@/components/ui/button";
-import PreviewIcon from "@/assets/icons/PreviewIcon";
-import DeleteIcon from "@icons/DeleteIcon";
-import EditIcon from "@icons/EditIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { RecentSalesPaid } from "@typesm/sales";

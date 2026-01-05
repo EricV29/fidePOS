@@ -18,13 +18,12 @@ import { useTranslation } from "react-i18next";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
-  actions?: TableActions;
-}
-
-export interface TableActions {
-  view?: boolean;
-  edit?: boolean;
-  delete?: boolean;
+  actions?: {
+    onView?: (row: TData) => void;
+    onEdit?: (row: TData) => void;
+    onDelete?: (row: TData) => void;
+    onAdd?: (row: TData) => void;
+  };
 }
 
 export function DataTable<TData, TValue>({
@@ -36,8 +35,11 @@ export function DataTable<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    meta: { actions },
+    meta: {
+      actions,
+    },
   });
+
   const { t } = useTranslation();
   const numericTotals: Record<string, number> = {};
   columns.forEach((col) => {

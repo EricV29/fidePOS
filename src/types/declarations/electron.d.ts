@@ -20,12 +20,14 @@ declare global {
 declare module "@tanstack/react-table" {
   interface TableMeta<TData extends unknown> {
     actions?: {
-      view?: boolean;
-      delete?: boolean;
-      edit?: boolean;
-      add?: boolean;
+      onView?: (row: TData) => void;
+      onEdit?: (row: TData) => void;
+      onDelete?: (row: TData) => void;
+      onAdd?: (row: TData) => void;
     };
+
     updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
+
     addProduct?: (product: TData) => void;
     deleteProduct?: (id: string) => void;
   }

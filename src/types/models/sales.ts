@@ -25,11 +25,6 @@ export type RecentSalesPaid = {
   ccolor: string;
   status: string;
   total_amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
 
 export type ShoppingCarT = {

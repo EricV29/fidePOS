@@ -13,6 +13,9 @@ import type { AccountsReceivable } from "@typesm/accounts";
 import { addRandomFill } from "@utility/addFill";
 import { useInstallDate } from "@hooks/useInstallDate";
 import { useTranslation } from "react-i18next";
+import { ModalSales } from "@modals/ModalSales";
+import { useModal } from "@context/ModalContext";
+import { ModalNewPayment } from "@modals/ModalNewPayment";
 
 interface BarChartItem {
   [key: string]: string | number;
@@ -88,6 +91,7 @@ export default function Dashboard() {
   const [investCard, setInvestCard] = useState(Number);
   const [dataTableRSP, setDataTableRSP] = useState<RecentSalesPaid[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
+  const { setModal } = useModal();
 
   useEffect(() => {
     setChartDataTSC(chartDataTCSDB);
@@ -175,9 +179,9 @@ export default function Dashboard() {
                 columns={columnsrsp}
                 data={dataTableRSP}
                 actions={{
-                  view: true,
-                  edit: false,
-                  delete: false,
+                  onView: (row) => {
+                    setModal(<ModalSales sale={row} />);
+                  },
                 }}
               />
             </div>
@@ -187,9 +191,14 @@ export default function Dashboard() {
                 columns={columnsar}
                 data={dataTableAR}
                 actions={{
-                  view: true,
-                  edit: false,
-                  delete: false,
+                  onView: (row) => {
+                    const data = {
+                      idCustomer: row.id,
+                      idSaleDetail: row.id,
+                    };
+
+                    setModal(<ModalNewPayment account={data} />);
+                  },
                 }}
               />
             </div>

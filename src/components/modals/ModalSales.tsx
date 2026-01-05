@@ -60,9 +60,7 @@ export function ModalSales({ sale }: Props) {
   console.log(dataSale);
 
   const { label, color } = getStatusConfig(sale.status, t);
-
   const date = dateFormat(sale.created_at, i18n.language);
-
   const total = currencyFormat(sale.total_amount);
 
   return ReactDOM.createPortal(

@@ -178,8 +178,10 @@ async function initDatabase() {
       product_id INTEGER NOT NULL,
       quantity INTEGER NOT NULL,
       subt_price INTEGER NOT NULL,
+      status_id INTEGER NOT NULL,
       FOREIGN KEY (sale_id) REFERENCES sale(id) ON DELETE CASCADE,
-      FOREIGN KEY (product_id) REFERENCES product(id)
+      FOREIGN KEY (product_id) REFERENCES product(id),
+      FOREIGN KEY (status_id) REFERENCES status(id)
     );
   `);
 

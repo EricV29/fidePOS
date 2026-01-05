@@ -6,10 +6,13 @@ import NewPaymentForm from "@forms/form-newPayment";
 import CustomSelect from "@components/Select";
 import { DataTable } from "@components/data-table";
 import { useState, useEffect } from "react";
-import type { PaymentsDebt } from "@typesm/customers";
+import type { PaymentsDebt, AccountsReceivable } from "@typesm/customers";
 import { columnsPD } from "@columns/columnsPD";
 import { useTranslation } from "react-i18next";
-import i18n from "@/i18n";
+
+interface Props {
+  account?: AccountsReceivable;
+}
 
 const optionsDebts = [
   { label: "0001 Carrito $30.00", value: "id" },
@@ -33,7 +36,7 @@ const dataPaymentsDB = [
   },
 ];
 
-export function ModalNewPayment() {
+export function ModalNewPayment({ account }: Props) {
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
   const close = () => setModal(null);
@@ -43,6 +46,8 @@ export function ModalNewPayment() {
   useEffect(() => {
     setDataPayments(dataPaymentsDB);
   }, []);
+
+  console.log(account?.idCustomer);
 
   const columnspd = columnsPD(t, i18n.language);
 

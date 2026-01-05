@@ -2,50 +2,44 @@ import { Button } from "@/components/ui/button";
 import PreviewIcon from "@icons/PreviewIcon";
 import EditIcon from "@icons/EditIcon";
 import DeleteIcon from "@icons/DeleteIcon";
-import { useModal } from "@context/ModalContext";
-import { ModalSales } from "@/components/modals/ModalSales";
-import type { RecentSalesPaid } from "@typesm/sales";
+import type { TableMeta } from "@tanstack/react-table";
 
-type Props = {
-  row: RecentSalesPaid;
-  actions?: {
-    view?: boolean;
-    edit?: boolean;
-    delete?: boolean;
-  };
-};
+interface Props<T> {
+  row: T;
+  actions?: TableMeta<T>["actions"];
+}
 
 export function RowActions({ row, actions }: Props) {
-  const { setModal } = useModal();
-
-  const handleView = () => {
-    setModal(<ModalSales sale={row} />);
-  };
-
-  const handleEdit = () => {
-    console.log("EDIT:", row.id);
-  };
-
-  const handleDelete = () => {
-    console.log("DELETE:", row.id);
-  };
+  if (!actions) return null;
 
   return (
-    <div className="flex justify-center items-center space-x-2">
-      {actions?.view && (
-        <Button variant="outline" size="icon" onClick={handleView}>
+    <div className="flex justify-center gap-2">
+      {actions.onView && (
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => actions.onView?.(row)}
+        >
           <PreviewIcon />
         </Button>
       )}
 
-      {actions?.edit && (
-        <Button variant="outline" size="icon" onClick={handleEdit}>
+      {actions.onEdit && (
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => actions.onEdit?.(row)}
+        >
           <EditIcon color="#F57C00" />
         </Button>
       )}
 
-      {actions?.delete && (
-        <Button variant="outline" size="icon" onClick={handleDelete}>
+      {actions.onDelete && (
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => actions.onDelete?.(row)}
+        >
           <DeleteIcon color="#D32F2F" />
         </Button>
       )}
