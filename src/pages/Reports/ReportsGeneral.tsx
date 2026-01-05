@@ -200,15 +200,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           </div>
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
             <p className="font-semibold mb-2">Accounts Receivable</p>
-            <DataTable
-              columns={columnsar}
-              data={dataTableAR}
-              actions={{
-                view: true,
-                edit: false,
-                delete: false,
-              }}
-            />
+            <DataTable columns={columnsar} data={dataTableAR} />
           </div>
         </div>
       </div>

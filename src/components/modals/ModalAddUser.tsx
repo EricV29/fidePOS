@@ -4,8 +4,13 @@ import UserPlusIcon from "@icons/UserPlusIcon";
 import CloseIcon from "@icons/CloseIcon";
 import AddUserForm from "@forms/form-addUser";
 import { useTranslation } from "react-i18next";
+import type { Users } from "@typesm/users";
 
-export function ModalAddUser() {
+interface Props {
+  data?: Users;
+}
+
+export function ModalAddUser({ data }: Props) {
   const { setModal } = useModal();
   const { t } = useTranslation();
 
@@ -15,6 +20,8 @@ export function ModalAddUser() {
   const handleAddUser = () => {
     //window.electronAPI.signupSuccess();
   };
+
+  console.log(data);
 
   return ReactDOM.createPortal(
     <div
