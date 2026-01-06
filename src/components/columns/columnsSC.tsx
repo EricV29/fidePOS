@@ -70,19 +70,16 @@ export const columnsSC = (t: TFunction): ColumnDef<ShoppingCarT>[] => [
       headerClassName: "text-center",
     },
     cell: ({ row, table }) => {
-      const actions = table.options.meta?.actions;
       const deleteProduct = table.options.meta?.deleteProduct;
       return (
         <div className="flex justify-center items-center space-x-2">
-          {actions?.delete && (
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => deleteProduct?.(row.original.id)}
-            >
-              <DeleteIcon color="#D32F2F" />
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() => deleteProduct?.(row.original.id)}
+          >
+            <DeleteIcon color="#D32F2F" />
+          </Button>
         </div>
       );
     },

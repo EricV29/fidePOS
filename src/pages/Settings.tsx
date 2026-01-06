@@ -67,6 +67,11 @@ const Settings: React.FC<SettingsProps> = ({}) => {
     i18n.changeLanguage(value);
     localStorage.setItem("lang", value);
   };
+
+  function deleteUser(id: string) {
+    console.log("Deleting user:", id);
+  }
+
   return (
     <>
       <div className="w-full h-full flex flex-col min-h-0">
@@ -158,9 +163,12 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               data={dataUsers}
               columns={columnsu}
               actions={{
-                view: true,
-                edit: true,
-                delete: true,
+                onEdit: (row) => {
+                  setModal(<ModalAddUser data={row} />);
+                },
+                onDelete: (row) => {
+                  deleteUser(row.id);
+                },
               }}
             />
           </div>

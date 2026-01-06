@@ -194,15 +194,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
           </div>
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
             <p className="font-semibold mb-2">{t("reports.table4")}</p>
-            <DataTable
-              columns={columnsc}
-              data={dataTableC}
-              actions={{
-                view: true,
-                edit: false,
-                delete: false,
-              }}
-            />
+            <DataTable columns={columnsc} data={dataTableC} />
           </div>
           <CustomSelect
             options={optionsCustomers}
@@ -212,27 +204,11 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
           <div className="w-full min-w-0 flex gap-2">
             <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
               <p className="font-semibold">{t("reports.table5")}</p>
-              <DataTableSearch
-                data={dataTableDC}
-                columns={columnsdc}
-                actions={{
-                  view: true,
-                  edit: true,
-                  delete: true,
-                }}
-              />
+              <DataTableSearch data={dataTableDC} columns={columnsdc} />
             </div>
             <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
               <p className="font-semibold">{t("reports.table6")}</p>
-              <DataTableSearch
-                data={dataTablePC}
-                columns={columnspc}
-                actions={{
-                  view: true,
-                  edit: true,
-                  delete: true,
-                }}
-              />
+              <DataTableSearch data={dataTablePC} columns={columnspc} />
             </div>
           </div>
         </div>

@@ -10,24 +10,16 @@ export type Sales = {
   paid_amount: number;
   status: string;
   created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
 
 export type RecentSalesPaid = {
   id: string;
+  sale_num: string;
   created_at: string;
   category: string;
   ccolor: string;
+  status: string;
   total_amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
 
 export type ShoppingCarT = {
@@ -36,9 +28,20 @@ export type ShoppingCarT = {
   unit_price: number;
   quantity: number;
   total_amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
+};
+
+interface ProductSaleView {
+  product: string;
+  unit_price: number;
+  quantity: number;
+  code_sku: string;
+  subtotal: number;
+}
+
+export type SaleView = {
+  sale: number;
+  customer: string;
+  products: ProductSaleView[];
+  subtotal: number;
+  discount: number;
 };

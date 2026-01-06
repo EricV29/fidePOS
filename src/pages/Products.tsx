@@ -64,6 +64,10 @@ export default function Products() {
     setProducts(dataProductsDB);
   }, []);
 
+  function deleteProduct(id: string) {
+    console.log("Deleting product:", id);
+  }
+
   const columnsp = columnsP(t, i18n.language);
 
   return (
@@ -134,9 +138,12 @@ export default function Products() {
               data={dataProducts}
               columns={columnsp}
               actions={{
-                view: false,
-                edit: true,
-                delete: true,
+                onEdit: (row) => {
+                  setModal(<ModalAddProduct data={row} />);
+                },
+                onDelete: (row) => {
+                  deleteProduct(row.id);
+                },
               }}
             />
           </div>

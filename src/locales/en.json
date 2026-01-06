@@ -118,7 +118,8 @@
     "note": "Note",
     "paid_amount": "Paid Amount",
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "sale": "Sale"
   },
   "charts": {
     "chart_tcs": "Sales",
@@ -274,6 +275,13 @@
     "input1": "Payment Amount",
     "input2": "Note",
     "btn": "Add payment"
+  },
+  "modalSale": {
+    "title": "Sale",
+    "description": "Sale status:",
+    "subtitle": "Information of sale.",
+    "customer": "Customer:",
+    "discount": "Discount"
   },
   "modalExport": {
     "title": "Export statistics",

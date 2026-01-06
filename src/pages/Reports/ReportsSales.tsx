@@ -136,15 +136,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
           </div>
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
             <p className="font-semibold mb-2">{t("reports.table2")}</p>
-            <DataTable
-              columns={columnss}
-              data={dataTableS}
-              actions={{
-                view: true,
-                edit: false,
-                delete: false,
-              }}
-            />
+            <DataTable columns={columnss} data={dataTableS} />
           </div>
         </div>
       </div>

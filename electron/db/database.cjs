@@ -155,6 +155,7 @@ async function initDatabase() {
   db.run(`
     CREATE TABLE IF NOT EXISTS sale (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sale_num INT UNIQUE NOT NULL,
       total_amount INTEGER NOT NULL,
       paid_amount INTEGER NOT NULL,
       discount INTEGER NOT NULL,
@@ -177,8 +178,10 @@ async function initDatabase() {
       product_id INTEGER NOT NULL,
       quantity INTEGER NOT NULL,
       subt_price INTEGER NOT NULL,
+      status_id INTEGER NOT NULL,
       FOREIGN KEY (sale_id) REFERENCES sale(id) ON DELETE CASCADE,
-      FOREIGN KEY (product_id) REFERENCES product(id)
+      FOREIGN KEY (product_id) REFERENCES product(id),
+      FOREIGN KEY (status_id) REFERENCES status(id)
     );
   `);
 

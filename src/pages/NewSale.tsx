@@ -11,7 +11,7 @@ import { ShoppingCart } from "@/components/shopping-cart";
 import { columnsSC } from "@columns/columnsSC";
 import type { ShoppingCarT } from "@typesm/sales";
 import { currencyFormat } from "@utility/currencyFormat";
-import { useModal } from "@/context/ModalContext";
+import { useModal } from "@context/ModalContext";
 import { ModalAddCustomer } from "@modals/ModalAddCustomer";
 import { useTranslation } from "react-i18next";
 

@@ -8,20 +8,10 @@ export type Users = {
   role: string;
   status: string;
   created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
 
 export type Rol = {
   id: string;
   rol: string;
   created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };

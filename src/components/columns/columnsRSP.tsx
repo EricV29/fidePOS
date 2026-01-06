@@ -1,15 +1,11 @@
 import type { ColumnDef } from "@tanstack/react-table";
-
-import { Button } from "@/components/ui/button";
-import PreviewIcon from "@/assets/icons/PreviewIcon";
-import DeleteIcon from "@icons/DeleteIcon";
-import EditIcon from "@icons/EditIcon";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { RecentSalesPaid } from "@typesm/sales";
 import { shadenHexColor } from "@utility/shadenHexColor";
 import type { TFunction } from "i18next";
 import { formatDateColumns } from "@utility/dateFormatColumns";
+import { RowActions } from "@components/RowActions";
 
 // Columns Recent Sales Paid
 export const columnsRSP = (
@@ -25,6 +21,10 @@ export const columnsRSP = (
     cell: ({ row }) => {
       return <div className="text-center font-semibold">{row.index + 1}</div>;
     },
+  },
+  {
+    accessorKey: "sale_num",
+    header: t("columns.sale"),
   },
   {
     accessorKey: "created_at",
@@ -80,31 +80,7 @@ export const columnsRSP = (
     cell: ({ row, table }) => {
       const actions = table.options.meta?.actions;
 
-      const handleDescription = () => {
-        console.log("ID:", row.original.id);
-      };
-
-      return (
-        <div className="flex justify-center items-center space-x-2">
-          {actions?.view && (
-            <Button variant="outline" size="icon" onClick={handleDescription}>
-              <PreviewIcon />
-            </Button>
-          )}
-
-          {actions?.edit && (
-            <Button variant="outline" size="icon" onClick={handleDescription}>
-              <EditIcon color="#F57C00" />
-            </Button>
-          )}
-
-          {actions?.delete && (
-            <Button variant="outline" size="icon" onClick={handleDescription}>
-              <DeleteIcon color="#D32F2F" />
-            </Button>
-          )}
-        </div>
-      );
+      return <RowActions row={row.original} actions={actions} />;
     },
   },
 ];

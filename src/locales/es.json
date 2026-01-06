@@ -128,7 +128,8 @@
     "note": "Nota",
     "paid_amount": "Monto Pagado",
     "email": "Correo electrónico",
-    "password": "Contraseña"
+    "password": "Contraseña",
+    "sale": "Venta"
   },
   "charts": {
     "chart_tcs": "Ventas",
@@ -284,6 +285,13 @@
     "input1": "Monto de pago",
     "input2": "Nota",
     "btn": "Agregar pago"
+  },
+  "modalSale": {
+    "title": "Venta",
+    "description": "Estatus de venta:",
+    "subtitle": "Información de venta.",
+    "customer": "Cliente:",
+    "discount": "Descuento"
   },
   "modalExport": {
     "title": "Exportar estadísticas",

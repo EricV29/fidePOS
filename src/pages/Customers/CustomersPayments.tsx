@@ -9,6 +9,8 @@ import CardInfoNumber from "@components/CardInfoNumber";
 import FlagIcon from "@icons/FlagIcon";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import { useTranslation } from "react-i18next";
+import { ModalNewPayment } from "@/components/modals/ModalNewPayment";
+import { useModal } from "@context/ModalContext";
 
 interface CustomersPaymentsProps {}
 
@@ -62,6 +64,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
     PaymentsCustomer[]
   >([]);
   const { t, i18n } = useTranslation();
+  const { setModal } = useModal();
 
   useEffect(() => {
     setDebtCustomer(dataDCDB);
@@ -120,23 +123,20 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
               data={dataDebtCustomer}
               columns={columnsdc}
               actions={{
-                view: true,
-                edit: true,
-                delete: true,
+                onView: (row) => {
+                  const data = {
+                    idCustomer: row.id,
+                    idSaleDetail: row.id,
+                  };
+
+                  setModal(<ModalNewPayment account={data} />);
+                },
               }}
             />
           </div>
           <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
             <p className="font-semibold">{t("customers.table3")}</p>
-            <DataTableSearch
-              data={dataPaymentsCustomers}
-              columns={columnspc}
-              actions={{
-                view: true,
-                edit: true,
-                delete: true,
-              }}
-            />
+            <DataTableSearch data={dataPaymentsCustomers} columns={columnspc} />
           </div>
         </div>
       </div>

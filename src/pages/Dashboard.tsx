@@ -13,6 +13,9 @@ import type { AccountsReceivable } from "@typesm/accounts";
 import { addRandomFill } from "@utility/addFill";
 import { useInstallDate } from "@hooks/useInstallDate";
 import { useTranslation } from "react-i18next";
+import { ModalSales } from "@modals/ModalSales";
+import { useModal } from "@context/ModalContext";
+import { ModalNewPayment } from "@modals/ModalNewPayment";
 
 interface BarChartItem {
   [key: string]: string | number;
@@ -48,16 +51,20 @@ const dataInvestBD = 12238;
 const dataRSPBD = [
   {
     id: "728ed51f",
+    sale_num: "0001",
     created_at: "2025-11-16 00:00:00",
     category: "Maquillaje",
     ccolor: "#5b49ff",
+    status: "paid",
     total_amount: 100,
   },
   {
     id: "728ed52f",
+    sale_num: "0002",
     created_at: "2025-11-16 00:00:00",
     category: "toys",
     ccolor: "#ff49ff",
+    status: "unpaid",
     total_amount: 50,
   },
 ];
@@ -84,6 +91,7 @@ export default function Dashboard() {
   const [investCard, setInvestCard] = useState(Number);
   const [dataTableRSP, setDataTableRSP] = useState<RecentSalesPaid[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
+  const { setModal } = useModal();
 
   useEffect(() => {
     setChartDataTSC(chartDataTCSDB);
@@ -171,9 +179,9 @@ export default function Dashboard() {
                 columns={columnsrsp}
                 data={dataTableRSP}
                 actions={{
-                  view: true,
-                  edit: false,
-                  delete: false,
+                  onView: (row) => {
+                    setModal(<ModalSales sale={row} />);
+                  },
                 }}
               />
             </div>
@@ -183,9 +191,14 @@ export default function Dashboard() {
                 columns={columnsar}
                 data={dataTableAR}
                 actions={{
-                  view: true,
-                  edit: false,
-                  delete: false,
+                  onView: (row) => {
+                    const data = {
+                      idCustomer: row.id,
+                      idSaleDetail: row.id,
+                    };
+
+                    setModal(<ModalNewPayment account={data} />);
+                  },
                 }}
               />
             </div>

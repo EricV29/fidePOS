@@ -8,6 +8,8 @@ import { columnsC } from "@columns/columnsC";
 import type { Customers } from "@typesm/customers";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import { useTranslation } from "react-i18next";
+import { ModalAddCustomer } from "@components/modals/ModalAddCustomer";
+import { useModal } from "@context/ModalContext";
 
 interface CustomersGeneralProps {}
 
@@ -29,11 +31,17 @@ const dataCustomersDB = [
 const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
   const [dataCustomers, setCustomers] = useState<Customers[]>([]);
   const { t, i18n } = useTranslation();
+  const { setModal } = useModal();
+
   useEffect(() => {
     setCustomers(dataCustomersDB);
   }, []);
 
   const columnsc = columnsC(t, i18n.language);
+
+  function deleteCustomer(id: string) {
+    console.log("Deleting customer:", id);
+  }
 
   return (
     <>
@@ -78,9 +86,12 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
             data={dataCustomers}
             columns={columnsc}
             actions={{
-              view: true,
-              edit: true,
-              delete: true,
+              onEdit: (row) => {
+                setModal(<ModalAddCustomer data={row} />);
+              },
+              onDelete: (row) => {
+                deleteCustomer(row.id);
+              },
             }}
           />
         </div>

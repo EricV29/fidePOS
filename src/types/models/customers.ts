@@ -8,11 +8,6 @@ export type Customers = {
   debts_amount: number;
   debts_paid: number;
   created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
 
 export type DebtsCustomer = {
@@ -26,11 +21,6 @@ export type DebtsCustomer = {
   debt_amount: number;
   debt_paid: number;
   created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
 
 export type PaymentsCustomer = {
@@ -40,11 +30,6 @@ export type PaymentsCustomer = {
   product: string;
   note: string;
   amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
 
 export type CustomersSale = {
@@ -58,4 +43,9 @@ export type PaymentsDebt = {
   code_sku: string;
   amount: number;
   note: string;
+};
+
+export type AccountsReceivable = {
+  idCustomer: string;
+  idSaleDetail: string;
 };

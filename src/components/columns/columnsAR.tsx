@@ -1,13 +1,10 @@
 import type { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@components/ui/button";
-import PreviewIcon from "@/assets/icons/PreviewIcon";
-import DeleteIcon from "@icons/DeleteIcon";
-import EditIcon from "@icons/EditIcon";
 import { currencyFormat } from "@utility/currencyFormat";
 import { partialNumberFilter } from "@utility/table-filter";
 import type { AccountsReceivable } from "@typesm/accounts";
 import type { TFunction } from "i18next";
 import { formatDateColumns } from "@utility/dateFormatColumns";
+import { RowActions } from "@components/RowActions";
 
 // Columns Accounts Receivable
 export const columnsAR = (
@@ -89,31 +86,7 @@ export const columnsAR = (
     cell: ({ row, table }) => {
       const actions = table.options.meta?.actions;
 
-      const handleDescription = () => {
-        console.log("ID:", row.original.id);
-      };
-
-      return (
-        <div className="flex justify-center items-center space-x-2">
-          {actions?.view && (
-            <Button variant="outline" size="icon" onClick={handleDescription}>
-              <PreviewIcon />
-            </Button>
-          )}
-
-          {actions?.edit && (
-            <Button variant="outline" size="icon" onClick={handleDescription}>
-              <EditIcon color="#F57C00" />
-            </Button>
-          )}
-
-          {actions?.delete && (
-            <Button variant="outline" size="icon" onClick={handleDescription}>
-              <DeleteIcon color="#D32F2F" />
-            </Button>
-          )}
-        </div>
-      );
+      return <RowActions row={row.original} actions={actions} />;
     },
   },
 ];
