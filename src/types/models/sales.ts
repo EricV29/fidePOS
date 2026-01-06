@@ -10,11 +10,6 @@ export type Sales = {
   paid_amount: number;
   status: string;
   created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
 
 export type RecentSalesPaid = {
@@ -33,11 +28,6 @@ export type ShoppingCarT = {
   unit_price: number;
   quantity: number;
   total_amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
 
 interface ProductSaleView {

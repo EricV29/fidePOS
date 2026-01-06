@@ -7,9 +7,4 @@ export type AccountsReceivable = {
   debt_paid: number;
   debt_pending: number;
   created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
 };
