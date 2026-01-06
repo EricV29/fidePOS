@@ -18,7 +18,9 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   return (
     <button
       className={`sideitem flex items-center gap-10 w-full px-4 py-2 rounded-lg transition-colors ${
-        active ? "active bg-[#F57C00] text-[#ffffff]" : "text-[#5d5d5d]"
+        active
+          ? "active bg-[#F57C00] text-[#ffffff]"
+          : "text-[#5d5d5d] dark:text-[#B3B3B3]"
       }`}
       onClick={onClick}
     >

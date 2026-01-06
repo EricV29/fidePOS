@@ -46,10 +46,22 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   const [dataUsers, setUsers] = useState<Users[]>([]);
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
+  const [theme, setTheme] = useState(() => {
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      return "dark";
+    }
+
+    return "light";
+  });
 
   useEffect(() => {
     setUsers(dataUsersDB);
-  }, []);
+    if (theme === "dark") {
+      document.querySelector("html")?.classList.add("dark");
+    } else {
+      document.querySelector("html")?.classList.remove("dark");
+    }
+  }, [theme]);
 
   const columnsu = columnsU(t, i18n.language);
 
@@ -71,6 +83,10 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   function deleteUser(id: string) {
     console.log("Deleting user:", id);
   }
+
+  const handleChangeTheme = (theme: string) => {
+    setTheme(theme);
+  };
 
   return (
     <>
@@ -131,6 +147,8 @@ const Settings: React.FC<SettingsProps> = ({}) => {
                 options={optionsTheme}
                 color="#000"
                 placeholder={t("placeholders.theme")}
+                value={theme}
+                onChange={handleChangeTheme}
               />
             </div>
           </div>

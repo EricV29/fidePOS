@@ -65,9 +65,9 @@ export default function MainPage() {
 
   return (
     <>
-      <div className="w-screen h-screen overflow-hidden flex p-[13px] gap-[15px]">
+      <div className="w-screen h-screen overflow-hidden flex p-[13px] gap-[15px] dark:bg-[#353935]">
         <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
-        <main className="h-full min-h-0 w-full min-w-0 p-5 rounded-[30px] bg-[#ffffff] border border-[#B3B3B340] flex flex-col overflow-hidden">
+        <main className="h-full min-h-0 w-full min-w-0 p-5 rounded-[30px] bg-[#ffffff] border border-[#B3B3B340] flex flex-col overflow-hidden dark:bg-[#353935]">
           <Outlet context={installDate} />
         </main>
       </div>
