@@ -377,6 +377,10 @@ input:focus {
   background: #fff;
 }
 
+.dark ::-webkit-scrollbar-track {
+  background: #353935;
+}
+
 ::-webkit-scrollbar-thumb {
   background-color: #f57c00;
   border-radius: 4px;

@@ -60,7 +60,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <Table>
-      <TableHeader className="bg-[#FFEFDE] sticky top-0">
+      <TableHeader className="bg-[#FFEFDE] dark:bg-[#5f5f5f] sticky top-0">
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
 
-            <TableRow className="sticky bottom-0 bg-[#FFF8ED] font-semibold">
+            <TableRow className="sticky bottom-0 bg-[#FFF8ED] dark:bg-[#5f5f5f] font-semibold">
               {table.getVisibleFlatColumns().map((column, index) => {
                 const key = column.id;
 

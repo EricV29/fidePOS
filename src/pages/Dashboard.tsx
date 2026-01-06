@@ -136,7 +136,7 @@ export default function Dashboard() {
         <div className="flex-1 min-h-0 w-full flex flex-col">
           <div className="h-fit p-2">
             <div className="h-[35vh] w-full flex justify-between gap-2 min-w-0">
-              <div className="max-w-[600px] min-w-0 w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
+              <div className="max-w-[600px] min-w-0 w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white dark:bg-[#353935] dark:text-[#b3b3b3]">
                 <p className="font-semibold mb-2">{t("dashboard.chart1")}</p>
                 <ChartBarLabel
                   chartData={chartDataTCS}
@@ -145,7 +145,7 @@ export default function Dashboard() {
                   yAxis="sales"
                 />
               </div>
-              <div className="max-w-[300px] min-w-0 h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
+              <div className="max-w-[300px] min-w-0 h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white dark:bg-[#353935] dark:text-[#b3b3b3]">
                 <p className="font-semibold">{t("dashboard.chart2")}</p>
                 <ChartPieDonutText
                   chartData={chartDataTAPCF}
@@ -173,7 +173,7 @@ export default function Dashboard() {
             </div>
           </div>
           <div className="flex-1 min-h-0 p-2 flex gap-2">
-            <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
+            <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white dark:bg-[#353935] dark:text-[#b3b3b3] flex flex-col">
               <p className="font-semibold mb-2">{t("dashboard.table1")}</p>
               <DataTable
                 columns={columnsrsp}
@@ -185,7 +185,7 @@ export default function Dashboard() {
                 }}
               />
             </div>
-            <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
+            <div className="w-1/2 h-full min-h-0 p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white dark:bg-[#353935] dark:text-[#b3b3b3] flex flex-col">
               <p className="font-semibold mb-2">{t("dashboard.table2")}</p>
               <DataTable
                 columns={columnsar}

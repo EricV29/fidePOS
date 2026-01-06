@@ -48,7 +48,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
       const day = new Date(year, month, i);
       const dayString = formatDate(day);
       let className =
-        "flex items-center justify-center cursor-pointer w-[46px] h-[46px] rounded-full hover:bg-[#f57c00] hover:text-white text-black";
+        "flex items-center justify-center cursor-pointer w-[46px] h-[46px] rounded-full hover:bg-[#f57c00] hover:text-white text-black dark:text-white";
 
       if (selectedStartDate && dayString === selectedStartDate) {
         className += " bg-[#f57c00] text-white rounded-r-none";
@@ -145,7 +145,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
             id="datepicker"
             type="text"
             placeholder="Pick a date"
-            className="w-full rounded-[10px] border-2 bg-white py-2.5 pl-[50px] pr-8 text-[#f57c00] outline-none transition border-[#f57c00] shadow-[0px_2px_0px_#F57C00]"
+            className="w-full rounded-[10px] border-2 bg-white dark:bg-[#353935] py-2.5 pl-[50px] pr-8 text-[#f57c00] outline-none transition border-[#f57c00] shadow-[0px_2px_0px_#F57C00]"
             value={updateInput()}
             onClick={toggleDatepicker}
             readOnly
@@ -161,12 +161,12 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
         {isOpen && (
           <div
             id="datepicker-container"
-            className="shadow-datepicker absolute mt-2 rounded-xl border-2 bg-white pt-5 border-[#f57c00]"
+            className="shadow-datepicker absolute mt-2 rounded-xl border-2 bg-white dark:bg-[#353935] pt-5 border-[#f57c00]"
           >
             <div className="flex items-center justify-between px-5">
               <button
                 id="prevMonth"
-                className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black hover:text-white"
+                className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black dark:text-white hover:text-white"
                 onClick={() =>
                   setCurrentDate(
                     new Date(currentDate.setMonth(currentDate.getMonth() - 1))
@@ -178,14 +178,14 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
 
               <div
                 id="currentMonth"
-                className="text-lg font-medium text-dark-3 text-black"
+                className="text-lg font-medium text-dark-3 text-black dark:text-white"
               >
                 {t(`datePicker.months.${monthKey}`)} {currentDate.getFullYear()}
               </div>
 
               <button
                 id="nextMonth"
-                className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black hover:text-white"
+                className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black dark:text-white hover:text-white"
                 onClick={() =>
                   setCurrentDate(
                     new Date(currentDate.setMonth(currentDate.getMonth() + 1))
@@ -200,7 +200,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
               {["sun", "mon", "tue", "wed", "thu", "fri", "sat"].map((day) => (
                 <div
                   key={day}
-                  className="text-center text-sm font-medium text-secondary-color"
+                  className="text-center text-sm font-medium text-secondary-color dark:text-white"
                 >
                   {t(`datePicker.days.${day}`)}
                 </div>
