@@ -1,6 +1,4 @@
 const COLORS = [
-  "#000000",
-  "#B3B3B3",
   "#F57C00",
   "#43A047",
   "#FFEFDE",
@@ -8,15 +6,19 @@ const COLORS = [
   "#FFC107",
   "#1976D2",
   "#008F4C",
-  "#9C27B0",
   "#FF1744",
   "#F9A825",
   "#546E7A",
-  "#00E5FF",
   "#FF4081",
   "#64FFDA",
-  "#7C4DFF",
   "#FFC400",
+  "#aae3ab",
+  "#ecd079",
+  "#ef3353",
+  "#26979f",
+  "#d69e60",
+  "#5ac7aa",
+  "#4b538b",
 ];
 
 export function addRandomFill<
