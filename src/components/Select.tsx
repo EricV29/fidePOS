@@ -70,13 +70,13 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
 
       {isOpen && (
         <div
-          className="w-full absolute z-10 mt-2 rounded-xl border-2 bg-white max-h-60 overflow-y-auto"
+          className="w-full absolute z-10 mt-2 rounded-xl border-2 bg-white dark:bg-[#353935] max-h-60 overflow-y-auto"
           style={{ borderColor: color }}
         >
           {options.map((option) => (
             <div
               key={option.value}
-              className="cursor-pointer px-5 py-2 text-black transition-colors hover:text-white"
+              className="cursor-pointer px-5 py-2 text-black dark:text-white transition-colors hover:text-white"
               onClick={() => handleSelect(option)}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.backgroundColor = color)

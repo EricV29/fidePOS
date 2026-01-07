@@ -50,7 +50,7 @@ export function ShoppingCart<TData, TValue>({
 
   return (
     <Table>
-      <TableHeader className="bg-[#FFEFDE] sticky top-0">
+      <TableHeader className="bg-[#FFEFDE] dark:bg-[#5f5f5f] sticky top-0">
         {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
             {headerGroup.headers.map((header) => (

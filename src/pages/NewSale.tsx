@@ -146,7 +146,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               />
             ))}
           </div>
-          <div className="flex-5 w-full p-2 flex flex-col gap-4">
+          <div className="flex-5 w-full p-2 flex flex-col gap-4 dark:text-[#b3b3b3]">
             <div>
               <h2 className="font-semibold">{t("newSale.title")}</h2>
               <hr className="border border-[#b3b3b3] my-2" />
@@ -159,7 +159,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             />
           </div>
         </div>
-        <div className="w-1/3 p-2 flex flex-col gap-2 bg-white drop-shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-2xl ">
+        <div className="w-1/3 p-2 flex flex-col gap-2 bg-white dark:bg-[#353935] drop-shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-2xl ">
           <p className="font-semibold text-[20px] text-[#F57C00]">
             {t("newSale.num_sale")}: #0001
           </p>
@@ -179,7 +179,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               </p>
             </button>
           </div>
-          <div className="w-full h-[500px] py-2 overflow-y-auto">
+          <div className="w-full h-[500px] py-2 overflow-y-auto dark:text-[#b3b3b3]">
             {" "}
             <ShoppingCart
               data={dataCar}
@@ -204,11 +204,11 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             />
           </div>
           <div className="w-full flex flex-col">
-            <div className="w-full flex justify-between">
+            <div className="w-full flex justify-between dark:text-white">
               <p>Subtotal</p>
               <p>{currencyFormat(subtotalCart)}</p>
             </div>
-            <div className="w-full flex justify-between">
+            <div className="w-full flex justify-between dark:text-white">
               <p>{t("newSale.discount")}</p>
               <div className="inputnumber">
                 <input
@@ -219,7 +219,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               </div>
             </div>
             <hr className="border border-[#b3b3b3] my-2" />
-            <div className="w-full flex justify-between">
+            <div className="w-full flex justify-between dark:text-white">
               <p className="font-bold">Total</p>
               <p className="font-bold">{currencyFormat(totalCart)}</p>
             </div>
