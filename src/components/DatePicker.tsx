@@ -62,7 +62,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
         new Date(day) > new Date(selectedStartDate) &&
         new Date(day) < new Date(selectedEndDate)
       ) {
-        className += " bg-[#ffead6] rounded-none";
+        className += " bg-[#ffead6] dark:bg-[#b3b3b3] rounded-none";
       }
 
       daysArray.push(

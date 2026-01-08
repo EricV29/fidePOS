@@ -122,7 +122,7 @@ export function DataTableSearch<TData, TValue>({
           ))}
         </TableHeader>
 
-        <TableBody>
+        <TableBody className="dark:text-[#b3b3b3]">
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>

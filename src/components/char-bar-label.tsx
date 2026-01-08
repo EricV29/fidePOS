@@ -37,7 +37,10 @@ const ChartBarLabel: React.FC<ChartBarLabelProps> = ({
   }
 
   return (
-    <ChartContainer config={chartConfig} className="min-h-0 w-full">
+    <ChartContainer
+      config={chartConfig}
+      className="min-h-0 w-full dark:text-[#b3b3b3]"
+    >
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis

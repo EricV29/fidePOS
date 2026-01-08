@@ -29,8 +29,12 @@ const CardInfoDetail: React.FC<CardInfoDetailProps> = ({
       >
         <div className="w-full flex flex-col justify-center items-start">
           <div className="flex items-center gap-2 font-bold">
-            <p className="text-[clamp(15px,3vw,30px)]">{totalItems}</p>
-            <p className="text-[clamp(10px,2vw,20px)]">{title}</p>
+            <p className="text-[clamp(15px,3vw,30px)] dark:text-white">
+              {totalItems}
+            </p>
+            <p className="text-[clamp(10px,2vw,20px)] dark:text-white">
+              {title}
+            </p>
           </div>
           {Object.keys(chartData).length ? (
             <ProgressBar chartData={chartData} totalItems={totalItems} />

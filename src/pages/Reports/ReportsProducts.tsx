@@ -116,15 +116,19 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
         </div>
         <div className="w-full h-auto flex-1 flex flex-col overflow-y-auto gap-2">
           <div className="w-full flex gap-2 h-[280px]">
-            <div className="max-w-[300px] min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3]">
-              <p className="font-semibold">{t("reports.chart3")}</p>
+            <div className="max-w-[300px] min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
+              <p className="font-semibold dark:text-white">
+                {t("reports.chart3")}
+              </p>
               <ChartPieDonutText
                 chartData={chartDataCP}
                 chartConfig={chartConfigCP}
               />
             </div>
-            <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3]">
-              <p className="font-semibold mb-2">{t("reports.chart4")}</p>
+            <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
+              <p className="font-semibold mb-2 dark:text-white">
+                {t("reports.chart4")}
+              </p>
               <ChartBarLabel
                 chartData={chartDataTSP}
                 chartConfig={chartConfigTSP}
@@ -140,8 +144,10 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
               />
             </div>
           </div>
-          <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3] flex flex-col">
-            <p className="font-semibold mb-2">{t("reports.table3")}</p>
+          <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent flex flex-col">
+            <p className="font-semibold mb-2 dark:text-white">
+              {t("reports.table3")}
+            </p>
             <DataTable columns={columnsp} data={dataTableP} />
           </div>
         </div>

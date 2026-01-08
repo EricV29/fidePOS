@@ -80,7 +80,7 @@ export function DataTable<TData, TValue>({
         ))}
       </TableHeader>
 
-      <TableBody>
+      <TableBody className="dark:text-[#b3b3b3]">
         {table.getRowModel().rows.length ? (
           <>
             {table.getRowModel().rows.map((row) => (
@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
               </TableRow>
             ))}
 
-            <TableRow className="sticky bottom-0 bg-[#FFF8ED] dark:bg-[#5f5f5f] font-semibold">
+            <TableRow className="sticky bottom-0 bg-[#FFF8ED] dark:bg-[#5f5f5f] dark:text-[#b3b3b3] font-semibold">
               {table.getVisibleFlatColumns().map((column, index) => {
                 const key = column.id;
 

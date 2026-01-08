@@ -195,8 +195,10 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               <p>{t("settings.input4_btn")}</p>
             </button>
           </div>
-          <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3]">
-            <p className="font-semibold">{t("settings.table1")}</p>
+          <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
+            <p className="font-semibold dark:text-white">
+              {t("settings.table1")}
+            </p>
             <DataTableSearch
               data={dataUsers}
               columns={columnsu}
