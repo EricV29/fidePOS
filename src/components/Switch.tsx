@@ -20,7 +20,7 @@ const Switch: React.FC<SwitchProps> = ({ options, active, onChange }) => {
             key={index}
             className={`${
               active === op.value
-                ? "bg-[#f57c00] text-[#FFEFDE] font-semibold px-2 rounded-md"
+                ? "bg-[#f57c00] text-[#FFEFDE] dark:text-[#5f5f5f] font-semibold px-2 rounded-md"
                 : "text-[#f57c00] px-2"
             }`}
             onClick={() => onChange(op.value)}
