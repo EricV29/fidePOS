@@ -32,10 +32,10 @@ const CardInfoText: React.FC<CardInfoTextProps> = ({
   return (
     <>
       <div
-        className="min-w-[200] min-h-[100px] max-h-full w-full flex flex-col justify-center items-center px-6 py-4 rounded-xl border-[3px] bg-white transition-all"
+        className="min-w-[200] min-h-[100px] max-h-full w-full flex flex-col justify-center items-center px-6 py-4 rounded-xl border-[3px] bg-transparent transition-all"
         style={{ borderColor: color }}
       >
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center dark:text-[#b3b3b3]">
           {Icon && <Icon color={color} />}
           <p className="font-bold text-[clamp(14px,2vw,20px)]">{title}</p>
         </div>

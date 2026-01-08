@@ -14,7 +14,7 @@ interface SwitchProps {
 const Switch: React.FC<SwitchProps> = ({ options, active, onChange }) => {
   return (
     <>
-      <div className="flex justify-between gap-3 bg-[#FFEFDE] border border-[#f57c00] py-1 px-1 rounded-lg w-fit">
+      <div className="flex justify-between gap-3 bg-[#FFEFDE] dark:bg-[#5f5f5f] border border-[#f57c00] py-1 px-1 rounded-lg w-fit">
         {options.map((op, index) => (
           <button
             key={index}
