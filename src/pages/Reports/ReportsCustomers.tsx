@@ -177,14 +177,14 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
         </div>
         <div className="w-full h-auto flex-1 flex flex-col overflow-y-auto gap-2">
           <div className="w-full flex gap-2 h-[280px]">
-            <div className="max-w-[300px] min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
+            <div className="max-w-[300px] min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3]">
               <p className="font-semibold">{t("reports.chart5")}</p>
               <ChartPieDonutText
                 chartData={chartDataDDC}
                 chartConfig={chartConfigDDC}
               />
             </div>
-            <div className=" min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
+            <div className=" min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3]">
               <p className="font-semibold">{t("reports.chart6")}</p>
               <ChartAreaDefault
                 chartData={chartDataTDOT}
@@ -192,7 +192,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
               />
             </div>
           </div>
-          <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-white flex flex-col">
+          <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3] flex flex-col">
             <p className="font-semibold mb-2">{t("reports.table4")}</p>
             <DataTable columns={columnsc} data={dataTableC} />
           </div>
@@ -202,11 +202,11 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
             color="#F57C00"
           />
           <div className="w-full min-w-0 flex gap-2">
-            <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
+            <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3]">
               <p className="font-semibold">{t("reports.table5")}</p>
               <DataTableSearch data={dataTableDC} columns={columnsdc} />
             </div>
-            <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
+            <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3]">
               <p className="font-semibold">{t("reports.table6")}</p>
               <DataTableSearch data={dataTablePC} columns={columnspc} />
             </div>
