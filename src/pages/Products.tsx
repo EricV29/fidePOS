@@ -132,7 +132,7 @@ export default function Products() {
               color="#1976D2"
             />
           </div>
-          <div className="w-full min-h-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
+          <div className="w-full min-h-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent dark:text-[#b3b3b3]">
             <p className="font-semibold"> {t("products.table1")}</p>
             <DataTableSearch
               data={dataProducts}
