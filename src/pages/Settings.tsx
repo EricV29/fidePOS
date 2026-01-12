@@ -46,21 +46,30 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   const [dataUsers, setUsers] = useState<Users[]>([]);
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
-  const [theme, setTheme] = useState(() => {
-    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-      return "dark";
+
+  const getInitialTheme = () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+      return savedTheme;
     }
 
-    return "light";
-  });
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+
+  const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
 
   useEffect(() => {
     setUsers(dataUsersDB);
+    const html = document.documentElement;
     if (theme === "dark") {
-      document.querySelector("html")?.classList.add("dark");
+      html.classList.add("dark");
     } else {
-      document.querySelector("html")?.classList.remove("dark");
+      html.classList.remove("dark");
     }
+
+    localStorage.setItem("theme", theme);
   }, [theme]);
 
   const columnsu = columnsU(t, i18n.language);
