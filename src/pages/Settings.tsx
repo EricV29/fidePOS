@@ -93,8 +93,10 @@ const Settings: React.FC<SettingsProps> = ({}) => {
     console.log("Deleting user:", id);
   }
 
-  const handleChangeTheme = (theme: string) => {
-    setTheme(theme);
+  const handleChangeTheme = (value: string) => {
+    if (value === "light" || value === "dark") {
+      setTheme(value);
+    }
   };
 
   return (

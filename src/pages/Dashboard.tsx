@@ -10,7 +10,7 @@ import { columnsRSP } from "@columns/columnsRSP";
 import type { RecentSalesPaid } from "@typesm/sales";
 import { columnsAR } from "@columns/columnsAR";
 import type { AccountsReceivable } from "@typesm/accounts";
-import { addRandomFill } from "@utility/addFill";
+import { addRandomFill } from "@utility/AddFill";
 import { useInstallDate } from "@hooks/useInstallDate";
 import { useTranslation } from "react-i18next";
 import { ModalSales } from "@modals/ModalSales";
