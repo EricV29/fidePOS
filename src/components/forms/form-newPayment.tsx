@@ -1,4 +1,3 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -11,6 +10,7 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
+import { cn } from "@/lib/utils";
 import {
   type NewPaymentFormValues,
   getNewPaymentSchema,
@@ -43,37 +43,65 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
         <FormField
           control={form.control}
           name="payment_amount"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formNewPayment.input1")}
               </FormLabel>
+
               <FormControl>
-                <Input placeholder="$" {...field} className="bg-white" />
+                <Input
+                  placeholder="$"
+                  {...field}
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
+                />
               </FormControl>
-              <FormMessage />
+
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
+
         <FormField
           control={form.control}
           name="note"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formNewPayment.input2")}
               </FormLabel>
+
               <FormControl>
                 <Input
                   placeholder={t("placeholders.text")}
                   {...field}
-                  className="bg-white"
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
                 />
               </FormControl>
-              <FormMessage />
+
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
+
         <button type="submit" className="borange">
           {t("formNewPayment.btn")}
         </button>

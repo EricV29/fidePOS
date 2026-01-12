@@ -15,6 +15,7 @@ import {
   getAddCategorySchema,
 } from "./schemas/category.schema";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 
 interface ProductFormProps {
   onSuccess?: () => void;
@@ -43,23 +44,32 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
           <FormField
             control={form.control}
             name="name"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddCategory.input1")}
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder={t("placeholders.name")}
                     {...field}
-                    className="bg-white"
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
-          <div className="w-[180px] flex justify-start items-center p-2 gap-2 bg-[#FFEFDE] cursor-pointer rounded-[15px]">
+          <div className="w-[180px] flex justify-start items-center p-2 gap-2 bg-[#FFEFDE] dark:bg-[#353935] dark:border-[#FFEFDE] border cursor-pointer rounded-[15px]">
             <input
               type="color"
               className="w-6 h-6 rounded-full cursor-pointer p-0 [&::-webkit-color-swatch-wrapper]:p-0 [&::-webkit-color-swatch]:rounded-full"
@@ -70,19 +80,28 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
         <FormField
           control={form.control}
           name="description"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formAddCategory.input3")}
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder={t("placeholders.text")}
                   {...field}
-                  className="bg-white"
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />

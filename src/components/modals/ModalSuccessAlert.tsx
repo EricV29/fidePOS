@@ -15,7 +15,7 @@ export function ModalSuccessAlert() {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-center items-center z-30">
       <div
-        className="w-[400px] flex flex-col p-5 gap-2 bg-white rounded-[15px] border-2 border-[#43A047] drop-shadow-[5px_5px_10px_rgba(67,170,71,0.5)]"
+        className="w-[400px] flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#43A047] drop-shadow-[5px_5px_10px_rgba(67,170,71,0.5)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full flex flex-col justify-center items-center gap-5">
@@ -27,7 +27,9 @@ export function ModalSuccessAlert() {
 
           <div className="w-full flex flex-col justify-center items-center">
             <p className="font-semibold text-3xl text-[#43A047]">Success</p>
-            <p className="font-extralight">Action is donde successfully!</p>
+            <p className="font-extralight dark:text-white">
+              Action is donde successfully!
+            </p>
           </div>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
