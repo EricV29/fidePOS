@@ -15,6 +15,7 @@ import {
   type ContactFormValues,
   getContactSchema,
 } from "./schemas/user.schema";
+import { cn } from "@/lib/utils";
 
 interface ContactFormProps {
   onSuccess?: () => void;
@@ -41,19 +42,28 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
         <FormField
           control={form.control}
           name="text"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formContact.input1")}
               </FormLabel>
               <FormControl>
                 <Textarea
                   placeholder={t("placeholders.text")}
                   {...field}
-                  className="bg-white min-h-[120px] resize-none"
+                  className={cn(
+                    "bg-white min-h-[120px] resize-none",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />

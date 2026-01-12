@@ -16,6 +16,7 @@ import {
   getAddProductSchema,
 } from "./schemas/product.schema";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 interface ProductFormProps {
   onSuccess?: () => void;
 }
@@ -52,9 +53,14 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
           <FormField
             control={form.control}
             name="code_sku"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddProduct.input1")}
                 </FormLabel>
                 <FormControl>
@@ -62,29 +68,42 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                     type="number"
                     placeholder="00000"
                     {...field}
-                    className="bg-white"
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
             name="product"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddProduct.input2")}
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder={t("placeholders.product")}
                     {...field}
-                    className="bg-white"
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
@@ -92,19 +111,28 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
         <FormField
           control={form.control}
           name="description"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formAddProduct.input3")}
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder={t("placeholders.text")}
                   {...field}
-                  className="bg-white"
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
@@ -113,16 +141,21 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
             <p className="font-semibold">{t("formAddProduct.input4")}</p>
             <CustomSelect
               options={optionsCategory}
-              color="#000"
+              color="#F57C00"
               placeholder={t("placeholders.select")}
             />
           </div>
           <FormField
             control={form.control}
             name="stock"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddProduct.input5")}
                 </FormLabel>
                 <FormControl>
@@ -130,10 +163,14 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                     type="number"
                     placeholder="00000"
                     {...field}
-                    className="bg-white"
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
@@ -142,30 +179,56 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
           <FormField
             control={form.control}
             name="cost_price"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddProduct.input6")}
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="$" {...field} className="bg-white" />
+                  <Input
+                    placeholder="$"
+                    {...field}
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
+                  />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
             name="unit_price"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddProduct.input7")}
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="$" {...field} className="bg-white" />
+                  <Input
+                    placeholder="$"
+                    {...field}
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
+                  />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />{" "}

@@ -44,7 +44,7 @@ const ChartPieDonut: React.FC<ChartPieExProp> = ({
   return (
     <ChartContainer
       config={chartConfig}
-      className="aspect-square min-h-0 w-full"
+      className="aspect-square min-h-0 w-full dark:text-[#b3b3b3]"
     >
       <PieChart>
         <ChartTooltip

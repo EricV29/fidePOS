@@ -28,7 +28,7 @@ const CardInfoNumber: React.FC<CardInfoNumberProps> = ({
   return (
     <>
       <div
-        className="min-w-[200] min-h-[100px] max-h-full w-full flex flex-col justify-center items-center px-6 py-4 rounded-xl border-[3px] bg-white transition-all"
+        className="min-w-[200] min-h-[100px] max-h-full w-full flex flex-col justify-center items-center px-6 py-4 rounded-xl border-[3px] bg-white dark:bg-[#353935] dark:text-white transition-all"
         style={{ borderColor: color }}
       >
         <div className="flex gap-2 items-center">

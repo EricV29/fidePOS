@@ -69,13 +69,13 @@ export function ModalSales({ sale }: Props) {
       onClick={close}
     >
       <div
-        className="w-[500px] flex flex-col p-5 gap-2 bg-white rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
+        className="w-[500px] flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full flex justify-between items-center">
           <div className="flex gap-5">
             <ShoppingCarFillIcon size={40} color="#F57C00" />
-            <div className="flex flex-col">
+            <div className="flex flex-col dark:text-[#b3b3b3]">
               <h2>
                 {t("modalSale.title")} #{sale.sale_num}
               </h2>
@@ -90,9 +90,9 @@ export function ModalSales({ sale }: Props) {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p>{t("modalSale.subtitle")}</p>
+        <p className="dark:text-white">{t("modalSale.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
-          <div className="w-full flex justify-between">
+          <div className="w-full flex justify-between dark:text-[#b3b3b3]">
             <div className="flex gap-1">
               <CalendarIcon size={20} />
               <p>{date}</p>
@@ -102,7 +102,7 @@ export function ModalSales({ sale }: Props) {
               <p className="font-semibold">{dataSale[0]?.customer}</p>
             </div>
           </div>
-          <div className="w-full max-h-[280px] overflow-y-auto flex flex-col gap-2">
+          <div className="w-full max-h-[280px] overflow-y-auto flex flex-col gap-2 dark:text-white">
             {dataSale[0]?.products.map((item) => (
               <div
                 key={item.code_sku}
@@ -113,7 +113,10 @@ export function ModalSales({ sale }: Props) {
                     {item.product}: {item.quantity}
                   </p>
                   <div className="flex gap-1 font-extralight">
-                    <BarCodeIcon size={20} color="#6B7280" />
+                    <BarCodeIcon
+                      size={20}
+                      className="text-[#6B7280] dark:text-[#b3b3b3]"
+                    />
                     {item.code_sku}
                   </div>
                 </div>
@@ -129,20 +132,20 @@ export function ModalSales({ sale }: Props) {
             ))}
           </div>
           <div className="w-full">
-            <div className="w-full flex justify-between">
+            <div className="w-full flex justify-between dark:text-[#b3b3b3]">
               <p>Subtotal</p>
               <p className="font-semibold">
                 {currencyFormat(dataSale[0]?.subtotal)}
               </p>
             </div>
-            <div className="w-full flex justify-between">
+            <div className="w-full flex justify-between dark:text-[#b3b3b3]">
               <p>{t("modalSale.discount")}</p>
               <p className="font-semibold">
                 {currencyFormat(dataSale[0]?.discount)}
               </p>
             </div>
             <hr className="border border-[#b3b3b3] my-1" />
-            <div className="w-full flex justify-between bg-[#FFEFDE] px-2 rounded-[7px]">
+            <div className="w-full flex justify-between bg-[#FFEFDE] dark:bg-[#5f5f5f] dark:text-white px-2 rounded-[7px]">
               <p>Total</p>
               <p className="font-semibold">{total}</p>
             </div>

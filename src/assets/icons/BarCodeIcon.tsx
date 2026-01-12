@@ -4,8 +4,15 @@ import type { IconProps } from "@typesm/icons";
 const BarCodeIcon: React.FC<IconProps> = ({
   size = 24,
   color = "currentColor",
+  className,
 }) => (
-  <svg width={size} color={color} viewBox="0 0 24 24" fill="none">
+  <svg
+    width={size}
+    color={color}
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+  >
     <path
       d="M21.25 8.91667V5.83333C21.25 5.01558 20.9251 4.23132 20.3469 3.65309C19.7687 3.07485 18.9844 2.75 18.1666 2.75H15.0833"
       stroke="currentColor"

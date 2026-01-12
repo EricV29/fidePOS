@@ -15,6 +15,7 @@ import {
   type AddUserFormValues,
   getAddUserSchema,
 } from "./schemas/user.schema";
+import { cn } from "@/lib/utils";
 
 interface AddUserFormProps {
   onSuccess?: () => void;
@@ -51,38 +52,56 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
           <FormField
             control={form.control}
             name="name"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddUser.input1")}
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder={t("placeholders.name")}
                     {...field}
-                    className="bg-white"
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
             name="lastname"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddUser.input2")}
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder={t("placeholders.lastname")}
                     {...field}
-                    className="bg-white"
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
@@ -91,34 +110,56 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
           <FormField
             control={form.control}
             name="email"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddUser.input3")}
                 </FormLabel>
                 <FormControl>
                   <Input
                     placeholder={t("placeholders.email")}
                     {...field}
-                    className="bg-white"
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
                   />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
           <FormField
             control={form.control}
             name="phone"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddUser.input4")}
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="52+" {...field} className="bg-white" />
+                  <Input
+                    placeholder="52+"
+                    {...field}
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
+                  />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
@@ -127,15 +168,28 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
           <FormField
             control={form.control}
             name="password"
-            render={({ field }) => (
+            render={({ field, fieldState }) => (
               <FormItem>
-                <FormLabel className="font-semibold">
+                <FormLabel
+                  className={cn(
+                    "font-semibold",
+                    fieldState.error && "text-red-600 dark:text-red-400"
+                  )}
+                >
                   {t("formAddUser.input5")}
                 </FormLabel>
                 <FormControl>
-                  <Input placeholder="*****" {...field} className="bg-white" />
+                  <Input
+                    placeholder="*****"
+                    {...field}
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                    )}
+                  />
                 </FormControl>
-                <FormMessage />
+                <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
             )}
           />
@@ -150,15 +204,28 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
         <FormField
           control={form.control}
           name="confirmPass"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formAddUser.input6")}
               </FormLabel>
               <FormControl>
-                <Input placeholder="*****" {...field} className="bg-white" />
+                <Input
+                  placeholder="*****"
+                  {...field}
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />

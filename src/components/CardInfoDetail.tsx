@@ -24,13 +24,17 @@ const CardInfoDetail: React.FC<CardInfoDetailProps> = ({
   return (
     <>
       <div
-        className="min-w-[300px] min-h-[100px] max-h-full w-full flex flex-col justify-center items-center px-6 py-4 rounded-xl border-[3px] bg-white transition-all"
+        className="min-w-[300px] min-h-[100px] max-h-full w-full flex flex-col justify-center items-center px-6 py-4 rounded-xl border-[3px] bg-transparent dark:text-[#b3b3b3] ransition-all"
         style={{ borderColor: color }}
       >
         <div className="w-full flex flex-col justify-center items-start">
           <div className="flex items-center gap-2 font-bold">
-            <p className="text-[clamp(15px,3vw,30px)]">{totalItems}</p>
-            <p className="text-[clamp(10px,2vw,20px)]">{title}</p>
+            <p className="text-[clamp(15px,3vw,30px)] dark:text-white">
+              {totalItems}
+            </p>
+            <p className="text-[clamp(10px,2vw,20px)] dark:text-white">
+              {title}
+            </p>
           </div>
           {Object.keys(chartData).length ? (
             <ProgressBar chartData={chartData} totalItems={totalItems} />

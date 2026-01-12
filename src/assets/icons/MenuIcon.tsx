@@ -4,8 +4,15 @@ import type { IconProps } from "@typesm/icons";
 const MenuIcon: React.FC<IconProps> = ({
   size = 24,
   color = "currentColor",
+  className,
 }) => (
-  <svg width={size} color={color} viewBox="0 0 24 24" fill="none">
+  <svg
+    width={size}
+    color={color}
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+  >
     <path
       d="M4.5 12H19.5"
       stroke="currentColor"

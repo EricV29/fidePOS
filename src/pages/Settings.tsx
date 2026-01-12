@@ -47,9 +47,30 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
 
+  const getInitialTheme = () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+      return savedTheme;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+
+  const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
+
   useEffect(() => {
     setUsers(dataUsersDB);
-  }, []);
+    const html = document.documentElement;
+    if (theme === "dark") {
+      html.classList.add("dark");
+    } else {
+      html.classList.remove("dark");
+    }
+
+    localStorage.setItem("theme", theme);
+  }, [theme]);
 
   const columnsu = columnsU(t, i18n.language);
 
@@ -71,6 +92,10 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   function deleteUser(id: string) {
     console.log("Deleting user:", id);
   }
+
+  const handleChangeTheme = (theme: string) => {
+    setTheme(theme);
+  };
 
   return (
     <>
@@ -95,26 +120,34 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               alt="ImgUser"
               className="size-[57px] rounded-full object-cover"
             />
-            <div className="flex flex-col justify-center items-start">
-              <button className="bblack">
-                <ImgIcon color="#fff" />
-                <p>{t("settings.btn_change_img")}</p>
-              </button>
-              <p className="font-extralight">{t("placeholders.support_img")}</p>
+            <div>
+              <div className="flex gap-3 justify-center">
+                <button className="bblack">
+                  <ImgIcon color="#fff" />
+                  <p>{t("settings.btn_change_img")}</p>
+                </button>
+                <button className="bwhite">
+                  <p>{t("settings.btn_remove_img")}</p>
+                </button>
+              </div>
+              <p className="font-extralight dark:text-[#b3b3b3]">
+                {t("placeholders.support_img")}
+              </p>
             </div>
-            <button className="bwhite">
-              <p>{t("settings.btn_remove_img")}</p>
-            </button>
           </div>
           <div className="w-full flex justify-start items-center gap-3">
             <div className="w-auto">
-              <p className="font-semibold">{t("settings.input1")}</p>
-              <p className="font-extralight">{t("settings.description1")}</p>
+              <p className="font-semibold dark:text-white">
+                {t("settings.input1")}
+              </p>
+              <p className="font-extralight dark:text-[#b3b3b3]">
+                {t("settings.description1")}
+              </p>
             </div>
             <div>
               <CustomSelect
                 options={optionsLanguage}
-                color="#000"
+                color="#F57C00"
                 placeholder={t("placeholders.language")}
                 value={i18n.language}
                 onChange={handleLanguageChange}
@@ -123,21 +156,31 @@ const Settings: React.FC<SettingsProps> = ({}) => {
           </div>
           <div className="w-full flex justify-start items-center gap-3">
             <div className="w-auto">
-              <p className="font-semibold">{t("settings.input2")}</p>
-              <p className="font-extralight">{t("settings.description2")}</p>
+              <p className="font-semibold dark:text-white">
+                {t("settings.input2")}
+              </p>
+              <p className="font-extralight dark:text-[#b3b3b3]">
+                {t("settings.description2")}
+              </p>
             </div>
             <div>
               <CustomSelect
                 options={optionsTheme}
-                color="#000"
+                color="#F57C00"
                 placeholder={t("placeholders.theme")}
+                value={theme}
+                onChange={handleChangeTheme}
               />
             </div>
           </div>
           <div className="w-full flex justify-start items-center gap-3">
             <div className="w-auto">
-              <p className="font-semibold">{t("settings.input3")}</p>
-              <p className="font-extralight">{t("settings.description3")}</p>
+              <p className="font-semibold dark:text-white">
+                {t("settings.input3")}
+              </p>
+              <p className="font-extralight dark:text-[#b3b3b3]">
+                {t("settings.description3")}
+              </p>
             </div>
             <button
               className="bgreen"
@@ -149,16 +192,22 @@ const Settings: React.FC<SettingsProps> = ({}) => {
           </div>
           <div className="w-full flex justify-start items-center gap-3">
             <div className="w-auto">
-              <p className="font-semibold">{t("settings.input4")}</p>
-              <p className="font-extralight">{t("settings.description4")}</p>
+              <p className="font-semibold dark:text-white">
+                {t("settings.input4")}
+              </p>
+              <p className="font-extralight dark:text-[#b3b3b3]">
+                {t("settings.description4")}
+              </p>
             </div>
             <button className="bred" onClick={() => setModal(<ModalContact />)}>
               <ShieldIcon />
               <p>{t("settings.input4_btn")}</p>
             </button>
           </div>
-          <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-white">
-            <p className="font-semibold">{t("settings.table1")}</p>
+          <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
+            <p className="font-semibold dark:text-white">
+              {t("settings.table1")}
+            </p>
             <DataTableSearch
               data={dataUsers}
               columns={columnsu}

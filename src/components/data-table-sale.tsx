@@ -103,7 +103,7 @@ export function DataTableSale<TData, TValue>({
         />
       </div>
       <Table>
-        <TableHeader className="bg-[#FFEFDE] sticky top-0">
+        <TableHeader className="bg-[#FFEFDE] dark:bg-[#5f5f5f] sticky top-0">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (

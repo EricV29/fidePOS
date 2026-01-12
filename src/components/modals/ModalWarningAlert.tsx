@@ -15,7 +15,7 @@ export function ModalWarningAlert() {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-center items-center z-30">
       <div
-        className="w-[400px] flex flex-col p-5 gap-2 bg-white rounded-[15px] border-2 border-[#FFC107] drop-shadow-[5px_5px_10px_rgba(255,193,7,0.5)]"
+        className="w-[400px] flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#FFC107] drop-shadow-[5px_5px_10px_rgba(255,193,7,0.5)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full flex flex-col justify-center items-center gap-5">
@@ -27,7 +27,9 @@ export function ModalWarningAlert() {
 
           <div className="w-full flex flex-col justify-center items-center">
             <p className="font-semibold text-3xl text-[#FFC107]">Warning</p>
-            <p className="font-extralight">Are you sure about this action?</p>
+            <p className="font-extralight dark:text-white">
+              Are you sure about this action?
+            </p>
           </div>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />

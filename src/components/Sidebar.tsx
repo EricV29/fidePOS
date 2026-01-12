@@ -43,7 +43,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <>
       <aside
         className={`
-        h-full bg-[#ffffff] rounded-[30px] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)] flex flex-col justify-between items-center
+        h-full bg-[#ffffff] rounded-[30px] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)] flex flex-col justify-between items-center dark:bg-[#353935]
         ${isOpen ? "w-[200px] px-[15px] py-5" : "w-[70px] px-[5px] py-[15px]"}
       `}
       >
@@ -60,7 +60,10 @@ const Sidebar: React.FC<SidebarProps> = ({
               className="transition-transform duration-200 hover:scale-110 hover:-translate-y-0.5"
               onClick={toggleSidebar}
             >
-              <MenuIcon size={30} color="#5D5D5D" />
+              <MenuIcon
+                size={30}
+                className="text-[#5D5D5D] dark:text-[#b3b3b3]"
+              />
             </button>
           </div>
           <div className="h-auto w-full flex flex-col justify-start items-center gap-2.5">
@@ -119,7 +122,9 @@ const Sidebar: React.FC<SidebarProps> = ({
             {isOpen && (
               <>
                 <h1 className="mb-0 break-all block">User</h1>
-                <p className="text-[#5D5D5D] block">{roleMatched?.label}</p>
+                <p className="text-[#5D5D5D] dark:text-[#B3B3B3] block">
+                  {roleMatched?.label}
+                </p>
               </>
             )}
           </div>

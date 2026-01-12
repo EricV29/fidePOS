@@ -80,7 +80,7 @@ export function DataTableSearch<TData, TValue>({
 
   return (
     <>
-      <div className="w-full flex justify-between gap-5">
+      <div className="w-full flex justify-between gap-5 ">
         <div className="inputtext">
           <SearchIcon />
           <input
@@ -102,7 +102,7 @@ export function DataTableSearch<TData, TValue>({
         />
       </div>
       <Table>
-        <TableHeader className="bg-[#FFEFDE] sticky top-0">
+        <TableHeader className="bg-[#FFEFDE] dark:bg-[#5f5f5f] sticky top-0">
           {table.getHeaderGroups().map((headerGroup) => (
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
@@ -122,7 +122,7 @@ export function DataTableSearch<TData, TValue>({
           ))}
         </TableHeader>
 
-        <TableBody>
+        <TableBody className="dark:text-[#b3b3b3]">
           {table.getRowModel().rows.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow key={row.id}>

@@ -15,6 +15,7 @@ import {
   type AddCustomerFormValues,
   getAddCustomerSchema,
 } from "./schemas/customer.schema";
+import { cn } from "@/lib/utils";
 
 interface AddCustomerFormProps {
   onSuccess?: () => void;
@@ -43,53 +44,84 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
         <FormField
           control={form.control}
           name="name"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formAddCustomer.input1")}
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder={t("placeholders.name")}
                   {...field}
-                  className="bg-white"
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="lastname"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formAddCustomer.input2")}
               </FormLabel>
               <FormControl>
                 <Input
                   placeholder={t("placeholders.lastname")}
                   {...field}
-                  className="bg-white"
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
                 />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="phone"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formAddCustomer.input3")}
               </FormLabel>
               <FormControl>
-                <Input placeholder="52+" {...field} className="bg-white" />
+                <Input
+                  placeholder="52+"
+                  {...field}
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />

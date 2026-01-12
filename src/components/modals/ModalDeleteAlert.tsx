@@ -15,7 +15,7 @@ export function ModalDeleteAlert() {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-center items-center z-30">
       <div
-        className="w-[400px] flex flex-col p-5 gap-2 bg-white rounded-[15px] border-2 border-[#D32F2F] drop-shadow-[5px_5px_10px_rgba(211,47,47,0.5)]"
+        className="w-[400px] flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#D32F2F] drop-shadow-[5px_5px_10px_rgba(211,47,47,0.5)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full flex flex-col justify-center items-center gap-5">
@@ -27,10 +27,12 @@ export function ModalDeleteAlert() {
 
           <div className="w-full flex flex-col justify-center items-center">
             <p className="font-semibold text-3xl text-[#D32F2F]">Delete</p>
-            <p className="font-extralight">
+            <p className="font-extralight dark:text-white">
               Are you sure you want delete this VAR?
             </p>
-            <p className="font-extralight">This action cannot be undone.</p>
+            <p className="font-extralight dark:text-white">
+              This action cannot be undone.
+            </p>
           </div>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />

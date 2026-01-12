@@ -61,10 +61,10 @@ export function ModalNewPayment({ account }: Props) {
       onClick={close}
     >
       <div
-        className="max-w-[700px] h-[500px] lg:h-[700px] flex flex-col p-5 gap-2 bg-white rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
+        className="max-w-[700px] h-[500px] lg:h-[700px] flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="w-full flex justify-between items-center">
+        <div className="w-full flex justify-between items-center dark:text-[#b3b3b3]">
           <div className="flex gap-5">
             <PayIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
@@ -79,13 +79,13 @@ export function ModalNewPayment({ account }: Props) {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p>{t("modalNewPayment.subtitle")}</p>
-        <div className="w-full flex justify-between items-center gap-2">
+        <p className="dark:text-white">{t("modalNewPayment.subtitle")}</p>
+        <div className="w-full flex justify-between items-center gap-2 dark:text-[#b3b3b3]">
           <div className="w-full">
             <p className="font-semibold">{t("modalNewPayment.input1")}</p>
             <CustomSelect
               options={optionsCustomers}
-              color="#000"
+              color="#F57C00"
               placeholder={t("placeholders.select")}
             />
           </div>
@@ -93,12 +93,12 @@ export function ModalNewPayment({ account }: Props) {
             <p className="font-semibold">{t("modalNewPayment.input2")}</p>
             <CustomSelect
               options={optionsDebts}
-              color="#000"
+              color="#F57C00"
               placeholder={t("placeholders.select")}
             />
           </div>
         </div>
-        <div className="w-full flex justify-between px-2">
+        <div className="w-full flex justify-between px-2 dark:text-[#b3b3b3]">
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_debt")}</p>
             <p className="text-[#F57C00]">$2393.00</p>
@@ -112,7 +112,7 @@ export function ModalNewPayment({ account }: Props) {
             <p className="text-[#D32F2F]">$1938.00</p>
           </div>
         </div>
-        <div className="w-full h-[400px] flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 overflow-y-auto">
+        <div className="w-full h-[400px] flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 overflow-y-auto dark:text-[#b3b3b3]">
           <NewPaymentForm onSuccess={handleNewPayment} />
           <div>
             <DataTable data={dataPayments} columns={columnspd} />

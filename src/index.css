@@ -56,7 +56,7 @@ input:focus {
   padding-right: clamp(6px, 3vw, 20px);
   gap: clamp(2px, 1vw, 5px);
   font-weight: 600;
-  background-color: #ffffff;
+  background-color: transparent;
   color: #f57c00;
   box-shadow: 0px 2px 0px rgba(245, 124, 0, 1);
   display: flex;
@@ -74,7 +74,7 @@ input:focus {
   height: 35px;
   border-radius: 10px;
   border: 2px solid #f57c00;
-  background-color: #ffffff;
+  background-color: transparent;
   color: #f57c00;
   box-shadow: 0px 2px 0px rgba(245, 124, 0, 1);
   display: flex;
@@ -100,6 +100,10 @@ input:focus {
   line-height: 1;
 }
 
+.dark .bblack {
+  box-shadow: 0px 2px 0px rgba(255, 255, 255, 1);
+}
+
 .bwhite {
   min-width: 100px;
   height: clamp(40px, 4vw, 48px);
@@ -109,13 +113,19 @@ input:focus {
   padding-right: clamp(6px, 3vw, 20px);
   gap: clamp(2px, 1vw, 5px);
   font-weight: 600;
-  background-color: #fff;
+  background-color: transparent;
   color: #000;
   box-shadow: 0px 2px 0px rgba(0, 0, 0, 1);
   display: flex;
   justify-content: center;
   align-items: center;
   line-height: 1;
+}
+
+.dark .bwhite {
+  border-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 0px 2px 0px rgba(255, 255, 255, 1);
 }
 
 .bgreen {
@@ -164,7 +174,7 @@ input:focus {
   padding-right: clamp(6px, 3vw, 20px);
   gap: clamp(2px, 1vw, 5px);
   font-weight: 600;
-  background-color: #fff;
+  background-color: transparent;
   color: #d32f2f;
   box-shadow: 0px 2px 0px rgba(211, 47, 47, 1);
   display: flex;
@@ -221,7 +231,7 @@ input:focus {
   padding-right: clamp(6px, 3vw, 20px);
   gap: clamp(2px, 1vw, 5px);
   font-weight: 600;
-  background-color: #fff;
+  background-color: transparent;
   color: #ffc107;
   box-shadow: 0px 2px 0px rgba(255, 193, 7, 1);
   display: flex;
@@ -242,7 +252,7 @@ input:focus {
   padding-right: clamp(6px, 3vw, 20px);
   gap: clamp(2px, 1vw, 5px);
   font-weight: 600;
-  background-color: #ffffff;
+  background-color: transparent;
   color: #f57c00;
   cursor: text;
   box-shadow: 0px 2px 0px rgba(245, 124, 0, 1);
@@ -263,7 +273,7 @@ input:focus {
   padding-right: clamp(6px, 3vw, 20px);
   gap: clamp(2px, 1vw, 5px);
   font-weight: 400;
-  background-color: #ffffff;
+  background-color: transparent;
   color: #f57c00;
   cursor: text;
   box-shadow: 0px 2px 0px rgba(245, 124, 0, 1);
@@ -279,7 +289,7 @@ input:focus {
   min-height: 30px;
   border-radius: 5px;
   border-bottom: 1px solid #f57c00;
-  background-color: #ffffff;
+  background-color: transparent;
   color: #f57c00;
   cursor: text;
   box-shadow: 0px 2px 0px rgba(245, 124, 0, 1);
@@ -298,7 +308,7 @@ input:focus {
   padding-right: clamp(6px, 3vw, 20px);
   gap: clamp(2px, 1vw, 5px);
   font-weight: 600;
-  background-color: #ffffff;
+  background-color: transparent;
   cursor: pointer;
   box-shadow: 0px 2px 0px;
   display: flex;
@@ -375,6 +385,10 @@ input:focus {
 
 ::-webkit-scrollbar-track {
   background: #fff;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #353935;
 }
 
 ::-webkit-scrollbar-thumb {

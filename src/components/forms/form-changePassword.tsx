@@ -15,6 +15,7 @@ import {
   type ChangePasswordFormValues,
   getChangePasswordSchema,
 } from "./schemas/user.schema";
+import { cn } from "@/lib/utils";
 
 interface ChangePasswordFormProps {
   onSuccess?: () => void;
@@ -49,30 +50,56 @@ export default function ChangePasswordForm({
         <FormField
           control={form.control}
           name="currentPass"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formChangePassword.input1")}
               </FormLabel>
               <FormControl>
-                <Input placeholder="*****" {...field} className="bg-white" />
+                <Input
+                  placeholder="*****"
+                  {...field}
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="newPass"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formChangePassword.input2")}
               </FormLabel>
               <FormControl>
-                <Input placeholder="*****" {...field} className="bg-white" />
+                <Input
+                  placeholder="*****"
+                  {...field}
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
@@ -86,15 +113,28 @@ export default function ChangePasswordForm({
         <FormField
           control={form.control}
           name="confirmNewPass"
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <FormItem>
-              <FormLabel className="font-semibold">
+              <FormLabel
+                className={cn(
+                  "font-semibold",
+                  fieldState.error && "text-red-600 dark:text-red-400"
+                )}
+              >
                 {t("formChangePassword.input3")}
               </FormLabel>
               <FormControl>
-                <Input placeholder="*****" {...field} className="bg-white" />
+                <Input
+                  placeholder="*****"
+                  {...field}
+                  className={cn(
+                    "bg-white",
+                    fieldState.error &&
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                  )}
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
           )}
         />
