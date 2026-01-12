@@ -43,16 +43,20 @@ export function DataTable<TData, TValue>({
   const { t } = useTranslation();
   const numericTotals: Record<string, number> = {};
   columns.forEach((col) => {
-    const key = col.accessorKey as string;
+    if (!("accessorKey" in col)) return;
+
+    const key = col.accessorKey;
+
+    if (typeof key !== "string") return;
+
     const excluded = ["stock"];
 
     if (
-      key &&
       !excluded.includes(key) &&
-      typeof (data[0] as any)?.[key] === "number"
+      typeof (data[0] as Record<string, unknown>)?.[key] === "number"
     ) {
       numericTotals[key] = data.reduce(
-        (sum, row) => sum + (row as any)[key],
+        (sum, row) => sum + (row as Record<string, number>)[key],
         0
       );
     }

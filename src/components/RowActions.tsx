@@ -9,7 +9,7 @@ interface Props<T> {
   actions?: TableMeta<T>["actions"];
 }
 
-export function RowActions({ row, actions }: Props) {
+export function RowActions<T>({ row, actions }: Props<T>) {
   if (!actions) return null;
 
   return (

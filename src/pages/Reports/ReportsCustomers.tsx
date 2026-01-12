@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import CardInfoNumber from "@components/CardInfoNumber";
 import ChartPieDonutText from "@components/chart-pie-donut";
-import { addRandomFill } from "@/utility/addFill";
+import { addRandomFill } from "@utility/AddFill";
 import { DataTable } from "@components/data-table";
 import { columnsC } from "@columns/columnsC";
 import type { Customers } from "@typesm/customers";

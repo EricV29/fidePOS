@@ -31,7 +31,6 @@ export interface TableActions {
 export function ShoppingCart<TData, TValue>({
   columns,
   data,
-  actions,
   updateData,
   deleteProduct,
 }: ShoppingCartProps<TData, TValue>) {
@@ -40,7 +39,6 @@ export function ShoppingCart<TData, TValue>({
     columns,
     getCoreRowModel: getCoreRowModel(),
     meta: {
-      actions,
       updateData,
       deleteProduct,
     },
