@@ -22,7 +22,7 @@ const CardCategory: React.FC<CardCategoryProps> = ({
         className={`min-w-[170px] min-h-15 h-full flex flex-col p-2 justify-end items-start rounded-xl ${
           active
             ? "bg-[#F57C00] text-white"
-            : "bg-[#FFEFDE] dark:bg-[#b3b3b3] text-[#b3b3b3] dark:text-[#353935]"
+            : "bg-[#FFEFDE] dark:bg-[#5f5f5f] text-[#b3b3b3] dark:text-[#353935]"
         }`}
         onClick={onClick}
       >
