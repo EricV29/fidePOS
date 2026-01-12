@@ -36,12 +36,6 @@ interface TableColumns {
   accessorKey?: string;
 }
 
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData, TValue> {
-    headerClassName?: string;
-  }
-}
-
 export function DataTableSearch<TData, TValue>({
   columns,
   data,

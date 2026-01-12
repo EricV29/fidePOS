@@ -32,12 +32,6 @@ interface TableColumns {
   accessorKey?: string;
 }
 
-declare module "@tanstack/react-table" {
-  interface ColumnMeta<TData, TValue> {
-    headerClassName?: string;
-  }
-}
-
 export interface TableActions {
   add?: boolean;
 }
@@ -45,7 +39,6 @@ export interface TableActions {
 export function DataTableSale<TData, TValue>({
   columns,
   data,
-  actions,
   addProduct,
 }: DataTableSaleProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -58,7 +51,7 @@ export function DataTableSale<TData, TValue>({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
-    meta: { actions, addProduct },
+    meta: { addProduct },
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     state: {

@@ -154,7 +154,6 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             <DataTableSale
               data={dataProducts}
               columns={columnsps}
-              actions={{ add: true }}
               addProduct={addProductToCart}
             />
           </div>
