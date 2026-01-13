@@ -2,6 +2,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
 const { getRoles } = require("./db/queries.cjs");
+const { firstRun } = require("./firstRun.cjs");
 
 const isDev = !app.isPackaged;
 
@@ -24,11 +25,56 @@ const {
   getInstallDate,
 } = require("./installDateManager.cjs");
 
+let welcomeWindow = null;
 let mainWindow = null;
 let loginWindow = null;
 let signupWindow = null;
 
 //* CREATE WINDOWS
+
+// Welcome Window
+function createWelcomeWindow() {
+  splash = new BrowserWindow({
+    width: 300,
+    height: 300,
+    transparent: true,
+    frame: false,
+    alwaysOnTop: true,
+  });
+
+  welcomeWindow = new BrowserWindow({
+    width: 600,
+    height: 450,
+    resizable: false,
+    frame: false,
+    titleBarStyle: "hidden",
+    titleBarOverlay: false,
+    autoHideMenuBar: true,
+    backgroundColor: "#F57C00",
+    icon: path.join(__dirname, "../public/fidelogo.ico"),
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+    },
+    show: false,
+  });
+
+  const url = getPageUrl("welcome");
+  welcomeWindow.loadURL(url);
+
+  welcomeWindow.webContents.on("did-finish-load", () => {
+    if (splash && !splash.isDestroyed()) {
+      splash.close();
+      splash = null;
+    }
+
+    welcomeWindow.show();
+  });
+
+  welcomeWindow.on("closed", () => {
+    welcomeWindow = null;
+  });
+}
 
 // Signup Window
 function createSignupWindow() {
@@ -186,11 +232,12 @@ ipcMain.on("message_private", (event, msg) => {
 
 //* INITIALIZATION
 app.whenReady().then(async () => {
-  await initDatabase();
-  registerInstallDate();
+  //await initDatabase();
+  createWelcomeWindow();
+  //registerInstallDate();
   //createSignupWindow();
   //createLoginWindow();
-  createMainWindow();
+  //createMainWindow();
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createSignupWindow();

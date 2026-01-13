@@ -1,5 +1,6 @@
 {
   "global": {
+    "welcome": "Welcome to",
     "no_data": "There is no data yet.",
     "status_active": "ACTIVE",
     "status_inactive": "INACTIVE",

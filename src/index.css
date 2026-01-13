@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "tailwindcss-animated";
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
