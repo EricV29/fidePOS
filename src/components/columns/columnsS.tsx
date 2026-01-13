@@ -2,7 +2,6 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { Sales } from "@typesm/sales";
-import { shadenHexColor } from "@utility/shadenHexColor";
 import type { TFunction } from "i18next";
 import { getStatusConfig } from "@utility/statusColumns";
 import { formatDateColumns } from "@utility/dateFormatColumns";
@@ -32,33 +31,13 @@ export const columnsS = (
     accessorFn: (row) => `${row.name} ${row.last_name}`,
   },
   {
-    accessorKey: "code_sku",
-    header: t("columns.code"),
-  },
-  {
-    accessorKey: "product",
-    header: t("columns.product"),
-  },
-  {
-    accessorKey: "category",
-    header: t("columns.category"),
-    cell: ({ row }) => {
-      const category = row.getValue("category") as string;
-      const ccolor = row.original.ccolor;
-      const background = shadenHexColor(ccolor);
-
-      return (
-        <div
-          style={{
-            background,
-            color: ccolor,
-          }}
-          className="categoryB"
-        >
-          {category.toUpperCase()}
-        </div>
-      );
-    },
+    accessorKey: "products",
+    header: t("columns.products"),
+    cell: ({ getValue }) => (
+      <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
+        {getValue() as string}
+      </div>
+    ),
   },
   {
     accessorKey: "total_amount",
@@ -66,7 +45,7 @@ export const columnsS = (
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("total_amount")));
 
-      return <div className="font-semibold text-[#43A047]">{formatted}</div>;
+      return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
     },
     filterFn: partialNumberFilter,
   },
@@ -77,6 +56,16 @@ export const columnsS = (
       const formatted = currencyFormat(Number(row.getValue("paid_amount")));
 
       return <div className="font-semibold text-[#43A047]">{formatted}</div>;
+    },
+    filterFn: partialNumberFilter,
+  },
+  {
+    accessorKey: "pending_amount",
+    header: t("columns.debt_pending"),
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("pending_amount")));
+
+      return <div className="font-semibold text-[#D32F2F]">{formatted}</div>;
     },
     filterFn: partialNumberFilter,
   },

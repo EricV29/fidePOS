@@ -13,6 +13,7 @@
     "dashboard": "Panel",
     "newSale": "Venta",
     "products": "Productos",
+    "history": "Historial",
     "customers": "Clientes",
     "reports": "Reportes",
     "settings": "Ajustes",
@@ -36,11 +37,11 @@
   },
   "products": {
     "title": "Inventario de Productos",
-    "btn_export": "Exportar",
-    "btn_import": "Importar",
-    "btn_add_product": "Producto",
-    "btn_add_category": "Categoría",
     "table1": "Tabla de inventario"
+  },
+  "history": {
+    "title": "Historial de ventas",
+    "table1": "Tabla de historial"
   },
   "customers": {
     "title": "Clientes",
@@ -117,6 +118,7 @@
     "debt_paid": "Monto pagado",
     "debt_pending": "Monto pendiente",
     "product": "Producto",
+    "products": "Productos",
     "description": "Descripción",
     "unit_price": "Precio unidad",
     "quantity": "Cantidad",
@@ -152,7 +154,10 @@
     "paid_title": "Total Pagado",
     "sales_title": "Ventas",
     "products_status_title": "Productos (activo/inactivo)",
-    "options": "Opciones"
+    "options": "Opciones",
+    "pending_title": "Saldo pendiente",
+    "discounts_title": "Descuentos",
+    "salesvs_title": "Pagado vs Pendiente"
   },
   "datePicker": {
     "months": {

@@ -4,6 +4,7 @@ import MenuIcon from "@icons/MenuIcon";
 import DashIcon from "@icons/DashboardIcon";
 import ShopCarIcon from "@icons/ShoppingCar";
 import BoxIcon from "@icons/BoxIcon";
+import CheckListIcon from "@icons/CheckListIcon";
 import RepIcon from "@icons/ReportIcon";
 import CustIcon from "@icons/CustomerIcon";
 import SettIcon from "@icons/SettingsIcon";
@@ -89,6 +90,13 @@ const Sidebar: React.FC<SidebarProps> = ({
               isOpen={isOpen}
             />
             <Sidebaitem
+              icon={CheckListIcon}
+              label={t("sidebar.history")}
+              active={location.pathname === "/main/history"}
+              onClick={() => navigate("/main/history")}
+              isOpen={isOpen}
+            />
+            <Sidebaitem
               icon={CustIcon}
               label={t("sidebar.customers")}
               active={location.pathname.startsWith("/main/customers")}
@@ -117,12 +125,12 @@ const Sidebar: React.FC<SidebarProps> = ({
             <img
               src={userImage}
               alt="ImgUser"
-              className="size-[57px] rounded-full object-cover"
+              className="size-[45px] rounded-full object-cover"
             />
             {isOpen && (
               <>
-                <h1 className="mb-0 break-all block">User</h1>
-                <p className="text-[#5D5D5D] dark:text-[#B3B3B3] block">
+                <h2 className="mb-0 break-all block">User</h2>
+                <p className="text-[15px] text-[#5D5D5D] dark:text-[#B3B3B3] block">
                   {roleMatched?.label}
                 </p>
               </>

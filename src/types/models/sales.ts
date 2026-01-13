@@ -2,19 +2,18 @@ export type Sales = {
   id: string;
   name: string | null;
   last_name: string | null;
-  code_sku: string;
-  product: string;
-  category: string;
-  ccolor: string;
+  num_sale: string;
+  products: string;
   total_amount: number;
   paid_amount: number;
+  pending_amount: number;
   status: string;
   created_at: string;
 };
 
 export type RecentSalesPaid = {
   id: string;
-  sale_num: string;
+  num_sale: string;
   created_at: string;
   category: string;
   ccolor: string;
@@ -44,4 +43,12 @@ export type SaleView = {
   products: ProductSaleView[];
   subtotal: number;
   discount: number;
+};
+
+export type SaleModal = {
+  id: string;
+  num_sale: string;
+  status: string;
+  total_amount: number;
+  created_at: string;
 };
