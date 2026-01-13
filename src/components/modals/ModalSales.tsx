@@ -4,7 +4,7 @@ import { useModal } from "@context/ModalContext";
 import ShoppingCarFillIcon from "@icons/ShoppingCarFillIcon";
 import CloseIcon from "@icons/CloseIcon";
 import { useTranslation } from "react-i18next";
-import type { RecentSalesPaid, SaleView } from "@typesm/sales";
+import type { SaleModal, SaleView } from "@typesm/sales";
 import { getStatusConfig } from "@utility/statusColumns";
 import CalendarIcon from "@icons/CalendarIcon";
 import { dateFormat } from "@utility/dateFormat";
@@ -12,7 +12,7 @@ import { currencyFormat } from "@utility/currencyFormat";
 import BarCodeIcon from "@icons/BarCodeIcon";
 
 type Props = {
-  sale: RecentSalesPaid;
+  sale: SaleModal;
 };
 
 //* Example data sale
@@ -77,7 +77,7 @@ export function ModalSales({ sale }: Props) {
             <ShoppingCarFillIcon size={40} color="#F57C00" />
             <div className="flex flex-col dark:text-[#b3b3b3]">
               <h2>
-                {t("modalSale.title")} #{sale.sale_num}
+                {t("modalSale.title")} #{sale.num_sale}
               </h2>
               <p className="font-extralight">
                 {t("modalSale.description")}{" "}

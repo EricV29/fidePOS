@@ -51,7 +51,7 @@ const dataInvestBD = 12238;
 const dataRSPBD = [
   {
     id: "728ed51f",
-    sale_num: "0001",
+    num_sale: "0001",
     created_at: "2025-11-16 00:00:00",
     category: "Maquillaje",
     ccolor: "#5b49ff",
@@ -60,7 +60,7 @@ const dataRSPBD = [
   },
   {
     id: "728ed52f",
-    sale_num: "0002",
+    num_sale: "0002",
     created_at: "2025-11-16 00:00:00",
     category: "toys",
     ccolor: "#ff49ff",
@@ -186,7 +186,17 @@ export default function Dashboard() {
                 data={dataTableRSP}
                 actions={{
                   onView: (row) => {
-                    setModal(<ModalSales sale={row} />);
+                    setModal(
+                      <ModalSales
+                        sale={{
+                          id: row.id,
+                          num_sale: row.num_sale,
+                          status: row.status,
+                          total_amount: row.total_amount,
+                          created_at: row.created_at,
+                        }}
+                      />
+                    );
                   },
                 }}
               />

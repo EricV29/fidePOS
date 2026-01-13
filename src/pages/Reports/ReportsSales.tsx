@@ -38,30 +38,17 @@ const chartDataTCSDB = [
 //* Example data table
 const dataSBD = [
   {
-    id: "728ed51f",
+    id: "34234",
     name: "Eric",
     last_name: "Villeda",
-    code_sku: "ASD2344",
-    product: "Carrito 12",
-    category: "Maquillaje",
-    ccolor: "#5b49ff",
-    total_amount: 100,
-    paid_amount: 100,
+    num_sale: "0001",
+    products:
+      "Labial, carrito, estuche, peluche, edredon, manguito, peine, cepillo, bolsa, moño",
+    total_amount: 1000,
+    paid_amount: 1000,
+    pending_amount: 0,
     status: "paid",
-    created_at: "2025-02-15 00:00:00",
-  },
-  {
-    id: "728ed51f",
-    name: "",
-    last_name: "",
-    code_sku: "ASD2344",
-    product: "Carrito 12",
-    category: "Maquillaje",
-    ccolor: "#5b49ff",
-    total_amount: 100,
-    paid_amount: 100,
-    status: "unpaid",
-    created_at: "2025-02-15 00:00:00",
+    created_at: "2025-11-16 00:00:00",
   },
 ];
 

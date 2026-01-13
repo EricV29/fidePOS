@@ -13,6 +13,7 @@
     "dashboard": "Dashboard",
     "newSale": "New Sale",
     "products": "Products",
+    "history": "History",
     "customers": "Customers",
     "reports": "Reports",
     "settings": "Settings",
@@ -36,6 +37,10 @@
   "products": {
     "title": "Products Inventory",
     "table1": "Inventory Table"
+  },
+  "history": {
+    "title": "Sales history",
+    "table1": "History table"
   },
   "customers": {
     "title": "Customers",
@@ -107,6 +112,7 @@
     "debt_paid": "Debt paid",
     "debt_pending": "Debt pending",
     "product": "Product",
+    "products": "Products",
     "description": "Description",
     "unit_price": "Unit price",
     "quantity": "Quantity",
@@ -142,7 +148,10 @@
     "paid_title": "Paid",
     "sales_title": "Sales",
     "products_status_title": "Products (active/inactive)",
-    "options": "Options"
+    "options": "Options",
+    "pending_title": "Pending sales",
+    "discounts_title": "Discounts",
+    "salesvs_title": "Paid vs Pending"
   },
   "datePicker": {
     "months": {
