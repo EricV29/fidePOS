@@ -18,6 +18,8 @@ function registerInstallDate() {
 
   const raw = fs.readFileSync(filePath, "utf-8");
   const json = JSON.parse(raw);
+  console.log(json.installed);
+
   return json.installed;
 }
 

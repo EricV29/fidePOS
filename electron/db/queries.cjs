@@ -25,6 +25,21 @@ async function getDB() {
   return dbInstance;
 }
 
+// First Run
+
+async function firstRun() {
+  try {
+    const db = await getDB();
+    const result = db.exec("SELECT COUNT(*) as total FROM user");
+    const rows = mapResultToObjects(result);
+
+    return rows[0]?.total === 0;
+  } catch (error) {
+    console.error("Error checking first run:", error);
+    return true;
+  }
+}
+
 // Get Roles
 async function getRoles() {
   const db = await getDB();
@@ -34,4 +49,5 @@ async function getRoles() {
 
 module.exports = {
   getRoles,
+  firstRun,
 };
