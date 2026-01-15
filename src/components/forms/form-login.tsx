@@ -18,7 +18,7 @@ import EyeOffIcon from "@icons/EyeOffIcon";
 
 interface LoginFormProps {
   onSuccess?: (values: LoginFormValues) => void;
-  onForgotPassword?: () => void;
+  onForgotPassword?: (email: string) => void;
 }
 
 export default function LoginForm({
@@ -98,7 +98,7 @@ export default function LoginForm({
           />
           <button
             type="button"
-            onClick={onForgotPassword}
+            onClick={() => onForgotPassword?.(form.getValues("email"))}
             className="w-full text-end text-sm font-semibold text-[#F57C00] hover:underline"
           >
             {t("global.forgot_password")}

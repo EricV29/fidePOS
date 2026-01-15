@@ -117,9 +117,54 @@ async function loginUser(data) {
   }
 }
 
+// Recovery Password
+async function insertNewPassword(email, newPass) {
+  try {
+    const db = await getDB();
+    const hashedPassword = await bcrypt.hash(newPass, 10);
+
+    // Search User
+    const query = db.exec(
+      "SELECT id, password, name, lastname, rol_id, status_id FROM user WHERE email = ?",
+      [email]
+    );
+
+    const users = mapResultToObjects(query);
+    const user = users[0];
+
+    if (!user) {
+      return { success: false, error: "User not found" };
+    }
+
+    // Status Valid
+    if (user.status_id === 0 || user.status_id === "0") {
+      return { success: false, error: "Inactive user" };
+    }
+
+    // Password Update
+    db.run("UPDATE user SET password = ? WHERE email = ?", [
+      hashedPassword,
+      email,
+    ]);
+
+    const rowsModified = db.getRowsModified();
+
+    if (rowsModified > 0) {
+      saveDB(db);
+      return { success: true, message: "Password updated successfully" };
+    } else {
+      return { success: false, error: "Database could not be updated" };
+    }
+  } catch (error) {
+    console.error("Error recovery password:", error);
+    return true;
+  }
+}
+
 module.exports = {
   getRoles,
   firstRun,
   addAdmin,
   loginUser,
+  insertNewPassword,
 };

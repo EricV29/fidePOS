@@ -10,7 +10,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Singup bridge
   signup: (data) => ipcRenderer.send("signup", data),
-
   signupReply: (callback) => {
     const listener = (_event, data) => callback(data);
     ipcRenderer.on("signup-reply", listener);
@@ -22,7 +21,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Login bridge
   login: (data) => ipcRenderer.send("login", data),
-
   loginReply: (callback) => {
     const listener = (_event, data) => callback(data);
     ipcRenderer.on("login-reply", listener);
@@ -31,6 +29,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
       ipcRenderer.removeListener("login-reply", listener);
     };
   },
+
+  // Forgot password bridge
+  forgotPassword: (email, lan) =>
+    ipcRenderer.invoke("forgotPassword", email, lan),
 
   // Logout bridge
   logoutSuccess: () => ipcRenderer.send("logout-success"),

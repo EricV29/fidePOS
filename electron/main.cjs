@@ -1,7 +1,16 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
-const { getRoles, firstRun, addAdmin, loginUser } = require("./db/queries.cjs");
+const {
+  getRoles,
+  firstRun,
+  addAdmin,
+  loginUser,
+  insertNewPassword,
+} = require("./db/queries.cjs");
+const { sendRecoveryEmail } = require("./recoveryPassword.cjs");
+const { generatePassword } = require("./generatePassword.cjs");
+require("dotenv").config();
 
 const isDev = !app.isPackaged;
 
@@ -163,11 +172,12 @@ ipcMain.handle("getRoles", async () => {
   return await getRoles();
 });
 
-// Global message
+/* Global message
 ipcMain.on("message", (event, msg) => {
   console.log("Message received:", msg);
   event.sender.send("message-reply", `Message: ${msg}`);
 });
+*/
 
 //* PRIVATE LISTENER
 
@@ -182,7 +192,7 @@ ipcMain.on("message_private", (event, msg) => {
   }
 });
 
-// User Signup Private
+/* User Signup Private
 ipcMain.on("signup", async (event, data) => {
   if (event.sender === signupWindow.webContents) {
     console.log("data:", data);
@@ -200,6 +210,7 @@ ipcMain.on("signup", async (event, data) => {
     event.reply("signup-reply", { error: "Not allowed" });
   }
 });
+*/
 
 // User Login Private
 ipcMain.on("login", async (event, data) => {
@@ -217,6 +228,39 @@ ipcMain.on("login", async (event, data) => {
   } else {
     console.log("Not allowed");
     event.reply("login-reply", { error: "Not allowed" });
+  }
+});
+
+// Forgot Password Private
+ipcMain.handle("forgotPassword", async (event, email, lan) => {
+  if (event.sender === loginWindow.webContents) {
+    try {
+      const newPass = await generatePassword();
+      const response = await insertNewPassword(email, newPass);
+
+      if (response.success) {
+        const responseEmail = await sendRecoveryEmail(email, newPass, lan);
+        if (responseEmail.success) {
+          return {
+            success: true,
+            result: "Email sent",
+          };
+        } else {
+          return {
+            success: false,
+            error: responseEmail.error,
+          };
+        }
+      } else {
+        console.error("❌ ERROR:", response.error);
+        return { success: false, error: response.error };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 

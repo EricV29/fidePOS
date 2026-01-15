@@ -5,11 +5,19 @@ import { useTranslation } from "react-i18next";
 
 interface Props {
   text: string;
+  btnOptions: boolean;
   onConfirm?: () => void;
   onCancel?: () => void;
+  onOk?: () => void;
 }
 
-const ModalWarningAlert = ({ text, onConfirm, onCancel }: Props) => {
+const ModalWarningAlert = ({
+  text,
+  btnOptions,
+  onConfirm,
+  onCancel,
+  onOk,
+}: Props) => {
   const { setModal } = useModal();
   const { t } = useTranslation();
 
@@ -23,6 +31,11 @@ const ModalWarningAlert = ({ text, onConfirm, onCancel }: Props) => {
 
   const handleCancel = () => {
     if (onCancel) onCancel();
+    close();
+  };
+
+  const handleOk = () => {
+    if (onOk) onOk();
     close();
   };
 
@@ -47,14 +60,23 @@ const ModalWarningAlert = ({ text, onConfirm, onCancel }: Props) => {
           </div>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <div className="w-full flex justify-between gap-2">
-          <button className="w-full bstrokeyellow" onClick={handleCancel}>
-            {t("buttons.btn_cancel")}
-          </button>
-          <button className="w-full byellow" onClick={handleConfirm}>
-            {t("buttons.btn_confirm")}
-          </button>
-        </div>
+
+        {btnOptions ? (
+          <div className="w-full flex justify-between gap-2">
+            <button className="w-full bstrokeyellow" onClick={handleCancel}>
+              {t("buttons.btn_cancel")}
+            </button>
+            <button className="w-full byellow" onClick={handleConfirm}>
+              {t("buttons.btn_confirm")}
+            </button>
+          </div>
+        ) : (
+          <div className="w-full flex justify-between gap-2">
+            <button className="w-full byellow" onClick={handleOk}>
+              {t("buttons.btn_ok")}
+            </button>
+          </div>
+        )}
       </div>
     </div>,
     modalRoot

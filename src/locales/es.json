@@ -109,6 +109,7 @@
     "table1": "Tabla de Usuarios"
   },
   "buttons": {
+    "btn_ok": "ACEPTAR",
     "btn_cancel": "CANCELAR",
     "btn_confirm": "CONFIRMAR",
     "btn_add_customer": "Cliente",
@@ -208,7 +209,11 @@
   },
   "modalWarningAlert": {
     "title": "Advertencia",
-    "text_forgot_password": "Se enviará un correo electrónico con tu contraseña. Asegúrate de tener conexión a internet."
+    "text_forgot_password": "Se enviará un correo electrónico con tu contraseña. Asegúrate de tener conexión a internet.",
+    "text_write_email": "Asegurate de escribir tu correo electrónico.",
+    "text_user_not_found": "Usuario no econtrado.",
+    "text_user_inactive": "Usuario inactivo",
+    "text_email_send": "Correo enviado"
   },
   "modalAddUser": {
     "title": "Agregar usuario",

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import LoginForm from "@/components/forms/form-login";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
@@ -30,18 +30,66 @@ const Login: React.FC = () => {
     window.electronAPI.login(data);
   };
 
-  const handleForgotPassword = () => {
-    console.log("ddd");
+  const handleForgotPassword = (email: string) => {
+    if (!email) {
+      setModal(
+        <ModalWarningAlert
+          text={t("modalWarningAlert.text_write_email")}
+          btnOptions={false}
+        />
+      );
+      return;
+    }
+
     setModal(
       <ModalWarningAlert
         text={t("modalWarningAlert.text_forgot_password")}
-        onConfirm={() => {
-          console.log("Confirm");
+        btnOptions={true}
+        onConfirm={async () => {
+          try {
+            const response = await window.electronAPI.forgotPassword(
+              email,
+              i18n.language
+            );
+
+            if (response.success) {
+              console.log(response.result);
+              replyForgotPassword(response.result);
+            } else {
+              console.error(response.error);
+              replyForgotPassword(response.error);
+            }
+          } catch (err) {
+            console.error("Comunication Error:", err);
+          }
         }}
-        onCancel={() => console.log("Cancel")}
       />
     );
-    //window.electronAPI.forgotPassword();
+  };
+
+  const replyForgotPassword = (response: string | undefined) => {
+    if (response === "User not found") {
+      setModal(
+        <ModalWarningAlert
+          text={t("modalWarningAlert.text_user_not_found")}
+          btnOptions={false}
+        />
+      );
+    } else if (response === "Inactive user") {
+      setModal(
+        <ModalWarningAlert
+          text={t("modalWarningAlert.text_user_inactive")}
+          btnOptions={false}
+        />
+      );
+    } else if (response === "Email sent") {
+      setModal(
+        <ModalWarningAlert
+          text={t("modalWarningAlert.text_email_send")}
+          btnOptions={false}
+        />
+      );
+    }
   };
 
   const optionsLanguage = [

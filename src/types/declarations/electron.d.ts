@@ -7,6 +7,7 @@ declare global {
       installDate: () => Promise<string>;
       getRoles: () => Promise<Rol>;
       signup: (data) => void;
+
       signupReply: (
         callback: (data: {
           success: boolean;
@@ -14,6 +15,7 @@ declare global {
           error?: string;
         }) => void
       ) => () => void;
+
       login: (data) => void;
       loginReply: (
         callback: (data: {
@@ -22,6 +24,16 @@ declare global {
           error?: string;
         }) => void
       ) => () => void;
+
+      forgotPassword: (
+        email: string,
+        lan: string
+      ) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
       logoutSuccess: () => void;
       sendMessage: (msg: string) => void;
       onMessageReply: (callback: (data: string) => void) => void;
