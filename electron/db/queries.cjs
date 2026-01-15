@@ -26,7 +26,6 @@ async function getDB() {
 }
 
 // First Run
-
 async function firstRun() {
   try {
     const db = await getDB();

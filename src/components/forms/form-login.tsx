@@ -1,6 +1,6 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { type LoginFormValues, getLoginSchema } from "./schemas/user.schema";
 
 import {
   Form,
@@ -11,26 +11,17 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-
-const loginSchema = z.object({
-  email: z.string().email("Invalid email"),
-  password: z
-    .string()
-    .min(8, "Min 8 caracters")
-    .regex(/[A-Z]/, "Requires at least one uppercase letter")
-    .regex(/[a-z]/, "Requires at least one lowercase letter")
-    .regex(/[0-9]/, "Requires at least one number"),
-});
-
-export type LoginFormValues = z.infer<typeof loginSchema>;
+import { useTranslation } from "react-i18next";
 
 interface LoginFormProps {
   onSuccess?: () => void;
 }
 
 export default function LoginForm({ onSuccess }: LoginFormProps) {
+  const { t } = useTranslation();
+
   const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(getLoginSchema(t)),
     defaultValues: {
       email: "",
       password: "",
@@ -50,10 +41,12 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Email</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddUser.input3")}
+              </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="your@email.com"
+                  placeholder={t("placeholders.email")}
                   {...field}
                   className="bg-white"
                 />
@@ -67,7 +60,9 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Password</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddUser.input5")}
+              </FormLabel>
               <FormControl>
                 <Input
                   type="password"
@@ -81,7 +76,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           )}
         />
         <button type="submit" className="borange">
-          Submit
+          {t("formAddUser.btn3")}
         </button>
       </form>
     </Form>

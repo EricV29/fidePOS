@@ -20,6 +20,14 @@
     "settings": "Ajustes",
     "logout": "Cerrar Sesión"
   },
+  "signup": {
+    "title": "Crear Cuenta",
+    "subtitle": "Bienvenido a FidePOS, tu punto de venta ideal para tu negocio."
+  },
+  "login": {
+    "title": "Iniciar Sesión",
+    "subtitle": "Hola, ingresa tus datos para acceder."
+  },
   "dashboard": {
     "title": "Panel",
     "chart1": "Top 5 - Ventas por categoría",
@@ -208,6 +216,8 @@
     "input5": "Contrseña",
     "input6": "Confirmar contraseña",
     "btn": "Agregar usuario",
+    "btn2": "Crear",
+    "btn3": "Acceder",
     "password_rules": [
       "Al menos 5 caracteres",
       "Un número",

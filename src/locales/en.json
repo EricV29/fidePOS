@@ -20,6 +20,14 @@
     "settings": "Settings",
     "logout": "Logout"
   },
+  "signup": {
+    "title": "Create Account",
+    "subtitle": "Welcome to FidePOS, your ideal point of view for you bussiness."
+  },
+  "login": {
+    "title": "Login",
+    "subtitle": "Hello, enter your information to access."
+  },
   "dashboard": {
     "title": "Dashboard",
     "chart1": "Top 5 - Sales by Category",
@@ -202,6 +210,8 @@
     "input5": "Password",
     "input6": "Confirm Password",
     "btn": "Add user",
+    "btn2": "Submit",
+    "btn3": "Login",
     "password_rules": [
       "At least 5 characters",
       "One number",

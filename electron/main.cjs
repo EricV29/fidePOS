@@ -62,14 +62,6 @@ function createWelcomeWindow() {
 
 // Signup Window
 function createSignupWindow() {
-  splash = new BrowserWindow({
-    width: 300,
-    height: 300,
-    transparent: true,
-    frame: false,
-    alwaysOnTop: true,
-  });
-
   signupWindow = new BrowserWindow({
     width: 600,
     height: 650,
@@ -90,25 +82,12 @@ function createSignupWindow() {
   signupWindow.loadURL(url);
 
   signupWindow.webContents.on("did-finish-load", () => {
-    splash.close();
     signupWindow.show();
-  });
-
-  signupWindow.on("closed", () => {
-    signupWindow = null;
   });
 }
 
 // Login Window
 function createLoginWindow() {
-  splash = new BrowserWindow({
-    width: 300,
-    height: 300,
-    transparent: true,
-    frame: false,
-    alwaysOnTop: true,
-  });
-
   loginWindow = new BrowserWindow({
     width: 600,
     height: 450,
@@ -129,12 +108,7 @@ function createLoginWindow() {
   loginWindow.loadURL(url);
 
   loginWindow.webContents.on("did-finish-load", () => {
-    splash.close();
     loginWindow.show();
-  });
-
-  loginWindow.on("closed", () => {
-    loginWindow = null;
   });
 }
 
@@ -221,7 +195,7 @@ app.whenReady().then(async () => {
 
   await new Promise((r) => setTimeout(r, 3000));
   const isFirstRun = await firstRun();
-  if (isFirstRun) {
+  if (!isFirstRun) {
     console.log(isFirstRun);
     registerInstallDate();
     welcomeWindow.close();
