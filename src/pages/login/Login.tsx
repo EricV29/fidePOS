@@ -4,9 +4,12 @@ import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
 import CustomSelect from "@components/Select";
 import type { LoginFormValues } from "@forms/schemas/user.schema";
+import { useModal } from "@context/ModalContext";
+import ModalWarningAlert from "@modals/ModalWarningAlert";
 
 const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const { setModal } = useModal();
 
   useEffect(() => {
     const unsubscribe = window.electronAPI.loginReply((response) => {
@@ -25,6 +28,20 @@ const Login: React.FC = () => {
   const handleLogin = (data: LoginFormValues) => {
     console.log(data);
     window.electronAPI.login(data);
+  };
+
+  const handleForgotPassword = () => {
+    console.log("ddd");
+    setModal(
+      <ModalWarningAlert
+        text={t("modalWarningAlert.text_forgot_password")}
+        onConfirm={() => {
+          console.log("Confirm");
+        }}
+        onCancel={() => console.log("Cancel")}
+      />
+    );
+    //window.electronAPI.forgotPassword();
   };
 
   const optionsLanguage = [
@@ -55,7 +72,10 @@ const Login: React.FC = () => {
           <p className="font-extralight">{t("login.subtitle")}</p>
         </div>
         <div className="w-[450px]">
-          <LoginForm onSuccess={handleLogin} />
+          <LoginForm
+            onSuccess={handleLogin}
+            onForgotPassword={handleForgotPassword}
+          />
         </div>
       </div>
     </>

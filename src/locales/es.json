@@ -1,6 +1,7 @@
 {
   "global": {
     "welcome": "Bienvenido a",
+    "forgot_password": "Olvide mi contraseña",
     "no_data": "Aún no hay datos.",
     "status_active": "ACTIVO",
     "status_inactive": "INACTIVO",
@@ -108,6 +109,8 @@
     "table1": "Tabla de Usuarios"
   },
   "buttons": {
+    "btn_cancel": "CANCELAR",
+    "btn_confirm": "CONFIRMAR",
     "btn_add_customer": "Cliente",
     "btn_export": "Exportar",
     "btn_import": "Importar",
@@ -202,6 +205,10 @@
   "tableSearch": {
     "input_search": "Busca un registro...",
     "input_select": "Elige una columna"
+  },
+  "modalWarningAlert": {
+    "title": "Advertencia",
+    "text_forgot_password": "Se enviará un correo electrónico con tu contraseña. Asegúrate de tener conexión a internet."
   },
   "modalAddUser": {
     "title": "Agregar usuario",
