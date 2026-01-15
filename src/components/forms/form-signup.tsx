@@ -14,12 +14,17 @@ import {
   type AddUserFormValues,
   getAddUserSchema,
 } from "./schemas/user.schema";
+import { useState } from "react";
+import EyeIcon from "@icons/EyeIcon";
+import EyeOffIcon from "@icons/EyeOffIcon";
 
 interface ProfileFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (values: AddUserFormValues) => void;
 }
 
 export default function ProfileForm({ onSuccess }: ProfileFormProps) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCPassword, setShowCPassword] = useState(false);
   const { t } = useTranslation();
 
   const form = useForm<AddUserFormValues>({
@@ -36,7 +41,7 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
 
   function onSubmit(values: AddUserFormValues) {
     console.log("Form submitted:", values);
-    if (onSuccess) onSuccess();
+    onSuccess?.(values);
   }
 
   return (
@@ -126,13 +131,27 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
               <FormLabel className="font-semibold">
                 {t("formAddUser.input5")}
               </FormLabel>
+
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="••••••••••"
-                  {...field}
-                  className="bg-white"
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className="bg-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -147,7 +166,25 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
                 {t("formAddUser.input6")}
               </FormLabel>
               <FormControl>
-                <Input placeholder="*****" {...field} className="bg-white" />
+                <div className="relative">
+                  <Input
+                    type={showCPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className="bg-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showCPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

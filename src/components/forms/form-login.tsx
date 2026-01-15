@@ -12,12 +12,16 @@ import {
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import EyeIcon from "@icons/EyeIcon";
+import EyeOffIcon from "@icons/EyeOffIcon";
 
 interface LoginFormProps {
   onSuccess?: () => void;
 }
 
 export default function LoginForm({ onSuccess }: LoginFormProps) {
+  const [showPassword, setShowPassword] = useState(true);
   const { t } = useTranslation();
 
   const form = useForm<LoginFormValues>({
@@ -64,12 +68,25 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
                 {t("formAddUser.input5")}
               </FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="••••••••••"
-                  {...field}
-                  className="bg-white"
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className="bg-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>

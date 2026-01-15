@@ -3,12 +3,14 @@ import ProfileForm from "@components/forms/form-signup";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
 import CustomSelect from "@components/Select";
+import type { AddUserFormValues } from "@forms/schemas/user.schema";
 
 const Signup: React.FC = () => {
   const { t, i18n } = useTranslation();
 
-  const handleSignup = () => {
-    window.electronAPI.signupSuccess();
+  const handleSignup = (data: AddUserFormValues) => {
+    console.log(data);
+    //window.electronAPI.signupSuccess();
   };
 
   const optionsLanguage = [
