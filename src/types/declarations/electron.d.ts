@@ -6,8 +6,22 @@ declare global {
     electronAPI: {
       installDate: () => Promise<string>;
       getRoles: () => Promise<Rol>;
-      signupSuccess: () => void;
-      loginSuccess: () => void;
+      signup: (data) => void;
+      signupReply: (
+        callback: (data: {
+          success: boolean;
+          result?: boolean;
+          error?: string;
+        }) => void
+      ) => () => void;
+      login: (data) => void;
+      loginReply: (
+        callback: (data: {
+          success: boolean;
+          user?: boolean;
+          error?: string;
+        }) => void
+      ) => () => void;
       logoutSuccess: () => void;
       sendMessage: (msg: string) => void;
       onMessageReply: (callback: (data: string) => void) => void;

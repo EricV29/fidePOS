@@ -2,6 +2,20 @@ import { z } from "zod";
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+export const getLoginSchema = (t: (key: string) => string) =>
+  z.object({
+    email: z.string().regex(emailRegex, t("errors.email_invalid")),
+
+    password: z
+      .string()
+      .regex(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{5,}$/,
+        t("errors.pass_requirements")
+      ),
+  });
+
+export type LoginFormValues = z.infer<ReturnType<typeof getLoginSchema>>;
+
 export const getAddUserSchema = (t: (key: string) => string) =>
   z
     .object({

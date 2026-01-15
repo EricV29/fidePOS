@@ -1,6 +1,6 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { type LoginFormValues, getLoginSchema } from "./schemas/user.schema";
 
 import {
   Form,
@@ -11,26 +11,21 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-
-const loginSchema = z.object({
-  email: z.string().email("Invalid email"),
-  password: z
-    .string()
-    .min(8, "Min 8 caracters")
-    .regex(/[A-Z]/, "Requires at least one uppercase letter")
-    .regex(/[a-z]/, "Requires at least one lowercase letter")
-    .regex(/[0-9]/, "Requires at least one number"),
-});
-
-export type LoginFormValues = z.infer<typeof loginSchema>;
+import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import EyeIcon from "@icons/EyeIcon";
+import EyeOffIcon from "@icons/EyeOffIcon";
 
 interface LoginFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (values: LoginFormValues) => void;
 }
 
 export default function LoginForm({ onSuccess }: LoginFormProps) {
+  const [showPassword, setShowPassword] = useState(true);
+  const { t } = useTranslation();
+
   const form = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(getLoginSchema(t)),
     defaultValues: {
       email: "",
       password: "",
@@ -38,8 +33,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
   });
 
   function onSubmit(values: LoginFormValues) {
-    console.log("Form submitted:", values);
-    if (onSuccess) onSuccess();
+    onSuccess?.(values);
   }
 
   return (
@@ -50,10 +44,12 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Email</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddUser.input3")}
+              </FormLabel>
               <FormControl>
                 <Input
-                  placeholder="your@email.com"
+                  placeholder={t("placeholders.email")}
                   {...field}
                   className="bg-white"
                 />
@@ -67,21 +63,36 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Password</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddUser.input5")}
+              </FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="••••••••••"
-                  {...field}
-                  className="bg-white"
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className="bg-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <button type="submit" className="borange">
-          Submit
+          {t("formAddUser.btn3")}
         </button>
       </form>
     </Form>

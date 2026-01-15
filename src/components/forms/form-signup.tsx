@@ -1,7 +1,5 @@
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
 import {
   Form,
   FormControl,
@@ -11,48 +9,38 @@ import {
   FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-
-const profileSchema = z
-  .object({
-    name: z.string().min(2, "Min 2 caracters").max(50),
-    lastname: z.string().min(2, "Min 2 caracters").max(50),
-    email: z.string().email("Invalid email"),
-    phone: z.string().regex(/^[0-9]{10}$/, "Number of 10 digits"),
-    password: z
-      .string()
-      .min(8, "Min 8 caracters")
-      .regex(/[A-Z]/, "Requires at least one uppercase letter")
-      .regex(/[a-z]/, "Requires at least one lowercase letter")
-      .regex(/[0-9]/, "Requires at least one number"),
-    confirmPassword: z.string(),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords do not match",
-    path: ["confirmPassword"],
-  });
-
-export type ProfileFormValues = z.infer<typeof profileSchema>;
+import { useTranslation } from "react-i18next";
+import {
+  type AddUserFormValues,
+  getAddUserSchema,
+} from "./schemas/user.schema";
+import { useState } from "react";
+import EyeIcon from "@icons/EyeIcon";
+import EyeOffIcon from "@icons/EyeOffIcon";
 
 interface ProfileFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (values: AddUserFormValues) => void;
 }
 
 export default function ProfileForm({ onSuccess }: ProfileFormProps) {
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileSchema),
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCPassword, setShowCPassword] = useState(false);
+  const { t } = useTranslation();
+
+  const form = useForm<AddUserFormValues>({
+    resolver: zodResolver(getAddUserSchema(t)),
     defaultValues: {
       name: "",
       lastname: "",
       email: "",
       phone: "",
       password: "",
-      confirmPassword: "",
+      confirmPass: "",
     },
   });
 
-  function onSubmit(values: ProfileFormValues) {
-    console.log("Form submitted:", values);
-    if (onSuccess) onSuccess();
+  function onSubmit(values: AddUserFormValues) {
+    onSuccess?.(values);
   }
 
   return (
@@ -64,9 +52,15 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Name</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddUser.input1")}
+                </FormLabel>
                 <FormControl>
-                  <Input placeholder="Name" {...field} className="bg-white" />
+                  <Input
+                    placeholder={t("placeholders.name")}
+                    {...field}
+                    className="bg-white"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -77,10 +71,12 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
             name="lastname"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Lastname</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddUser.input2")}
+                </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Lastname"
+                    placeholder={t("placeholders.lastname")}
                     {...field}
                     className="bg-white"
                   />
@@ -96,10 +92,12 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Email</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddUser.input3")}
+                </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="your@email.com"
+                    placeholder={t("placeholders.email")}
                     {...field}
                     className="bg-white"
                   />
@@ -113,7 +111,9 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">Phone</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formAddUser.input4")}
+                </FormLabel>
                 <FormControl>
                   <Input placeholder="52+" {...field} className="bg-white" />
                 </FormControl>
@@ -127,14 +127,30 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="font-semibold">Password</FormLabel>
+              <FormLabel className="font-semibold">
+                {t("formAddUser.input5")}
+              </FormLabel>
+
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="••••••••••"
-                  {...field}
-                  className="bg-white"
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className="bg-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -142,26 +158,39 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
         />
         <FormField
           control={form.control}
-          name="confirmPassword"
+          name="confirmPass"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-semibold">
-                Confirmar contraseña
+                {t("formAddUser.input6")}
               </FormLabel>
               <FormControl>
-                <Input
-                  type="password"
-                  placeholder="••••••••••"
-                  {...field}
-                  className="bg-white"
-                />
+                <div className="relative">
+                  <Input
+                    type={showCPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className="bg-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showCPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
         <button type="submit" className="borange">
-          Submit
+          {t("formAddUser.btn2")}
         </button>
       </form>
     </Form>

@@ -1,8 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
-const { getRoles } = require("./db/queries.cjs");
-const { firstRun } = require("./firstRun.cjs");
+const { getRoles, firstRun, addAdmin, loginUser } = require("./db/queries.cjs");
 
 const isDev = !app.isPackaged;
 
@@ -34,58 +33,35 @@ let signupWindow = null;
 
 // Welcome Window
 function createWelcomeWindow() {
-  splash = new BrowserWindow({
-    width: 300,
-    height: 300,
-    transparent: true,
-    frame: false,
-    alwaysOnTop: true,
-  });
+  return new Promise((resolve) => {
+    welcomeWindow = new BrowserWindow({
+      width: 600,
+      height: 450,
+      resizable: false,
+      frame: false,
+      titleBarStyle: "hidden",
+      titleBarOverlay: false,
+      autoHideMenuBar: true,
+      show: false,
+      icon: path.join(__dirname, "../public/fidelogo.ico"),
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+      },
+    });
 
-  welcomeWindow = new BrowserWindow({
-    width: 600,
-    height: 450,
-    resizable: false,
-    frame: false,
-    titleBarStyle: "hidden",
-    titleBarOverlay: false,
-    autoHideMenuBar: true,
-    backgroundColor: "#F57C00",
-    icon: path.join(__dirname, "../public/fidelogo.ico"),
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true,
-    },
-    show: false,
-  });
+    const url = getPageUrl("welcome");
+    welcomeWindow.loadURL(url);
 
-  const url = getPageUrl("welcome");
-  welcomeWindow.loadURL(url);
-
-  welcomeWindow.webContents.on("did-finish-load", () => {
-    if (splash && !splash.isDestroyed()) {
-      splash.close();
-      splash = null;
-    }
-
-    welcomeWindow.show();
-  });
-
-  welcomeWindow.on("closed", () => {
-    welcomeWindow = null;
+    welcomeWindow.webContents.once("did-finish-load", () => {
+      welcomeWindow.show();
+      resolve();
+    });
   });
 }
 
 // Signup Window
 function createSignupWindow() {
-  splash = new BrowserWindow({
-    width: 300,
-    height: 300,
-    transparent: true,
-    frame: false,
-    alwaysOnTop: true,
-  });
-
   signupWindow = new BrowserWindow({
     width: 600,
     height: 650,
@@ -106,25 +82,12 @@ function createSignupWindow() {
   signupWindow.loadURL(url);
 
   signupWindow.webContents.on("did-finish-load", () => {
-    splash.close();
     signupWindow.show();
-  });
-
-  signupWindow.on("closed", () => {
-    signupWindow = null;
   });
 }
 
 // Login Window
 function createLoginWindow() {
-  splash = new BrowserWindow({
-    width: 300,
-    height: 300,
-    transparent: true,
-    frame: false,
-    alwaysOnTop: true,
-  });
-
   loginWindow = new BrowserWindow({
     width: 600,
     height: 450,
@@ -145,12 +108,7 @@ function createLoginWindow() {
   loginWindow.loadURL(url);
 
   loginWindow.webContents.on("did-finish-load", () => {
-    splash.close();
     loginWindow.show();
-  });
-
-  loginWindow.on("closed", () => {
-    loginWindow = null;
   });
 }
 
@@ -180,12 +138,6 @@ function createMainWindow() {
 }
 
 //* GLOBAL LISTENER
-
-// Open login
-ipcMain.on("signup-success", () => {
-  if (signupWindow) signupWindow.close();
-  createLoginWindow();
-});
 
 // Open dashboard
 ipcMain.on("login-success", () => {
@@ -230,14 +182,61 @@ ipcMain.on("message_private", (event, msg) => {
   }
 });
 
+// User Signup Private
+ipcMain.on("signup", async (event, data) => {
+  if (event.sender === signupWindow.webContents) {
+    console.log("data:", data);
+    try {
+      const result = await addAdmin(data);
+      event.sender.send("signup-reply", result);
+    } catch (error) {
+      event.sender.send("signup-reply", {
+        success: false,
+        error: error.message,
+      });
+    }
+  } else {
+    console.log("Not allowed");
+    event.reply("signup-reply", { error: "Not allowed" });
+  }
+});
+
+// User Login Private
+ipcMain.on("login", async (event, data) => {
+  if (event.sender === loginWindow.webContents) {
+    console.log("data:", data);
+    try {
+      const result = await loginUser(data);
+      event.sender.send("login-reply", result);
+    } catch (error) {
+      event.sender.send("login-reply", {
+        success: false,
+        error: error.message,
+      });
+    }
+  } else {
+    console.log("Not allowed");
+    event.reply("login-reply", { error: "Not allowed" });
+  }
+});
+
 //* INITIALIZATION
 app.whenReady().then(async () => {
-  //await initDatabase();
-  createWelcomeWindow();
-  //registerInstallDate();
-  //createSignupWindow();
-  //createLoginWindow();
-  //createMainWindow();
+  await createWelcomeWindow();
+  await initDatabase();
+
+  await new Promise((r) => setTimeout(r, 3000));
+  const isFirstRun = await firstRun();
+  if (isFirstRun) {
+    console.log(isFirstRun);
+    registerInstallDate();
+    welcomeWindow.close();
+    createSignupWindow();
+  } else {
+    console.log(isFirstRun);
+    welcomeWindow.close();
+    createLoginWindow();
+  }
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createSignupWindow();

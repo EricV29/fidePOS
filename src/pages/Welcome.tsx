@@ -12,7 +12,7 @@ const Welcome: React.FC = () => {
         <img
           src={back}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover animate-fade animate-once animation-duration-[2000ms]"
+          className="absolute inset-0 w-full h-full object-cover animate-ping animate-infinite animation-duration-[11000ms] animate-ease-in"
         />
 
         <div className="relative z-10 w-full h-full flex flex-col justify-center items-center">
