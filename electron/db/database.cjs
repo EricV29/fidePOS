@@ -8,6 +8,7 @@ async function initDatabase() {
 
   const dbPath = path.join(app.getPath("userData"), "app.db");
   let db;
+  let shouldSave = false;
 
   //C:\Users\jared\AppData\Roaming\fidepos
 
@@ -18,6 +19,7 @@ async function initDatabase() {
     console.log("📦 DB loaded from disk:", dbPath);
   } else {
     db = new SQL.Database();
+    shouldSave = true;
     console.log("📦 New DB created on disk");
   }
 
@@ -52,6 +54,7 @@ async function initDatabase() {
     ]);
     db.run("INSERT INTO rol (code, description) VALUES (?, ?);", ["2", "user"]);
     console.log("✅ Roles inserted (admin, user)");
+    shouldSave = true;
   } else {
     console.log("📦 Roles already exist");
   }
@@ -82,6 +85,7 @@ async function initDatabase() {
       "unpaid",
     ]);
     console.log("✅ Status inserted (desactive, active, paid, debt)");
+    shouldSave = true;
   } else {
     console.log("📦 Status already exist");
   }
@@ -198,11 +202,20 @@ async function initDatabase() {
   `);
 
   // SAVE DB
-  const data = Buffer.from(db.export());
-  fs.writeFileSync(dbPath, data);
-  console.log("✅ DB persisted to disk:", dbPath);
+  if (shouldSave) {
+    const data = Buffer.from(db.export());
+    fs.writeFileSync(dbPath, data);
+    console.log("✅ DB persisted to disk:", dbPath);
+  }
 
   return db;
 }
 
-module.exports = { initDatabase };
+function saveDB(db) {
+  const dbPath = path.join(app.getPath("userData"), "app.db");
+  const data = Buffer.from(db.export());
+  fs.writeFileSync(dbPath, data);
+  console.log("💾 DB saved");
+}
+
+module.exports = { initDatabase, saveDB };

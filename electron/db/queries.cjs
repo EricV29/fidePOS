@@ -1,4 +1,7 @@
-const { initDatabase } = require("./database.cjs");
+const { log } = require("console");
+const { initDatabase, saveDB } = require("./database.cjs");
+const bcrypt = require("bcrypt");
+const { success } = require("zod");
 
 let dbInstance = null;
 
@@ -31,6 +34,7 @@ async function firstRun() {
     const db = await getDB();
     const result = db.exec("SELECT COUNT(*) as total FROM user");
     const rows = mapResultToObjects(result);
+    console.log(rows);
 
     return rows[0]?.total === 0;
   } catch (error) {
@@ -46,7 +50,76 @@ async function getRoles() {
   return mapResultToObjects(result);
 }
 
+// Add Admin
+async function addAdmin(data) {
+  try {
+    const db = await getDB();
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    db.run(
+      "INSERT INTO user(name, lastname, email, phone, password, rol_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?)",
+      [data.name, data.lastname, data.email, data.phone, hashedPassword, 1, 1]
+    );
+
+    saveDB(db);
+    return { success: true };
+  } catch (error) {
+    console.error("Error inserting admin:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Login
+async function loginUser(data) {
+  try {
+    const db = await getDB();
+
+    // Search User
+    const result = db.exec(
+      "SELECT id, password, name, lastname, rol_id, status_id FROM user WHERE email = ?",
+      [data.email]
+    );
+
+    if (!result[0]) {
+      return { success: false, error: "User not found" };
+    }
+
+    // Status Valid
+    if (result[5] === "0") {
+      return { success: false, error: "Inactive user" };
+    }
+
+    const columns = result[0].columns;
+    const values = result[0].values[0];
+
+    const user = {};
+    columns.forEach((col, i) => (user[col] = values[i]));
+
+    // Password Valid
+    const isValid = await bcrypt.compare(data.password, user.password);
+
+    if (!isValid) {
+      return { success: false, error: "Incorrect Password" };
+    }
+
+    return {
+      success: true,
+      user: {
+        id: user.id,
+        name: user.name,
+        lastname: user.lastname,
+        rol_id: user.rol_id,
+        status_id: user.status_id,
+      },
+    };
+  } catch (error) {
+    console.error("Error login:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getRoles,
   firstRun,
+  addAdmin,
+  loginUser,
 };

@@ -1,13 +1,30 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LoginForm from "@/components/forms/form-login";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
 import CustomSelect from "@components/Select";
+import type { LoginFormValues } from "@forms/schemas/user.schema";
 
 const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const handleLogin = () => {
-    window.electronAPI.loginSuccess();
+
+  useEffect(() => {
+    const unsubscribe = window.electronAPI.loginReply((response) => {
+      if (response.success) {
+        console.log(response.user);
+      } else {
+        console.error(response.error);
+      }
+    });
+
+    return () => {
+      unsubscribe?.();
+    };
+  }, []);
+
+  const handleLogin = (data: LoginFormValues) => {
+    console.log(data);
+    window.electronAPI.login(data);
   };
 
   const optionsLanguage = [

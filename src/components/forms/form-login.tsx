@@ -17,7 +17,7 @@ import EyeIcon from "@icons/EyeIcon";
 import EyeOffIcon from "@icons/EyeOffIcon";
 
 interface LoginFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (values: LoginFormValues) => void;
 }
 
 export default function LoginForm({ onSuccess }: LoginFormProps) {
@@ -33,8 +33,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
   });
 
   function onSubmit(values: LoginFormValues) {
-    console.log("Form submitted:", values);
-    if (onSuccess) onSuccess();
+    onSuccess?.(values);
   }
 
   return (

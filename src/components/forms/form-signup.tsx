@@ -40,7 +40,6 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
   });
 
   function onSubmit(values: AddUserFormValues) {
-    console.log("Form submitted:", values);
     onSuccess?.(values);
   }
 

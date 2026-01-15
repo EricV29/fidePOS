@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
-const { getRoles, firstRun } = require("./db/queries.cjs");
+const { getRoles, firstRun, addAdmin, loginUser } = require("./db/queries.cjs");
 
 const isDev = !app.isPackaged;
 
@@ -139,12 +139,6 @@ function createMainWindow() {
 
 //* GLOBAL LISTENER
 
-// Open login
-ipcMain.on("signup-success", () => {
-  if (signupWindow) signupWindow.close();
-  createLoginWindow();
-});
-
 // Open dashboard
 ipcMain.on("login-success", () => {
   if (loginWindow) loginWindow.close();
@@ -188,6 +182,44 @@ ipcMain.on("message_private", (event, msg) => {
   }
 });
 
+// User Signup Private
+ipcMain.on("signup", async (event, data) => {
+  if (event.sender === signupWindow.webContents) {
+    console.log("data:", data);
+    try {
+      const result = await addAdmin(data);
+      event.sender.send("signup-reply", result);
+    } catch (error) {
+      event.sender.send("signup-reply", {
+        success: false,
+        error: error.message,
+      });
+    }
+  } else {
+    console.log("Not allowed");
+    event.reply("signup-reply", { error: "Not allowed" });
+  }
+});
+
+// User Login Private
+ipcMain.on("login", async (event, data) => {
+  if (event.sender === loginWindow.webContents) {
+    console.log("data:", data);
+    try {
+      const result = await loginUser(data);
+      event.sender.send("login-reply", result);
+    } catch (error) {
+      event.sender.send("login-reply", {
+        success: false,
+        error: error.message,
+      });
+    }
+  } else {
+    console.log("Not allowed");
+    event.reply("login-reply", { error: "Not allowed" });
+  }
+});
+
 //* INITIALIZATION
 app.whenReady().then(async () => {
   await createWelcomeWindow();
@@ -195,7 +227,7 @@ app.whenReady().then(async () => {
 
   await new Promise((r) => setTimeout(r, 3000));
   const isFirstRun = await firstRun();
-  if (!isFirstRun) {
+  if (isFirstRun) {
     console.log(isFirstRun);
     registerInstallDate();
     welcomeWindow.close();
