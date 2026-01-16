@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import LoginForm from "@/components/forms/form-login";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
@@ -10,24 +10,20 @@ import ModalWarningAlert from "@modals/ModalWarningAlert";
 const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = window.electronAPI.loginReply((response) => {
-      if (response.success) {
-        console.log(response.user);
-      } else {
-        console.error(response.error);
-      }
-    });
-
-    return () => {
-      unsubscribe?.();
-    };
-  }, []);
-
-  const handleLogin = (data: LoginFormValues) => {
+  const handleLogin = async (data: LoginFormValues) => {
     console.log(data);
-    window.electronAPI.login(data);
+    try {
+      const response = await window.electronAPI.login(data);
+      if (response.success) {
+        console.log(response.result);
+      } else {
+        console.log(response.error);
+      }
+    } catch (err) {
+      console.error("Comunication Error:", err);
+    }
   };
 
   const handleForgotPassword = (email: string) => {
@@ -47,13 +43,13 @@ const Login: React.FC = () => {
         btnOptions={true}
         onConfirm={async () => {
           try {
+            setIsLoading(true);
             const response = await window.electronAPI.forgotPassword(
               email,
               i18n.language
             );
-
             if (response.success) {
-              console.log(response.result);
+              //console.log(response.result);
               replyForgotPassword(response.result);
             } else {
               console.error(response.error);
@@ -69,6 +65,7 @@ const Login: React.FC = () => {
 
   const replyForgotPassword = (response: string | undefined) => {
     if (response === "User not found") {
+      setIsLoading(false);
       setModal(
         <ModalWarningAlert
           text={t("modalWarningAlert.text_user_not_found")}
@@ -76,6 +73,7 @@ const Login: React.FC = () => {
         />
       );
     } else if (response === "Inactive user") {
+      setIsLoading(false);
       setModal(
         <ModalWarningAlert
           text={t("modalWarningAlert.text_user_inactive")}
@@ -83,6 +81,7 @@ const Login: React.FC = () => {
         />
       );
     } else if (response === "Email sent") {
+      setIsLoading(false);
       setModal(
         <ModalWarningAlert
           text={t("modalWarningAlert.text_email_send")}
@@ -123,6 +122,7 @@ const Login: React.FC = () => {
           <LoginForm
             onSuccess={handleLogin}
             onForgotPassword={handleForgotPassword}
+            loading={isLoading}
           />
         </div>
       </div>

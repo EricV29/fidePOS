@@ -16,15 +16,14 @@ declare global {
         }) => void
       ) => () => void;
 
-      login: (data) => void;
-      loginReply: (
-        callback: (data: {
-          success: boolean;
-          user?: boolean;
-          error?: string;
-        }) => void
-      ) => () => void;
+      // LOGIN
+      login: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
 
+      // FORGOT PASSWORD
       forgotPassword: (
         email: string,
         lan: string

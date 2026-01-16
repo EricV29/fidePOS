@@ -20,15 +20,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   },
 
   // Login bridge
-  login: (data) => ipcRenderer.send("login", data),
-  loginReply: (callback) => {
-    const listener = (_event, data) => callback(data);
-    ipcRenderer.on("login-reply", listener);
-
-    return () => {
-      ipcRenderer.removeListener("login-reply", listener);
-    };
-  },
+  login: (data) => ipcRenderer.invoke("login", data),
 
   // Forgot password bridge
   forgotPassword: (email, lan) =>

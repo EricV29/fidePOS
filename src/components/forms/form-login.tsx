@@ -19,11 +19,13 @@ import EyeOffIcon from "@icons/EyeOffIcon";
 interface LoginFormProps {
   onSuccess?: (values: LoginFormValues) => void;
   onForgotPassword?: (email: string) => void;
+  loading: boolean;
 }
 
 export default function LoginForm({
   onSuccess,
   onForgotPassword,
+  loading,
 }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
@@ -99,6 +101,7 @@ export default function LoginForm({
           <button
             type="button"
             onClick={() => onForgotPassword?.(form.getValues("email"))}
+            disabled={loading}
             className="w-full text-end text-sm font-semibold text-[#F57C00] hover:underline"
           >
             {t("global.forgot_password")}

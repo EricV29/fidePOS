@@ -74,25 +74,22 @@ async function loginUser(data) {
     const db = await getDB();
 
     // Search User
-    const result = db.exec(
+    const query = db.exec(
       "SELECT id, password, name, lastname, rol_id, status_id FROM user WHERE email = ?",
       [data.email]
     );
 
-    if (!result[0]) {
+    const users = mapResultToObjects(query);
+    const user = users[0];
+
+    if (!user) {
       return { success: false, error: "User not found" };
     }
 
     // Status Valid
-    if (result[5] === "0") {
+    if (user.status_id === 0 || user.status_id === "0") {
       return { success: false, error: "Inactive user" };
     }
-
-    const columns = result[0].columns;
-    const values = result[0].values[0];
-
-    const user = {};
-    columns.forEach((col, i) => (user[col] = values[i]));
 
     // Password Valid
     const isValid = await bcrypt.compare(data.password, user.password);
@@ -103,7 +100,7 @@ async function loginUser(data) {
 
     return {
       success: true,
-      user: {
+      data: {
         id: user.id,
         name: user.name,
         lastname: user.lastname,

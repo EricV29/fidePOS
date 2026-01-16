@@ -213,21 +213,28 @@ ipcMain.on("signup", async (event, data) => {
 */
 
 // User Login Private
-ipcMain.on("login", async (event, data) => {
+ipcMain.handle("login", async (event, data) => {
   if (event.sender === loginWindow.webContents) {
     console.log("data:", data);
     try {
-      const result = await loginUser(data);
-      event.sender.send("login-reply", result);
+      const response = await loginUser(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.data,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
     } catch (error) {
-      event.sender.send("login-reply", {
-        success: false,
-        error: error.message,
-      });
+      console.log("❌ ERROR: ", error);
     }
   } else {
-    console.log("Not allowed");
-    event.reply("login-reply", { error: "Not allowed" });
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 
