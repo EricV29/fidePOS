@@ -42,6 +42,13 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed; /* Cambia la flecha por un círculo de prohibido */
+  pointer-events: none; /* Evita que cualquier evento de clic pase */
+  filter: grayscale(1); /* Lo pone gris para que sea obvio */
+}
+
 input:focus {
   outline: none !important;
   box-shadow: none !important;

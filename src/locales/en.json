@@ -1,6 +1,7 @@
 {
   "global": {
     "welcome": "Welcome to",
+    "forgot_password": "I forgot my password",
     "no_data": "There is no data yet.",
     "status_active": "ACTIVE",
     "status_inactive": "INACTIVE",
@@ -102,6 +103,9 @@
     "table1": "Users Table"
   },
   "buttons": {
+    "btn_ok": "ACCEPT",
+    "btn_cancel": "CANCEL",
+    "btn_confirm": "CONFIRM",
     "btn_add_customer": "Customer",
     "btn_export": "Export",
     "btn_import": "Import",
@@ -196,6 +200,14 @@
   "tableSearch": {
     "input_search": "Search register...",
     "input_select": "Choose a column"
+  },
+  "modalWarningAlert": {
+    "title": "Warning",
+    "text_forgot_password": "A password recovery email will be sent to you. Please ensure you are connected to the internet.",
+    "text_write_email": "Make sure to write your email.",
+    "text_user_not_found": "User not found.",
+    "text_user_inactive": "User inactive",
+    "text_email_send": "Email send"
   },
   "modalAddUser": {
     "title": "Add new user",

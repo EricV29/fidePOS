@@ -9,28 +9,17 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getRoles: () => ipcRenderer.invoke("getRoles"),
 
   // Singup bridge
-  signup: (data) => ipcRenderer.send("signup", data),
-
-  signupReply: (callback) => {
-    const listener = (_event, data) => callback(data);
-    ipcRenderer.on("signup-reply", listener);
-
-    return () => {
-      ipcRenderer.removeListener("signup-reply", listener);
-    };
-  },
+  signup: (data) => ipcRenderer.invoke("signup", data),
 
   // Login bridge
-  login: (data) => ipcRenderer.send("login", data),
+  login: (data) => ipcRenderer.invoke("login", data),
 
-  loginReply: (callback) => {
-    const listener = (_event, data) => callback(data);
-    ipcRenderer.on("login-reply", listener);
+  // Get session bridge
+  getSession: (data) => ipcRenderer.invoke("get-session", data),
 
-    return () => {
-      ipcRenderer.removeListener("login-reply", listener);
-    };
-  },
+  // Forgot password bridge
+  forgotPassword: (email, lan) =>
+    ipcRenderer.invoke("forgotPassword", email, lan),
 
   // Logout bridge
   logoutSuccess: () => ipcRenderer.send("logout-success"),

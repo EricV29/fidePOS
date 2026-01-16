@@ -1,7 +1,5 @@
-const { log } = require("console");
 const { initDatabase, saveDB } = require("./database.cjs");
 const bcrypt = require("bcrypt");
-const { success } = require("zod");
 
 let dbInstance = null;
 
@@ -34,7 +32,6 @@ async function firstRun() {
     const db = await getDB();
     const result = db.exec("SELECT COUNT(*) as total FROM user");
     const rows = mapResultToObjects(result);
-    console.log(rows);
 
     return rows[0]?.total === 0;
   } catch (error) {
@@ -46,7 +43,7 @@ async function firstRun() {
 // Get Roles
 async function getRoles() {
   const db = await getDB();
-  const result = db.exec("SELECT id, code, description, created_at FROM rol;");
+  const result = db.exec("SELECT id, code, description, created_at FROM role;");
   return mapResultToObjects(result);
 }
 
@@ -56,8 +53,8 @@ async function addAdmin(data) {
     const db = await getDB();
     const hashedPassword = await bcrypt.hash(data.password, 10);
     db.run(
-      "INSERT INTO user(name, lastname, email, phone, password, rol_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?)",
-      [data.name, data.lastname, data.email, data.phone, hashedPassword, 1, 1]
+      "INSERT INTO user(name, last_name, email, phone, password, role_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?)",
+      [data.name, data.last_name, data.email, data.phone, hashedPassword, 1, 1]
     );
 
     saveDB(db);
@@ -74,25 +71,22 @@ async function loginUser(data) {
     const db = await getDB();
 
     // Search User
-    const result = db.exec(
-      "SELECT id, password, name, lastname, rol_id, status_id FROM user WHERE email = ?",
+    const query = db.exec(
+      "SELECT id, password, name, last_name, role_id, status_id FROM user WHERE email = ?",
       [data.email]
     );
 
-    if (!result[0]) {
+    const users = mapResultToObjects(query);
+    const user = users[0];
+
+    if (!user) {
       return { success: false, error: "User not found" };
     }
 
     // Status Valid
-    if (result[5] === "0") {
+    if (user.status === "inactive") {
       return { success: false, error: "Inactive user" };
     }
-
-    const columns = result[0].columns;
-    const values = result[0].values[0];
-
-    const user = {};
-    columns.forEach((col, i) => (user[col] = values[i]));
 
     // Password Valid
     const isValid = await bcrypt.compare(data.password, user.password);
@@ -103,11 +97,11 @@ async function loginUser(data) {
 
     return {
       success: true,
-      user: {
+      data: {
         id: user.id,
         name: user.name,
-        lastname: user.lastname,
-        rol_id: user.rol_id,
+        last_name: user.last_name,
+        role_id: user.role_id,
         status_id: user.status_id,
       },
     };
@@ -117,9 +111,54 @@ async function loginUser(data) {
   }
 }
 
+// Recovery Password
+async function insertNewPassword(email, newPass) {
+  try {
+    const db = await getDB();
+    const hashedPassword = await bcrypt.hash(newPass, 10);
+
+    // Search User
+    const query = db.exec(
+      "SELECT id, password, name, last_name, role_id, status_id FROM user WHERE email = ?",
+      [email]
+    );
+
+    const users = mapResultToObjects(query);
+    const user = users[0];
+
+    if (!user) {
+      return { success: false, error: "User not found" };
+    }
+
+    // Status Valid
+    if (user.status_id === 0 || user.status_id === "0") {
+      return { success: false, error: "Inactive user" };
+    }
+
+    // Password Update
+    db.run("UPDATE user SET password = ? WHERE email = ?", [
+      hashedPassword,
+      email,
+    ]);
+
+    const rowsModified = db.getRowsModified();
+
+    if (rowsModified > 0) {
+      saveDB(db);
+      return { success: true, message: "Password updated successfully" };
+    } else {
+      return { success: false, error: "Database could not be updated" };
+    }
+  } catch (error) {
+    console.error("Error recovery password:", error);
+    return true;
+  }
+}
+
 module.exports = {
   getRoles,
   firstRun,
   addAdmin,
   loginUser,
+  insertNewPassword,
 };

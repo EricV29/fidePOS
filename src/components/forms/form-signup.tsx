@@ -31,7 +31,7 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
     resolver: zodResolver(getAddUserSchema(t)),
     defaultValues: {
       name: "",
-      lastname: "",
+      last_name: "",
       email: "",
       phone: "",
       password: "",
@@ -68,7 +68,7 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
           />
           <FormField
             control={form.control}
-            name="lastname"
+            name="last_name"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-semibold">

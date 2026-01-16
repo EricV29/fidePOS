@@ -13,17 +13,18 @@ import Sidebaitem from "@components/SidebarItem";
 import userImage from "@img/user.webp";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
+import type { UserSession } from "@typesm/users";
 
 interface SidebarProps {
   isOpen: boolean;
   toggleSidebar: () => void;
+  session: UserSession | null;
 }
-
-const roleDB = "admin";
 
 const Sidebar: React.FC<SidebarProps> = ({
   isOpen,
   toggleSidebar,
+  session,
 }: SidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,11 +35,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const roles = [
-    { label: t("global.role_admin"), value: "admin" },
-    { label: t("global.role_user"), value: "user" },
+    { label: t("global.role_admin"), value: 1 },
+    { label: t("global.role_user"), value: 2 },
   ];
 
-  const roleMatched = roles.find((role) => role.value === roleDB);
+  const roleMatched = roles.find((role) => role.value === session?.role_id);
 
   return (
     <>
@@ -129,7 +130,9 @@ const Sidebar: React.FC<SidebarProps> = ({
             />
             {isOpen && (
               <>
-                <h2 className="mb-0 break-all block">User</h2>
+                <h2 className="mb-0 break-all block">
+                  {session?.name + " " + session?.last_name}
+                </h2>
                 <p className="text-[15px] text-[#5D5D5D] dark:text-[#B3B3B3] block">
                   {roleMatched?.label}
                 </p>

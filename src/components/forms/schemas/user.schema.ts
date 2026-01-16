@@ -24,7 +24,7 @@ export const getAddUserSchema = (t: (key: string) => string) =>
         .min(2, t("errors.min2_characters"))
         .max(50, t("errors.max50_characters")),
 
-      lastname: z
+      last_name: z
         .string()
         .min(2, t("errors.min2_characters"))
         .max(50, t("errors.max50_characters")),

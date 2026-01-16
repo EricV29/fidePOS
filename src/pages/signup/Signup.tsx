@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ProfileForm from "@components/forms/form-signup";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
@@ -7,20 +7,6 @@ import type { AddUserFormValues } from "@forms/schemas/user.schema";
 
 const Signup: React.FC = () => {
   const { t, i18n } = useTranslation();
-
-  useEffect(() => {
-    const unsubscribe = window.electronAPI.signupReply((response) => {
-      if (response.success) {
-        console.log(response.result);
-      } else {
-        console.error(response.error);
-      }
-    });
-
-    return () => {
-      unsubscribe?.();
-    };
-  }, []);
 
   const handleSignup = (data: AddUserFormValues) => {
     console.log(data);

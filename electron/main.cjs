@@ -1,7 +1,16 @@
 const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
-const { getRoles, firstRun, addAdmin, loginUser } = require("./db/queries.cjs");
+const {
+  getRoles,
+  firstRun,
+  addAdmin,
+  loginUser,
+  insertNewPassword,
+} = require("./db/queries.cjs");
+const { sendRecoveryEmail } = require("./recoveryPassword.cjs");
+const { generatePassword } = require("./generatePassword.cjs");
+require("dotenv").config();
 
 const isDev = !app.isPackaged;
 
@@ -137,6 +146,28 @@ function createMainWindow() {
   });
 }
 
+//* SESSION
+let sessionUser = null;
+
+// Save login
+function saveLogin(userData) {
+  sessionUser = userData;
+  console.log("👤 Session started for:", sessionUser.name);
+}
+
+// Get session data
+ipcMain.handle("get-session", () => {
+  return sessionUser;
+});
+
+/* Logout session
+ipcMain.handle('logout', () => {
+  sessionUser = null;
+  console.log("🔒 Session cleared");
+  return { success: true };
+});
+*/
+
 //* GLOBAL LISTENER
 
 // Open dashboard
@@ -163,11 +194,12 @@ ipcMain.handle("getRoles", async () => {
   return await getRoles();
 });
 
-// Global message
+/* Global message
 ipcMain.on("message", (event, msg) => {
   console.log("Message received:", msg);
   event.sender.send("message-reply", `Message: ${msg}`);
 });
+*/
 
 //* PRIVATE LISTENER
 
@@ -183,57 +215,116 @@ ipcMain.on("message_private", (event, msg) => {
 });
 
 // User Signup Private
-ipcMain.on("signup", async (event, data) => {
+ipcMain.handle("signup", async (event, data) => {
   if (event.sender === signupWindow.webContents) {
-    console.log("data:", data);
     try {
-      const result = await addAdmin(data);
-      event.sender.send("signup-reply", result);
+      const response = await addAdmin(data);
+      if (response.success) {
+        signupWindow.close();
+        createLoginWindow();
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
     } catch (error) {
-      event.sender.send("signup-reply", {
-        success: false,
-        error: error.message,
-      });
+      console.log("❌ ERROR: ", error);
     }
   } else {
-    console.log("Not allowed");
-    event.reply("signup-reply", { error: "Not allowed" });
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 
 // User Login Private
-ipcMain.on("login", async (event, data) => {
+ipcMain.handle("login", async (event, data) => {
   if (event.sender === loginWindow.webContents) {
-    console.log("data:", data);
     try {
-      const result = await loginUser(data);
-      event.sender.send("login-reply", result);
+      const response = await loginUser(data);
+      if (response.success) {
+        saveLogin(response.data);
+        loginWindow.close();
+        createMainWindow();
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
     } catch (error) {
-      event.sender.send("login-reply", {
-        success: false,
-        error: error.message,
-      });
+      console.log("❌ ERROR: ", error);
     }
   } else {
-    console.log("Not allowed");
-    event.reply("login-reply", { error: "Not allowed" });
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Forgot Password Private
+ipcMain.handle("forgotPassword", async (event, email, lan) => {
+  if (event.sender === loginWindow.webContents) {
+    try {
+      const newPass = await generatePassword();
+      const response = await insertNewPassword(email, newPass);
+
+      if (response.success) {
+        const responseEmail = await sendRecoveryEmail(email, newPass, lan);
+        if (responseEmail.success) {
+          return {
+            success: true,
+            result: "Email sent",
+          };
+        } else {
+          return {
+            success: false,
+            error: responseEmail.error,
+          };
+        }
+      } else {
+        console.error("❌ ERROR:", response.error);
+        return { success: false, error: response.error };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 
 //* INITIALIZATION
+let isInitializing = false;
 app.whenReady().then(async () => {
-  await createWelcomeWindow();
-  await initDatabase();
+  if (isInitializing) return;
+  isInitializing = true;
+
+  try {
+    await createWelcomeWindow();
+    await initDatabase();
+    console.log("🚀 APP AND DB READY TO START");
+  } catch (err) {
+    console.error("Initialization error:", err);
+  } finally {
+    isInitializing = false;
+  }
 
   await new Promise((r) => setTimeout(r, 3000));
   const isFirstRun = await firstRun();
   if (isFirstRun) {
-    console.log(isFirstRun);
+    console.log("✅ Is First Run: " + isFirstRun);
     registerInstallDate();
     welcomeWindow.close();
     createSignupWindow();
   } else {
-    console.log(isFirstRun);
+    console.log("❌ Is First Run: " + isFirstRun);
     welcomeWindow.close();
     createLoginWindow();
   }

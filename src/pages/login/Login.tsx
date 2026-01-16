@@ -1,30 +1,92 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import LoginForm from "@/components/forms/form-login";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
 import CustomSelect from "@components/Select";
 import type { LoginFormValues } from "@forms/schemas/user.schema";
+import { useModal } from "@context/ModalContext";
+import ModalWarningAlert from "@modals/ModalWarningAlert";
 
 const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
+  const { setModal } = useModal();
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    const unsubscribe = window.electronAPI.loginReply((response) => {
-      if (response.success) {
-        console.log(response.user);
-      } else {
-        console.error(response.error);
-      }
-    });
-
-    return () => {
-      unsubscribe?.();
-    };
-  }, []);
-
-  const handleLogin = (data: LoginFormValues) => {
+  const handleLogin = async (data: LoginFormValues) => {
     console.log(data);
-    window.electronAPI.login(data);
+    try {
+      const response = await window.electronAPI.login(data);
+      if (!response.success) {
+        console.log(response.error);
+      }
+    } catch (err) {
+      console.error("Comunication Error:", err);
+    }
+  };
+
+  const handleForgotPassword = (email: string) => {
+    if (!email) {
+      setModal(
+        <ModalWarningAlert
+          text={t("modalWarningAlert.text_write_email")}
+          btnOptions={false}
+        />
+      );
+      return;
+    }
+
+    setModal(
+      <ModalWarningAlert
+        text={t("modalWarningAlert.text_forgot_password")}
+        btnOptions={true}
+        onConfirm={async () => {
+          try {
+            setIsLoading(true);
+            const response = await window.electronAPI.forgotPassword(
+              email,
+              i18n.language
+            );
+            if (response.success) {
+              //console.log(response.result);
+              replyForgotPassword(response.result);
+            } else {
+              console.error(response.error);
+              replyForgotPassword(response.error);
+            }
+          } catch (err) {
+            console.error("Comunication Error:", err);
+          }
+        }}
+      />
+    );
+  };
+
+  const replyForgotPassword = (response: string | undefined) => {
+    if (response === "User not found") {
+      setIsLoading(false);
+      setModal(
+        <ModalWarningAlert
+          text={t("modalWarningAlert.text_user_not_found")}
+          btnOptions={false}
+        />
+      );
+    } else if (response === "Inactive user") {
+      setIsLoading(false);
+      setModal(
+        <ModalWarningAlert
+          text={t("modalWarningAlert.text_user_inactive")}
+          btnOptions={false}
+        />
+      );
+    } else if (response === "Email sent") {
+      setIsLoading(false);
+      setModal(
+        <ModalWarningAlert
+          text={t("modalWarningAlert.text_email_send")}
+          btnOptions={false}
+        />
+      );
+    }
   };
 
   const optionsLanguage = [
@@ -55,7 +117,11 @@ const Login: React.FC = () => {
           <p className="font-extralight">{t("login.subtitle")}</p>
         </div>
         <div className="w-[450px]">
-          <LoginForm onSuccess={handleLogin} />
+          <LoginForm
+            onSuccess={handleLogin}
+            onForgotPassword={handleForgotPassword}
+            loading={isLoading}
+          />
         </div>
       </div>
     </>

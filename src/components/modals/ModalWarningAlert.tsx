@@ -1,15 +1,42 @@
 import ReactDOM from "react-dom";
 import { useModal } from "@context/ModalContext";
 import WarningIcon from "@icons/WarningIcon";
+import { useTranslation } from "react-i18next";
 
-export function ModalWarningAlert() {
+interface Props {
+  text: string;
+  btnOptions: boolean;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  onOk?: () => void;
+}
+
+const ModalWarningAlert = ({
+  text,
+  btnOptions,
+  onConfirm,
+  onCancel,
+  onOk,
+}: Props) => {
   const { setModal } = useModal();
+  const { t } = useTranslation();
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleAlertSuccess = () => {
-    window.electronAPI.signupSuccess();
+  const handleConfirm = () => {
+    if (onConfirm) onConfirm();
+    close();
+  };
+
+  const handleCancel = () => {
+    if (onCancel) onCancel();
+    close();
+  };
+
+  const handleOk = () => {
+    if (onOk) onOk();
+    close();
   };
 
   return ReactDOM.createPortal(
@@ -25,24 +52,35 @@ export function ModalWarningAlert() {
             </div>
           </div>
 
-          <div className="w-full flex flex-col justify-center items-center">
-            <p className="font-semibold text-3xl text-[#FFC107]">Warning</p>
-            <p className="font-extralight dark:text-white">
-              Are you sure about this action?
+          <div className="w-full flex flex-col justify-center items-center text-center">
+            <p className="font-semibold text-3xl text-[#FFC107]">
+              {t("modalWarningAlert.title")}
             </p>
+            <p className="font-extralight dark:text-white">{text}</p>
           </div>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <div className="w-full flex justify-between gap-2">
-          <button className="w-full bstrokeyellow" onClick={close}>
-            CANCEL
-          </button>
-          <button className="w-full byellow" onClick={close}>
-            CONFIRM
-          </button>
-        </div>
+
+        {btnOptions ? (
+          <div className="w-full flex justify-between gap-2">
+            <button className="w-full bstrokeyellow" onClick={handleCancel}>
+              {t("buttons.btn_cancel")}
+            </button>
+            <button className="w-full byellow" onClick={handleConfirm}>
+              {t("buttons.btn_confirm")}
+            </button>
+          </div>
+        ) : (
+          <div className="w-full flex justify-between gap-2">
+            <button className="w-full byellow" onClick={handleOk}>
+              {t("buttons.btn_ok")}
+            </button>
+          </div>
+        )}
       </div>
     </div>,
     modalRoot
   );
-}
+};
+
+export default ModalWarningAlert;
