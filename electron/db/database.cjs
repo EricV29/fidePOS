@@ -100,6 +100,7 @@ async function initDatabase() {
       email TEXT UNIQUE NOT NULL,
       phone TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL,
+      img TEXT DEFAULT NULL,
       role_id INTEGER NOT NULL,
       status_id INTEGER NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,

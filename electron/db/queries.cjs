@@ -53,8 +53,17 @@ async function addAdmin(data) {
     const db = await getDB();
     const hashedPassword = await bcrypt.hash(data.password, 10);
     db.run(
-      "INSERT INTO user(name, last_name, email, phone, password, role_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?)",
-      [data.name, data.last_name, data.email, data.phone, hashedPassword, 1, 1]
+      "INSERT INTO user(name, last_name, email, phone, password, img, role_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        data.name,
+        data.last_name,
+        data.email,
+        data.phone,
+        hashedPassword,
+        null,
+        1,
+        1,
+      ]
     );
 
     saveDB(db);
@@ -72,7 +81,7 @@ async function loginUser(data) {
 
     // Search User
     const query = db.exec(
-      "SELECT id, password, name, last_name, role_id, status_id FROM user WHERE email = ?",
+      "SELECT id, password, name, last_name, img, role_id, status_id FROM user WHERE email = ?",
       [data.email]
     );
 
@@ -101,6 +110,7 @@ async function loginUser(data) {
         id: user.id,
         name: user.name,
         last_name: user.last_name,
+        img: user.img,
         role_id: user.role_id,
         status_id: user.status_id,
       },

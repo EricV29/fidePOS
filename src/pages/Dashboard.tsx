@@ -11,11 +11,11 @@ import type { RecentSalesPaid } from "@typesm/sales";
 import { columnsAR } from "@columns/columnsAR";
 import type { AccountsReceivable } from "@typesm/accounts";
 import { addRandomFill } from "@utility/AddFill";
-import { useInstallDate } from "@hooks/useInstallDate";
 import { useTranslation } from "react-i18next";
 import { ModalSales } from "@modals/ModalSales";
 import { useModal } from "@context/ModalContext";
 import { ModalNewPayment } from "@modals/ModalNewPayment";
+import { useOutletContext } from "react-router-dom";
 
 interface BarChartItem {
   [key: string]: string | number;
@@ -82,8 +82,12 @@ const dataARBD = [
   },
 ];
 
+interface MyContext {
+  installDate: string;
+}
+
 export default function Dashboard() {
-  const { installDate } = useInstallDate();
+  const { installDate } = useOutletContext<MyContext>();
   const { t, i18n } = useTranslation();
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [chartDataTAPCF, setChartDataTAPCF] = useState<PieChartItem[]>([]);

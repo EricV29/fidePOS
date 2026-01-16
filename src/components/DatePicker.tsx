@@ -6,7 +6,7 @@ import RightIcon from "@icons/RightIcon";
 import { useTranslation } from "react-i18next";
 
 interface DatePickerProps {
-  installDate: string;
+  installDate: string | null;
 }
 
 const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
@@ -24,12 +24,20 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
     .toLocaleString("en-US", { month: "long" })
     .toLowerCase();
 
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | string | null | undefined) => {
+    if (!date) return "";
+
+    const d = new Date(date);
+
+    if (isNaN(d.getTime())) {
+      return "";
+    }
+
     return new Intl.DateTimeFormat(i18n.language, {
       year: "numeric",
       month: "2-digit",
       day: "2-digit",
-    }).format(date);
+    }).format(d);
   };
 
   const renderCalendar = () => {
@@ -102,15 +110,16 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
 
   const updateInput = () => {
     if (selectedStartDate && selectedEndDate) {
-      return `${formatDate(new Date(selectedStartDate))} - ${formatDate(
-        new Date(selectedEndDate)
+      return `${formatDate(selectedStartDate)} - ${formatDate(
+        selectedEndDate
       )}`;
     } else if (selectedStartDate) {
-      return formatDate(new Date(selectedStartDate));
+      return formatDate(selectedStartDate);
     } else {
       const today = formatDate(currentDate);
-      const iDate = formatDate(new Date(installDate));
-      return `${iDate} - ${today}`;
+      const iDate = installDate ? formatDate(installDate) : "";
+
+      return iDate ? `${iDate} - ${today}` : today;
     }
   };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import userImage from "@img/user.webp";
+import { useOutletContext } from "react-router-dom";
 import ImgIcon from "@icons/ImgIcon";
 import CustomSelect from "@components/Select";
 import LockedIcon from "@icons/LockedIcon";
@@ -7,14 +7,20 @@ import ShieldIcon from "@icons/ShieldIcon";
 import UserPlusIcon from "@icons/UserPlusIcon";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsU } from "@columns/columnsU";
-import type { Users } from "@typesm/users";
+import type { Users, UserSession } from "@typesm/users";
 import { useModal } from "@context/ModalContext";
 import { ModalAddUser } from "@modals/ModalAddUser";
 import { ModalChangePassword } from "@modals/ModalChangePassword";
 import { ModalContact } from "@modals/ModalContact";
 import { useTranslation } from "react-i18next";
+import { getAvatar } from "@utility/getAvatar";
 
 interface SettingsProps {}
+
+interface MyContext {
+  session: UserSession | null;
+  installDate: string;
+}
 
 //* Example data users
 const dataUsersDB = [
@@ -43,9 +49,12 @@ const dataUsersDB = [
 ];
 
 const Settings: React.FC<SettingsProps> = ({}) => {
+  const { session } = useOutletContext<MyContext>();
   const [dataUsers, setUsers] = useState<Users[]>([]);
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
+  const [fallbackAvatar] = useState(getAvatar);
+  const displayImage = session?.img ? session.img : fallbackAvatar;
 
   const getInitialTheme = () => {
     const savedTheme = localStorage.getItem("theme");
@@ -118,7 +127,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
         <div className="w-full flex flex-col gap-5 p-5 overflow-y-auto">
           <div className="w-full flex gap-3">
             <img
-              src={userImage}
+              src={displayImage}
               alt="ImgUser"
               className="size-[57px] rounded-full object-cover"
             />

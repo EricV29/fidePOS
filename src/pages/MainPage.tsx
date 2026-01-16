@@ -2,16 +2,14 @@ import { useEffect, useState } from "react";
 import Sidebar from "@components/Sidebar";
 import { Outlet } from "react-router-dom";
 import type { UserSession } from "@typesm/users";
-
-type ContextType = { installDate: string };
+import { useLoading } from "@context/LoadingContext";
 
 export default function MainPage() {
   const [isOpen, setIsOpen] = useState(true);
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth >= 1024);
-  const [installDate, setInstallDate] = useState<ContextType>({
-    installDate: "",
-  });
+  const [installDate, setInstallDate] = useState<string | null>(null);
   const [session, setSession] = useState<UserSession | null>(null);
+  const { setLoading } = useLoading();
 
   const fetchSession = async () => {
     try {
@@ -30,8 +28,10 @@ export default function MainPage() {
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     window.electronAPI.installDate().then((date) => {
-      setInstallDate({ installDate: date });
+      setInstallDate(date);
+      setLoading(false);
     });
 
     function handleResize() {
@@ -90,7 +90,7 @@ export default function MainPage() {
           session={session}
         />
         <main className="h-full min-h-0 w-full min-w-0 p-5 rounded-[30px] bg-[#ffffff] border border-[#B3B3B340] flex flex-col overflow-hidden dark:bg-[#353935]">
-          <Outlet context={installDate} />
+          {installDate && <Outlet context={{ installDate, session }} />}
         </main>
       </div>
     </>
