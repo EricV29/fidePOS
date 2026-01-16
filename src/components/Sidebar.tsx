@@ -33,7 +33,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const displayImage = session?.img ? session.img : fallbackAvatar;
 
   const handleLogout = () => {
-    window.electronAPI.logoutSuccess();
+    window.electronAPI.logout();
   };
 
   const roles = [

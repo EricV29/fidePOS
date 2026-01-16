@@ -5,9 +5,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Install Date bridge
   getInstallDate: () => ipcRenderer.invoke("getInstallDate"),
 
-  // getRoles bridge
-  getRoles: () => ipcRenderer.invoke("getRoles"),
-
   // Singup bridge
   signup: (data) => ipcRenderer.invoke("signup", data),
 
@@ -22,7 +19,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.invoke("forgotPassword", email, lan),
 
   // Logout bridge
-  logoutSuccess: () => ipcRenderer.send("logout-success"),
+  logout: () => ipcRenderer.send("logout"),
+
+  // getRoles bridge
+  getRoles: () => ipcRenderer.invoke("getRoles"),
 
   // message 1 bridge
   sendMessage: (msg) => ipcRenderer.send("message", msg),

@@ -16,8 +16,6 @@ declare global {
       // INSTALL DATE APLICATION
       getInstallDate: () => Promise<string>;
 
-      getRoles: () => Promise<Role>;
-
       // SIGNUP
       signup: (data) => Promise<{
         success: boolean;
@@ -45,7 +43,10 @@ declare global {
         error?: string;
       }>;
 
-      logoutSuccess: () => void;
+      // LOGOUT
+      logout: () => void;
+
+      getRoles: () => Promise<Role>;
       sendMessage: (msg: string) => void;
       onMessageReply: (callback: (data: string) => void) => void;
       sendMessagePrivate: (msg: string) => void;

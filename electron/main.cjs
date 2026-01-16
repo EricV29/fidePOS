@@ -146,72 +146,22 @@ function createMainWindow() {
   });
 }
 
-//* SESSION
-let sessionUser = null;
+//* FUNCTIONS
 
-// Save login
+// Save Login
+let sessionUser = null;
 function saveLogin(userData) {
   sessionUser = userData;
-  console.log("👤 Session started for:", sessionUser.name);
+  console.log(
+    `✅ Session started for: ${sessionUser.name} ${sessionUser.last_name}`
+  );
 }
 
-// Get session data
-ipcMain.handle("get-session", () => {
-  return sessionUser;
-});
-
-/* Logout session
-ipcMain.handle('logout', () => {
-  sessionUser = null;
-  console.log("🔒 Session cleared");
-  return { success: true };
-});
-*/
-
-//* GLOBAL LISTENER
-
-// Open dashboard
-ipcMain.on("login-success", () => {
-  if (loginWindow) loginWindow.close();
-  createMainWindow();
-});
-
-// Logout
-ipcMain.on("logout-success", () => {
-  if (mainWindow) mainWindow.close();
-  createLoginWindow();
-});
+//* LISTENERS
 
 // Get Install Date
 ipcMain.handle("getInstallDate", () => {
   return getInstallDate();
-});
-
-//* DATABASE CONSULTS
-
-// Consult getRoles
-ipcMain.handle("getRoles", async () => {
-  return await getRoles();
-});
-
-/* Global message
-ipcMain.on("message", (event, msg) => {
-  console.log("Message received:", msg);
-  event.sender.send("message-reply", `Message: ${msg}`);
-});
-*/
-
-//* PRIVATE LISTENER
-
-// Message private
-ipcMain.on("message_private", (event, msg) => {
-  if (event.sender === mainWindow.webContents) {
-    console.log("Message received:", msg);
-    event.sender.send("message-private-reply", `Message: ${msg}`);
-  } else {
-    console.log("Not allowed");
-    event.reply("message-private-reply", { error: "Not allowed" });
-  }
 });
 
 // User Signup Private
@@ -267,6 +217,11 @@ ipcMain.handle("login", async (event, data) => {
   }
 });
 
+// Get Session Data
+ipcMain.handle("get-session", () => {
+  return sessionUser;
+});
+
 // Forgot Password Private
 ipcMain.handle("forgotPassword", async (event, email, lan) => {
   if (event.sender === loginWindow.webContents) {
@@ -300,6 +255,17 @@ ipcMain.handle("forgotPassword", async (event, email, lan) => {
   }
 });
 
+// Logout Session
+ipcMain.on("logout", (event) => {
+  if (event.sender === mainWindow.webContents) {
+    const userName = sessionUser.name;
+    mainWindow.close();
+    createLoginWindow();
+    sessionUser = null;
+    console.log(`🔒 Logout session: ${userName}`);
+  }
+});
+
 //* INITIALIZATION
 let isInitializing = false;
 app.whenReady().then(async () => {
@@ -319,12 +285,12 @@ app.whenReady().then(async () => {
   await new Promise((r) => setTimeout(r, 3000));
   const isFirstRun = await firstRun();
   if (isFirstRun) {
-    console.log("✅ Is First Run: " + isFirstRun);
+    console.log(`✅ Is First Run: ${isFirstRun}`);
     registerInstallDate();
     welcomeWindow.close();
     createSignupWindow();
   } else {
-    console.log("❌ Is First Run: " + isFirstRun);
+    console.log(`❌ Is First Run: ${isFirstRun}`);
     welcomeWindow.close();
     createLoginWindow();
   }
