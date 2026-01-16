@@ -11,29 +11,28 @@ export default function MainPage() {
   const [session, setSession] = useState<UserSession | null>(null);
   const { setLoading } = useLoading();
 
-  const fetchSession = async () => {
-    try {
-      const userData = await window.electronAPI.getSession();
+  useEffect(() => {
+    const initializeApp = async () => {
+      setLoading(true);
+      try {
+        const [userData, date] = await Promise.all([
+          window.electronAPI.getSession(),
+          window.electronAPI.getInstallDate(),
+        ]);
 
-      if (userData) {
-        setSession(userData);
+        if (userData) setSession(userData);
+        if (date) setInstallDate(date);
+      } catch (error) {
+        console.error("Error init app:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Fetch error session:", error);
-    }
-  };
+    };
+
+    initializeApp();
+  }, [setLoading]);
 
   useEffect(() => {
-    fetchSession();
-  }, []);
-
-  useEffect(() => {
-    setLoading(true);
-    window.electronAPI.installDate().then((date) => {
-      setInstallDate(date);
-      setLoading(false);
-    });
-
     function handleResize() {
       const large = window.innerWidth >= 1024;
 

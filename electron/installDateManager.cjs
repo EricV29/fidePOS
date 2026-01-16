@@ -6,20 +6,20 @@ function registerInstallDate() {
   const userData = app.getPath("userData");
   const filePath = path.join(userData, "install.json");
 
-  if (!fs.existsSync(filePath)) {
-    const data = {
-      installed: new Date().toISOString(),
-    };
+  try {
+    if (!fs.existsSync(filePath)) {
+      const data = { installed: new Date().toISOString() };
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+      return data.installed;
+    }
 
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
-
-    return data.installed;
+    const raw = fs.readFileSync(filePath, "utf-8");
+    const json = JSON.parse(raw);
+    return json.installed;
+  } catch (error) {
+    console.error("Error al gestionar la fecha de instalación:", error);
+    return new Date().toISOString();
   }
-
-  const raw = fs.readFileSync(filePath, "utf-8");
-  const json = JSON.parse(raw);
-
-  return json.installed;
 }
 
 function getInstallDate() {

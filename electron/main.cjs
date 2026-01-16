@@ -183,7 +183,7 @@ ipcMain.on("logout-success", () => {
 });
 
 // Get Install Date
-ipcMain.handle("installDate", () => {
+ipcMain.handle("getInstallDate", () => {
   return getInstallDate();
 });
 

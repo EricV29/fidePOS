@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
   // Install Date bridge
-  installDate: () => ipcRenderer.invoke("installDate"),
+  getInstallDate: () => ipcRenderer.invoke("getInstallDate"),
 
   // getRoles bridge
   getRoles: () => ipcRenderer.invoke("getRoles"),

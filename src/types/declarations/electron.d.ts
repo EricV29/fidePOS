@@ -13,7 +13,9 @@ interface UserSession {
 declare global {
   interface Window {
     electronAPI: {
-      installDate: () => Promise<string>;
+      // INSTALL DATE APLICATION
+      getInstallDate: () => Promise<string>;
+
       getRoles: () => Promise<Role>;
 
       // SIGNUP
