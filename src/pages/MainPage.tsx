@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Sidebar from "@components/Sidebar";
 import { Outlet } from "react-router-dom";
+import type { UserSession } from "@typesm/users";
 
 type ContextType = { installDate: string };
 
@@ -10,6 +11,23 @@ export default function MainPage() {
   const [installDate, setInstallDate] = useState<ContextType>({
     installDate: "",
   });
+  const [session, setSession] = useState<UserSession | null>(null);
+
+  const fetchSession = async () => {
+    try {
+      const userData = await window.electronAPI.getSession();
+
+      if (userData) {
+        setSession(userData);
+      }
+    } catch (error) {
+      console.error("Fetch error session:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSession();
+  }, []);
 
   useEffect(() => {
     window.electronAPI.installDate().then((date) => {
@@ -66,7 +84,11 @@ export default function MainPage() {
   return (
     <>
       <div className="w-screen h-screen overflow-hidden flex p-[13px] gap-[15px] dark:bg-[#353935]">
-        <Sidebar isOpen={isOpen} toggleSidebar={toggleSidebar} />
+        <Sidebar
+          isOpen={isOpen}
+          toggleSidebar={toggleSidebar}
+          session={session}
+        />
         <main className="h-full min-h-0 w-full min-w-0 p-5 rounded-[30px] bg-[#ffffff] border border-[#B3B3B340] flex flex-col overflow-hidden dark:bg-[#353935]">
           <Outlet context={installDate} />
         </main>

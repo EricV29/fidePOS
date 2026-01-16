@@ -16,9 +16,7 @@ const Login: React.FC = () => {
     console.log(data);
     try {
       const response = await window.electronAPI.login(data);
-      if (response.success) {
-        console.log(response.result);
-      } else {
+      if (!response.success) {
         console.log(response.error);
       }
     } catch (err) {

@@ -3,14 +3,20 @@ const fs = require("fs");
 const path = require("path");
 const { app } = require("electron");
 
-async function initDatabase() {
-  const SQL = await initSqlJs();
+let dbInstance = null;
 
+async function initDatabase() {
+  if (dbInstance) {
+    return dbInstance;
+  }
+
+  const SQL = await initSqlJs();
   const dbPath = path.join(app.getPath("userData"), "app.db");
   let db;
   let shouldSave = false;
 
-  //C:\Users\jared\AppData\Roaming\fidepos
+  // DATABASE FILE
+  // C:\Users\user\AppData\Roaming\fidepos
 
   // CREATE DB IF NOT EXISTING
   if (fs.existsSync(dbPath)) {
@@ -23,11 +29,10 @@ async function initDatabase() {
     console.log("📦 New DB created on disk");
   }
 
-  // CREATE ROL TABLE
+  // CREATE ROLE TABLE
   db.run(`
-    CREATE TABLE IF NOT EXISTS rol (
+    CREATE TABLE IF NOT EXISTS role (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code INTEGER UNIQUE NOT NULL,
       description TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
@@ -37,22 +42,18 @@ async function initDatabase() {
   db.run(`
     CREATE TABLE IF NOT EXISTS status (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      code INTEGER UNIQUE NOT NULL,
       description TEXT NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
 
   // INSERT ROLS IF NOT EXISTING
-  const resultRol = db.exec("SELECT COUNT(*) AS count FROM rol;");
-  const countRol = resultRol[0]?.values[0][0] || 0;
+  const resultRole = db.exec("SELECT COUNT(*) AS count FROM role;");
+  const countRole = resultRole[0]?.values[0][0] || 0;
 
-  if (countRol === 0) {
-    db.run("INSERT INTO rol (code, description) VALUES (?, ?);", [
-      "1",
-      "admin",
-    ]);
-    db.run("INSERT INTO rol (code, description) VALUES (?, ?);", ["2", "user"]);
+  if (countRole === 0) {
+    db.run("INSERT INTO role (id, description) VALUES (?, ?);", ["1", "admin"]);
+    db.run("INSERT INTO role (id, description) VALUES (?, ?);", ["2", "user"]);
     console.log("✅ Roles inserted (admin, user)");
     shouldSave = true;
   } else {
@@ -64,27 +65,27 @@ async function initDatabase() {
   const countStatus = resultStatus[0]?.values[0][0] || 0;
 
   if (countStatus === 0) {
-    db.run("INSERT INTO status (code, description) VALUES (?, ?);", [
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
       "0",
-      "desactive",
+      "inactive",
     ]);
-    db.run("INSERT INTO status (code, description) VALUES (?, ?);", [
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
       "1",
       "active",
     ]);
-    db.run("INSERT INTO status (code, description) VALUES (?, ?);", [
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
       "3",
       "debt",
     ]);
-    db.run("INSERT INTO status (code, description) VALUES (?, ?);", [
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
       "4",
       "paid",
     ]);
-    db.run("INSERT INTO status (code, description) VALUES (?, ?);", [
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
       "5",
       "unpaid",
     ]);
-    console.log("✅ Status inserted (desactive, active, paid, debt)");
+    console.log("✅ Status inserted (inactive, active, paid, debt)");
     shouldSave = true;
   } else {
     console.log("📦 Status already exist");
@@ -95,15 +96,15 @@ async function initDatabase() {
     CREATE TABLE IF NOT EXISTS user (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
-      lastname TEXT NOT NULL,
+      last_name TEXT NOT NULL,
       email TEXT UNIQUE NOT NULL,
       phone TEXT UNIQUE NOT NULL,
       password TEXT NOT NULL,
-      rol_id INTEGER NOT NULL,
+      role_id INTEGER NOT NULL,
       status_id INTEGER NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       delete_at DATETIME DEFAULT NULL,
-      FOREIGN KEY (rol_id) REFERENCES rol(id),
+      FOREIGN KEY (role_id) REFERENCES role(id),
       FOREIGN KEY (status_id) REFERENCES status(id)
     );
   `);
@@ -208,7 +209,8 @@ async function initDatabase() {
     console.log("✅ DB persisted to disk:", dbPath);
   }
 
-  return db;
+  dbInstance = db;
+  return dbInstance;
 }
 
 function saveDB(db) {

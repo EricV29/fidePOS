@@ -1,20 +1,26 @@
 export {};
-import { Rol } from "@typesm/users";
+import { Role } from "@typesm/users";
+
+interface UserSession {
+  id: number;
+  name: string;
+  last_name: string;
+  role_id: number;
+  status_id: number;
+}
 
 declare global {
   interface Window {
     electronAPI: {
       installDate: () => Promise<string>;
-      getRoles: () => Promise<Rol>;
-      signup: (data) => void;
+      getRoles: () => Promise<Role>;
 
-      signupReply: (
-        callback: (data: {
-          success: boolean;
-          result?: boolean;
-          error?: string;
-        }) => void
-      ) => () => void;
+      // SIGNUP
+      signup: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
 
       // LOGIN
       login: (data) => Promise<{
@@ -22,6 +28,9 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // GET SESSION
+      getSession: () => Promise<UserSession | null>;
 
       // FORGOT PASSWORD
       forgotPassword: (

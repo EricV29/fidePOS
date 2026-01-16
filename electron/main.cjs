@@ -146,6 +146,28 @@ function createMainWindow() {
   });
 }
 
+//* SESSION
+let sessionUser = null;
+
+// Save login
+function saveLogin(userData) {
+  sessionUser = userData;
+  console.log("👤 Session started for:", sessionUser.name);
+}
+
+// Get session data
+ipcMain.handle("get-session", () => {
+  return sessionUser;
+});
+
+/* Logout session
+ipcMain.handle('logout', () => {
+  sessionUser = null;
+  console.log("🔒 Session cleared");
+  return { success: true };
+});
+*/
+
 //* GLOBAL LISTENER
 
 // Open dashboard
@@ -192,36 +214,43 @@ ipcMain.on("message_private", (event, msg) => {
   }
 });
 
-/* User Signup Private
-ipcMain.on("signup", async (event, data) => {
+// User Signup Private
+ipcMain.handle("signup", async (event, data) => {
   if (event.sender === signupWindow.webContents) {
-    console.log("data:", data);
     try {
-      const result = await addAdmin(data);
-      event.sender.send("signup-reply", result);
+      const response = await addAdmin(data);
+      if (response.success) {
+        signupWindow.close();
+        createLoginWindow();
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
     } catch (error) {
-      event.sender.send("signup-reply", {
-        success: false,
-        error: error.message,
-      });
+      console.log("❌ ERROR: ", error);
     }
   } else {
-    console.log("Not allowed");
-    event.reply("signup-reply", { error: "Not allowed" });
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
-*/
 
 // User Login Private
 ipcMain.handle("login", async (event, data) => {
   if (event.sender === loginWindow.webContents) {
-    console.log("data:", data);
     try {
       const response = await loginUser(data);
       if (response.success) {
+        saveLogin(response.data);
+        loginWindow.close();
+        createMainWindow();
         return {
           success: true,
-          result: response.data,
         };
       } else {
         return {
@@ -272,19 +301,30 @@ ipcMain.handle("forgotPassword", async (event, email, lan) => {
 });
 
 //* INITIALIZATION
+let isInitializing = false;
 app.whenReady().then(async () => {
-  await createWelcomeWindow();
-  await initDatabase();
+  if (isInitializing) return;
+  isInitializing = true;
+
+  try {
+    await createWelcomeWindow();
+    await initDatabase();
+    console.log("🚀 APP AND DB READY TO START");
+  } catch (err) {
+    console.error("Initialization error:", err);
+  } finally {
+    isInitializing = false;
+  }
 
   await new Promise((r) => setTimeout(r, 3000));
   const isFirstRun = await firstRun();
   if (isFirstRun) {
-    console.log(isFirstRun);
+    console.log("✅ Is First Run: " + isFirstRun);
     registerInstallDate();
     welcomeWindow.close();
     createSignupWindow();
   } else {
-    console.log(isFirstRun);
+    console.log("❌ Is First Run: " + isFirstRun);
     welcomeWindow.close();
     createLoginWindow();
   }

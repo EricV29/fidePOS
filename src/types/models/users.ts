@@ -10,8 +10,16 @@ export type Users = {
   created_at: string;
 };
 
-export type Rol = {
+export type Role = {
   id: string;
-  rol: string;
+  role: string;
   created_at: string;
+};
+
+export type UserSession = {
+  id: number;
+  name: string;
+  last_name: string;
+  role_id: number;
+  status_id: number;
 };

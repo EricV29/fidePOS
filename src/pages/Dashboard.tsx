@@ -100,7 +100,6 @@ export default function Dashboard() {
     setInvestCard(dataInvestBD);
     setDataTableRSP(dataRSPBD);
     setDataTableAR(dataARBD);
-    loadRoles();
   }, []);
 
   const columnsrsp = columnsRSP(t, i18n.language);
@@ -118,10 +117,6 @@ export default function Dashboard() {
       label: t("charts.chart_apc"),
     },
   };
-
-  async function loadRoles() {
-    const roles = await window.electronAPI.getRoles();
-  }
 
   if (!installDate) return null;
 
