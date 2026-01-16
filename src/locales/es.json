@@ -208,12 +208,19 @@
     "input_select": "Elige una columna"
   },
   "modalWarningAlert": {
-    "title": "Advertencia",
+    "title": "¡Advertencia!",
     "text_forgot_password": "Se enviará un correo electrónico con tu contraseña. Asegúrate de tener conexión a internet.",
-    "text_write_email": "Asegurate de escribir tu correo electrónico.",
-    "text_user_not_found": "Usuario no econtrado.",
-    "text_user_inactive": "Usuario inactivo",
-    "text_email_send": "Correo enviado"
+    "text_write_email": "Asegurate de escribir tu correo electrónico."
+  },
+  "modalSuccessAlert": {
+    "title": "¡Exito!",
+    "text_email_send": "Correo enviado."
+  },
+  "modalDangerAlert": {
+    "title": "¡Cuidado!",
+    "text_user_not_found": "Usuario no encontrado.",
+    "text_user_inactive": "Usuario inactivo.",
+    "text_incorrect_password": "Contraseña incorrecta."
   },
   "modalAddUser": {
     "title": "Agregar usuario",

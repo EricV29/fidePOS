@@ -5,6 +5,7 @@ interface UserSession {
   id: number;
   name: string;
   last_name: string;
+  img: string;
   role_id: number;
   status_id: number;
 }
@@ -12,8 +13,8 @@ interface UserSession {
 declare global {
   interface Window {
     electronAPI: {
-      installDate: () => Promise<string>;
-      getRoles: () => Promise<Role>;
+      // INSTALL DATE APLICATION
+      getInstallDate: () => Promise<string>;
 
       // SIGNUP
       signup: (data) => Promise<{
@@ -42,7 +43,10 @@ declare global {
         error?: string;
       }>;
 
-      logoutSuccess: () => void;
+      // LOGOUT
+      logout: () => void;
+
+      getRoles: () => Promise<Role>;
       sendMessage: (msg: string) => void;
       onMessageReply: (callback: (data: string) => void) => void;
       sendMessagePrivate: (msg: string) => void;

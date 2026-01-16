@@ -202,12 +202,19 @@
     "input_select": "Choose a column"
   },
   "modalWarningAlert": {
-    "title": "Warning",
+    "title": "¡Warning!",
     "text_forgot_password": "A password recovery email will be sent to you. Please ensure you are connected to the internet.",
-    "text_write_email": "Make sure to write your email.",
+    "text_write_email": "Make sure to write your email."
+  },
+  "modalSuccessAlert": {
+    "title": "¡Success!",
+    "text_email_send": "Email sent."
+  },
+  "modalDangerAlert": {
+    "title": "¡Danger!",
     "text_user_not_found": "User not found.",
     "text_user_inactive": "User inactive",
-    "text_email_send": "Email send"
+    "text_incorrect_password": "Incorrect password"
   },
   "modalAddUser": {
     "title": "Add new user",

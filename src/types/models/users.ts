@@ -20,6 +20,7 @@ export type UserSession = {
   id: number;
   name: string;
   last_name: string;
+  img: string;
   role_id: number;
   status_id: number;
 };

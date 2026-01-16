@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import MenuIcon from "@icons/MenuIcon";
 import DashIcon from "@icons/DashboardIcon";
@@ -10,10 +10,10 @@ import CustIcon from "@icons/CustomerIcon";
 import SettIcon from "@icons/SettingsIcon";
 import LogoutIcon from "@icons/LogoutIcon";
 import Sidebaitem from "@components/SidebarItem";
-import userImage from "@img/user.webp";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
 import type { UserSession } from "@typesm/users";
+import { getAvatar } from "@utility/getAvatar";
 
 interface SidebarProps {
   isOpen: boolean;
@@ -29,9 +29,11 @@ const Sidebar: React.FC<SidebarProps> = ({
   const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
+  const [fallbackAvatar] = useState(getAvatar);
+  const displayImage = session?.img ? session.img : fallbackAvatar;
 
   const handleLogout = () => {
-    window.electronAPI.logoutSuccess();
+    window.electronAPI.logout();
   };
 
   const roles = [
@@ -40,6 +42,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   const roleMatched = roles.find((role) => role.value === session?.role_id);
+
+  const nameUser =
+    session?.name.split(" ")[0] + " " + session?.last_name.split(" ")[0];
 
   return (
     <>
@@ -124,15 +129,18 @@ const Sidebar: React.FC<SidebarProps> = ({
         <div className="h-auto w-auto flex flex-col justify-center items-center 2xl:gap-[50px] gap-5">
           <div className="flex flex-col items-center text-center">
             <img
-              src={userImage}
+              src={displayImage}
               alt="ImgUser"
-              className="size-[45px] rounded-full object-cover"
+              title={nameUser}
+              className={`rounded-full object-cover ${
+                isOpen ? "size-[60px]" : "size-[35px]"
+              }`}
             />
             {isOpen && (
               <>
-                <h2 className="mb-0 break-all block">
-                  {session?.name + " " + session?.last_name}
-                </h2>
+                <p className="font-bold text-[#F57C00] text-[20px] mb-0">
+                  {nameUser}
+                </p>
                 <p className="text-[15px] text-[#5D5D5D] dark:text-[#B3B3B3] block">
                   {roleMatched?.label}
                 </p>

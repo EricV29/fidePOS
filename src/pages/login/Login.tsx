@@ -6,6 +6,8 @@ import CustomSelect from "@components/Select";
 import type { LoginFormValues } from "@forms/schemas/user.schema";
 import { useModal } from "@context/ModalContext";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
+import ModalSuccessAlert from "@modals/ModalSuccessAlert";
+import ModalDangerAlert from "@modals/ModalDangerAlert";
 
 const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -13,11 +15,11 @@ const Login: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async (data: LoginFormValues) => {
-    console.log(data);
     try {
       const response = await window.electronAPI.login(data);
       if (!response.success) {
-        console.log(response.error);
+        //console.log(response.error);
+        replyForgotPassword(response.error);
       }
     } catch (err) {
       console.error("Comunication Error:", err);
@@ -65,24 +67,32 @@ const Login: React.FC = () => {
     if (response === "User not found") {
       setIsLoading(false);
       setModal(
-        <ModalWarningAlert
-          text={t("modalWarningAlert.text_user_not_found")}
+        <ModalDangerAlert
+          text={t("modalDangerAlert.text_user_not_found")}
           btnOptions={false}
         />
       );
     } else if (response === "Inactive user") {
       setIsLoading(false);
       setModal(
-        <ModalWarningAlert
-          text={t("modalWarningAlert.text_user_inactive")}
+        <ModalDangerAlert
+          text={t("modalDangerAlert.text_user_inactive")}
+          btnOptions={false}
+        />
+      );
+    } else if (response === "Incorrect Password") {
+      setIsLoading(false);
+      setModal(
+        <ModalDangerAlert
+          text={t("modalDangerAlert.text_incorrect_password")}
           btnOptions={false}
         />
       );
     } else if (response === "Email sent") {
       setIsLoading(false);
       setModal(
-        <ModalWarningAlert
-          text={t("modalWarningAlert.text_email_send")}
+        <ModalSuccessAlert
+          text={t("modalSuccessAlert.text_email_send")}
           btnOptions={false}
         />
       );

@@ -1,8 +1,7 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import ExportIcon from "@icons/ExportIcon";
 import DatePicker from "@components/DatePicker";
-import { useInstallDate } from "@hooks/useInstallDate";
 import Switch from "@components/Switch";
 import { Outlet } from "react-router-dom";
 import { useModal } from "@/context/ModalContext";
@@ -11,8 +10,12 @@ import { useTranslation } from "react-i18next";
 
 interface ReportsProps {}
 
+interface MyContext {
+  installDate: string;
+}
+
 const Reports: React.FC<ReportsProps> = ({}) => {
-  const { installDate } = useInstallDate();
+  const { installDate } = useOutletContext<MyContext>();
   const navigate = useNavigate();
   const location = useLocation();
   const { setModal } = useModal();
