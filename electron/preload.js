@@ -6,7 +6,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getInstallDate: () => ipcRenderer.invoke("getInstallDate"),
 
   // Singup bridge
-  signup: (data) => ipcRenderer.invoke("signup", data),
+  signup: (data, lan) => ipcRenderer.invoke("signup", data, lan),
 
   // Login bridge
   login: (data) => ipcRenderer.invoke("login", data),

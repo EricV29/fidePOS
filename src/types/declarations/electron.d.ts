@@ -17,7 +17,10 @@ declare global {
       getInstallDate: () => Promise<string>;
 
       // SIGNUP
-      signup: (data) => Promise<{
+      signup: (
+        data,
+        lan,
+      ) => Promise<{
         success: boolean;
         result?: string;
         error?: string;
@@ -36,7 +39,7 @@ declare global {
       // FORGOT PASSWORD
       forgotPassword: (
         email: string,
-        lan: string
+        lan: string,
       ) => Promise<{
         success: boolean;
         result?: string;

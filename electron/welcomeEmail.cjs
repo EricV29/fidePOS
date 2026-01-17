@@ -10,45 +10,45 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-async function sendRecoveryEmail(to, tempPassword, lan) {
+async function welcomeEmail(data, lan) {
   const mailOptionsEn = {
     from: '"Fide POS Support" <typira.oficial@gmail.com>',
-    to: to,
-    subject: "Password Recovery - Fide POS",
+    to: data.email,
+    subject: "Welcome - Fide POS",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; border: 1px solid #eee; border-radius: 10px; padding: 20px;">
         <div style="text-align: center;">
           <img width="200px" src="https://i.imgur.com/GG61JLo.png" alt="LogoFidePOS"/>
         </div>
         <p>Hi,</p>
-        <p>You have requested to recover your password to access the system. This is your temporary password:</p>
+        <p>Welcome to Fide POS! You have successfully created your account to manage your business. This tool is completely free for you; we hope you enjoy it:</p>
         <div style="background-color: #FFEFDE; padding: 15px; text-align: center; border-radius: 5px; margin: 20px 0;">
-          <span style="font-size: 24px; font-weight: bold; color: #333; letter-spacing: 2px;">${tempPassword}</span>
+          <span style="font-size: 24px; font-weight: bold; color: #333; letter-spacing: 2px;">${data.name + " " + data.last_name}</span>
         </div>
-        <p style="color: #666; font-size: 14px;">For security reasons, we recommend changing this password once you log in.</p>
+        <p style="color: #666; font-size: 14px;">If you need any help, please don't hesitate to contact us.</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="font-size: 12px; color: #999; text-align: center;">If you did not request this change, please contact the administrator.</p>
+        <p style="font-size: 12px; color: #999; text-align: center;">If you didn't request to join, please ignore this message.</p>
       </div>
     `,
   };
 
   const mailOptionsEs = {
     from: '"Fide POS Soporte" <typira.oficial@gmail.com>',
-    to: to,
-    subject: "Recuperación de Contraseña - Fide POS",
+    to: data.email,
+    subject: "Bienvenid@ - Fide POS",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 500px; margin: auto; border: 1px solid #eee; border-radius: 10px; padding: 20px;">
         <div style="text-align: center;">
           <img width="200px" src="https://i.imgur.com/GG61JLo.png" alt="LogoFidePOS"/>
         </div>
         <p>Hola,</p>
-        <p>Has solicitado recuperar tu contraseña para poder acceder al sistema. La siguiente contraseña es temporal:</p>
+        <p>¡Bienvenido a Fide POS! Has creado exitosamente tu cuenta para gestionar tu negocio. Esta herramienta es totalmente gratuita para ti; esperamos que la disfrutes:</p>
         <div style="background-color: #FFEFDE; padding: 15px; text-align: center; border-radius: 5px; margin: 20px 0;">
-          <span style="font-size: 24px; font-weight: bold; color: #333; letter-spacing: 2px;">${tempPassword}</span>
+          <span style="font-size: 24px; font-weight: bold; color: #333; letter-spacing: 2px;">${data.name + " " + data.last_name}</span>
         </div>
-        <p style="color: #666; font-size: 14px;">Por seguridad, te recomendamos cambiar esta contraseña una vez que logres iniciar sesión.</p>
+        <p style="color: #666; font-size: 14px;">Si necesitas ayuda, no dudes en contactarnos.</p>
         <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="font-size: 12px; color: #999; text-align: center;">Si no solicitaste este cambio, por favor contacta al administrador.</p>
+        <p style="font-size: 12px; color: #999; text-align: center;">Si no solicitaste unirte, ignora este mensaje.</p>
       </div>
     `,
   };
@@ -68,4 +68,4 @@ async function sendRecoveryEmail(to, tempPassword, lan) {
   }
 }
 
-module.exports = { sendRecoveryEmail };
+module.exports = { welcomeEmail };

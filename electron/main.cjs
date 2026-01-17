@@ -9,6 +9,7 @@ const {
   insertNewPassword,
 } = require("./db/queries.cjs");
 const { sendRecoveryEmail } = require("./recoveryPassword.cjs");
+const { welcomeEmail } = require("./welcomeEmail.cjs");
 const { generatePassword } = require("./generatePassword.cjs");
 require("dotenv").config();
 
@@ -22,7 +23,7 @@ function getPageUrl(route = "") {
       process.resourcesPath,
       "app.asar",
       "dist",
-      "index.html"
+      "index.html",
     );
     return `file://${distPath}#/${route}`;
   }
@@ -153,7 +154,7 @@ let sessionUser = null;
 function saveLogin(userData) {
   sessionUser = userData;
   console.log(
-    `✅ Session started for: ${sessionUser.name} ${sessionUser.last_name}`
+    `✅ Session started for: ${sessionUser.name} ${sessionUser.last_name}`,
   );
 }
 
@@ -165,11 +166,12 @@ ipcMain.handle("getInstallDate", () => {
 });
 
 // User Signup Private
-ipcMain.handle("signup", async (event, data) => {
+ipcMain.handle("signup", async (event, data, lan) => {
   if (event.sender === signupWindow.webContents) {
     try {
       const response = await addAdmin(data);
       if (response.success) {
+        welcomeEmail(data, lan);
         signupWindow.close();
         createLoginWindow();
         return {

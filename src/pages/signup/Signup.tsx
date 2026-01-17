@@ -10,7 +10,7 @@ const Signup: React.FC = () => {
 
   const handleSignup = (data: AddUserFormValues) => {
     console.log(data);
-    window.electronAPI.signup(data);
+    window.electronAPI.signup(data, i18n.language);
   };
 
   const optionsLanguage = [
