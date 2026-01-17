@@ -63,7 +63,7 @@ async function addAdmin(data) {
         null,
         1,
         1,
-      ]
+      ],
     );
 
     saveDB(db);
@@ -82,7 +82,7 @@ async function loginUser(data) {
     // Search User
     const query = db.exec(
       "SELECT id, password, name, last_name, img, role_id, status_id FROM user WHERE email = ?",
-      [data.email]
+      [data.email],
     );
 
     const users = mapResultToObjects(query);
@@ -130,7 +130,7 @@ async function insertNewPassword(email, newPass) {
     // Search User
     const query = db.exec(
       "SELECT id, password, name, last_name, role_id, status_id FROM user WHERE email = ?",
-      [email]
+      [email],
     );
 
     const users = mapResultToObjects(query);
@@ -165,10 +165,38 @@ async function insertNewPassword(email, newPass) {
   }
 }
 
+// Add User
+async function addUser(data) {
+  try {
+    const db = await getDB();
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    db.run(
+      "INSERT INTO user(name, last_name, email, phone, password, img, role_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
+      [
+        data.name,
+        data.last_name,
+        data.email,
+        data.phone,
+        hashedPassword,
+        null,
+        2,
+        1,
+      ],
+    );
+
+    saveDB(db);
+    return { success: true };
+  } catch (error) {
+    console.error("Error inserting user:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getRoles,
   firstRun,
   addAdmin,
   loginUser,
   insertNewPassword,
+  addUser,
 };

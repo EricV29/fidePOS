@@ -16,19 +16,24 @@ import {
   getAddUserSchema,
 } from "./schemas/user.schema";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import EyeIcon from "@icons/EyeIcon";
+import EyeOffIcon from "@icons/EyeOffIcon";
 
 interface AddUserFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (values: AddUserFormValues) => void;
 }
 
 export default function AddUserForm({ onSuccess }: AddUserFormProps) {
   const { t } = useTranslation();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showCPassword, setShowCPassword] = useState(false);
 
   const form = useForm<AddUserFormValues>({
     resolver: zodResolver(getAddUserSchema(t)),
     defaultValues: {
       name: "",
-      lastname: "",
+      last_name: "",
       email: "",
       phone: "",
       password: "",
@@ -37,8 +42,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
   });
 
   function onSubmit(values: AddUserFormValues) {
-    console.log("Form submitted:", values);
-    onSuccess?.();
+    onSuccess?.(values);
   }
 
   const passwordRules = t("formAddUser.password_rules", {
@@ -57,7 +61,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
                   {t("formAddUser.input1")}
@@ -69,7 +73,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                     className={cn(
                       "bg-white",
                       fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                     )}
                   />
                 </FormControl>
@@ -79,13 +83,13 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
           />
           <FormField
             control={form.control}
-            name="lastname"
+            name="last_name"
             render={({ field, fieldState }) => (
               <FormItem>
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
                   {t("formAddUser.input2")}
@@ -97,7 +101,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                     className={cn(
                       "bg-white",
                       fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                     )}
                   />
                 </FormControl>
@@ -115,7 +119,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
                   {t("formAddUser.input3")}
@@ -127,7 +131,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                     className={cn(
                       "bg-white",
                       fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                     )}
                   />
                 </FormControl>
@@ -143,7 +147,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
                   {t("formAddUser.input4")}
@@ -155,7 +159,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                     className={cn(
                       "bg-white",
                       fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                     )}
                   />
                 </FormControl>
@@ -173,21 +177,35 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
                   {t("formAddUser.input5")}
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="*****"
-                    {...field}
-                    className={cn(
-                      "bg-white",
-                      fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
-                    )}
-                  />
+                  <div className="relative">
+                    <Input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••••"
+                      {...field}
+                      className={cn(
+                        "bg-white",
+                        fieldState.error &&
+                          "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
+                      )}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    >
+                      {showPassword ? (
+                        <EyeOffIcon color="#F57C00" />
+                      ) : (
+                        <EyeIcon color="#F57C00" />
+                      )}
+                    </button>
+                  </div>
                 </FormControl>
                 <FormMessage className="text-red-600 dark:text-red-400" />
               </FormItem>
@@ -209,21 +227,35 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formAddUser.input6")}
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder="*****"
-                  {...field}
-                  className={cn(
-                    "bg-white",
-                    fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
-                  )}
-                />
+                <div className="relative">
+                  <Input
+                    type={showCPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showCPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>

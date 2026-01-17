@@ -21,20 +21,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Logout bridge
   logout: () => ipcRenderer.send("logout"),
 
+  // Add user bridge
+  addUser: (data, lan) => ipcRenderer.invoke("addUser", data, lan),
+
   // getRoles bridge
   getRoles: () => ipcRenderer.invoke("getRoles"),
 
-  // message 1 bridge
-  sendMessage: (msg) => ipcRenderer.send("message", msg),
-
-  onMessageReply: (callback) => {
-    ipcRenderer.on("message-reply", (_event, data) => callback(data));
-  },
-
-  // message 2 bridge
-  sendMessagePrivate: (msg) => ipcRenderer.send("message_private", msg),
-
+  /*
+  
   onMessageReplyPrivate: (callback) => {
     ipcRenderer.on("message_private-reply", (_event, data) => callback(data));
   },
+  */
 });

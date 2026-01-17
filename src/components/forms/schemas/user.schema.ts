@@ -10,7 +10,7 @@ export const getLoginSchema = (t: (key: string) => string) =>
       .string()
       .regex(
         /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{5,}$/,
-        t("errors.pass_requirements")
+        t("errors.pass_requirements"),
       ),
   });
 
@@ -37,7 +37,7 @@ export const getAddUserSchema = (t: (key: string) => string) =>
         .string()
         .regex(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{5,}$/,
-          t("errors.pass_requirements")
+          t("errors.pass_requirements"),
         ),
 
       confirmPass: z.string(),
@@ -58,7 +58,7 @@ export const getChangePasswordSchema = (t: (key: string) => string) =>
         .string()
         .regex(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{5,}$/,
-          t("errors.pass_requirements")
+          t("errors.pass_requirements"),
         ),
 
       confirmNewPass: z.string(),

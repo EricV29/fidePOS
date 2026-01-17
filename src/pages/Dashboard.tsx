@@ -194,7 +194,7 @@ export default function Dashboard() {
                           total_amount: row.total_amount,
                           created_at: row.created_at,
                         }}
-                      />
+                      />,
                     );
                   },
                 }}
