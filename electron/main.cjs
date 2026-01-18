@@ -204,6 +204,7 @@ ipcMain.handle("login", async (event, data) => {
         createMainWindow();
         return {
           success: true,
+          result: response.result,
         };
       } else {
         return {
@@ -237,7 +238,7 @@ ipcMain.handle("forgotPassword", async (event, email, lan) => {
         if (responseEmail.success) {
           return {
             success: true,
-            result: "Email sent",
+            result: responseEmail.result,
           };
         } else {
           return {

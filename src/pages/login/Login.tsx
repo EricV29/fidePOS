@@ -6,20 +6,26 @@ import CustomSelect from "@components/Select";
 import type { LoginFormValues } from "@forms/schemas/user.schema";
 import { useModal } from "@context/ModalContext";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
-import ModalSuccessAlert from "@modals/ModalSuccessAlert";
-import ModalDangerAlert from "@modals/ModalDangerAlert";
 
 const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
+  const { triggerResponseAlert } = useModal();
 
   const handleLogin = async (data: LoginFormValues) => {
     try {
       const response = await window.electronAPI.login(data);
-      if (!response.success) {
-        //console.log(response.error);
-        replyForgotPassword(response.error);
+      console.log(response.success);
+
+      if (response.success) {
+        console.log(response.error);
+        console.log(response.result);
+        triggerResponseAlert(response.result);
+      } else {
+        console.log(response.error);
+        console.log(response.result);
+        triggerResponseAlert(response.error);
       }
     } catch (err) {
       console.error("Comunication Error:", err);
@@ -32,7 +38,7 @@ const Login: React.FC = () => {
         <ModalWarningAlert
           text={t("modalWarningAlert.text_write_email")}
           btnOptions={false}
-        />
+        />,
       );
       return;
     }
@@ -46,57 +52,22 @@ const Login: React.FC = () => {
             setIsLoading(true);
             const response = await window.electronAPI.forgotPassword(
               email,
-              i18n.language
+              i18n.language,
             );
             if (response.success) {
-              //console.log(response.result);
-              replyForgotPassword(response.result);
+              console.log(response.result);
+
+              triggerResponseAlert(response.result);
             } else {
               console.error(response.error);
-              replyForgotPassword(response.error);
+              triggerResponseAlert(response.error);
             }
           } catch (err) {
             console.error("Comunication Error:", err);
           }
         }}
-      />
+      />,
     );
-  };
-
-  const replyForgotPassword = (response: string | undefined) => {
-    if (response === "User not found") {
-      setIsLoading(false);
-      setModal(
-        <ModalDangerAlert
-          text={t("modalDangerAlert.text_user_not_found")}
-          btnOptions={false}
-        />
-      );
-    } else if (response === "Inactive user") {
-      setIsLoading(false);
-      setModal(
-        <ModalDangerAlert
-          text={t("modalDangerAlert.text_user_inactive")}
-          btnOptions={false}
-        />
-      );
-    } else if (response === "Incorrect Password") {
-      setIsLoading(false);
-      setModal(
-        <ModalDangerAlert
-          text={t("modalDangerAlert.text_incorrect_password")}
-          btnOptions={false}
-        />
-      );
-    } else if (response === "Email sent") {
-      setIsLoading(false);
-      setModal(
-        <ModalSuccessAlert
-          text={t("modalSuccessAlert.text_email_send")}
-          btnOptions={false}
-        />
-      );
-    }
   };
 
   const optionsLanguage = [

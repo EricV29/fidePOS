@@ -1,5 +1,6 @@
 const { initDatabase, saveDB } = require("./database.cjs");
 const bcrypt = require("bcrypt");
+const AUTH_CODES = require("../../constants/authCodes.json");
 
 let dbInstance = null;
 
@@ -89,19 +90,19 @@ async function loginUser(data) {
     const user = users[0];
 
     if (!user) {
-      return { success: false, error: "User not found" };
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Status Valid
     if (user.status === "inactive") {
-      return { success: false, error: "Inactive user" };
+      return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
     // Password Valid
     const isValid = await bcrypt.compare(data.password, user.password);
 
     if (!isValid) {
-      return { success: false, error: "Incorrect Password" };
+      return { success: false, error: AUTH_CODES.INCORRECT_PASSWORD };
     }
 
     return {
@@ -137,12 +138,12 @@ async function insertNewPassword(email, newPass) {
     const user = users[0];
 
     if (!user) {
-      return { success: false, error: "User not found" };
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Status Valid
     if (user.status_id === 0 || user.status_id === "0") {
-      return { success: false, error: "Inactive user" };
+      return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
     // Password Update
@@ -155,7 +156,7 @@ async function insertNewPassword(email, newPass) {
 
     if (rowsModified > 0) {
       saveDB(db);
-      return { success: true, message: "Password updated successfully" };
+      return { success: true };
     } else {
       return { success: false, error: "Database could not be updated" };
     }
