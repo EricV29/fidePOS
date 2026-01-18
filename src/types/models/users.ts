@@ -4,10 +4,10 @@ export type Users = {
   last_name: string;
   email: string;
   phone: string;
-  password: string;
   role: string;
   status: string;
   created_at: string;
+  deleted_at: string;
 };
 
 export type Role = {

@@ -9,7 +9,7 @@ import { RowActions } from "@components/RowActions";
 // Columns Users
 export const columnsU = (
   t: TFunction,
-  language: string
+  language: string,
 ): ColumnDef<Users>[] => [
   {
     id: "rowNumber",
@@ -31,7 +31,6 @@ export const columnsU = (
   },
   { accessorKey: "email", header: t("columns.email") },
   { accessorKey: "phone", header: t("columns.phone") },
-  { accessorKey: "password", header: t("columns.password") },
   {
     accessorKey: "role",
     header: "Role",
@@ -64,6 +63,22 @@ export const columnsU = (
       return (
         <div className="text-center">
           {formatDateColumns(row.getValue("created_at"), language)}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "deleted_at",
+    header: t("columns.deleted_at"),
+    meta: {
+      headerClassName: "text-center",
+    },
+    cell: ({ row }) => {
+      const deletedAt = row.getValue("deleted_at") as string | null;
+
+      return (
+        <div className="text-center">
+          {deletedAt ? formatDateColumns(deletedAt, language) : "—"}
         </div>
       );
     },

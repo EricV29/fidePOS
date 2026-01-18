@@ -2,29 +2,32 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
-  // Install Date bridge
+  // Install Date
   getInstallDate: () => ipcRenderer.invoke("getInstallDate"),
 
   // Singup bridge
   signup: (data, lan) => ipcRenderer.invoke("signup", data, lan),
 
-  // Login bridge
+  // Login
   login: (data) => ipcRenderer.invoke("login", data),
 
-  // Get session bridge
+  // Get session
   getSession: (data) => ipcRenderer.invoke("get-session", data),
 
-  // Forgot password bridge
+  // Forgot password
   forgotPassword: (email, lan) =>
     ipcRenderer.invoke("forgotPassword", email, lan),
 
-  // Logout bridge
+  // Logout
   logout: () => ipcRenderer.send("logout"),
 
-  // Add user bridge
+  // Add user
   addUser: (data, lan) => ipcRenderer.invoke("addUser", data, lan),
 
-  // getRoles bridge
+  // Get session
+  getUsers: (data) => ipcRenderer.invoke("get-users", data),
+
+  // getRoles
   getRoles: () => ipcRenderer.invoke("getRoles"),
 
   /*

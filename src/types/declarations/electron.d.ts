@@ -1,5 +1,5 @@
 export {};
-import { Role } from "@typesm/users";
+import { Role, Users } from "@typesm/users";
 
 interface UserSession {
   id: number;
@@ -56,6 +56,13 @@ declare global {
       ) => Promise<{
         success: boolean;
         result?: string;
+        error?: string;
+      }>;
+
+      // GET USERS
+      getUsers: () => Promise<{
+        success: boolean;
+        result?: Users[];
         error?: string;
       }>;
 

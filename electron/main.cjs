@@ -2,12 +2,12 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
 const {
-  getRoles,
   firstRun,
   addAdmin,
   loginUser,
   insertNewPassword,
   addUser,
+  getUsers,
 } = require("./db/queries.cjs");
 const { sendRecoveryEmail } = require("./recoveryPassword.cjs");
 const { welcomeEmail } = require("./welcomeEmail.cjs");
@@ -277,6 +277,31 @@ ipcMain.handle("addUser", async (event, data, lan) => {
       const response = await addUser(data);
       if (response.success) {
         welcomeEmail(data, lan);
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Users
+ipcMain.handle("get-users", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getUsers();
+      if (response.success) {
         return {
           success: true,
           result: response.result,

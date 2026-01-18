@@ -43,13 +43,6 @@ async function firstRun() {
   }
 }
 
-// Get Roles
-async function getRoles() {
-  const db = await getDB();
-  const result = db.exec("SELECT id, code, description, created_at FROM role;");
-  return mapResultToObjects(result);
-}
-
 // Add Admin
 async function addAdmin(data) {
   try {
@@ -214,11 +207,32 @@ async function addUser(data) {
   }
 }
 
+// Get Users
+async function getUsers() {
+  try {
+    const db = await getDB();
+    const query = db.exec(
+      "SELECT u.id, u.name, u.last_name, u.email, u.phone, u.img, r.description AS role, s.description AS status, u.created_at, u.deleted_at FROM user AS u INNER JOIN role AS r ON u.role_id = r.id INNER JOIN status AS s ON u.status_id = s.id;",
+    );
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const users = mapResultToObjects(query);
+
+    return { success: true, result: users };
+  } catch (error) {
+    console.error("Error getting users:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
-  getRoles,
   firstRun,
   addAdmin,
   loginUser,
   insertNewPassword,
   addUser,
+  getUsers,
 };
