@@ -214,13 +214,16 @@
   },
   "modalSuccessAlert": {
     "title": "¡Exito!",
-    "text_email_send": "Correo enviado."
+    "text_email_send": "Correo enviado.",
+    "text_add_user": "Usuario agregado correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
     "text_user_not_found": "Usuario no encontrado.",
     "text_user_inactive": "Usuario inactivo.",
-    "text_incorrect_password": "Contraseña incorrecta."
+    "text_incorrect_password": "Contraseña incorrecta.",
+    "text_email_used": "Correo electrónico ya utilizado. Prueba con otro.",
+    "text_phone_used": "Número telefónico ya utilizado. Prueba con otro."
   },
   "modalAddUser": {
     "title": "Agregar usuario",

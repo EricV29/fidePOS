@@ -9,13 +9,18 @@ import type { AddUserFormValues } from "@forms/schemas/user.schema";
 export function ModalAddUser() {
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
+  const { triggerResponseAlert } = useModal();
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleAddUser = (data: AddUserFormValues) => {
-    console.log(data);
-    const response = window.electronAPI.addUser(data, i18n.language);
+  const handleAddUser = async (data: AddUserFormValues) => {
+    const response = await window.electronAPI.addUser(data, i18n.language);
+    if (response.success) {
+      triggerResponseAlert(response.result);
+    } else {
+      triggerResponseAlert(response.error);
+    }
   };
 
   return ReactDOM.createPortal(

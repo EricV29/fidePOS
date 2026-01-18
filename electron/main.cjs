@@ -279,6 +279,7 @@ ipcMain.handle("addUser", async (event, data, lan) => {
         welcomeEmail(data, lan);
         return {
           success: true,
+          result: response.result,
         };
       } else {
         return {
