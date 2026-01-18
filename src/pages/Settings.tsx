@@ -46,13 +46,15 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   const getUsers = async () => {
     const response = await window.electronAPI.getUsers();
     if (response) {
-      console.log(response.result);
       setUsers(response.result ?? []);
     }
   };
 
   useEffect(() => {
-    getUsers();
+    if (session?.role_id !== 2) {
+      getUsers();
+    }
+
     const html = document.documentElement;
     if (theme === "dark") {
       html.classList.add("dark");
@@ -61,7 +63,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
     }
 
     localStorage.setItem("theme", theme);
-  }, [theme]);
+  }, [theme, session?.role_id]);
 
   const columnsu = columnsU(t, i18n.language);
 
@@ -95,15 +97,17 @@ const Settings: React.FC<SettingsProps> = ({}) => {
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
           <h1 className="text-[30px] mb-0">{t("settings.title")}</h1>
-          <div className="flex gap-2">
-            <button
-              className="bnormal"
-              onClick={() => setModal(<ModalAddUser onSuccess={getUsers} />)}
-            >
-              <UserPlusIcon />
-              <p>{t("buttons.btn_add_user")}</p>
-            </button>
-          </div>
+          {session?.role_id !== 2 && (
+            <div className="flex gap-2">
+              <button
+                className="bnormal"
+                onClick={() => setModal(<ModalAddUser onSuccess={getUsers} />)}
+              >
+                <UserPlusIcon />
+                <p>{t("buttons.btn_add_user")}</p>
+              </button>
+            </div>
+          )}
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <div className="w-full flex flex-col gap-5 p-5 overflow-y-auto">
@@ -197,23 +201,25 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               <p>{t("settings.input4_btn")}</p>
             </button>
           </div>
-          <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
-            <p className="font-semibold dark:text-white">
-              {t("settings.table1")}
-            </p>
-            <DataTableSearch
-              data={dataUsers}
-              columns={columnsu}
-              actions={{
-                onEdit: (row) => {
-                  setModal(<ModalAddUser data={row} onSuccess={getUsers} />);
-                },
-                onDelete: (row) => {
-                  deleteUser(row.id);
-                },
-              }}
-            />
-          </div>
+          {session?.role_id !== 2 && (
+            <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
+              <p className="font-semibold dark:text-white">
+                {t("settings.table1")}
+              </p>
+              <DataTableSearch
+                data={dataUsers}
+                columns={columnsu}
+                actions={{
+                  onEdit: (row) => {
+                    setModal(<ModalAddUser data={row} onSuccess={getUsers} />);
+                  },
+                  onDelete: (row) => {
+                    deleteUser(row.id);
+                  },
+                }}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>
