@@ -122,6 +122,7 @@
   },
   "columns": {
     "created_at": "Fecha creación",
+    "deleted_at": "Fecha eliminación",
     "category": "Categoría",
     "actions": "Acciones",
     "total_amount": "Monto",

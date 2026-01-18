@@ -9,7 +9,7 @@ import { DataTableSearch } from "@components/data-table-search";
 import { columnsU } from "@columns/columnsU";
 import type { Users, UserSession } from "@typesm/users";
 import { useModal } from "@context/ModalContext";
-import { ModalAddUser } from "@modals/ModalAddUser";
+import ModalAddUser from "@modals/ModalAddUser";
 import { ModalChangePassword } from "@modals/ModalChangePassword";
 import { ModalContact } from "@modals/ModalContact";
 import { useTranslation } from "react-i18next";
@@ -21,32 +21,6 @@ interface MyContext {
   session: UserSession | null;
   installDate: string;
 }
-
-//* Example data users
-const dataUsersDB = [
-  {
-    id: "728ed51f",
-    name: "Eric",
-    last_name: "Villeda",
-    email: "ericjared29@gmail.com",
-    phone: "7713940793",
-    password: "12345",
-    role: "admin",
-    status: "active",
-    created_at: "03/03/2025",
-  },
-  {
-    id: "728ed51f",
-    name: "Eric",
-    last_name: "Villeda",
-    email: "ericjared29@gmail.com",
-    phone: "7713940793",
-    password: "12345",
-    role: "user",
-    status: "active",
-    created_at: "03/03/2025",
-  },
-];
 
 const Settings: React.FC<SettingsProps> = ({}) => {
   const { session } = useOutletContext<MyContext>();
@@ -69,8 +43,16 @@ const Settings: React.FC<SettingsProps> = ({}) => {
 
   const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
 
+  const getUsers = async () => {
+    const response = await window.electronAPI.getUsers();
+    if (response) {
+      console.log(response.result);
+      setUsers(response.result ?? []);
+    }
+  };
+
   useEffect(() => {
-    setUsers(dataUsersDB);
+    getUsers();
     const html = document.documentElement;
     if (theme === "dark") {
       html.classList.add("dark");
@@ -116,7 +98,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
           <div className="flex gap-2">
             <button
               className="bnormal"
-              onClick={() => setModal(<ModalAddUser />)}
+              onClick={() => setModal(<ModalAddUser onSuccess={getUsers} />)}
             >
               <UserPlusIcon />
               <p>{t("buttons.btn_add_user")}</p>
@@ -224,7 +206,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               columns={columnsu}
               actions={{
                 onEdit: (row) => {
-                  setModal(<ModalAddUser data={row} />);
+                  setModal(<ModalAddUser data={row} onSuccess={getUsers} />);
                 },
                 onDelete: (row) => {
                   deleteUser(row.id);

@@ -116,6 +116,7 @@
   },
   "columns": {
     "created_at": "Created date",
+    "deleted_at": "Deleted date",
     "category": "Category",
     "actions": "Actions",
     "total_amount": "Amount",

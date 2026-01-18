@@ -104,7 +104,7 @@ async function initDatabase() {
       role_id INTEGER NOT NULL,
       status_id INTEGER NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-      delete_at DATETIME DEFAULT NULL,
+      deleted_at DATETIME DEFAULT NULL,
       FOREIGN KEY (role_id) REFERENCES role(id),
       FOREIGN KEY (status_id) REFERENCES status(id)
     );
