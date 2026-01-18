@@ -7,6 +7,7 @@ const {
   addAdmin,
   loginUser,
   insertNewPassword,
+  addUser,
 } = require("./db/queries.cjs");
 const { sendRecoveryEmail } = require("./recoveryPassword.cjs");
 const { welcomeEmail } = require("./welcomeEmail.cjs");
@@ -203,6 +204,7 @@ ipcMain.handle("login", async (event, data) => {
         createMainWindow();
         return {
           success: true,
+          result: response.result,
         };
       } else {
         return {
@@ -236,7 +238,7 @@ ipcMain.handle("forgotPassword", async (event, email, lan) => {
         if (responseEmail.success) {
           return {
             success: true,
-            result: "Email sent",
+            result: responseEmail.result,
           };
         } else {
           return {
@@ -265,6 +267,31 @@ ipcMain.on("logout", (event) => {
     createLoginWindow();
     sessionUser = null;
     console.log(`🔒 Logout session: ${userName}`);
+  }
+});
+
+// Add User
+ipcMain.handle("addUser", async (event, data, lan) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await addUser(data);
+      if (response.success) {
+        welcomeEmail(data, lan);
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 

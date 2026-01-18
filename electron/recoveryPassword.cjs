@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
+const AUTH_CODES = require("../constants/authCodes.json");
 
 // Configuration
 const transporter = nodemailer.createTransport({
@@ -61,7 +62,7 @@ async function sendRecoveryEmail(to, tempPassword, lan) {
       info = await transporter.sendMail(mailOptionsEs);
     }
     console.log("Email send: " + info.response);
-    return { success: true };
+    return { success: true, result: AUTH_CODES.EMAIL_SENT };
   } catch (error) {
     console.error("Error send to email:", error);
     return { success: false, error: error.message };
