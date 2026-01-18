@@ -1,6 +1,8 @@
 const { initDatabase, saveDB } = require("./database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../constants/authCodes.json");
+const { success } = require("zod");
+const { error } = require("console");
 
 let dbInstance = null;
 
@@ -171,6 +173,25 @@ async function addUser(data) {
   try {
     const db = await getDB();
     const hashedPassword = await bcrypt.hash(data.password, 10);
+
+    // Search User
+    const query = db.exec(
+      "SELECT email, phone FROM user WHERE email = ? OR phone = ?",
+      [data.email, data.phone],
+    );
+
+    const users = mapResultToObjects(query);
+    const userFound = users[0];
+
+    if (userFound) {
+      if (userFound.email === data.email) {
+        return { success: false, error: AUTH_CODES.EMAIL_USED };
+      }
+      if (userFound.phone === data.phone) {
+        return { success: false, error: AUTH_CODES.PHONE_USED };
+      }
+    }
+
     db.run(
       "INSERT INTO user(name, last_name, email, phone, password, img, role_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
       [
@@ -186,7 +207,7 @@ async function addUser(data) {
     );
 
     saveDB(db);
-    return { success: true };
+    return { success: true, result: AUTH_CODES.ADD_USER };
   } catch (error) {
     console.error("Error inserting user:", error);
     return { success: false, error: error.message };

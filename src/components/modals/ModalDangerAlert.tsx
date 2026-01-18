@@ -1,46 +1,16 @@
-import ReactDOM from "react-dom";
-import { useModal } from "@context/ModalContext";
 import ExclamationIcon from "@icons/ExclamationIcon";
 import { useTranslation } from "react-i18next";
 
 interface Props {
   text: string;
-  btnOptions: boolean;
-  onConfirm?: () => void;
-  onCancel?: () => void;
   onOk?: () => void;
 }
 
-const ModalDangerAlert = ({
-  text,
-  btnOptions,
-  onConfirm,
-  onCancel,
-  onOk,
-}: Props) => {
-  const { setModal } = useModal();
+const ModalDangerAlert = ({ text, onOk }: Props) => {
   const { t } = useTranslation();
 
-  const close = () => setModal(null);
-  const modalRoot = document.getElementById("modal-root") as HTMLElement;
-
-  const handleConfirm = () => {
-    if (onConfirm) onConfirm();
-    close();
-  };
-
-  const handleCancel = () => {
-    if (onCancel) onCancel();
-    close();
-  };
-
-  const handleOk = () => {
-    if (onOk) onOk();
-    close();
-  };
-
-  return ReactDOM.createPortal(
-    <div className="fixed inset-0 flex justify-center items-center z-30">
+  return (
+    <div className="fixed inset-0 flex justify-center items-center z-40">
       <div
         className="w-[400px] flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#D32F2F] drop-shadow-[5px_5px_10px_rgba(211,47,47,0.5)]"
         onClick={(e) => e.stopPropagation()}
@@ -60,25 +30,13 @@ const ModalDangerAlert = ({
           </div>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        {btnOptions ? (
-          <div className="w-full flex justify-between gap-2">
-            <button className="w-full bstrokeyellow" onClick={handleCancel}>
-              {t("buttons.btn_cancel")}
-            </button>
-            <button className="w-full byellow" onClick={handleConfirm}>
-              {t("buttons.btn_confirm")}
-            </button>
-          </div>
-        ) : (
-          <div className="w-full flex justify-between gap-2">
-            <button className="w-full bred" onClick={handleOk}>
-              {t("buttons.btn_ok")}
-            </button>
-          </div>
-        )}
+        <div className="w-full flex justify-between gap-2">
+          <button className="w-full bred" onClick={onOk}>
+            {t("buttons.btn_ok")}
+          </button>
+        </div>
       </div>
-    </div>,
-    modalRoot
+    </div>
   );
 };
 

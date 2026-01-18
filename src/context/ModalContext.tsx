@@ -1,9 +1,9 @@
 import { createContext, useContext, useState } from "react";
 import ModalSuccessAlert from "@modals/ModalSuccessAlert";
-import ModalWarningAlert from "@modals/ModalWarningAlert";
 import ModalDangerAlert from "@modals/ModalDangerAlert";
 import { useTranslation } from "react-i18next";
 import AUTH_CODES from "../../constants/authCodes.json";
+import ReactDOM from "react-dom";
 
 interface ModalContextType {
   modal: React.ReactNode | null;
@@ -13,9 +13,6 @@ interface ModalContextType {
 
 interface AlertModalProps {
   text: string;
-  btnOptions: boolean;
-  onConfirm?: () => void;
-  onCancel?: () => void;
   onOk?: () => void;
 }
 
@@ -23,6 +20,7 @@ const ModalContext = createContext<ModalContextType | null>(null);
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [modal, setModal] = useState<React.ReactNode | null>(null);
+  const [alert, setAlert] = useState<React.ReactNode | null>(null);
   const { t } = useTranslation();
 
   const triggerResponseAlert = (code: string | undefined) => {
@@ -44,34 +42,48 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         textKey: "modalDangerAlert.text_incorrect_password",
       },
       [AUTH_CODES.INACTIVE_USER]: {
-        Component: ModalWarningAlert,
+        Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_user_inactive",
       },
       [AUTH_CODES.EMAIL_SENT]: {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_email_send",
       },
-      [AUTH_CODES.USER_ADDED]: {
+      [AUTH_CODES.EMAIL_USED]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_email_used",
+      },
+      [AUTH_CODES.PHONE_USED]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_phone_used",
+      },
+      [AUTH_CODES.ADD_USER]: {
         Component: ModalSuccessAlert,
-        textKey: "modalSuccessAlert.text_user_added",
+        textKey: "modalSuccessAlert.text_add_user",
       },
     };
 
     const config = alertConfig[code];
 
     if (config) {
-      setModal(
-        <config.Component text={t(config.textKey)} btnOptions={false} />,
+      setAlert(
+        <config.Component
+          text={t(config.textKey)}
+          onOk={() => setAlert(null)}
+        />,
       );
     } else {
-      console.warn(`Código de respuesta no reconocido: ${code}`);
+      console.warn(`Response code not recognized: ${code}`);
     }
   };
 
   return (
     <ModalContext.Provider value={{ modal, setModal, triggerResponseAlert }}>
       {children}
-      {modal}
+      {alert &&
+        ReactDOM.createPortal(alert, document.getElementById("alert-root")!)}
+      {modal &&
+        ReactDOM.createPortal(modal, document.getElementById("modal-root")!)}
     </ModalContext.Provider>
   );
 }

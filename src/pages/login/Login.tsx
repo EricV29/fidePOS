@@ -16,15 +16,10 @@ const Login: React.FC = () => {
   const handleLogin = async (data: LoginFormValues) => {
     try {
       const response = await window.electronAPI.login(data);
-      console.log(response.success);
 
       if (response.success) {
-        console.log(response.error);
-        console.log(response.result);
         triggerResponseAlert(response.result);
       } else {
-        console.log(response.error);
-        console.log(response.result);
         triggerResponseAlert(response.error);
       }
     } catch (err) {
@@ -55,11 +50,8 @@ const Login: React.FC = () => {
               i18n.language,
             );
             if (response.success) {
-              console.log(response.result);
-
               triggerResponseAlert(response.result);
             } else {
-              console.error(response.error);
               triggerResponseAlert(response.error);
             }
           } catch (err) {
