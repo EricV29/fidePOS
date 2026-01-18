@@ -109,14 +109,15 @@ const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => navigate("/main/customers")}
               isOpen={isOpen}
             />
-            <Sidebaitem
-              icon={RepIcon}
-              label={t("sidebar.reports")}
-              active={location.pathname.startsWith("/main/reports")}
-              onClick={() => navigate("/main/reports")}
-              isOpen={isOpen}
-            />
-
+            {session?.role_id !== 2 && (
+              <Sidebaitem
+                icon={RepIcon}
+                label={t("sidebar.reports")}
+                active={location.pathname.startsWith("/main/reports")}
+                onClick={() => navigate("/main/reports")}
+                isOpen={isOpen}
+              />
+            )}
             <Sidebaitem
               icon={SettIcon}
               label={t("sidebar.settings")}
