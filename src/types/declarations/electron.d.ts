@@ -66,6 +66,13 @@ declare global {
         error?: string;
       }>;
 
+      // DELETE USER
+      deleteUser: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
       getRoles: () => Promise<Role>;
       sendMessage: (msg: string) => void;
       onMessageReply: (callback: (data: string) => void) => void;

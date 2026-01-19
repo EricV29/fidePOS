@@ -61,6 +61,14 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_add_user",
       },
+      [AUTH_CODES.UNAUTHORIZED]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_unauthorized",
+      },
+      [AUTH_CODES.DELETE_USER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_delete_user",
+      },
     };
 
     const config = alertConfig[code];
