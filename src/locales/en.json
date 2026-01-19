@@ -205,12 +205,14 @@
   "modalWarningAlert": {
     "title": "¡Warning!",
     "text_forgot_password": "A password recovery email will be sent to you. Please ensure you are connected to the internet.",
-    "text_write_email": "Make sure to write your email."
+    "text_write_email": "Make sure to write your email.",
+    "text_delete_user": "Delete this user? This action cannot be undone."
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
     "text_email_send": "Email sent.",
-    "text_add_user": "User added successfully."
+    "text_add_user": "User added successfully.",
+    "text_delete_user": "User deleted successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -218,7 +220,8 @@
     "text_user_inactive": "User inactive",
     "text_incorrect_password": "Incorrect password",
     "text_email_used": "Email is already in use. Try a different one.",
-    "text_phone_used": "Phone number already in use.  Try a different one."
+    "text_phone_used": "Phone number already in use.  Try a different one.",
+    "text_unauthorized": "Unauthorized action."
   },
   "modalAddUser": {
     "title": "Add new user",

@@ -50,8 +50,10 @@ const Login: React.FC = () => {
               i18n.language,
             );
             if (response.success) {
+              setIsLoading(false);
               triggerResponseAlert(response.result);
             } else {
+              setIsLoading(false);
               triggerResponseAlert(response.error);
             }
           } catch (err) {

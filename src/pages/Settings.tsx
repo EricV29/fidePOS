@@ -14,6 +14,8 @@ import { ModalChangePassword } from "@modals/ModalChangePassword";
 import { ModalContact } from "@modals/ModalContact";
 import { useTranslation } from "react-i18next";
 import { getAvatar } from "@utility/getAvatar";
+import ModalWarningAlert from "@modals/ModalWarningAlert";
+import { useLoading } from "@context/LoadingContext";
 
 interface SettingsProps {}
 
@@ -29,6 +31,8 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   const { t, i18n } = useTranslation();
   const [fallbackAvatar] = useState(getAvatar);
   const displayImage = session?.img ? session.img : fallbackAvatar;
+  const { triggerResponseAlert } = useModal();
+  const { setLoading } = useLoading();
 
   const getInitialTheme = () => {
     const savedTheme = localStorage.getItem("theme");
@@ -82,9 +86,35 @@ const Settings: React.FC<SettingsProps> = ({}) => {
     localStorage.setItem("lang", value);
   };
 
-  function deleteUser(id: string) {
-    console.log("Deleting user:", id);
-  }
+  const deleteUser = async (id: string) => {
+    if (session?.role_id !== 1) {
+      triggerResponseAlert("UNAUTHORIZED");
+    }
+
+    setModal(
+      <ModalWarningAlert
+        text={t("modalWarningAlert.text_delete_user")}
+        btnOptions={true}
+        onConfirm={async () => {
+          try {
+            setLoading(true);
+            const response = await window.electronAPI.deleteUser(id);
+            if (response.success) {
+              getUsers();
+              setLoading(false);
+              triggerResponseAlert(response.result);
+            } else {
+              setLoading(false);
+
+              triggerResponseAlert(response.error);
+            }
+          } catch (err) {
+            console.error("Comunication Error:", err);
+          }
+        }}
+      />,
+    );
+  };
 
   const handleChangeTheme = (value: string) => {
     if (value === "light" || value === "dark") {

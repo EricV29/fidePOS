@@ -84,12 +84,13 @@ async function loginUser(data) {
     const users = mapResultToObjects(query);
     const user = users[0];
 
+    // User?
     if (!user) {
       return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Status Valid
-    if (user.status === "inactive") {
+    if (user.status_id === 0) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
@@ -132,12 +133,13 @@ async function insertNewPassword(email, newPass) {
     const users = mapResultToObjects(query);
     const user = users[0];
 
+    // User?
     if (!user) {
       return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Status Valid
-    if (user.status_id === 0 || user.status_id === "0") {
+    if (user.status_id === 0) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
@@ -176,13 +178,19 @@ async function addUser(data) {
     const users = mapResultToObjects(query);
     const userFound = users[0];
 
-    if (userFound) {
-      if (userFound.email === data.email) {
-        return { success: false, error: AUTH_CODES.EMAIL_USED };
-      }
-      if (userFound.phone === data.phone) {
-        return { success: false, error: AUTH_CODES.PHONE_USED };
-      }
+    // User?
+    if (!userFound) {
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
+    }
+
+    // User Match Email
+    if (userFound.email === data.email) {
+      return { success: false, error: AUTH_CODES.EMAIL_USED };
+    }
+
+    // User Match Phone
+    if (userFound.phone === data.phone) {
+      return { success: false, error: AUTH_CODES.PHONE_USED };
     }
 
     db.run(
@@ -228,6 +236,45 @@ async function getUsers() {
   }
 }
 
+// Delete User
+async function deleteUser(data) {
+  try {
+    const db = await getDB();
+
+    // Search User
+    const query = db.exec(
+      "SELECT id, role_id, status_id FROM user WHERE id = ?",
+      [data],
+    );
+
+    const users = mapResultToObjects(query);
+    const userFound = users[0];
+
+    if (!userFound) {
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
+    }
+
+    if (userFound.role_id === 1) {
+      return { success: false, error: AUTH_CODES.UNAUTHORIZED };
+    }
+
+    if (userFound.status_id === 0) {
+      return { success: false, error: AUTH_CODES.INACTIVE_USER };
+    }
+
+    db.run(
+      "UPDATE user SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
+      [data],
+    );
+
+    saveDB(db);
+    return { success: true, result: AUTH_CODES.DELETE_USER };
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   firstRun,
   addAdmin,
@@ -235,4 +282,5 @@ module.exports = {
   insertNewPassword,
   addUser,
   getUsers,
+  deleteUser,
 };
