@@ -2,28 +2,26 @@ import ReactDOM from "react-dom";
 import { useModal } from "@context/ModalContext";
 import UserPlusIcon from "@icons/UserPlusIcon";
 import CloseIcon from "@icons/CloseIcon";
-import AddUserForm from "@forms/form-addUser";
+import EditUserForm from "@forms/form-editUser";
 import { useTranslation } from "react-i18next";
-import type { AddUserFormValues } from "@forms/schemas/user.schema";
+import type { EditUserFormValues } from "@forms/schemas/user.schema";
 import type { Users } from "@typesm/users";
 
-interface ModalAddUserProps {
+interface ModalEditUserProps {
   data?: Users;
   onSuccess: () => void;
 }
 
-const ModalAddUser = ({ data, onSuccess }: ModalAddUserProps) => {
+const ModalEditUser = ({ data, onSuccess }: ModalEditUserProps) => {
   const { setModal } = useModal();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { triggerResponseAlert } = useModal();
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleAddUser = async (data: AddUserFormValues) => {
-    console.log(data);
-
-    const response = await window.electronAPI.addUser(data, i18n.language);
+  const handleEditUser = async (data: EditUserFormValues) => {
+    const response = await window.electronAPI.editUser(data);
     if (response.success) {
       onSuccess();
       triggerResponseAlert(response.result);
@@ -31,8 +29,6 @@ const ModalAddUser = ({ data, onSuccess }: ModalAddUserProps) => {
       triggerResponseAlert(response.error);
     }
   };
-
-  console.log(data);
 
   return ReactDOM.createPortal(
     <div
@@ -47,8 +43,10 @@ const ModalAddUser = ({ data, onSuccess }: ModalAddUserProps) => {
           <div className="flex gap-5">
             <UserPlusIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>{t("modalAddUser.title")}</h2>
-              <p className="font-extralight">{t("modalAddUser.description")}</p>
+              <h2>{t("modalEditUser.title")}</h2>
+              <p className="font-extralight">
+                {t("modalEditUser.description")}
+              </p>
             </div>
           </div>
           <button className="bicon" onClick={close}>
@@ -56,9 +54,9 @@ const ModalAddUser = ({ data, onSuccess }: ModalAddUserProps) => {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p className="dark:text-white">{t("modalAddUser.subtitle")}</p>
+        <p className="dark:text-white">{t("modalEditUser.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 dark:text-[#b3b3b3]">
-          <AddUserForm onSuccess={handleAddUser} />
+          <EditUserForm onSuccess={handleEditUser} data={data} />
         </div>
       </div>
     </div>,
@@ -66,4 +64,4 @@ const ModalAddUser = ({ data, onSuccess }: ModalAddUserProps) => {
   );
 };
 
-export default ModalAddUser;
+export default ModalEditUser;

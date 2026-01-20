@@ -30,6 +30,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Delete user
   deleteUser: (data) => ipcRenderer.invoke("deleteUser", data),
 
+  // Edit user
+  editUser: (data) => ipcRenderer.invoke("editUser", data),
+
   // getRoles
   getRoles: () => ipcRenderer.invoke("getRoles"),
 

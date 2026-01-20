@@ -69,6 +69,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_delete_user",
       },
+      [AUTH_CODES.EDIT_USER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_edit_user",
+      },
     };
 
     const config = alertConfig[code];
