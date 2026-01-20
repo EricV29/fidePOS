@@ -33,6 +33,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Edit user
   editUser: (data) => ipcRenderer.invoke("editUser", data),
 
+  // Change password
+  changePassword: (data) => ipcRenderer.invoke("changePassword", data),
+
   // getRoles
   getRoles: () => ipcRenderer.invoke("getRoles"),
 

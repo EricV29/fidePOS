@@ -16,15 +16,21 @@ import {
   getChangePasswordSchema,
 } from "./schemas/user.schema";
 import { cn } from "@/lib/utils";
+import { useState } from "react";
+import EyeOffIcon from "@icons/EyeOffIcon";
+import EyeIcon from "@icons/EyeIcon";
 
 interface ChangePasswordFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (values: ChangePasswordFormValues) => void;
 }
 
 export default function ChangePasswordForm({
   onSuccess,
 }: ChangePasswordFormProps) {
   const { t } = useTranslation();
+  const [showCPassword, setShowCPassword] = useState(false);
+  const [showNPassword, setShowNPassword] = useState(false);
+  const [showNCPassword, setShowNCPassword] = useState(false);
 
   const form = useForm<ChangePasswordFormValues>({
     resolver: zodResolver(getChangePasswordSchema(t)),
@@ -36,8 +42,7 @@ export default function ChangePasswordForm({
   });
 
   function onSubmit(values: ChangePasswordFormValues) {
-    console.log("Form submitted:", values);
-    onSuccess?.();
+    onSuccess?.(values);
   }
 
   const passwordRules = t("formChangePassword.password_rules", {
@@ -55,21 +60,35 @@ export default function ChangePasswordForm({
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formChangePassword.input1")}
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder="*****"
-                  {...field}
-                  className={cn(
-                    "bg-white",
-                    fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
-                  )}
-                />
+                <div className="relative">
+                  <Input
+                    type={showCPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showCPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
@@ -83,21 +102,35 @@ export default function ChangePasswordForm({
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formChangePassword.input2")}
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder="*****"
-                  {...field}
-                  className={cn(
-                    "bg-white",
-                    fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
-                  )}
-                />
+                <div className="relative">
+                  <Input
+                    type={showNPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showNPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>
@@ -118,21 +151,35 @@ export default function ChangePasswordForm({
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formChangePassword.input3")}
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder="*****"
-                  {...field}
-                  className={cn(
-                    "bg-white",
-                    fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
-                  )}
-                />
+                <div className="relative">
+                  <Input
+                    type={showNCPassword ? "text" : "password"}
+                    placeholder="••••••••••"
+                    {...field}
+                    className={cn(
+                      "bg-white",
+                      fieldState.error &&
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNCPassword((prev) => !prev)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showNCPassword ? (
+                      <EyeOffIcon color="#F57C00" />
+                    ) : (
+                      <EyeIcon color="#F57C00" />
+                    )}
+                  </button>
+                </div>
               </FormControl>
               <FormMessage className="text-red-600 dark:text-red-400" />
             </FormItem>

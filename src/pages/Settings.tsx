@@ -10,7 +10,7 @@ import { columnsU } from "@columns/columnsU";
 import type { Users, UserSession } from "@typesm/users";
 import { useModal } from "@context/ModalContext";
 import ModalAddUser from "@modals/ModalAddUser";
-import { ModalChangePassword } from "@modals/ModalChangePassword";
+import ModalChangePassword from "@modals/ModalChangePassword";
 import { ModalContact } from "@modals/ModalContact";
 import { useTranslation } from "react-i18next";
 import { getAvatar } from "@utility/getAvatar";
@@ -87,7 +87,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
     localStorage.setItem("lang", value);
   };
 
-  const deleteUser = async (id: string) => {
+  const deleteUser = async (id: number) => {
     if (session?.role_id !== 1) {
       triggerResponseAlert("UNAUTHORIZED");
     }
@@ -212,7 +212,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
             </div>
             <button
               className="bgreen"
-              onClick={() => setModal(<ModalChangePassword />)}
+              onClick={() => setModal(<ModalChangePassword id={session?.id} />)}
             >
               <LockedIcon />
               <p>{t("settings.input3_btn")}</p>
