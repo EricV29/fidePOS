@@ -219,7 +219,8 @@
     "text_email_send": "Correo enviado.",
     "text_add_user": "Usuario agregado correctamente.",
     "text_delete_user": "Usuario eliminado correctamente.",
-    "text_edit_user": "Usuario editado correctamente."
+    "text_edit_user": "Usuario editado correctamente.",
+    "text_change_pass_user": "Contraseña actualizada correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",

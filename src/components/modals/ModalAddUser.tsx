@@ -32,7 +32,6 @@ const ModalAddUser = ({ data, onSuccess }: ModalAddUserProps) => {
     }
   };
 
-  console.log(data);
 
   return ReactDOM.createPortal(
     <div

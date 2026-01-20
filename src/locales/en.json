@@ -213,7 +213,8 @@
     "text_email_send": "Email sent.",
     "text_add_user": "User added successfully.",
     "text_delete_user": "User deleted successfully.",
-    "text_edit_user": "User edited successfully."
+    "text_edit_user": "User edited successfully.",
+    "text_change_pass_user": "Change password successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",

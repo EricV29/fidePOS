@@ -4,16 +4,28 @@ import UnlockedIcon from "@icons/UnlockedIcon";
 import CloseIcon from "@icons/CloseIcon";
 import ChangePasswordForm from "@forms/form-changePassword";
 import { useTranslation } from "react-i18next";
+import type { ChangePasswordFormValues } from "@forms/schemas/user.schema";
 
-export function ModalChangePassword() {
+interface Props {
+  id: number | undefined;
+}
+
+const ModalChangePassword = ({ id }: Props) => {
   const { setModal } = useModal();
   const { t } = useTranslation();
+  const { triggerResponseAlert } = useModal();
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleChangePassword = () => {
-    //window.electronAPI.signupSuccess();
+  const handleChangePassword = async (data: ChangePasswordFormValues) => {
+    const dataC = { ...data, id: id };
+    const response = await window.electronAPI.changePassword(dataC);
+    if (response.success) {
+      triggerResponseAlert(response.result);
+    } else {
+      triggerResponseAlert(response.error);
+    }
   };
 
   return ReactDOM.createPortal(
@@ -46,6 +58,8 @@ export function ModalChangePassword() {
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
-}
+};
+
+export default ModalChangePassword;

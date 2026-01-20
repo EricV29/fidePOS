@@ -73,6 +73,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_edit_user",
       },
+      [AUTH_CODES.CHANGE_PASS]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_change_pass_user",
+      },
     };
 
     const config = alertConfig[code];

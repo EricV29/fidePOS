@@ -329,6 +329,52 @@ async function editUser(data) {
   }
 }
 
+// Change Password
+async function changePassword(data) {
+  try {
+    const db = await getDB();
+    const hashedPassword = await bcrypt.hash(data.newPass, 10);
+
+    // Search User
+    const query = db.exec(
+      "SELECT id, password, role_id, status_id FROM user WHERE id = ?",
+      [data.id],
+    );
+
+    const user = mapResultToObjects(query);
+    const userFound = user[0];
+
+    // User?
+    if (!userFound) {
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
+    }
+
+    // Status?
+    if (userFound.status_id === 0) {
+      return { success: false, error: AUTH_CODES.INACTIVE_USER };
+    }
+
+    // Password Valid
+    const isValid = await bcrypt.compare(data.currentPass, userFound.password);
+
+    if (!isValid) {
+      return { success: false, error: AUTH_CODES.INCORRECT_PASSWORD };
+    }
+
+    // Update Password
+    db.run("UPDATE user SET password = ? WHERE id = ?", [
+      hashedPassword,
+      data.id,
+    ]);
+
+    saveDB(db);
+    return { success: true, result: AUTH_CODES.CHANGE_PASS };
+  } catch (error) {
+    console.error("Error change password user:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   firstRun,
   addAdmin,
@@ -338,4 +384,5 @@ module.exports = {
   getUsers,
   deleteUser,
   editUser,
+  changePassword,
 };

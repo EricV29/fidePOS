@@ -10,6 +10,7 @@ const {
   getUsers,
   deleteUser,
   editUser,
+  changePassword,
 } = require("./db/queries.cjs");
 const { sendRecoveryEmail } = require("./recoveryPassword.cjs");
 const { welcomeEmail } = require("./welcomeEmail.cjs");
@@ -354,6 +355,31 @@ ipcMain.handle("editUser", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await editUser(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Change Password
+ipcMain.handle("changePassword", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await changePassword(data);
       if (response.success) {
         return {
           success: true,
