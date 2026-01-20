@@ -9,6 +9,7 @@ const {
   addUser,
   getUsers,
   deleteUser,
+  editUser,
 } = require("./db/queries.cjs");
 const { sendRecoveryEmail } = require("./recoveryPassword.cjs");
 const { welcomeEmail } = require("./welcomeEmail.cjs");
@@ -35,6 +36,7 @@ const {
   registerInstallDate,
   getInstallDate,
 } = require("./installDateManager.cjs");
+const { log } = require("console");
 
 let welcomeWindow = null;
 let mainWindow = null;
@@ -327,6 +329,31 @@ ipcMain.handle("deleteUser", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await deleteUser(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Edit User
+ipcMain.handle("editUser", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await editUser(data);
       if (response.success) {
         return {
           success: true,

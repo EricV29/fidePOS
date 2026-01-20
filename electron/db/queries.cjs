@@ -2,7 +2,7 @@ const { initDatabase, saveDB } = require("./database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../constants/authCodes.json");
 const { success } = require("zod");
-const { error } = require("console");
+const { error, log } = require("console");
 
 let dbInstance = null;
 
@@ -169,28 +169,23 @@ async function addUser(data) {
     const db = await getDB();
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
-    // Search User
+    // Search Users
     const query = db.exec(
-      "SELECT email, phone FROM user WHERE email = ? OR phone = ?",
+      "SELECT email, phone FROM user WHERE (email = ? OR phone = ?) AND deleted_at IS NULL",
       [data.email, data.phone],
     );
 
-    const users = mapResultToObjects(query);
-    const userFound = users[0];
+    const usersFound = mapResultToObjects(query);
 
-    // User?
-    if (!userFound) {
-      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
-    }
-
-    // User Match Email
-    if (userFound.email === data.email) {
-      return { success: false, error: AUTH_CODES.EMAIL_USED };
-    }
-
-    // User Match Phone
-    if (userFound.phone === data.phone) {
-      return { success: false, error: AUTH_CODES.PHONE_USED };
+    if (usersFound.length > 0) {
+      for (const user of usersFound) {
+        if (user.email === data.email) {
+          return { success: false, error: AUTH_CODES.EMAIL_USED };
+        }
+        if (user.phone === data.phone) {
+          return { success: false, error: AUTH_CODES.PHONE_USED };
+        }
+      }
     }
 
     db.run(
@@ -250,14 +245,17 @@ async function deleteUser(data) {
     const users = mapResultToObjects(query);
     const userFound = users[0];
 
+    // User?
     if (!userFound) {
       return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
+    // Role?
     if (userFound.role_id === 1) {
       return { success: false, error: AUTH_CODES.UNAUTHORIZED };
     }
 
+    // Status?
     if (userFound.status_id === 0) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
@@ -275,6 +273,62 @@ async function deleteUser(data) {
   }
 }
 
+// Edit User
+async function editUser(data) {
+  try {
+    const db = await getDB();
+
+    // Search User
+    const query = db.exec(
+      "SELECT id, email, role_id, status_id FROM user WHERE id = ?",
+      [data.id],
+    );
+
+    const user = mapResultToObjects(query);
+    const userFound = user[0];
+
+    // User?
+    if (!userFound) {
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
+    }
+
+    // Status?
+    if (userFound.status_id === 0) {
+      return { success: false, error: AUTH_CODES.INACTIVE_USER };
+    }
+
+    // Search Users
+    const users = db.exec(
+      "SELECT email, phone FROM user WHERE (email = ? OR phone = ?) AND deleted_at IS NULL AND id != ?",
+      [data.email, data.phone, data.id],
+    );
+
+    const usersFound = mapResultToObjects(users);
+
+    if (usersFound.length > 0) {
+      for (const user of usersFound) {
+        if (user.email === data.email) {
+          return { success: false, error: AUTH_CODES.EMAIL_USED };
+        }
+        if (user.phone === data.phone) {
+          return { success: false, error: AUTH_CODES.PHONE_USED };
+        }
+      }
+    }
+
+    db.run(
+      "UPDATE user SET name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?",
+      [data.name, data.last_name, data.email, data.phone, data.id],
+    );
+
+    saveDB(db);
+    return { success: true, result: AUTH_CODES.EDIT_USER };
+  } catch (error) {
+    console.error("Error editing user:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   firstRun,
   addAdmin,
@@ -283,4 +337,5 @@ module.exports = {
   addUser,
   getUsers,
   deleteUser,
+  editUser,
 };

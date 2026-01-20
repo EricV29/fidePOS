@@ -218,7 +218,8 @@
     "title": "¡Exito!",
     "text_email_send": "Correo enviado.",
     "text_add_user": "Usuario agregado correctamente.",
-    "text_delete_user": "Usuario eliminado correctamente."
+    "text_delete_user": "Usuario eliminado correctamente.",
+    "text_edit_user": "Usuario editado correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -327,6 +328,18 @@
     "input1": "Monto de pago",
     "input2": "Nota",
     "btn": "Agregar pago"
+  },
+  "modalEditUser": {
+    "title": "Editar usuario",
+    "description": "Acutaliza individualmente usuarios en tu app.",
+    "subtitle": "Remplaza la nueva información para tu usuario."
+  },
+  "formEditUser": {
+    "input1": "Nombre",
+    "input2": "Apellido",
+    "input3": "Correo electrónico",
+    "input4": "Teléfono",
+    "btn": "Editar usuario"
   },
   "modalSale": {
     "title": "Venta",

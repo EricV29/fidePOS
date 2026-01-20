@@ -97,8 +97,8 @@ async function initDatabase() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       last_name TEXT NOT NULL,
-      email TEXT UNIQUE NOT NULL,
-      phone TEXT UNIQUE NOT NULL,
+      email TEXT NOT NULL,
+      phone TEXT NOT NULL,
       password TEXT NOT NULL,
       img TEXT DEFAULT NULL,
       role_id INTEGER NOT NULL,
@@ -108,6 +108,18 @@ async function initDatabase() {
       FOREIGN KEY (role_id) REFERENCES role(id),
       FOREIGN KEY (status_id) REFERENCES status(id)
     );
+  `);
+
+  db.run(`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_user_email_active 
+    ON user(email) 
+    WHERE deleted_at IS NULL;
+  `);
+
+  db.run(`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_user_phone_active 
+    ON user(phone) 
+    WHERE deleted_at IS NULL;
   `);
 
   // CREATE CUSTOMER TABLE

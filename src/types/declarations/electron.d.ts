@@ -73,6 +73,13 @@ declare global {
         error?: string;
       }>;
 
+      // EDIT USER
+      editUser: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
       getRoles: () => Promise<Role>;
       sendMessage: (msg: string) => void;
       onMessageReply: (callback: (data: string) => void) => void;

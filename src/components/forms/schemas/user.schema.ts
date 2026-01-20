@@ -81,3 +81,23 @@ export const getContactSchema = (t: (key: string) => string) =>
   });
 
 export type ContactFormValues = z.infer<ReturnType<typeof getContactSchema>>;
+
+export const getEditUserSchema = (t: (key: string) => string) =>
+  z.object({
+    id: z.number().optional(),
+    name: z
+      .string()
+      .min(2, t("errors.min2_characters"))
+      .max(50, t("errors.max50_characters")),
+
+    last_name: z
+      .string()
+      .min(2, t("errors.min2_characters"))
+      .max(50, t("errors.max50_characters")),
+
+    email: z.string().regex(emailRegex, t("errors.email_invalid")),
+
+    phone: z.string().regex(/^[0-9]{10}$/, t("errors.number10_digits")),
+  });
+
+export type EditUserFormValues = z.infer<ReturnType<typeof getEditUserSchema>>;

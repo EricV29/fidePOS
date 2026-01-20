@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { getAvatar } from "@utility/getAvatar";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
 import { useLoading } from "@context/LoadingContext";
+import ModalEditUser from "@/components/modals/ModalEditUser";
 
 interface SettingsProps {}
 
@@ -241,7 +242,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
                 columns={columnsu}
                 actions={{
                   onEdit: (row) => {
-                    setModal(<ModalAddUser data={row} onSuccess={getUsers} />);
+                    setModal(<ModalEditUser data={row} onSuccess={getUsers} />);
                   },
                   onDelete: (row) => {
                     deleteUser(row.id);
