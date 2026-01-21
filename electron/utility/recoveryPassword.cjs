@@ -1,6 +1,6 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
-const AUTH_CODES = require("../constants/authCodes.json");
+const AUTH_CODES = require("../../constants/authCodes.json");
 
 // Configuration
 const transporter = nodemailer.createTransport({

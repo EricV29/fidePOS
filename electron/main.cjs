@@ -12,12 +12,13 @@ const {
   editUser,
   changePassword,
 } = require("./db/queries.cjs");
-const { sendRecoveryEmail } = require("./recoveryPassword.cjs");
-const { welcomeEmail } = require("./welcomeEmail.cjs");
-const { contactDevs } = require("./contactDevs.cjs");
-const { generatePassword } = require("./generatePassword.cjs");
+const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
+const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
+const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
+const { contactDevs } = require("./utility/contactDevs.cjs");
+const { generatePassword } = require("./utility/generatePassword.cjs");
 require("dotenv").config();
-const { uploadUserImage } = require("./uploadUserImage.cjs");
+const { uploadUserImage } = require("./utility/uploadUserImage.cjs");
 
 const isDev = !app.isPackaged;
 
@@ -38,7 +39,7 @@ function getPageUrl(route = "") {
 const {
   registerInstallDate,
   getInstallDate,
-} = require("./installDateManager.cjs");
+} = require("./utility/installDateManager.cjs");
 const { log } = require("console");
 
 let welcomeWindow = null;
@@ -236,6 +237,14 @@ ipcMain.handle("get-session", () => {
 ipcMain.handle("forgotPassword", async (event, email, lan) => {
   if (event.sender === loginWindow.webContents) {
     try {
+      const hasInternet = await hasRealInternet();
+      if (!hasInternet.success) {
+        return {
+          success: false,
+          error: hasInternet.error,
+        };
+      }
+
       const newPass = await generatePassword();
       const response = await insertNewPassword(email, newPass);
 
@@ -426,6 +435,14 @@ ipcMain.handle("uploadImg", async (event, data) => {
 ipcMain.handle("contactDevs", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
+      const hasInternet = await hasRealInternet();
+      if (!hasInternet.success) {
+        return {
+          success: false,
+          error: hasInternet.error,
+        };
+      }
+
       const response = await contactDevs(data);
       if (response.success) {
         return {

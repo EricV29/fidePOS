@@ -231,7 +231,8 @@
     "text_phone_used": "Número telefónico ya utilizado. Prueba con otro.",
     "text_unauthorized": "Acción no permitida.",
     "text_img_invalid": "Imagenes aceptadas: JPEG, JPG, PNG o WebP.",
-    "text_img_large": "Imagen demasiado pesada. Máximo 2MB."
+    "text_img_large": "Imagen demasiado pesada. Máximo 2MB.",
+    "text_not_internet": "Asegurate de tener una conexión a internet."
   },
   "modalAddUser": {
     "title": "Agregar usuario",
