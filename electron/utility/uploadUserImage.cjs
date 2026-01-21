@@ -1,8 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { app } = require("electron");
-const { initDatabase, saveDB } = require("./db/database.cjs");
-const AUTH_CODES = require("../constants/authCodes.json");
+const { initDatabase, saveDB } = require("../db/database.cjs");
+const AUTH_CODES = require("../../constants/authCodes.json");
 
 let dbInstance = null;
 

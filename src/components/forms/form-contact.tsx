@@ -18,7 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 
 interface ContactFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (values: ContactFormValues) => void;
 }
 
 export default function ContactForm({ onSuccess }: ContactFormProps) {
@@ -32,8 +32,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
   });
 
   function onSubmit(values: ContactFormValues) {
-    console.log("Form submitted:", values);
-    onSuccess?.();
+    onSuccess?.(values);
   }
 
   return (
@@ -47,7 +46,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formContact.input1")}
@@ -59,7 +58,7 @@ export default function ContactForm({ onSuccess }: ContactFormProps) {
                   className={cn(
                     "bg-white min-h-[120px] resize-none",
                     fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                   )}
                 />
               </FormControl>

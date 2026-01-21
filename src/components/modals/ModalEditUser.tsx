@@ -6,6 +6,7 @@ import EditUserForm from "@forms/form-editUser";
 import { useTranslation } from "react-i18next";
 import type { EditUserFormValues } from "@forms/schemas/user.schema";
 import type { Users } from "@typesm/users";
+import { useLoading } from "@context/LoadingContext";
 
 interface ModalEditUserProps {
   data?: Users;
@@ -16,16 +17,19 @@ const ModalEditUser = ({ data, onSuccess }: ModalEditUserProps) => {
   const { setModal } = useModal();
   const { t } = useTranslation();
   const { triggerResponseAlert } = useModal();
-
+  const { setLoading } = useLoading();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
   const handleEditUser = async (data: EditUserFormValues) => {
+    setLoading(true);
     const response = await window.electronAPI.editUser(data);
     if (response.success) {
       onSuccess();
+      setLoading(false);
       triggerResponseAlert(response.result);
     } else {
+      setLoading(false);
       triggerResponseAlert(response.error);
     }
   };

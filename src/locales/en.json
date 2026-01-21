@@ -225,7 +225,8 @@
     "text_phone_used": "Phone number already in use.  Try a different one.",
     "text_unauthorized": "Unauthorized action.",
     "text_img_invalid": "Support images: JPEG, JPG, PNG or WebP.",
-    "text_img_large": "The image file is too large. Maximum size is 2MB."
+    "text_img_large": "The image file is too large. Maximum size is 2MB.",
+    "text_not_internet": "Make sure have an internet conecction."
   },
   "modalAddUser": {
     "title": "Add new user",

@@ -89,6 +89,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_img_upload",
       },
+      [AUTH_CODES.HAS_NOT_INTERNET]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_internet",
+      },
     };
 
     const config = alertConfig[code];

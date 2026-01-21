@@ -22,7 +22,7 @@ import AUTH_CODES from "../../constants/authCodes.json";
 interface SettingsProps {}
 
 interface MyContext {
-  session: UserSession | null;
+  session: UserSession;
   installDate: string;
 }
 
@@ -273,7 +273,10 @@ const Settings: React.FC<SettingsProps> = ({}) => {
                 {t("settings.description4")}
               </p>
             </div>
-            <button className="bred" onClick={() => setModal(<ModalContact />)}>
+            <button
+              className="bred"
+              onClick={() => setModal(<ModalContact session={session} />)}
+            >
               <ShieldIcon />
               <p>{t("settings.input4_btn")}</p>
             </button>
