@@ -87,12 +87,19 @@ declare global {
         error?: string;
       }>;
 
-      getRoles: () => Promise<Role>;
-      sendMessage: (msg: string) => void;
-      onMessageReply: (callback: (data: string) => void) => void;
-      sendMessagePrivate: (msg: string) => void;
-      onMessageReplyPrivate: (callback: (data: string) => void) => void;
+      // UPLOAD IMG
+      uploadUserImage: (data: {
+        userId: number;
+        fileArrayBuffer: ArrayBuffer;
+        fileName: string;
+      }) => Promise<{ success: boolean; result?: string; error?: string }>;
     };
+
+    getRoles: () => Promise<Role>;
+    sendMessage: (msg: string) => void;
+    onMessageReply: (callback: (data: string) => void) => void;
+    sendMessagePrivate: (msg: string) => void;
+    onMessageReplyPrivate: (callback: (data: string) => void) => void;
   }
 }
 

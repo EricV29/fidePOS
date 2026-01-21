@@ -30,7 +30,9 @@ const Sidebar: React.FC<SidebarProps> = ({
   const location = useLocation();
   const { t } = useTranslation();
   const [fallbackAvatar] = useState(getAvatar);
-  const displayImage = session?.img ? session.img : fallbackAvatar;
+  const displayImage = session?.img
+    ? `fide-pos://${session.img}`
+    : fallbackAvatar;
 
   const handleLogout = () => {
     window.electronAPI.logout();

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import ImgIcon from "@icons/ImgIcon";
 import CustomSelect from "@components/Select";
@@ -17,6 +17,7 @@ import { getAvatar } from "@utility/getAvatar";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
 import { useLoading } from "@context/LoadingContext";
 import ModalEditUser from "@/components/modals/ModalEditUser";
+import AUTH_CODES from "../../constants/authCodes.json";
 
 interface SettingsProps {}
 
@@ -31,9 +32,12 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
   const [fallbackAvatar] = useState(getAvatar);
-  const displayImage = session?.img ? session.img : fallbackAvatar;
+  const displayImage = session?.img
+    ? `fide-pos://${session.img}`
+    : fallbackAvatar;
   const { triggerResponseAlert } = useModal();
   const { setLoading } = useLoading();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const getInitialTheme = () => {
     const savedTheme = localStorage.getItem("theme");
@@ -123,6 +127,44 @@ const Settings: React.FC<SettingsProps> = ({}) => {
     }
   };
 
+  const handleButtonClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleChangeImg = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const file = event.target.files?.[0];
+    if (!session?.id) return;
+    if (!file) return;
+
+    const validTypes = ["image/jpeg", "image/jpg", "image/webp", "image/png"];
+    if (!validTypes.includes(file.type)) {
+      triggerResponseAlert(AUTH_CODES.IMAGE_INVALID);
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      triggerResponseAlert(AUTH_CODES.IMAGE_LARGE);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const arrayBuffer = reader.result as ArrayBuffer;
+      const response = await window.electronAPI.uploadUserImage({
+        userId: session.id,
+        fileArrayBuffer: arrayBuffer,
+        fileName: file.name,
+      });
+      if (response.success) {
+        triggerResponseAlert(response.result);
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
   return (
     <>
       <div className="w-full h-full flex flex-col min-h-0">
@@ -149,13 +191,17 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               className="size-[57px] rounded-full object-cover"
             />
             <div>
-              <div className="flex gap-3 justify-center">
-                <button className="bblack">
+              <div className="flex">
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleChangeImg}
+                  style={{ display: "none" }}
+                  accept="image/jpg, image/jpeg, image/webp"
+                />
+                <button className="bblack" onClick={handleButtonClick}>
                   <ImgIcon color="#fff" />
                   <p>{t("settings.btn_change_img")}</p>
-                </button>
-                <button className="bwhite">
-                  <p>{t("settings.btn_remove_img")}</p>
                 </button>
               </div>
               <p className="font-extralight dark:text-[#b3b3b3]">
