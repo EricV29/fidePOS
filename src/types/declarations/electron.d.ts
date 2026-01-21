@@ -93,6 +93,13 @@ declare global {
         fileArrayBuffer: ArrayBuffer;
         fileName: string;
       }) => Promise<{ success: boolean; result?: string; error?: string }>;
+
+      // CONTACT DEVS
+      contactDevs: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
 
     getRoles: () => Promise<Role>;

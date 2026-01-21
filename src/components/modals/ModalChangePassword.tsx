@@ -5,6 +5,7 @@ import CloseIcon from "@icons/CloseIcon";
 import ChangePasswordForm from "@forms/form-changePassword";
 import { useTranslation } from "react-i18next";
 import type { ChangePasswordFormValues } from "@forms/schemas/user.schema";
+import { useLoading } from "@context/LoadingContext";
 
 interface Props {
   id: number | undefined;
@@ -14,16 +15,19 @@ const ModalChangePassword = ({ id }: Props) => {
   const { setModal } = useModal();
   const { t } = useTranslation();
   const { triggerResponseAlert } = useModal();
-
+  const { setLoading } = useLoading();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
   const handleChangePassword = async (data: ChangePasswordFormValues) => {
+    setLoading(true);
     const dataC = { ...data, id: id };
     const response = await window.electronAPI.changePassword(dataC);
     if (response.success) {
+      setLoading(false);
       triggerResponseAlert(response.result);
     } else {
+      setLoading(false);
       triggerResponseAlert(response.error);
     }
   };

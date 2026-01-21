@@ -5,33 +5,32 @@ import CloseIcon from "@icons/CloseIcon";
 import AddUserForm from "@forms/form-addUser";
 import { useTranslation } from "react-i18next";
 import type { AddUserFormValues } from "@forms/schemas/user.schema";
-import type { Users } from "@typesm/users";
+import { useLoading } from "@context/LoadingContext";
 
 interface ModalAddUserProps {
-  data?: Users;
   onSuccess: () => void;
 }
 
-const ModalAddUser = ({ data, onSuccess }: ModalAddUserProps) => {
+const ModalAddUser = ({ onSuccess }: ModalAddUserProps) => {
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
   const { triggerResponseAlert } = useModal();
-
+  const { setLoading } = useLoading();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
   const handleAddUser = async (data: AddUserFormValues) => {
-    console.log(data);
-
+    setLoading(true);
     const response = await window.electronAPI.addUser(data, i18n.language);
     if (response.success) {
       onSuccess();
+      setLoading(false);
       triggerResponseAlert(response.result);
     } else {
+      setLoading(false);
       triggerResponseAlert(response.error);
     }
   };
-
 
   return ReactDOM.createPortal(
     <div

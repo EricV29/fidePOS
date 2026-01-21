@@ -4,16 +4,30 @@ import ShieldIcon from "@icons/ShieldIcon";
 import CloseIcon from "@icons/CloseIcon";
 import ContactForm from "@forms/form-contact";
 import { useTranslation } from "react-i18next";
+import { type ContactFormValues } from "../forms/schemas/user.schema";
+import type { UserSession } from "@typesm/users";
+import { useLoading } from "@context/LoadingContext";
 
-export function ModalContact() {
+interface Props {
+  session: UserSession | undefined;
+}
+
+export function ModalContact({ session }: Props) {
   const { setModal } = useModal();
   const { t } = useTranslation();
-
+  const { triggerResponseAlert } = useModal();
   const close = () => setModal(null);
+  const { setLoading } = useLoading();
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleContact = () => {
-    //window.electronAPI.signupSuccess();
+  const handleContact = async ({ text }: ContactFormValues) => {
+    setLoading(true);
+    const data = { ...session, text: text };
+    const response = await window.electronAPI.contactDevs(data);
+    if (response.success) {
+      setLoading(false);
+      triggerResponseAlert(response.result);
+    }
   };
 
   return ReactDOM.createPortal(
@@ -44,6 +58,6 @@ export function ModalContact() {
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }

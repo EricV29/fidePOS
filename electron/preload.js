@@ -39,6 +39,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Upload Image
   uploadUserImage: (data) => ipcRenderer.invoke("uploadImg", data),
 
+  // Contact Devs
+  contactDevs: (data) => ipcRenderer.invoke("contactDevs", data),
+
   // getRoles
   getRoles: () => ipcRenderer.invoke("getRoles"),
 
