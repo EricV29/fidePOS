@@ -77,6 +77,18 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_change_pass_user",
       },
+      [AUTH_CODES.IMAGE_INVALID]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_img_invalid",
+      },
+      [AUTH_CODES.IMAGE_LARGE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_img_large",
+      },
+      [AUTH_CODES.IMAGE_UPLOAD]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_img_upload",
+      },
     };
 
     const config = alertConfig[code];

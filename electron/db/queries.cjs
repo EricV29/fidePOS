@@ -1,8 +1,6 @@
 const { initDatabase, saveDB } = require("./database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../constants/authCodes.json");
-const { success } = require("zod");
-const { error, log } = require("console");
 
 let dbInstance = null;
 
@@ -103,7 +101,7 @@ async function loginUser(data) {
 
     return {
       success: true,
-      data: {
+      result: {
         id: user.id,
         name: user.name,
         last_name: user.last_name,

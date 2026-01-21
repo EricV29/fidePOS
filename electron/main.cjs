@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, ipcMain, protocol } = require("electron");
 const path = require("path");
 const { initDatabase } = require("./db/database.cjs");
 const {
@@ -16,6 +16,7 @@ const { sendRecoveryEmail } = require("./recoveryPassword.cjs");
 const { welcomeEmail } = require("./welcomeEmail.cjs");
 const { generatePassword } = require("./generatePassword.cjs");
 require("dotenv").config();
+const { uploadUserImage } = require("./uploadUserImage.cjs");
 
 const isDev = !app.isPackaged;
 
@@ -203,7 +204,7 @@ ipcMain.handle("login", async (event, data) => {
     try {
       const response = await loginUser(data);
       if (response.success) {
-        saveLogin(response.data);
+        saveLogin(response.result);
         loginWindow.close();
         createMainWindow();
         return {
@@ -400,11 +401,37 @@ ipcMain.handle("changePassword", async (event, data) => {
   }
 });
 
+// Upload Img
+ipcMain.handle("uploadImg", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await uploadUserImage(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
 //* INITIALIZATION
 let isInitializing = false;
 app.whenReady().then(async () => {
   if (isInitializing) return;
   isInitializing = true;
+
+  protocol.registerFileProtocol("fide-pos", (request, callback) => {
+    const url = request.url.replace("fide-pos://", "");
+    const filePath = path.join(app.getPath("userData"), "profile_images", url);
+    callback({ path: filePath });
+  });
 
   try {
     await createWelcomeWindow();

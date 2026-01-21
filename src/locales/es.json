@@ -91,7 +91,6 @@
     "title": "Configuración de Cuenta",
     "btn_add_user": "Usuario",
     "btn_change_img": "Cambiar imagen",
-    "btn_remove_img": "Remover imagen",
     "input1": "Idioma",
     "description1": "Personaliza el idioma de tu preferencia.",
     "input1_option1": "Inglés",
@@ -220,7 +219,8 @@
     "text_add_user": "Usuario agregado correctamente.",
     "text_delete_user": "Usuario eliminado correctamente.",
     "text_edit_user": "Usuario editado correctamente.",
-    "text_change_pass_user": "Contraseña actualizada correctamente."
+    "text_change_pass_user": "Contraseña actualizada correctamente.",
+    "text_img_upload": "Imagen cargada correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -229,7 +229,9 @@
     "text_incorrect_password": "Contraseña incorrecta.",
     "text_email_used": "Correo electrónico ya utilizado. Prueba con otro.",
     "text_phone_used": "Número telefónico ya utilizado. Prueba con otro.",
-    "text_unauthorized": "Acción no permitida."
+    "text_unauthorized": "Acción no permitida.",
+    "text_img_invalid": "Imagenes aceptadas: JPEG, JPG, PNG o WebP.",
+    "text_img_large": "Imagen demasiado pesada. Máximo 2MB."
   },
   "modalAddUser": {
     "title": "Agregar usuario",

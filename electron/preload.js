@@ -36,6 +36,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Change password
   changePassword: (data) => ipcRenderer.invoke("changePassword", data),
 
+  // Upload Image
+  uploadUserImage: (data) => ipcRenderer.invoke("uploadImg", data),
+
   // getRoles
   getRoles: () => ipcRenderer.invoke("getRoles"),
 
