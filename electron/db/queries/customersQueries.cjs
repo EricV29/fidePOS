@@ -1,16 +1,6 @@
-const { initDatabase, saveDB } = require("../database.cjs");
+const { getInstance, saveDB } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
-
-let dbInstance = null;
-
-//* Inicializa o reutiliza la DB
-async function getDB() {
-  if (!dbInstance) {
-    dbInstance = await initDatabase();
-  }
-  return dbInstance;
-}
 
 //* Mapping results
 function mapResultToObjects(result) {

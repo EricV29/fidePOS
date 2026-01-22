@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, protocol } = require("electron");
 const path = require("path");
-const { initDatabase } = require("./db/database.cjs");
+const { getInstance, saveDB, createSchema } = require("./db/database.cjs");
 const {
   firstRun,
   addAdmin,
@@ -168,6 +168,12 @@ function createMainWindow() {
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
+}
+
+//* START APP
+async function startApp() {
+  const db = await getInstance();
+  await createSchema(db);
 }
 
 //* FUNCTIONS
@@ -529,7 +535,7 @@ app.whenReady().then(async () => {
 
   try {
     await createWelcomeWindow();
-    await initDatabase();
+    await startApp();
     console.log("🚀 APP AND DB READY TO START");
   } catch (err) {
     console.error("Initialization error:", err);

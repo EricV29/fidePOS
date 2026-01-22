@@ -102,7 +102,7 @@ declare global {
       }>;
 
       // GET DASHBOARD DATA
-      getDashboarData: (data) => Promise<{
+      getDashboardData: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;

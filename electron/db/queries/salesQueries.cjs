@@ -1,16 +1,6 @@
-const { initDatabase, saveDB } = require("../database.cjs");
+const { getInstance, saveDB } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
-
-let dbInstance = null;
-
-//* Inicializa o reutiliza la DB
-async function getDB() {
-  if (!dbInstance) {
-    dbInstance = await initDatabase();
-  }
-  return dbInstance;
-}
 
 //* Mapping results
 function mapResultToObjects(result) {
@@ -31,7 +21,7 @@ function mapResultToObjects(result) {
 // Get Top 5 Sales by Category
 async function getTopSalesCategory() {
   try {
-    const db = await getDB();
+    const db = await getInstance();
     const query = db.exec(
       "SELECT u.id, u.name, u.last_name, u.email, u.phone, u.img, r.description AS role, s.description AS status, u.created_at, u.deleted_at FROM user AS u INNER JOIN role AS r ON u.role_id = r.id INNER JOIN status AS s ON u.status_id = s.id;",
     );
