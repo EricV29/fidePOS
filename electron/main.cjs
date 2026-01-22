@@ -6,12 +6,26 @@ const {
   addAdmin,
   loginUser,
   insertNewPassword,
+} = require("./db/queries/appQueries.cjs");
+const {
   addUser,
   getUsers,
   deleteUser,
   editUser,
   changePassword,
-} = require("./db/queries.cjs");
+} = require("./db/queries/usersQueries.cjs");
+const {
+  getTopSalesCategory,
+  //getRevenue,
+  //getRecentSales,
+} = require("./db/queries/salesQueries.cjs");
+const {
+  //getActiveProductsCategory,
+  //getInvestment,
+} = require("./db/queries/productsQueries.cjs");
+const {
+  //getAccountsReceivable
+} = require("./db/queries/customersQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
@@ -41,6 +55,7 @@ const {
   getInstallDate,
 } = require("./utility/installDateManager.cjs");
 const { log } = require("console");
+const { success } = require("zod");
 
 let welcomeWindow = null;
 let mainWindow = null;
@@ -450,6 +465,47 @@ ipcMain.handle("contactDevs", async (event, data) => {
           result: response.result,
         };
       }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Dashboard Data
+ipcMain.handle("get-dashboard-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { start, end } = data;
+      const [
+        topSalesCategory,
+        //activeProductsCategory,
+        //revenue,
+        //investment,
+        //recentSales,
+        //accountsReceivable,
+      ] = await Promise.all([
+        getTopSalesCategory(start, end),
+        //getActiveProductsCategory(start, end),
+        //getRevenue(start, end),
+        //getInvestment(start, end),
+        //getRecentSales(start, end),
+        //getAccountsReceivable(start, end),
+      ]);
+
+      return {
+        success: true,
+        data: {
+          topSalesCategory,
+          //activeProductsCategory,
+          //revenue,
+          //investment,
+          //recentSales,
+          //accountsReceivable,
+        },
+      };
     } catch (error) {
       console.log("❌ ERROR: ", error);
     }

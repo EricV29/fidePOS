@@ -107,8 +107,8 @@ export default function Dashboard() {
   });
 
   const loadDashboard = async () => {
-    setLoading(true);
-    const response = await window.electronAPI.getDashboardData();
+    //setLoading(true);
+    const response = await window.electronAPI.getDashboardData(filters);
   };
 
   useEffect(() => {
