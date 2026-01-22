@@ -3,14 +3,14 @@ import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { Customers } from "@typesm/customers";
 import type { TFunction } from "i18next";
-import { formatDateColumns } from "@utility/dateFormatColumns";
+import { formatDateColumns } from "@utility/dateFormats";
 import { getStatusConfig } from "@utility/statusColumns";
 import { RowActions } from "@components/RowActions";
 
 // Columns Customers
 export const columnsC = (
   t: TFunction,
-  language: string
+  language: string,
 ): ColumnDef<Customers>[] => [
   {
     id: "rowNumber",

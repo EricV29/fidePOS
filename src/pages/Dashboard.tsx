@@ -16,6 +16,7 @@ import { ModalSales } from "@modals/ModalSales";
 import { useModal } from "@context/ModalContext";
 import { ModalNewPayment } from "@modals/ModalNewPayment";
 import { useOutletContext } from "react-router-dom";
+import { useLoading } from "@/context/LoadingContext";
 
 interface BarChartItem {
   [key: string]: string | number;
@@ -96,8 +97,22 @@ export default function Dashboard() {
   const [dataTableRSP, setDataTableRSP] = useState<RecentSalesPaid[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
   const { setModal } = useModal();
+  const { setLoading } = useLoading();
+  const today = new Date().toISOString().split("T")[0];
+  const [filters, setFilters] = useState({
+    start: installDate
+      ? new Date(installDate).toISOString().split("T")[0]
+      : today,
+    end: today,
+  });
+
+  const loadDashboard = async () => {
+    setLoading(true);
+    const response = await window.electronAPI.getDashboardData();
+  };
 
   useEffect(() => {
+    loadDashboard();
     setChartDataTSC(chartDataTCSDB);
     setChartDataTAPCF(addRandomFill(chartDataTAPCDB));
     setRevenueCard(dataRevenueBD);
@@ -122,6 +137,12 @@ export default function Dashboard() {
     },
   };
 
+  const handleDateChange = (start: string | null, end: string | null) => {
+    setFilters({
+      start: start || "",
+      end: end || "",
+    });
+  };
   if (!installDate) return null;
 
   return (
@@ -129,7 +150,7 @@ export default function Dashboard() {
       <div className="w-full h-full flex flex-col min-h-0">
         <div className="w-full h-fit flex justify-between items-end">
           <h1 className="text-[30px]">{t("dashboard.title")}</h1>
-          <DatePicker installDate={installDate} />
+          <DatePicker installDate={installDate} onApply={handleDateChange} />
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <div className="flex-1 min-h-0 w-full flex flex-col">

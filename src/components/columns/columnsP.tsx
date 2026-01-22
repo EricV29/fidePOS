@@ -4,14 +4,14 @@ import { currencyFormat } from "@utility/currencyFormat";
 import type { Products } from "@typesm/products";
 import { shadenHexColor } from "@utility/shadenHexColor";
 import type { TFunction } from "i18next";
-import { formatDateColumns } from "@utility/dateFormatColumns";
+import { formatDateColumns } from "@utility/dateFormats";
 import { getStatusConfig } from "@utility/statusColumns";
 import { RowActions } from "@components/RowActions";
 
 // Columns Products
 export const columnsP = (
   t: TFunction,
-  language: string
+  language: string,
 ): ColumnDef<Products>[] => [
   {
     id: "rowNumber",

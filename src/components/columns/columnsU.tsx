@@ -1,7 +1,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { Users } from "@typesm/users";
 import type { TFunction } from "i18next";
-import { formatDateColumns } from "@utility/dateFormatColumns";
+import { formatDateColumns } from "@utility/dateFormats";
 import { getStatusConfig } from "@utility/statusColumns";
 import { getRolConfig } from "@utility/rolColumns";
 import { RowActions } from "@components/RowActions";

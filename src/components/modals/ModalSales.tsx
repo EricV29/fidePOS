@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import type { SaleModal, SaleView } from "@typesm/sales";
 import { getStatusConfig } from "@utility/statusColumns";
 import CalendarIcon from "@icons/CalendarIcon";
-import { dateFormat } from "@utility/dateFormat";
+import { dateFormat } from "@utility/dateFormats";
 import { currencyFormat } from "@utility/currencyFormat";
 import BarCodeIcon from "@icons/BarCodeIcon";
 
@@ -153,6 +153,6 @@ export function ModalSales({ sale }: Props) {
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }

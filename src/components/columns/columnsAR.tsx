@@ -3,13 +3,13 @@ import { currencyFormat } from "@utility/currencyFormat";
 import { partialNumberFilter } from "@utility/table-filter";
 import type { AccountsReceivable } from "@typesm/accounts";
 import type { TFunction } from "i18next";
-import { formatDateColumns } from "@utility/dateFormatColumns";
+import { formatDateColumns } from "@utility/dateFormats";
 import { RowActions } from "@components/RowActions";
 
 // Columns Accounts Receivable
 export const columnsAR = (
   t: TFunction,
-  language: string
+  language: string,
 ): ColumnDef<AccountsReceivable>[] => [
   {
     id: "rowNumber",

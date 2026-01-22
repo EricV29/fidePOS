@@ -42,13 +42,6 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Contact Devs
   contactDevs: (data) => ipcRenderer.invoke("contactDevs", data),
 
-  // getRoles
-  getRoles: () => ipcRenderer.invoke("getRoles"),
-
-  /*
-  
-  onMessageReplyPrivate: (callback) => {
-    ipcRenderer.on("message_private-reply", (_event, data) => callback(data));
-  },
-  */
+  // Get Dashboard Data
+  getDashboardData: () => ipcRenderer.invoke("get-dashboard-data"),
 });

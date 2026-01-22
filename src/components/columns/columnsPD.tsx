@@ -3,12 +3,12 @@ import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { PaymentsDebt } from "@typesm/customers";
 import type { TFunction } from "i18next";
-import { formatDateColumns } from "@utility/dateFormatColumns";
+import { formatDateColumns } from "@utility/dateFormats";
 
 // Columns Payments Debts for Customers
 export const columnsPD = (
   t: TFunction,
-  language: string
+  language: string,
 ): ColumnDef<PaymentsDebt>[] => [
   {
     id: "rowNumber",
