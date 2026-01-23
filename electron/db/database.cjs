@@ -5,29 +5,61 @@ const { app } = require("electron");
 
 let dbInstance = null;
 
-async function initDatabase() {
-  if (dbInstance) {
-    return dbInstance;
-  }
+if (process.env.NODE_ENV === "development") {
+  app.setPath("userData", path.join(app.getPath("appData"), "fidepos"));
+}
+const dbPath = path.join(app.getPath("userData"), "app.db");
+
+//* GET INSTANCE
+async function getDB() {
+  if (dbInstance) return dbInstance;
 
   const SQL = await initSqlJs();
-  const dbPath = path.join(app.getPath("userData"), "app.db");
-  let db;
-  let shouldSave = false;
 
-  // DATABASE FILE
-  // C:\Users\user\AppData\Roaming\fidepos
-
-  // CREATE DB IF NOT EXISTING
   if (fs.existsSync(dbPath)) {
     const fileBuffer = fs.readFileSync(dbPath);
-    db = new SQL.Database(fileBuffer);
-    console.log("📦 DB loaded from disk:", dbPath);
+    dbInstance = new SQL.Database(fileBuffer);
+    console.log("📦 DB loaded from disk.");
   } else {
-    db = new SQL.Database();
-    shouldSave = true;
+    dbInstance = new SQL.Database();
     console.log("📦 New DB created on disk");
   }
+
+  return dbInstance;
+}
+
+//* SAVE DATA BASE
+function saveDB(db) {
+  try {
+    const data = Buffer.from(db.export());
+    fs.writeFileSync(dbPath, data);
+    console.log("💾 DB Saved.");
+  } catch (err) {
+    console.error("❌ Error saved DB:", err);
+  }
+}
+
+//* Mapping results
+function mapResultToObjects(result) {
+  if (!result[0]) return [];
+
+  const columns = result[0].columns;
+  const values = result[0].values;
+
+  return values.map((row) => {
+    const obj = {};
+    row.forEach((val, i) => {
+      obj[columns[i]] = val;
+    });
+    return obj;
+  });
+}
+
+//* CREATE SCHEMA DB
+async function createSchema(db) {
+  // DATABASE FILE
+  // C:\Users\user\AppData\Roaming\fidepos
+  let shouldSave = false;
 
   // CREATE ROLE TABLE
   db.run(`
@@ -46,50 +78,6 @@ async function initDatabase() {
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP
     );
   `);
-
-  // INSERT ROLS IF NOT EXISTING
-  const resultRole = db.exec("SELECT COUNT(*) AS count FROM role;");
-  const countRole = resultRole[0]?.values[0][0] || 0;
-
-  if (countRole === 0) {
-    db.run("INSERT INTO role (id, description) VALUES (?, ?);", ["1", "admin"]);
-    db.run("INSERT INTO role (id, description) VALUES (?, ?);", ["2", "user"]);
-    console.log("✅ Roles inserted (admin, user)");
-    shouldSave = true;
-  } else {
-    console.log("📦 Roles already exist");
-  }
-
-  // INSERT STATUS IF NOT EXISTING
-  const resultStatus = db.exec("SELECT COUNT(*) AS count FROM status;");
-  const countStatus = resultStatus[0]?.values[0][0] || 0;
-
-  if (countStatus === 0) {
-    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
-      "0",
-      "inactive",
-    ]);
-    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
-      "1",
-      "active",
-    ]);
-    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
-      "3",
-      "debt",
-    ]);
-    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
-      "4",
-      "paid",
-    ]);
-    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
-      "5",
-      "unpaid",
-    ]);
-    console.log("✅ Status inserted (inactive, active, paid, debt)");
-    shouldSave = true;
-  } else {
-    console.log("📦 Status already exist");
-  }
 
   // CREATE USER TABLE
   db.run(`
@@ -110,12 +98,14 @@ async function initDatabase() {
     );
   `);
 
+  // CREATE INDEX EMAIL UNIQUE USER TABLE
   db.run(`
     CREATE UNIQUE INDEX IF NOT EXISTS idx_user_email_active 
     ON user(email) 
     WHERE deleted_at IS NULL;
   `);
 
+  // CREATE INDEX PHONE UNIQUE USER TABLE
   db.run(`
     CREATE UNIQUE INDEX IF NOT EXISTS idx_user_phone_active 
     ON user(phone) 
@@ -215,22 +205,47 @@ async function initDatabase() {
     );
   `);
 
-  // SAVE DB
-  if (shouldSave) {
-    const data = Buffer.from(db.export());
-    fs.writeFileSync(dbPath, data);
-    console.log("✅ DB persisted to disk:", dbPath);
+  // SEED DATA FOR ROLES
+  const countRole =
+    db.exec("SELECT COUNT(*) AS count FROM role;")[0]?.values[0][0] || 0;
+  if (countRole === 0) {
+    db.run("INSERT INTO role (id, description) VALUES (?, ?);", ["1", "admin"]);
+    db.run("INSERT INTO role (id, description) VALUES (?, ?);", ["2", "user"]);
+    console.log("✅ Roles inserted");
+    shouldSave = true;
   }
 
-  dbInstance = db;
-  return dbInstance;
+  // SEED DATA FOR STATUS
+  const countStatus =
+    db.exec("SELECT COUNT(*) AS count FROM status;")[0]?.values[0][0] || 0;
+  if (countStatus === 0) {
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
+      "0",
+      "inactive",
+    ]);
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
+      "1",
+      "active",
+    ]);
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
+      "3",
+      "debt",
+    ]);
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
+      "4",
+      "paid",
+    ]);
+    db.run("INSERT INTO status (id, description) VALUES (?, ?);", [
+      "5",
+      "unpaid",
+    ]);
+    console.log("✅ Status inserted");
+    shouldSave = true;
+  }
+
+  if (shouldSave) {
+    saveDB(db);
+  }
 }
 
-function saveDB(db) {
-  const dbPath = path.join(app.getPath("userData"), "app.db");
-  const data = Buffer.from(db.export());
-  fs.writeFileSync(dbPath, data);
-  console.log("💾 DB saved");
-}
-
-module.exports = { initDatabase, saveDB };
+module.exports = { getDB, saveDB, createSchema, mapResultToObjects };

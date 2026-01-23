@@ -1,5 +1,5 @@
 import React from "react";
-import { dateFormat } from "@utility/dateFormat";
+import { dateFormat } from "@utility/dateFormats";
 import type { IconProps } from "@typesm/icons";
 import { useTranslation } from "react-i18next";
 

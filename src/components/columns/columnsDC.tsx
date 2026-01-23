@@ -4,14 +4,14 @@ import { currencyFormat } from "@utility/currencyFormat";
 import type { DebtsCustomer } from "@typesm/customers";
 import { shadenHexColor } from "@utility/shadenHexColor";
 import type { TFunction } from "i18next";
-import { formatDateColumns } from "@utility/dateFormatColumns";
+import { formatDateColumns } from "@utility/dateFormats";
 import { getStatusConfig } from "@utility/statusColumns";
 import { RowActions } from "@components/RowActions";
 
 // Columns Debts Customer
 export const columnsDC = (
   t: TFunction,
-  language: string
+  language: string,
 ): ColumnDef<DebtsCustomer>[] => [
   {
     id: "rowNumber",

@@ -4,13 +4,13 @@ import { currencyFormat } from "@utility/currencyFormat";
 import type { RecentSalesPaid } from "@typesm/sales";
 import { shadenHexColor } from "@utility/shadenHexColor";
 import type { TFunction } from "i18next";
-import { formatDateColumns } from "@utility/dateFormatColumns";
+import { formatDateColumns } from "@utility/dateFormats";
 import { RowActions } from "@components/RowActions";
 
 // Columns Recent Sales Paid
 export const columnsRSP = (
   t: TFunction,
-  language: string
+  language: string,
 ): ColumnDef<RecentSalesPaid>[] => [
   {
     id: "rowNumber",

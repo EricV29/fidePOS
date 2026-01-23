@@ -4,13 +4,13 @@ import { currencyFormat } from "@utility/currencyFormat";
 import type { Sales } from "@typesm/sales";
 import type { TFunction } from "i18next";
 import { getStatusConfig } from "@utility/statusColumns";
-import { formatDateColumns } from "@utility/dateFormatColumns";
+import { formatDateColumns } from "@utility/dateFormats";
 import { RowActions } from "@components/RowActions";
 
 // Columns Sales
 export const columnsS = (
   t: TFunction,
-  language: string
+  language: string,
 ): ColumnDef<Sales>[] => [
   {
     id: "rowNumber",

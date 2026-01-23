@@ -100,13 +100,14 @@ declare global {
         result?: string;
         error?: string;
       }>;
-    };
 
-    getRoles: () => Promise<Role>;
-    sendMessage: (msg: string) => void;
-    onMessageReply: (callback: (data: string) => void) => void;
-    sendMessagePrivate: (msg: string) => void;
-    onMessageReplyPrivate: (callback: (data: string) => void) => void;
+      // GET DASHBOARD DATA
+      getDashboardData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+    };
   }
 }
 

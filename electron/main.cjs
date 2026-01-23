@@ -1,17 +1,31 @@
 const { app, BrowserWindow, ipcMain, protocol } = require("electron");
 const path = require("path");
-const { initDatabase } = require("./db/database.cjs");
+const { getDB, saveDB, createSchema } = require("./db/database.cjs");
 const {
   firstRun,
   addAdmin,
   loginUser,
   insertNewPassword,
+} = require("./db/queries/appQueries.cjs");
+const {
   addUser,
   getUsers,
   deleteUser,
   editUser,
   changePassword,
-} = require("./db/queries.cjs");
+} = require("./db/queries/usersQueries.cjs");
+const {
+  getTopSalesCategory,
+  //getRevenue,
+  //getRecentSales,
+} = require("./db/queries/salesQueries.cjs");
+const {
+  //getActiveProductsCategory,
+  //getInvestment,
+} = require("./db/queries/productsQueries.cjs");
+const {
+  //getAccountsReceivable
+} = require("./db/queries/customersQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
@@ -41,6 +55,7 @@ const {
   getInstallDate,
 } = require("./utility/installDateManager.cjs");
 const { log } = require("console");
+const { success } = require("zod");
 
 let welcomeWindow = null;
 let mainWindow = null;
@@ -153,6 +168,12 @@ function createMainWindow() {
   mainWindow.on("closed", () => {
     mainWindow = null;
   });
+}
+
+//* START APP
+async function startApp() {
+  const db = await getDB();
+  await createSchema(db);
 }
 
 //* FUNCTIONS
@@ -459,6 +480,47 @@ ipcMain.handle("contactDevs", async (event, data) => {
   }
 });
 
+// Get Dashboard Data
+ipcMain.handle("get-dashboard-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { startDate, endDate } = data;
+      const [
+        topSalesCategory,
+        //activeProductsCategory,
+        //revenue,
+        //investment,
+        //recentSales,
+        //accountsReceivable,
+      ] = await Promise.all([
+        getTopSalesCategory(startDate, endDate),
+        //getActiveProductsCategory(start, end),
+        //getRevenue(start, end),
+        //getInvestment(start, end),
+        //getRecentSales(start, end),
+        //getAccountsReceivable(start, end),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          topSalesCategory,
+          //activeProductsCategory,
+          //revenue,
+          //investment,
+          //recentSales,
+          //accountsReceivable,
+        },
+      };
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
 //* INITIALIZATION
 let isInitializing = false;
 app.whenReady().then(async () => {
@@ -473,7 +535,7 @@ app.whenReady().then(async () => {
 
   try {
     await createWelcomeWindow();
-    await initDatabase();
+    await startApp();
     console.log("🚀 APP AND DB READY TO START");
   } catch (err) {
     console.error("Initialization error:", err);

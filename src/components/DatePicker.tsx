@@ -4,13 +4,15 @@ import CaretDIcon from "@icons/CaretDIcon";
 import LeftIcon from "@icons/LeftIcon";
 import RightIcon from "@icons/RightIcon";
 import { useTranslation } from "react-i18next";
-
+import { toSqlDate } from "@utility/dateFormats";
 interface DatePickerProps {
   installDate: string | null;
+  onApply: (startDate: string | null, endDate: string | null) => void;
 }
 
 const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
   installDate,
+  onApply,
 }) => {
   const { t, i18n } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -87,7 +89,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
           onClick={() => handleDayClick(day)}
         >
           {i}
-        </div>
+        </div>,
       );
     }
 
@@ -111,7 +113,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
   const updateInput = () => {
     if (selectedStartDate && selectedEndDate) {
       return `${formatDate(selectedStartDate)} - ${formatDate(
-        selectedEndDate
+        selectedEndDate,
       )}`;
     } else if (selectedStartDate) {
       return formatDate(selectedStartDate);
@@ -128,13 +130,22 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
   };
 
   const handleApply = () => {
-    console.log("Applied:", selectedStartDate, selectedEndDate);
+    const start = toSqlDate(selectedStartDate);
+    const end = toSqlDate(selectedEndDate);
+    onApply(start, end);
     setIsOpen(false);
   };
 
   const handleCancel = () => {
     setSelectedStartDate(null);
     setSelectedEndDate(null);
+    const today = new Date().toISOString().split("T")[0];
+    const startDefault = installDate
+      ? new Date(installDate).toISOString().split("T")[0]
+      : today;
+
+    onApply(startDefault, today);
+
     setIsOpen(false);
   };
 
@@ -182,7 +193,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
                 className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black dark:text-white hover:text-white"
                 onClick={() =>
                   setCurrentDate(
-                    new Date(currentDate.setMonth(currentDate.getMonth() - 1))
+                    new Date(currentDate.setMonth(currentDate.getMonth() - 1)),
                   )
                 }
               >
@@ -201,7 +212,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
                 className="rounded-md px-2 py-2 text-dark hover:bg-[#f57c00] text-black dark:text-white hover:text-white"
                 onClick={() =>
                   setCurrentDate(
-                    new Date(currentDate.setMonth(currentDate.getMonth() + 1))
+                    new Date(currentDate.setMonth(currentDate.getMonth() + 1)),
                   )
                 }
               >
