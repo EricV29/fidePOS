@@ -1,4 +1,4 @@
-const { getInstance, saveDB } = require("../database.cjs");
+const { getDB, saveDB } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 
@@ -21,7 +21,7 @@ function mapResultToObjects(result) {
 // First Run
 async function firstRun() {
   try {
-    const db = await getInstance();
+    const db = await getDB();
     const result = db.exec("SELECT COUNT(*) as total FROM user");
     const rows = mapResultToObjects(result);
 
@@ -35,7 +35,7 @@ async function firstRun() {
 // Add Admin
 async function addAdmin(data) {
   try {
-    const db = await getInstance();
+    const db = await getDB();
     const hashedPassword = await bcrypt.hash(data.password, 10);
     db.run(
       "INSERT INTO user(name, last_name, email, phone, password, img, role_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
@@ -62,7 +62,7 @@ async function addAdmin(data) {
 // Login
 async function loginUser(data) {
   try {
-    const db = await getInstance();
+    const db = await getDB();
 
     // Search User
     const query = db.exec(
@@ -110,7 +110,7 @@ async function loginUser(data) {
 // Recovery Password
 async function insertNewPassword(email, newPass) {
   try {
-    const db = await getInstance();
+    const db = await getDB();
     const hashedPassword = await bcrypt.hash(newPass, 10);
 
     // Search User

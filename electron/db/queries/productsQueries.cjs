@@ -1,4 +1,4 @@
-const { getInstance, saveDB } = require("../database.cjs");
+const { getDB, saveDB } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 

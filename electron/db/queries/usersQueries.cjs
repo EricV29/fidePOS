@@ -1,4 +1,4 @@
-const { getInstance, saveDB } = require("../database.cjs");
+const { getDB, saveDB } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 
@@ -21,7 +21,7 @@ function mapResultToObjects(result) {
 // Add User
 async function addUser(data) {
   try {
-    const db = await getInstance();
+    const db = await getDB();
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
     // Search Users
@@ -68,7 +68,7 @@ async function addUser(data) {
 // Get Users
 async function getUsers() {
   try {
-    const db = await getInstance();
+    const db = await getDB();
     const query = db.exec(
       "SELECT u.id, u.name, u.last_name, u.email, u.phone, u.img, r.description AS role, s.description AS status, u.created_at, u.deleted_at FROM user AS u INNER JOIN role AS r ON u.role_id = r.id INNER JOIN status AS s ON u.status_id = s.id;",
     );
@@ -89,7 +89,7 @@ async function getUsers() {
 // Delete User
 async function deleteUser(data) {
   try {
-    const db = await getInstance();
+    const db = await getDB();
 
     // Search User
     const query = db.exec(
@@ -131,7 +131,7 @@ async function deleteUser(data) {
 // Edit User
 async function editUser(data) {
   try {
-    const db = await getInstance();
+    const db = await getDB();
 
     // Search User
     const query = db.exec(
@@ -187,7 +187,7 @@ async function editUser(data) {
 // Change Password
 async function changePassword(data) {
   try {
-    const db = await getInstance();
+    const db = await getDB();
     const hashedPassword = await bcrypt.hash(data.newPass, 10);
 
     // Search User

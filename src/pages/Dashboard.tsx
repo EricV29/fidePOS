@@ -100,20 +100,31 @@ export default function Dashboard() {
   const { setLoading } = useLoading();
   const today = new Date().toISOString().split("T")[0];
   const [filters, setFilters] = useState({
-    start: installDate
+    startDate: installDate
       ? new Date(installDate).toISOString().split("T")[0]
       : today,
-    end: today,
+    endDate: today,
   });
 
-  const loadDashboard = async () => {
-    //setLoading(true);
-    const response = await window.electronAPI.getDashboardData(filters);
+  const loadDashboard = async (currentFilters = filters) => {
+    setLoading(true);
+    console.log(currentFilters);
+    const response = await window.electronAPI.getDashboardData(currentFilters);
+    const dashboardData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+
+    if (dashboardData?.topSalesCategory) {
+      const chartData = dashboardData.topSalesCategory.result;
+      console.log(chartData);
+      setChartDataTSC(chartData);
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
     loadDashboard();
-    setChartDataTSC(chartDataTCSDB);
     setChartDataTAPCF(addRandomFill(chartDataTAPCDB));
     setRevenueCard(dataRevenueBD);
     setInvestCard(dataInvestBD);
@@ -137,12 +148,18 @@ export default function Dashboard() {
     },
   };
 
-  const handleDateChange = (start: string | null, end: string | null) => {
-    setFilters({
-      start: start || "",
-      end: end || "",
-    });
+  const handleDateChange = (
+    startDate: string | null,
+    endDate: string | null,
+  ) => {
+    const newFilters = {
+      startDate: startDate || "",
+      endDate: endDate || "",
+    };
+    setFilters(newFilters);
+    loadDashboard(newFilters);
   };
+
   if (!installDate) return null;
 
   return (

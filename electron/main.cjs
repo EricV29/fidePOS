@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, protocol } = require("electron");
 const path = require("path");
-const { getInstance, saveDB, createSchema } = require("./db/database.cjs");
+const { getDB, saveDB, createSchema } = require("./db/database.cjs");
 const {
   firstRun,
   addAdmin,
@@ -172,7 +172,7 @@ function createMainWindow() {
 
 //* START APP
 async function startApp() {
-  const db = await getInstance();
+  const db = await getDB();
   await createSchema(db);
 }
 
@@ -484,7 +484,7 @@ ipcMain.handle("contactDevs", async (event, data) => {
 ipcMain.handle("get-dashboard-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const { start, end } = data;
+      const { startDate, endDate } = data;
       const [
         topSalesCategory,
         //activeProductsCategory,
@@ -493,7 +493,7 @@ ipcMain.handle("get-dashboard-data", async (event, data) => {
         //recentSales,
         //accountsReceivable,
       ] = await Promise.all([
-        getTopSalesCategory(start, end),
+        getTopSalesCategory(startDate, endDate),
         //getActiveProductsCategory(start, end),
         //getRevenue(start, end),
         //getInvestment(start, end),
@@ -503,7 +503,7 @@ ipcMain.handle("get-dashboard-data", async (event, data) => {
 
       return {
         success: true,
-        data: {
+        result: {
           topSalesCategory,
           //activeProductsCategory,
           //revenue,

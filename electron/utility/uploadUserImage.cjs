@@ -1,17 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { app } = require("electron");
-const { initDatabase, saveDB } = require("../db/database.cjs");
+const { getDB, saveDB } = require("../db/database.cjs");
 const AUTH_CODES = require("../../constants/authCodes.json");
-
-let dbInstance = null;
-
-async function getDB() {
-  if (!dbInstance) {
-    dbInstance = await initDatabase();
-  }
-  return dbInstance;
-}
 
 function mapResultToObjects(result) {
   if (!result[0]) return [];

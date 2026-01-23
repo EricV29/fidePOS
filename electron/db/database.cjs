@@ -4,10 +4,14 @@ const path = require("path");
 const { app } = require("electron");
 
 let dbInstance = null;
+
+if (process.env.NODE_ENV === "development") {
+  app.setPath("userData", path.join(app.getPath("appData"), "fidepos"));
+}
 const dbPath = path.join(app.getPath("userData"), "app.db");
 
 //* GET INSTANCE
-async function getInstance() {
+async function getDB() {
   if (dbInstance) return dbInstance;
 
   const SQL = await initSqlJs();
@@ -33,6 +37,22 @@ function saveDB(db) {
   } catch (err) {
     console.error("❌ Error saved DB:", err);
   }
+}
+
+//* Mapping results
+function mapResultToObjects(result) {
+  if (!result[0]) return [];
+
+  const columns = result[0].columns;
+  const values = result[0].values;
+
+  return values.map((row) => {
+    const obj = {};
+    row.forEach((val, i) => {
+      obj[columns[i]] = val;
+    });
+    return obj;
+  });
 }
 
 //* CREATE SCHEMA DB
@@ -228,4 +248,4 @@ async function createSchema(db) {
   }
 }
 
-module.exports = { getInstance, saveDB, createSchema };
+module.exports = { getDB, saveDB, createSchema, mapResultToObjects };
