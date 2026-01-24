@@ -16,12 +16,12 @@ const {
 } = require("./db/queries/usersQueries.cjs");
 const {
   getTopSalesCategory,
-  //getRevenue,
+  getRevenue,
   //getRecentSales,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
-  //getInvestment,
+  getInvestment,
 } = require("./db/queries/productsQueries.cjs");
 const {
   //getAccountsReceivable
@@ -488,15 +488,15 @@ ipcMain.handle("get-dashboard-data", async (event, data) => {
       const [
         topSalesCategory,
         activeProductsCategory,
-        //revenue,
-        //investment,
+        investment,
+        revenue,
         //recentSales,
         //accountsReceivable,
       ] = await Promise.all([
         getTopSalesCategory(startDate, endDate),
         getActiveProductsCategory(),
-        //getRevenue(start, end),
-        //getInvestment(start, end),
+        getInvestment(),
+        getRevenue(),
         //getRecentSales(start, end),
         //getAccountsReceivable(start, end),
       ]);
@@ -506,8 +506,8 @@ ipcMain.handle("get-dashboard-data", async (event, data) => {
         result: {
           topSalesCategory,
           activeProductsCategory,
-          //revenue,
-          //investment,
+          investment,
+          revenue,
           //recentSales,
           //accountsReceivable,
         },

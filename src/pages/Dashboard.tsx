@@ -122,14 +122,22 @@ export default function Dashboard() {
     if (dashboardData?.activeProductsCategory) {
       const chartPieData = dashboardData.activeProductsCategory.result;
       setChartDataTAPCF(addRandomFill(chartPieData));
+    }
+
+    if (dashboardData?.investment) {
+      const investmentData = dashboardData.investment.result;
+      setInvestCard(investmentData[0].investment);
+    }
+
+    if (dashboardData?.revenue) {
+      const investmentData = dashboardData.revenue.result;
+      setRevenueCard(investmentData[0].revenue);
       setLoading(false);
     }
   };
 
   useEffect(() => {
     loadDashboard();
-    setRevenueCard(dataRevenueBD);
-    setInvestCard(dataInvestBD);
     setDataTableRSP(dataRSPBD);
     setDataTableAR(dataARBD);
   }, []);

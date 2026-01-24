@@ -35,8 +35,28 @@ async function getTopSalesCategory(startDate, endDate) {
   }
 }
 
+// Get Revenue
+async function getRevenue() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT * FROM v_revenue`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting revenue:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
-  //getRevenue,
+  getRevenue,
   //getRecentSales,
 };
