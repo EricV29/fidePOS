@@ -145,11 +145,11 @@ async function createSchema(db) {
     CREATE TABLE IF NOT EXISTS product (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       code_sku TEXT UNIQUE NOT NULL,
-      product TEXT NOT NULL,
+      name TEXT NOT NULL,
       description TEXT NOT NULL,
       category_id INTEGER NOT NULL,
-      cost_price INTEGER NOT NULL,
-      unit_price INTEGER NOT NULL,
+      cost_price REAL NOT NULL,
+      unit_price REAL NOT NULL,
       stock INTEGER NOT NULL DEFAULT 0,
       status_id INTEGER NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -164,9 +164,9 @@ async function createSchema(db) {
     CREATE TABLE IF NOT EXISTS sale (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       sale_num INT UNIQUE NOT NULL,
-      total_amount INTEGER NOT NULL,
-      paid_amount INTEGER NOT NULL,
-      discount INTEGER NOT NULL,
+      total_amount REAL NOT NULL,
+      paid_amount REAL NOT NULL,
+      discount REAL NOT NULL,
       customer_id INTEGER,
       status_id INTEGER NOT NULL,
       user_id INTEGER NOT NULL,
@@ -185,7 +185,7 @@ async function createSchema(db) {
       sale_id INTEGER NOT NULL,
       product_id INTEGER NOT NULL,
       quantity INTEGER NOT NULL,
-      subt_price INTEGER NOT NULL,
+      subt_price REAL NOT NULL,
       status_id INTEGER NOT NULL,
       FOREIGN KEY (sale_id) REFERENCES sale(id) ON DELETE CASCADE,
       FOREIGN KEY (product_id) REFERENCES product(id),
@@ -197,13 +197,26 @@ async function createSchema(db) {
   db.run(`
     CREATE TABLE IF NOT EXISTS payment (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      amount INTEGER NOT NULL,
+      amount REAL NOT NULL,
       note TEXT,
       sale_id INTEGER NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (sale_id) REFERENCES sale(id)
     );
   `);
+
+  // CREATE ENTRIES TABLE
+  db.run(`
+      CREATE TABLE IF NOT EXISTS entries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER NOT NULL,
+        quantity INTEGER NOT NULL,
+        cost_price REAL NOT NULL,
+        notes TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (product_id) REFERENCES product(id)
+      );
+    `);
 
   // SEED DATA FOR ROLES
   const countRole =
