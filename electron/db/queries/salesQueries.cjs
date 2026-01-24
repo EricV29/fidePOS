@@ -1,7 +1,6 @@
 const { getDB, saveDB, mapResultToObjects } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
-const { log } = require("console");
 
 // Get Top 5 Sales by Category
 async function getTopSalesCategory(startDate, endDate) {

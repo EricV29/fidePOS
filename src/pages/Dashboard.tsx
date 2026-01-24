@@ -27,7 +27,7 @@ interface PieChartItem {
   [key: string]: string | number;
 }
 
-//* Example data bar chart
+//* Example data bar chart ✅
 const chartDataTCSDB = [
   { category: "Maquillaje", sales: 186 },
   { category: "Regalos", sales: 305 },
@@ -36,9 +36,9 @@ const chartDataTCSDB = [
   { category: "Zapatos", sales: 209 },
 ];
 
-//* Example data pie chart
+//* Example data pie chart ✅
 const chartDataTAPCDB = [
-  { category: "Maquillaje", products: 275 },
+  { category: "Maquillaje", products: 200 },
   { category: "Dulces", products: 200 },
   { category: "Edredones", products: 287 },
   { category: "Zapatos", products: 173 },
@@ -108,7 +108,6 @@ export default function Dashboard() {
 
   const loadDashboard = async (currentFilters = filters) => {
     setLoading(true);
-    console.log(currentFilters);
     const response = await window.electronAPI.getDashboardData(currentFilters);
     const dashboardData =
       typeof response.result === "string"
@@ -117,15 +116,18 @@ export default function Dashboard() {
 
     if (dashboardData?.topSalesCategory) {
       const chartData = dashboardData.topSalesCategory.result;
-      console.log(chartData);
       setChartDataTSC(chartData);
+    }
+
+    if (dashboardData?.activeProductsCategory) {
+      const chartPieData = dashboardData.activeProductsCategory.result;
+      setChartDataTAPCF(addRandomFill(chartPieData));
       setLoading(false);
     }
   };
 
   useEffect(() => {
     loadDashboard();
-    setChartDataTAPCF(addRandomFill(chartDataTAPCDB));
     setRevenueCard(dataRevenueBD);
     setInvestCard(dataInvestBD);
     setDataTableRSP(dataRSPBD);
