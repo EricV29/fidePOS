@@ -185,6 +185,7 @@ async function createSchema(db) {
       sale_id INTEGER NOT NULL,
       product_id INTEGER NOT NULL,
       quantity INTEGER NOT NULL,
+      cost_price REAL NOT NULL,
       subt_price REAL NOT NULL,
       status_id INTEGER NOT NULL,
       FOREIGN KEY (sale_id) REFERENCES sale(id) ON DELETE CASCADE,
