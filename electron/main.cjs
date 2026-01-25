@@ -17,7 +17,8 @@ const {
 const {
   getTopSalesCategory,
   getRevenue,
-  //getRecentSales,
+  getRecentSales,
+  getSaleData,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -490,14 +491,14 @@ ipcMain.handle("get-dashboard-data", async (event, data) => {
         activeProductsCategory,
         investment,
         revenue,
-        //recentSales,
+        recentSales,
         //accountsReceivable,
       ] = await Promise.all([
         getTopSalesCategory(startDate, endDate),
         getActiveProductsCategory(),
         getInvestment(),
         getRevenue(),
-        //getRecentSales(start, end),
+        getRecentSales(),
         //getAccountsReceivable(start, end),
       ]);
 
@@ -508,10 +509,35 @@ ipcMain.handle("get-dashboard-data", async (event, data) => {
           activeProductsCategory,
           investment,
           revenue,
-          //recentSales,
+          recentSales,
           //accountsReceivable,
         },
       };
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Sale Data
+ipcMain.handle("get-sale-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getSaleData(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
     } catch (error) {
       console.log("❌ ERROR: ", error);
     }

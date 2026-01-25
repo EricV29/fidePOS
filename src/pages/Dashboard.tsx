@@ -132,13 +132,17 @@ export default function Dashboard() {
     if (dashboardData?.revenue) {
       const investmentData = dashboardData.revenue.result;
       setRevenueCard(investmentData[0].revenue);
+    }
+
+    if (dashboardData?.recentSales) {
+      const recentSalesData = dashboardData.recentSales.result;
+      setDataTableRSP(recentSalesData);
       setLoading(false);
     }
   };
 
   useEffect(() => {
     loadDashboard();
-    setDataTableRSP(dataRSPBD);
     setDataTableAR(dataARBD);
   }, []);
 
@@ -233,17 +237,7 @@ export default function Dashboard() {
                 data={dataTableRSP}
                 actions={{
                   onView: (row) => {
-                    setModal(
-                      <ModalSales
-                        sale={{
-                          id: row.id,
-                          num_sale: row.num_sale,
-                          status: row.status,
-                          total_amount: row.total_amount,
-                          created_at: row.created_at,
-                        }}
-                      />,
-                    );
+                    setModal(<ModalSales idSale={row.id} />);
                   },
                 }}
               />

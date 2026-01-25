@@ -1,5 +1,6 @@
 export {};
 import { Role, Users } from "@typesm/users";
+import { SaleView } from "@typesm/sales";
 
 interface UserSession {
   id: number;
@@ -105,6 +106,13 @@ declare global {
       getDashboardData: (data) => Promise<{
         success: boolean;
         result?: string;
+        error?: string;
+      }>;
+
+      // GET SALE DATA
+      getSaleData: (data) => Promise<{
+        success: boolean;
+        result?: SaleView;
         error?: string;
       }>;
     };
