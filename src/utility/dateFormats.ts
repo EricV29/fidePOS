@@ -11,8 +11,6 @@ export const dateFormat = (date: string | Date, locale: string) => {
     return "";
   }
 
-  console.log("ddd");
-
   return new Intl.DateTimeFormat(locale, {
     day: "2-digit",
     month: "long",

@@ -4,7 +4,7 @@ import { useModal } from "@context/ModalContext";
 import ShoppingCarFillIcon from "@icons/ShoppingCarFillIcon";
 import CloseIcon from "@icons/CloseIcon";
 import { useTranslation } from "react-i18next";
-import type { SaleModal, SaleView } from "@typesm/sales";
+import type { SaleView } from "@typesm/sales";
 import { getStatusConfig } from "@utility/statusColumns";
 import CalendarIcon from "@icons/CalendarIcon";
 import { dateFormat } from "@utility/dateFormats";
@@ -55,14 +55,16 @@ export function ModalSales({ idSale }: Props) {
 
   useEffect(() => {
     loadSale(idSale);
-  }, []);
+  }, [idSale]);
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  //const { label, color } = getStatusConfig(data.status, t);
-  //setDate(dateFormat(dataSale.created_at, i18n.language));
-  //const total = currencyFormat(idSale.total_amount);
+  const statusConfig = dataSale
+    ? getStatusConfig(dataSale.status, t)
+    : { label: t("loading"), color: "gray" };
+
+  const { label, color } = statusConfig;
 
   return ReactDOM.createPortal(
     <div
@@ -77,9 +79,12 @@ export function ModalSales({ idSale }: Props) {
           <div className="flex gap-5">
             <ShoppingCarFillIcon size={40} color="#F57C00" />
             <div className="flex flex-col dark:text-[#b3b3b3]">
-              <h2>{t("modalSale.title")} #</h2>
+              <h2>
+                {t("modalSale.title")} #{dataSale?.sale_num}
+              </h2>
               <p className="font-extralight">
-                {t("modalSale.description")} <span className="#000">label</span>
+                {t("modalSale.description")}{" "}
+                <span className={color}>{label}</span>
               </p>
             </div>
           </div>
@@ -93,11 +98,19 @@ export function ModalSales({ idSale }: Props) {
           <div className="w-full flex justify-between dark:text-[#b3b3b3]">
             <div className="flex gap-1">
               <CalendarIcon size={20} />
-              <p>date</p>
+              <p>
+                {dataSale
+                  ? dateFormat(dataSale.created_at, i18n.language)
+                  : t("global.loading")}
+              </p>
             </div>
             <div className="flex gap-1">
-              <p>{t("modalSale.customer")}</p>{" "}
-              <p className="font-semibold">{dataSale?.customer}</p>
+              {dataSale?.customer && (
+                <>
+                  <p>{t("modalSale.customer")}</p>{" "}
+                  <p className="font-semibold">{dataSale?.customer}</p>
+                </>
+              )}
             </div>
           </div>
           <div className="w-full max-h-[280px] overflow-y-auto flex flex-col gap-2 dark:text-white">
