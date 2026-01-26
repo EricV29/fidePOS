@@ -44,4 +44,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Get Dashboard Data
   getDashboardData: (data) => ipcRenderer.invoke("get-dashboard-data", data),
+
+  // Get Sale Data
+  getSaleData: (data) => ipcRenderer.invoke("get-sale-data", data),
 });

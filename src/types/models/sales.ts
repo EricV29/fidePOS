@@ -30,25 +30,22 @@ export type ShoppingCarT = {
 };
 
 interface ProductSaleView {
-  product: string;
-  unit_price: number;
+  id: number;
+  name: string;
   quantity: number;
   code_sku: string;
+  unit_price: number;
   subtotal: number;
 }
 
 export type SaleView = {
-  sale: number;
-  customer: string;
-  products: ProductSaleView[];
-  subtotal: number;
-  discount: number;
-};
-
-export type SaleModal = {
-  id: string;
-  num_sale: string;
+  id: number;
+  sale_num: number;
   status: string;
-  total_amount: number;
   created_at: string;
+  customer: string | null;
+  total_amount: number;
+  discount: number;
+  paid_amount: number;
+  products: ProductSaleView[];
 };

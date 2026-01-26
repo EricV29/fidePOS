@@ -4,7 +4,7 @@ import { useModal } from "@context/ModalContext";
 import ShoppingCarFillIcon from "@icons/ShoppingCarFillIcon";
 import CloseIcon from "@icons/CloseIcon";
 import { useTranslation } from "react-i18next";
-import type { SaleModal, SaleView } from "@typesm/sales";
+import type { SaleView } from "@typesm/sales";
 import { getStatusConfig } from "@utility/statusColumns";
 import CalendarIcon from "@icons/CalendarIcon";
 import { dateFormat } from "@utility/dateFormats";
@@ -12,7 +12,7 @@ import { currencyFormat } from "@utility/currencyFormat";
 import BarCodeIcon from "@icons/BarCodeIcon";
 
 type Props = {
-  sale: SaleModal;
+  idSale: number;
 };
 
 //* Example data sale
@@ -41,27 +41,30 @@ const dataSaleDB = [
   },
 ];
 
-export function ModalSales({ sale }: Props) {
+export function ModalSales({ idSale }: Props) {
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
-  const [dataSale, setDataSale] = useState<SaleView[]>([]);
+  const [dataSale, setDataSale] = useState<SaleView>();
+
+  const loadSale = async (idSale: number) => {
+    const response = await window.electronAPI.getSaleData(idSale);
+    if (response.success) {
+      setDataSale(response.result);
+    }
+  };
 
   useEffect(() => {
-    setDataSale(dataSaleDB);
-  }, []);
+    loadSale(idSale);
+  }, [idSale]);
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleSales = () => {
-    //window.electronAPI.signupSuccess();
-  };
+  const statusConfig = dataSale
+    ? getStatusConfig(dataSale.status, t)
+    : { label: t("loading"), color: "gray" };
 
-  console.log(dataSale);
-
-  const { label, color } = getStatusConfig(sale.status, t);
-  const date = dateFormat(sale.created_at, i18n.language);
-  const total = currencyFormat(sale.total_amount);
+  const { label, color } = statusConfig;
 
   return ReactDOM.createPortal(
     <div
@@ -77,7 +80,7 @@ export function ModalSales({ sale }: Props) {
             <ShoppingCarFillIcon size={40} color="#F57C00" />
             <div className="flex flex-col dark:text-[#b3b3b3]">
               <h2>
-                {t("modalSale.title")} #{sale.num_sale}
+                {t("modalSale.title")} #{dataSale?.sale_num}
               </h2>
               <p className="font-extralight">
                 {t("modalSale.description")}{" "}
@@ -95,22 +98,30 @@ export function ModalSales({ sale }: Props) {
           <div className="w-full flex justify-between dark:text-[#b3b3b3]">
             <div className="flex gap-1">
               <CalendarIcon size={20} />
-              <p>{date}</p>
+              <p>
+                {dataSale
+                  ? dateFormat(dataSale.created_at, i18n.language)
+                  : t("global.loading")}
+              </p>
             </div>
             <div className="flex gap-1">
-              <p>{t("modalSale.customer")}</p>{" "}
-              <p className="font-semibold">{dataSale[0]?.customer}</p>
+              {dataSale?.customer && (
+                <>
+                  <p>{t("modalSale.customer")}</p>{" "}
+                  <p className="font-semibold">{dataSale?.customer}</p>
+                </>
+              )}
             </div>
           </div>
           <div className="w-full max-h-[280px] overflow-y-auto flex flex-col gap-2 dark:text-white">
-            {dataSale[0]?.products.map((item) => (
+            {dataSale?.products.map((item) => (
               <div
                 key={item.code_sku}
                 className="w-full flex justify-between bg-[#b3b3b330] px-3 py-1 rounded-[7px]"
               >
                 <div>
                   <p className="font-bold text-[20px]">
-                    {item.product}: {item.quantity}
+                    {item.name}: {item.quantity}
                   </p>
                   <div className="flex gap-1 font-extralight">
                     <BarCodeIcon
@@ -135,19 +146,27 @@ export function ModalSales({ sale }: Props) {
             <div className="w-full flex justify-between dark:text-[#b3b3b3]">
               <p>Subtotal</p>
               <p className="font-semibold">
-                {currencyFormat(dataSale[0]?.subtotal)}
+                {dataSale
+                  ? currencyFormat(dataSale.total_amount)
+                  : t("global.loading")}
               </p>
             </div>
             <div className="w-full flex justify-between dark:text-[#b3b3b3]">
               <p>{t("modalSale.discount")}</p>
               <p className="font-semibold">
-                {currencyFormat(dataSale[0]?.discount)}
+                {dataSale
+                  ? currencyFormat(dataSale.discount)
+                  : t("global.loading")}
               </p>
             </div>
             <hr className="border border-[#b3b3b3] my-1" />
             <div className="w-full flex justify-between bg-[#FFEFDE] dark:bg-[#5f5f5f] dark:text-white px-2 rounded-[7px]">
               <p>Total</p>
-              <p className="font-semibold">{total}</p>
+              <p className="font-semibold">
+                {dataSale
+                  ? currencyFormat(dataSale.total_amount)
+                  : t("global.loading")}
+              </p>
             </div>
           </div>
         </div>

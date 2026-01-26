@@ -1,5 +1,11 @@
 export const dateFormat = (date: string | Date, locale: string) => {
-  const parsedDate = typeof date === "string" ? new Date(date) : date;
+  let dateToParse = date;
+
+  if (typeof date === "string") {
+    dateToParse = date.split(" ")[0].replace(/-/g, "/");
+  }
+
+  const parsedDate = new Date(dateToParse);
 
   if (isNaN(parsedDate.getTime())) {
     return "";

@@ -9,7 +9,8 @@
     "status_unpaid": "UNPAID",
     "status_debt": "DEBT",
     "role_admin": "ADMIN",
-    "role_user": "USER"
+    "role_user": "USER",
+    "loading": "Loading..."
   },
   "sidebar": {
     "dashboard": "Dashboard",
