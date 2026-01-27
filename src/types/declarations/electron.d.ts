@@ -115,6 +115,13 @@ declare global {
         result?: SaleView;
         error?: string;
       }>;
+
+      // GET INDEBTED CUSTOMERS
+      getIndebtedCustomers: () => Promise<{
+        success: boolean;
+        result?: SaleView;
+        error?: string;
+      }>;
     };
   }
 }

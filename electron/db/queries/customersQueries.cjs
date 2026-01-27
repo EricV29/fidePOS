@@ -22,6 +22,27 @@ async function getAccountsReceivable() {
   }
 }
 
+// Get Indebted Customers
+async function getIndebtedCustomers() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT id, name, last_name FROM customer WHERE status_id = 3;`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting indebted customers:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
+  getIndebtedCustomers,
 };

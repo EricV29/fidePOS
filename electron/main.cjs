@@ -24,7 +24,10 @@ const {
   getActiveProductsCategory,
   getInvestment,
 } = require("./db/queries/productsQueries.cjs");
-const { getAccountsReceivable } = require("./db/queries/customersQueries.cjs");
+const {
+  getAccountsReceivable,
+  getIndebtedCustomers,
+} = require("./db/queries/customersQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
@@ -525,6 +528,31 @@ ipcMain.handle("get-sale-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await getSaleData(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Indebted Customers Data
+ipcMain.handle("get-indebted-customers-data", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getIndebtedCustomers();
       if (response.success) {
         return {
           success: true,

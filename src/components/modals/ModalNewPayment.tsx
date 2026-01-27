@@ -5,8 +5,12 @@ import CloseIcon from "@icons/CloseIcon";
 import NewPaymentForm from "@forms/form-newPayment";
 import CustomSelect from "@components/Select";
 import { DataTable } from "@components/data-table";
-import { useState, useEffect } from "react";
-import type { PaymentsDebt, AccountsReceivable } from "@typesm/customers";
+import { useState, useEffect, useMemo } from "react";
+import type {
+  PaymentsDebt,
+  AccountsReceivable,
+  IndebtedCustomer,
+} from "@typesm/customers";
 import { columnsPD } from "@columns/columnsPD";
 import { useTranslation } from "react-i18next";
 import { currencyFormat } from "@utility/currencyFormat";
@@ -21,11 +25,13 @@ const optionsDebts = [
   { label: "0003 Labial $60.00", value: "iddd" },
 ];
 
+/*
 const optionsCustomers = [
   { label: "Eric Villeda", value: "id" },
   { label: "Manuel Angas", value: "idd" },
   { label: "Juan Perez", value: "iddd" },
 ];
+*/
 
 const dataPaymentsDB = [
   {
@@ -43,8 +49,14 @@ export function ModalNewPayment({ account }: Props) {
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
   const [dataPayments, setDataPayments] = useState<PaymentsDebt[]>([]);
+  const [indebtedCustomers, setIndebtedCustomers] = useState<
+    IndebtedCustomer[]
+  >([]);
 
-  const loadModal = (targetAccount: AccountsReceivable) => {
+  const loadModal = async (targetAccount: AccountsReceivable) => {
+    const response = await window.electronAPI.getIndebtedCustomers();
+    console.log(response.result);
+    setIndebtedCustomers(response.result);
     //const response = await window.electronAPI.getIndebtedCustomers(
     //  targetAccount.idSale,
     //);
@@ -55,6 +67,13 @@ export function ModalNewPayment({ account }: Props) {
     //console.log(account);
     setDataPayments(dataPaymentsDB);
   }, [account]);
+
+  const optionsCustomers = useMemo(() => {
+    return indebtedCustomers.map((c) => ({
+      label: `${c.name} ${c.last_name}`,
+      value: c.id.toString(),
+    }));
+  }, [indebtedCustomers]);
 
   const handlePaymentSuccess = () => {};
 
