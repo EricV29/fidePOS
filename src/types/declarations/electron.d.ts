@@ -130,6 +130,13 @@ declare global {
         result?: CustomerDebtsMin[];
         error?: string;
       }>;
+
+      /// GET DEBT DETAIL
+      getDebtDetail: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

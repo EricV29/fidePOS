@@ -54,4 +54,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Customer Debts Data
   getCustomerDebts: (data) =>
     ipcRenderer.invoke("get-customer-debts-data", data),
+
+  // Get Customer Debts Data
+  getDebtDetail: (data) => ipcRenderer.invoke("get-debt-detail-data", data),
 });
