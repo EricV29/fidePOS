@@ -48,7 +48,15 @@ export type PaymentsDebt = {
 export type AccountsReceivable = {
   idSale: number;
   idCustomer: number;
-  debtAmount: number;
-  debtPaid: number;
-  debtPending: number;
+};
+
+export type IndebtedCustomer = {
+  id: number;
+  name: string;
+  last_name: string;
+};
+
+export type CustomerDebtsMin = {
+  id: number;
+  customer_debt: string;
 };

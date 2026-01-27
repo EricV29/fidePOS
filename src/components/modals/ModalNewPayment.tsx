@@ -5,27 +5,35 @@ import CloseIcon from "@icons/CloseIcon";
 import NewPaymentForm from "@forms/form-newPayment";
 import CustomSelect from "@components/Select";
 import { DataTable } from "@components/data-table";
-import { useState, useEffect } from "react";
-import type { PaymentsDebt, AccountsReceivable } from "@typesm/customers";
+import { useState, useEffect, useMemo, useCallback } from "react";
+import type {
+  PaymentsDebt,
+  AccountsReceivable,
+  IndebtedCustomer,
+  CustomerDebtsMin,
+} from "@typesm/customers";
 import { columnsPD } from "@columns/columnsPD";
 import { useTranslation } from "react-i18next";
 import { currencyFormat } from "@utility/currencyFormat";
 
 interface Props {
-  account: AccountsReceivable;
+  account?: AccountsReceivable;
 }
 
+/*
 const optionsDebts = [
   { label: "0001 Carrito $30.00", value: "id" },
   { label: "0002 Cobija $50.00", value: "idd" },
   { label: "0003 Labial $60.00", value: "iddd" },
 ];
 
+
 const optionsCustomers = [
   { label: "Eric Villeda", value: "id" },
   { label: "Manuel Angas", value: "idd" },
   { label: "Juan Perez", value: "iddd" },
 ];
+*/
 
 const dataPaymentsDB = [
   {
@@ -43,18 +51,70 @@ export function ModalNewPayment({ account }: Props) {
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
   const [dataPayments, setDataPayments] = useState<PaymentsDebt[]>([]);
+  const [indebtedCustomers, setIndebtedCustomers] = useState<
+    IndebtedCustomer[]
+  >([]);
+  const [customerDebts, setCustomerDebts] = useState<CustomerDebtsMin[]>([]);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<
+    string | undefined
+  >();
+  const [selectedDebtId, setSelectedDebtId] = useState<string | undefined>();
 
-  const loadModal = (targetAccount: AccountsReceivable) => {
+  const loadModal = useCallback(async (targetAccount?: AccountsReceivable) => {
+    const response = await window.electronAPI.getIndebtedCustomers();
+    if (response.success && response.result) {
+      setIndebtedCustomers(response.result);
+    }
+
+    if (targetAccount) {
+      setSelectedCustomerId(targetAccount.idCustomer.toString());
+      handleIndebtedCustomer(targetAccount.idCustomer.toString());
+      setSelectedDebtId(targetAccount.idSale.toString());
+    }
     //const response = await window.electronAPI.getIndebtedCustomers(
     //  targetAccount.idSale,
     //);
-  };
+  }, []);
 
   useEffect(() => {
-    loadModal(account);
+    if (account) {
+      loadModal(account);
+    } else {
+      loadModal();
+    }
     //console.log(account);
     setDataPayments(dataPaymentsDB);
-  }, [account]);
+  }, [account, loadModal]);
+
+  const optionsCustomers = useMemo(() => {
+    return indebtedCustomers.map((c) => ({
+      label: `${c.name} ${c.last_name}`,
+      value: c.id?.toString(),
+    }));
+  }, [indebtedCustomers]);
+
+  const optionsDebts = useMemo(() => {
+    return customerDebts.map((d) => ({
+      label: `${d.customer_debt}`,
+      value: d.id?.toString(),
+    }));
+  }, [customerDebts]);
+
+  const handleIndebtedCustomer = async (value: string) => {
+    const response = await window.electronAPI.getCustomerDebts(value);
+    if (response.success && response.result) {
+      setCustomerDebts(response.result);
+    }
+  };
+
+  const handleDebtDetail = async (value: string) => {
+    console.log(value);
+    /*
+    const response = await window.electronAPI.getCustomerDebts(value);
+    if (response.success && response.result) {
+      setCustomerDebts(response.result);
+    }*/
+  };
 
   const handlePaymentSuccess = () => {};
 
@@ -92,6 +152,8 @@ export function ModalNewPayment({ account }: Props) {
               options={optionsCustomers}
               color="#F57C00"
               placeholder={t("placeholders.select")}
+              onChange={handleIndebtedCustomer}
+              value={selectedCustomerId}
             />
           </div>
           <div className="w-full">
@@ -100,25 +162,23 @@ export function ModalNewPayment({ account }: Props) {
               options={optionsDebts}
               color="#F57C00"
               placeholder={t("placeholders.select")}
+              onChange={handleDebtDetail}
+              value={selectedDebtId}
             />
           </div>
         </div>
         <div className="w-full flex justify-between px-2 dark:text-[#b3b3b3]">
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_debt")}</p>
-            <p className="text-[#F57C00]">
-              {currencyFormat(account.debtAmount)}
-            </p>
+            <p className="text-[#F57C00]">33</p>
           </div>
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_payment")}</p>
-            <p className="text-[#43A047]">{currencyFormat(account.debtPaid)}</p>
+            <p className="text-[#43A047]">333</p>
           </div>
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_debt_pending")}</p>
-            <p className="text-[#D32F2F]">
-              {currencyFormat(account.debtPending)}
-            </p>
+            <p className="text-[#D32F2F]">333</p>
           </div>
         </div>
         <div className="w-full h-[400px] flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 overflow-y-auto dark:text-[#b3b3b3]">

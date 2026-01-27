@@ -1,6 +1,7 @@
 export {};
 import { Role, Users } from "@typesm/users";
 import { SaleView } from "@typesm/sales";
+import { IndebtedCustomer, CustomerDebtsMin } from "@typesm/customers";
 
 interface UserSession {
   id: number;
@@ -113,6 +114,20 @@ declare global {
       getSaleData: (data) => Promise<{
         success: boolean;
         result?: SaleView;
+        error?: string;
+      }>;
+
+      // GET INDEBTED CUSTOMERS
+      getIndebtedCustomers: () => Promise<{
+        success: boolean;
+        result?: IndebtedCustomer[];
+        error?: string;
+      }>;
+
+      // GET CUSTOMER DEBTS
+      getCustomerDebts: (data) => Promise<{
+        success: boolean;
+        result?: CustomerDebtsMin[];
         error?: string;
       }>;
     };
