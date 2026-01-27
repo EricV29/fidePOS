@@ -261,6 +261,9 @@ export default function Dashboard() {
                     const data = {
                       idSale: row.idSale,
                       idCustomer: row.idCustomer,
+                      debtAmount: row.debt_amount,
+                      debtPaid: row.debt_paid,
+                      debtPending: row.debt_pending,
                     };
 
                     setModal(<ModalNewPayment account={data} />);
