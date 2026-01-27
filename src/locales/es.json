@@ -327,7 +327,7 @@
     "input2": "Deuda de Cliente",
     "total_debt": "Deuda total",
     "total_payment": "Total pagado",
-    "total_debts": "Total en deudas"
+    "total_debt_pending": "Deuda pendiente"
   },
   "formNewPayment": {
     "input1": "Monto de pago",

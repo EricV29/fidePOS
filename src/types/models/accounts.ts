@@ -1,5 +1,6 @@
 export type AccountsReceivable = {
-  id: string;
+  idSale: number;
+  idCustomer: number;
   name: string;
   last_name: string;
   code_sku: string;

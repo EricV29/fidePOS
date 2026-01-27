@@ -321,7 +321,7 @@
     "input2": "Customer debt",
     "total_debt": "Total debt",
     "total_payment": "Total payment",
-    "total_debts": "Total debts"
+    "total_debt_pending": "Debt pending"
   },
   "formNewPayment": {
     "input1": "Payment Amount",

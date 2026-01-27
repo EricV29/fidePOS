@@ -24,9 +24,7 @@ const {
   getActiveProductsCategory,
   getInvestment,
 } = require("./db/queries/productsQueries.cjs");
-const {
-  //getAccountsReceivable
-} = require("./db/queries/customersQueries.cjs");
+const { getAccountsReceivable } = require("./db/queries/customersQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
@@ -492,14 +490,14 @@ ipcMain.handle("get-dashboard-data", async (event, data) => {
         investment,
         revenue,
         recentSales,
-        //accountsReceivable,
+        accountsReceivable,
       ] = await Promise.all([
         getTopSalesCategory(startDate, endDate),
         getActiveProductsCategory(),
         getInvestment(),
         getRevenue(),
         getRecentSales(),
-        //getAccountsReceivable(start, end),
+        getAccountsReceivable(),
       ]);
 
       return {
@@ -510,7 +508,7 @@ ipcMain.handle("get-dashboard-data", async (event, data) => {
           investment,
           revenue,
           recentSales,
-          //accountsReceivable,
+          accountsReceivable,
         },
       };
     } catch (error) {

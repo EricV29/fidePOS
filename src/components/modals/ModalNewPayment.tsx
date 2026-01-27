@@ -9,9 +9,10 @@ import { useState, useEffect } from "react";
 import type { PaymentsDebt, AccountsReceivable } from "@typesm/customers";
 import { columnsPD } from "@columns/columnsPD";
 import { useTranslation } from "react-i18next";
+import { currencyFormat } from "@utility/currencyFormat";
 
 interface Props {
-  account?: AccountsReceivable;
+  account: AccountsReceivable;
 }
 
 const optionsDebts = [
@@ -43,17 +44,21 @@ export function ModalNewPayment({ account }: Props) {
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
   const [dataPayments, setDataPayments] = useState<PaymentsDebt[]>([]);
 
-  useEffect(() => {
-    setDataPayments(dataPaymentsDB);
-  }, []);
+  const loadModal = (targetAccount: AccountsReceivable) => {
+    //const response = await window.electronAPI.getIndebtedCustomers(
+    //  targetAccount.idSale,
+    //);
+  };
 
-  console.log(account?.idCustomer);
+  useEffect(() => {
+    loadModal(account);
+    //console.log(account);
+    setDataPayments(dataPaymentsDB);
+  }, [account]);
+
+  const handlePaymentSuccess = () => {};
 
   const columnspd = columnsPD(t, i18n.language);
-
-  const handleNewPayment = () => {
-    //window.electronAPI.signupSuccess();
-  };
 
   return ReactDOM.createPortal(
     <div
@@ -101,25 +106,29 @@ export function ModalNewPayment({ account }: Props) {
         <div className="w-full flex justify-between px-2 dark:text-[#b3b3b3]">
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_debt")}</p>
-            <p className="text-[#F57C00]">$2393.00</p>
+            <p className="text-[#F57C00]">
+              {currencyFormat(account.debtAmount)}
+            </p>
           </div>
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_payment")}</p>
-            <p className="text-[#43A047]">$200.00</p>
+            <p className="text-[#43A047]">{currencyFormat(account.debtPaid)}</p>
           </div>
           <div className="flex gap-2 font-semibold">
-            <p>{t("modalNewPayment.total_debts")}</p>
-            <p className="text-[#D32F2F]">$1938.00</p>
+            <p>{t("modalNewPayment.total_debt_pending")}</p>
+            <p className="text-[#D32F2F]">
+              {currencyFormat(account.debtPending)}
+            </p>
           </div>
         </div>
         <div className="w-full h-[400px] flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 overflow-y-auto dark:text-[#b3b3b3]">
-          <NewPaymentForm onSuccess={handleNewPayment} />
+          <NewPaymentForm onSuccess={handlePaymentSuccess} />
           <div>
             <DataTable data={dataPayments} columns={columnspd} />
           </div>
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }

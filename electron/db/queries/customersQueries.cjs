@@ -1,23 +1,27 @@
-const { getDB, saveDB } = require("../database.cjs");
+const { getDB, saveDB, mapResultToObjects } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 
-//* Mapping results
-function mapResultToObjects(result) {
-  if (!result[0]) return [];
+// Get Accounts Receivable
+async function getAccountsReceivable() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT * FROM v_accounts_receivable`;
 
-  const columns = result[0].columns;
-  const values = result[0].values;
+    const query = db.exec(sql);
 
-  return values.map((row) => {
-    const obj = {};
-    row.forEach((val, i) => {
-      obj[columns[i]] = val;
-    });
-    return obj;
-  });
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting accounts receivable:", error);
+    return { success: false, error: error.message };
+  }
 }
 
 module.exports = {
-  //getAccountsReceivable,
+  getAccountsReceivable,
 };

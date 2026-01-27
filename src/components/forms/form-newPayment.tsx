@@ -48,7 +48,7 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formNewPayment.input1")}
@@ -61,7 +61,7 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
                   className={cn(
                     "bg-white",
                     fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                   )}
                 />
               </FormControl>
@@ -79,7 +79,7 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formNewPayment.input2")}
@@ -92,7 +92,7 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
                   className={cn(
                     "bg-white",
                     fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                   )}
                 />
               </FormControl>
