@@ -5,7 +5,7 @@ import CloseIcon from "@icons/CloseIcon";
 import NewPaymentForm from "@forms/form-newPayment";
 import CustomSelect from "@components/Select";
 import { DataTable } from "@components/data-table";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import type {
   PaymentsDebt,
   AccountsReceivable,
@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next";
 import { currencyFormat } from "@utility/currencyFormat";
 
 interface Props {
-  account: AccountsReceivable;
+  account?: AccountsReceivable;
 }
 
 /*
@@ -55,22 +55,36 @@ export function ModalNewPayment({ account }: Props) {
     IndebtedCustomer[]
   >([]);
   const [customerDebts, setCustomerDebts] = useState<CustomerDebtsMin[]>([]);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<
+    string | undefined
+  >();
+  const [selectedDebtId, setSelectedDebtId] = useState<string | undefined>();
 
-  const loadModal = async (targetAccount: AccountsReceivable) => {
+  const loadModal = useCallback(async (targetAccount?: AccountsReceivable) => {
     const response = await window.electronAPI.getIndebtedCustomers();
     if (response.success && response.result) {
       setIndebtedCustomers(response.result);
     }
+
+    if (targetAccount) {
+      setSelectedCustomerId(targetAccount.idCustomer.toString());
+      handleIndebtedCustomer(targetAccount.idCustomer.toString());
+      setSelectedDebtId(targetAccount.idSale.toString());
+    }
     //const response = await window.electronAPI.getIndebtedCustomers(
     //  targetAccount.idSale,
     //);
-  };
+  }, []);
 
   useEffect(() => {
-    loadModal(account);
+    if (account) {
+      loadModal(account);
+    } else {
+      loadModal();
+    }
     //console.log(account);
     setDataPayments(dataPaymentsDB);
-  }, [account]);
+  }, [account, loadModal]);
 
   const optionsCustomers = useMemo(() => {
     return indebtedCustomers.map((c) => ({
@@ -93,7 +107,7 @@ export function ModalNewPayment({ account }: Props) {
     }
   };
 
-  const handleCustomerPayments = async (value: string) => {
+  const handleDebtDetail = async (value: string) => {
     console.log(value);
     /*
     const response = await window.electronAPI.getCustomerDebts(value);
@@ -139,6 +153,7 @@ export function ModalNewPayment({ account }: Props) {
               color="#F57C00"
               placeholder={t("placeholders.select")}
               onChange={handleIndebtedCustomer}
+              value={selectedCustomerId}
             />
           </div>
           <div className="w-full">
@@ -147,26 +162,23 @@ export function ModalNewPayment({ account }: Props) {
               options={optionsDebts}
               color="#F57C00"
               placeholder={t("placeholders.select")}
-              onChange={handleCustomerPayments}
+              onChange={handleDebtDetail}
+              value={selectedDebtId}
             />
           </div>
         </div>
         <div className="w-full flex justify-between px-2 dark:text-[#b3b3b3]">
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_debt")}</p>
-            <p className="text-[#F57C00]">
-              {currencyFormat(account.debtAmount)}
-            </p>
+            <p className="text-[#F57C00]">33</p>
           </div>
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_payment")}</p>
-            <p className="text-[#43A047]">{currencyFormat(account.debtPaid)}</p>
+            <p className="text-[#43A047]">333</p>
           </div>
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_debt_pending")}</p>
-            <p className="text-[#D32F2F]">
-              {currencyFormat(account.debtPending)}
-            </p>
+            <p className="text-[#D32F2F]">333</p>
           </div>
         </div>
         <div className="w-full h-[400px] flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 overflow-y-auto dark:text-[#b3b3b3]">
