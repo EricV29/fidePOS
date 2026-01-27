@@ -75,7 +75,7 @@ async function getRecentSales() {
   }
 }
 
-// Get Recent Sales
+// Get Sale Data
 async function getSaleData(id) {
   try {
     const db = await getDB();

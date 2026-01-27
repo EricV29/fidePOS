@@ -11,7 +11,7 @@ import { columnsPD } from "@columns/columnsPD";
 import { useTranslation } from "react-i18next";
 
 interface Props {
-  account?: AccountsReceivable;
+  account: AccountsReceivable;
 }
 
 const optionsDebts = [
@@ -43,17 +43,25 @@ export function ModalNewPayment({ account }: Props) {
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
   const [dataPayments, setDataPayments] = useState<PaymentsDebt[]>([]);
 
-  useEffect(() => {
-    setDataPayments(dataPaymentsDB);
-  }, []);
+  const loadNewPayment = async (targetAccount: AccountsReceivable) => {
+    const response = await window.electronAPI.getDebt(targetAccount);
+    if (response.success) {
+      console.log(response.result);
 
-  console.log(account?.idCustomer);
+      //setDataPayments(response.result);
+    }
+  };
+
+  useEffect(() => {
+    loadNewPayment(account);
+    setDataPayments(dataPaymentsDB);
+  }, [account]);
+
+  const handlePaymentSuccess = () => {
+    loadNewPayment(account);
+  };
 
   const columnspd = columnsPD(t, i18n.language);
-
-  const handleNewPayment = () => {
-    //window.electronAPI.signupSuccess();
-  };
 
   return ReactDOM.createPortal(
     <div
@@ -113,13 +121,13 @@ export function ModalNewPayment({ account }: Props) {
           </div>
         </div>
         <div className="w-full h-[400px] flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 overflow-y-auto dark:text-[#b3b3b3]">
-          <NewPaymentForm onSuccess={handleNewPayment} />
+          <NewPaymentForm onSuccess={handlePaymentSuccess} />
           <div>
             <DataTable data={dataPayments} columns={columnspd} />
           </div>
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }

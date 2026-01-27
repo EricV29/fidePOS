@@ -27,6 +27,7 @@ interface PieChartItem {
   [key: string]: string | number;
 }
 
+/*
 //* Example data bar chart ✅
 const chartDataTCSDB = [
   { category: "Maquillaje", sales: 186 },
@@ -69,6 +70,8 @@ const dataRSPBD = [
     total_amount: 50,
   },
 ];
+
+*/
 
 const dataARBD = [
   {
@@ -137,13 +140,17 @@ export default function Dashboard() {
     if (dashboardData?.recentSales) {
       const recentSalesData = dashboardData.recentSales.result;
       setDataTableRSP(recentSalesData);
+    }
+
+    if (dashboardData?.accountsReceivable) {
+      const accountsReceivableData = dashboardData.accountsReceivable.result;
+      setDataTableAR(accountsReceivableData);
       setLoading(false);
     }
   };
 
   useEffect(() => {
     loadDashboard();
-    setDataTableAR(dataARBD);
   }, []);
 
   const columnsrsp = columnsRSP(t, i18n.language);
@@ -252,8 +259,8 @@ export default function Dashboard() {
                 actions={{
                   onView: (row) => {
                     const data = {
-                      idCustomer: row.id,
-                      idSaleDetail: row.id,
+                      idSale: row.idSale,
+                      idCustomer: row.idCustomer,
                     };
 
                     setModal(<ModalNewPayment account={data} />);

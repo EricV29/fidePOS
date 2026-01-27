@@ -12,7 +12,7 @@ export type Sales = {
 };
 
 export type RecentSalesPaid = {
-  id: string;
+  id: number;
   num_sale: string;
   created_at: string;
   category: string;
