@@ -58,3 +58,8 @@ export type IndebtedCustomer = {
   name: string;
   last_name: string;
 };
+
+export type CustomerDebtsMin = {
+  id: number;
+  customer_debt: string;
+};

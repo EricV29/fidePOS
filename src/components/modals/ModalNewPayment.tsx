@@ -10,6 +10,7 @@ import type {
   PaymentsDebt,
   AccountsReceivable,
   IndebtedCustomer,
+  CustomerDebtsMin,
 } from "@typesm/customers";
 import { columnsPD } from "@columns/columnsPD";
 import { useTranslation } from "react-i18next";
@@ -19,13 +20,14 @@ interface Props {
   account: AccountsReceivable;
 }
 
+/*
 const optionsDebts = [
   { label: "0001 Carrito $30.00", value: "id" },
   { label: "0002 Cobija $50.00", value: "idd" },
   { label: "0003 Labial $60.00", value: "iddd" },
 ];
 
-/*
+
 const optionsCustomers = [
   { label: "Eric Villeda", value: "id" },
   { label: "Manuel Angas", value: "idd" },
@@ -52,11 +54,13 @@ export function ModalNewPayment({ account }: Props) {
   const [indebtedCustomers, setIndebtedCustomers] = useState<
     IndebtedCustomer[]
   >([]);
+  const [customerDebts, setCustomerDebts] = useState<CustomerDebtsMin[]>([]);
 
   const loadModal = async (targetAccount: AccountsReceivable) => {
     const response = await window.electronAPI.getIndebtedCustomers();
-    console.log(response.result);
-    setIndebtedCustomers(response.result);
+    if (response.success && response.result) {
+      setIndebtedCustomers(response.result);
+    }
     //const response = await window.electronAPI.getIndebtedCustomers(
     //  targetAccount.idSale,
     //);
@@ -71,9 +75,32 @@ export function ModalNewPayment({ account }: Props) {
   const optionsCustomers = useMemo(() => {
     return indebtedCustomers.map((c) => ({
       label: `${c.name} ${c.last_name}`,
-      value: c.id.toString(),
+      value: c.id?.toString(),
     }));
   }, [indebtedCustomers]);
+
+  const optionsDebts = useMemo(() => {
+    return customerDebts.map((d) => ({
+      label: `${d.customer_debt}`,
+      value: d.id?.toString(),
+    }));
+  }, [customerDebts]);
+
+  const handleIndebtedCustomer = async (value: string) => {
+    const response = await window.electronAPI.getCustomerDebts(value);
+    if (response.success && response.result) {
+      setCustomerDebts(response.result);
+    }
+  };
+
+  const handleCustomerPayments = async (value: string) => {
+    console.log(value);
+    /*
+    const response = await window.electronAPI.getCustomerDebts(value);
+    if (response.success && response.result) {
+      setCustomerDebts(response.result);
+    }*/
+  };
 
   const handlePaymentSuccess = () => {};
 
@@ -111,6 +138,7 @@ export function ModalNewPayment({ account }: Props) {
               options={optionsCustomers}
               color="#F57C00"
               placeholder={t("placeholders.select")}
+              onChange={handleIndebtedCustomer}
             />
           </div>
           <div className="w-full">
@@ -119,6 +147,7 @@ export function ModalNewPayment({ account }: Props) {
               options={optionsDebts}
               color="#F57C00"
               placeholder={t("placeholders.select")}
+              onChange={handleCustomerPayments}
             />
           </div>
         </div>

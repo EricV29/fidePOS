@@ -27,6 +27,7 @@ const {
 const {
   getAccountsReceivable,
   getIndebtedCustomers,
+  getCustomerDebts,
 } = require("./db/queries/customersQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
@@ -553,6 +554,31 @@ ipcMain.handle("get-indebted-customers-data", async (event) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await getIndebtedCustomers();
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Customer Debts Data
+ipcMain.handle("get-customer-debts-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getCustomerDebts(data);
       if (response.success) {
         return {
           success: true,

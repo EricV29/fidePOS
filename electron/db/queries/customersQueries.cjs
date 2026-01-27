@@ -42,7 +42,38 @@ async function getIndebtedCustomers() {
   }
 }
 
+// Get Customer Debts
+async function getCustomerDebts(idCustomer) {
+  try {
+    const db = await getDB();
+    const params = [idCustomer];
+    const sql = `
+      SELECT 
+        s.id,
+        GROUP_CONCAT('(' || sd.quantity || ') ' || p.name, ' | ') || ' = $' || (s.total_amount - s.paid_amount) AS customer_debt
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id 
+      INNER JOIN product p ON sd.product_id = p.id 
+      WHERE s.customer_id = ? AND sd.status_id = 5
+      GROUP BY s.id;
+    ;`;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting customer debts:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
+  getCustomerDebts,
 };

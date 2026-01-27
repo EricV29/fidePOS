@@ -76,10 +76,10 @@ async function getRecentSales() {
 }
 
 // Get Sale Data
-async function getSaleData(id) {
+async function getSaleData(idSale) {
   try {
     const db = await getDB();
-    const params = [id];
+    const params = [idSale];
     const sqlSaleGeneral = `
       SELECT s.id, s.sale_num, st.description AS status, s.created_at, c.name AS customer, s.total_amount, s.discount, s.paid_amount   
       FROM sale s
