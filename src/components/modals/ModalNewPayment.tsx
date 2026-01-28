@@ -64,22 +64,55 @@ export function ModalNewPayment({ account }: Props) {
   const [generalData, setGeneralData] = useState<generalDebtData | undefined>();
   const { setLoading } = useLoading();
 
-  const loadModal = useCallback(async (targetAccount?: AccountsReceivable) => {
-    const response = await window.electronAPI.getIndebtedCustomers();
+  //* Get Customer Debts
+  const handleCustomerDebts = useCallback(async (value: string) => {
+    const response = await window.electronAPI.getCustomerDebts(value);
     if (response.success && response.result) {
-      setIndebtedCustomers(response.result);
+      setCustomerDebts(response.result);
     }
-
-    if (targetAccount) {
-      setSelectedCustomerId(targetAccount.idCustomer.toString());
-      handleIndebtedCustomer(targetAccount.idCustomer.toString());
-      setSelectedDebtId(targetAccount.idSale.toString());
-      handleDebtDetail(targetAccount.idSale.toString());
-    }
-    //const response = await window.electronAPI.getIndebtedCustomers(
-    //  targetAccount.idSale,
-    //);
   }, []);
+
+  //* Get Debt Details
+  const handleDebtDetail = useCallback(
+    async (value: string) => {
+      const response = await window.electronAPI.getDebtDetail(value);
+      const debtDetailData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
+
+      if (debtDetailData?.detailDebt) {
+        const generalData = debtDetailData.detailDebt.result;
+        setGeneralData(generalData[0]);
+      }
+
+      if (debtDetailData?.paymentsDebt) {
+        const paymentsDebt = debtDetailData.paymentsDebt.result;
+        setDataPayments(paymentsDebt);
+        setLoading(false);
+      }
+    },
+    [setLoading],
+  );
+
+  const loadModal = useCallback(
+    async (targetAccount?: AccountsReceivable) => {
+      //* Get indebted customers
+      const response = await window.electronAPI.getIndebtedCustomers();
+      if (response.success && response.result) {
+        setIndebtedCustomers(response.result);
+      }
+
+      if (targetAccount) {
+        setLoading(true);
+        setSelectedCustomerId(targetAccount.idCustomer.toString());
+        handleCustomerDebts(targetAccount.idCustomer.toString());
+        setSelectedDebtId(targetAccount.idSale.toString());
+        handleDebtDetail(targetAccount.idSale.toString());
+      }
+    },
+    [handleCustomerDebts, handleDebtDetail, setLoading],
+  );
 
   useEffect(() => {
     if (account) {
@@ -87,7 +120,6 @@ export function ModalNewPayment({ account }: Props) {
     } else {
       loadModal();
     }
-    //console.log(account);
     setDataPayments(dataPaymentsDB);
   }, [account, loadModal]);
 
@@ -105,30 +137,7 @@ export function ModalNewPayment({ account }: Props) {
     }));
   }, [customerDebts]);
 
-  const handleIndebtedCustomer = async (value: string) => {
-    const response = await window.electronAPI.getCustomerDebts(value);
-    if (response.success && response.result) {
-      setCustomerDebts(response.result);
-    }
-  };
-
-  const handleDebtDetail = async (value: string) => {
-    setLoading(true);
-    const response = await window.electronAPI.getDebtDetail(value);
-    const debtDetailData =
-      typeof response.result === "string"
-        ? JSON.parse(response.result)
-        : response.result;
-
-    if (debtDetailData?.detailDebt) {
-      const generalData = debtDetailData.detailDebt.result;
-      setGeneralData(generalData[0]);
-      setLoading(false);
-    }
-  };
-
   const handlePaymentSuccess = () => {};
-
   const columnspd = columnsPD(t, i18n.language);
 
   return ReactDOM.createPortal(
@@ -163,7 +172,7 @@ export function ModalNewPayment({ account }: Props) {
               options={optionsCustomers}
               color="#F57C00"
               placeholder={t("placeholders.select")}
-              onChange={handleIndebtedCustomer}
+              onChange={handleCustomerDebts}
               value={selectedCustomerId}
             />
           </div>

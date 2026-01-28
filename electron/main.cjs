@@ -30,6 +30,7 @@ const {
   getCustomerDebts,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
+const { getPaymentsDebt } = require("./db/queries/paymentsQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
@@ -606,13 +607,13 @@ ipcMain.handle("get-debt-detail-data", async (event, data) => {
     try {
       const [detailDebt, paymentsDebt] = await Promise.all([
         getDetailDebt(data),
-        //getPaymentsDebt(data),
+        getPaymentsDebt(data),
       ]);
       return {
         success: true,
         result: {
           detailDebt,
-          //paymentsDebt,
+          paymentsDebt,
         },
       };
     } catch (error) {
