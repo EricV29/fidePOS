@@ -12,9 +12,11 @@ import type {
   IndebtedCustomer,
   CustomerDebtsMin,
 } from "@typesm/customers";
+import type { generalDebtData } from "@typesm/debts";
 import { columnsPD } from "@columns/columnsPD";
 import { useTranslation } from "react-i18next";
 import { currencyFormat } from "@utility/currencyFormat";
+import { useLoading } from "@context/LoadingContext";
 
 interface Props {
   account?: AccountsReceivable;
@@ -59,22 +61,58 @@ export function ModalNewPayment({ account }: Props) {
     string | undefined
   >();
   const [selectedDebtId, setSelectedDebtId] = useState<string | undefined>();
+  const [generalData, setGeneralData] = useState<generalDebtData | undefined>();
+  const { setLoading } = useLoading();
 
-  const loadModal = useCallback(async (targetAccount?: AccountsReceivable) => {
-    const response = await window.electronAPI.getIndebtedCustomers();
+  //* Get Customer Debts
+  const handleCustomerDebts = useCallback(async (value: string) => {
+    const response = await window.electronAPI.getCustomerDebts(value);
     if (response.success && response.result) {
-      setIndebtedCustomers(response.result);
+      setCustomerDebts(response.result);
     }
-
-    if (targetAccount) {
-      setSelectedCustomerId(targetAccount.idCustomer.toString());
-      handleIndebtedCustomer(targetAccount.idCustomer.toString());
-      setSelectedDebtId(targetAccount.idSale.toString());
-    }
-    //const response = await window.electronAPI.getIndebtedCustomers(
-    //  targetAccount.idSale,
-    //);
   }, []);
+
+  //* Get Debt Details
+  const handleDebtDetail = useCallback(
+    async (value: string) => {
+      const response = await window.electronAPI.getDebtDetail(value);
+      const debtDetailData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
+
+      if (debtDetailData?.detailDebt) {
+        const generalData = debtDetailData.detailDebt.result;
+        setGeneralData(generalData[0]);
+      }
+
+      if (debtDetailData?.paymentsDebt) {
+        const paymentsDebt = debtDetailData.paymentsDebt.result;
+        setDataPayments(paymentsDebt);
+        setLoading(false);
+      }
+    },
+    [setLoading],
+  );
+
+  const loadModal = useCallback(
+    async (targetAccount?: AccountsReceivable) => {
+      //* Get indebted customers
+      const response = await window.electronAPI.getIndebtedCustomers();
+      if (response.success && response.result) {
+        setIndebtedCustomers(response.result);
+      }
+
+      if (targetAccount) {
+        setLoading(true);
+        setSelectedCustomerId(targetAccount.idCustomer.toString());
+        handleCustomerDebts(targetAccount.idCustomer.toString());
+        setSelectedDebtId(targetAccount.idSale.toString());
+        handleDebtDetail(targetAccount.idSale.toString());
+      }
+    },
+    [handleCustomerDebts, handleDebtDetail, setLoading],
+  );
 
   useEffect(() => {
     if (account) {
@@ -82,7 +120,6 @@ export function ModalNewPayment({ account }: Props) {
     } else {
       loadModal();
     }
-    //console.log(account);
     setDataPayments(dataPaymentsDB);
   }, [account, loadModal]);
 
@@ -100,24 +137,7 @@ export function ModalNewPayment({ account }: Props) {
     }));
   }, [customerDebts]);
 
-  const handleIndebtedCustomer = async (value: string) => {
-    const response = await window.electronAPI.getCustomerDebts(value);
-    if (response.success && response.result) {
-      setCustomerDebts(response.result);
-    }
-  };
-
-  const handleDebtDetail = async (value: string) => {
-    console.log(value);
-    /*
-    const response = await window.electronAPI.getCustomerDebts(value);
-    if (response.success && response.result) {
-      setCustomerDebts(response.result);
-    }*/
-  };
-
   const handlePaymentSuccess = () => {};
-
   const columnspd = columnsPD(t, i18n.language);
 
   return ReactDOM.createPortal(
@@ -152,7 +172,7 @@ export function ModalNewPayment({ account }: Props) {
               options={optionsCustomers}
               color="#F57C00"
               placeholder={t("placeholders.select")}
-              onChange={handleIndebtedCustomer}
+              onChange={handleCustomerDebts}
               value={selectedCustomerId}
             />
           </div>
@@ -170,15 +190,27 @@ export function ModalNewPayment({ account }: Props) {
         <div className="w-full flex justify-between px-2 dark:text-[#b3b3b3]">
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_debt")}</p>
-            <p className="text-[#F57C00]">33</p>
+            <p className="text-[#F57C00]">
+              {generalData
+                ? currencyFormat(generalData.debt_amount)
+                : t("global.loading")}
+            </p>
           </div>
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_payment")}</p>
-            <p className="text-[#43A047]">333</p>
+            <p className="text-[#43A047]">
+              {generalData
+                ? currencyFormat(generalData.debt_paid)
+                : t("global.loading")}
+            </p>
           </div>
           <div className="flex gap-2 font-semibold">
             <p>{t("modalNewPayment.total_debt_pending")}</p>
-            <p className="text-[#D32F2F]">333</p>
+            <p className="text-[#D32F2F]">
+              {generalData
+                ? currencyFormat(generalData.debt_pending)
+                : t("global.loading")}
+            </p>
           </div>
         </div>
         <div className="w-full h-[400px] flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 overflow-y-auto dark:text-[#b3b3b3]">

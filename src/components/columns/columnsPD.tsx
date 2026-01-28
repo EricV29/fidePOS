@@ -35,10 +35,6 @@ export const columnsPD = (
     },
   },
   {
-    accessorKey: "code_sku",
-    header: t("columns.code"),
-  },
-  {
     accessorKey: "amount",
     header: t("columns.total_amount"),
     cell: ({ row }) => {

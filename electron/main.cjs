@@ -29,6 +29,8 @@ const {
   getIndebtedCustomers,
   getCustomerDebts,
 } = require("./db/queries/customersQueries.cjs");
+const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
+const { getPaymentsDebt } = require("./db/queries/paymentsQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
@@ -590,6 +592,30 @@ ipcMain.handle("get-customer-debts-data", async (event, data) => {
           error: response.error,
         };
       }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Debt Dtail Data
+ipcMain.handle("get-debt-detail-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [detailDebt, paymentsDebt] = await Promise.all([
+        getDetailDebt(data),
+        getPaymentsDebt(data),
+      ]);
+      return {
+        success: true,
+        result: {
+          detailDebt,
+          paymentsDebt,
+        },
+      };
     } catch (error) {
       console.log("❌ ERROR: ", error);
     }
