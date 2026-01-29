@@ -42,7 +42,28 @@ async function getInvestment() {
   }
 }
 
+// Get Category Options
+async function getCategoryOptions() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT * FROM v_category_options`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting category options:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
+  getCategoryOptions,
 };

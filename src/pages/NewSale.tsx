@@ -17,16 +17,16 @@ import { useTranslation } from "react-i18next";
 
 interface NewSaleProps {}
 
-//* Example data categories
-const categoriesDB = [
-  { id: "0001", category: "Zapatos", products: 15 },
-  { id: "0002", category: "Edredones", products: 12 },
-  { id: "0003", category: "Maquillaje", products: 10 },
-  { id: "0005", category: "Juguetes", products: 20 },
-  { id: "0006", category: "Barberia", products: 45 },
-  { id: "0007", category: "Peluches", products: 90 },
-  { id: "0008", category: "Dulces", products: 14 },
-];
+// //* Example data categories
+// const categoriesDB = [
+//   { id: "0001", category: "Zapatos", products: 15 },
+//   { id: "0002", category: "Edredones", products: 12 },
+//   { id: "0003", category: "Maquillaje", products: 10 },
+//   { id: "0005", category: "Juguetes", products: 20 },
+//   { id: "0006", category: "Barberia", products: 45 },
+//   { id: "0007", category: "Peluches", products: 90 },
+//   { id: "0008", category: "Dulces", products: 14 },
+// ];
 
 //* Example data products
 const dataProductsSaleDB = [
@@ -72,17 +72,27 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
 
   const loadNewSale = useCallback(async () => {
     const response = await window.electronAPI.getNewSaleData();
+    const newSaleData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+
+    if (newSaleData?.categoryOptions) {
+      const categoryData = newSaleData.categoryOptions.result;
+      console.log(categoryData);
+      setCategories(categoryData);
+    }
   }, []);
 
   useEffect(() => {
     loadNewSale();
-    setCategories(categoriesDB);
     setDataProducts(dataProductsSaleDB);
     setDataCustomers(customersDB);
     setCar([]);
   }, [loadNewSale]);
 
   const handleCategory = (id: string) => {
+    console.log(id);
     setActiveCategory(id);
   };
 
@@ -128,7 +138,6 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
 
   const totalCart = subtotalCart - Number(discount);
 
-  if (!categories) return null;
   return (
     <>
       <div className="w-full h-full flex min-h-0">
@@ -141,15 +150,17 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             />
           </div>
           <div className="w-full flex-1 flex justify-start gap-2 pb-1 overflow-x-auto">
-            {categories.map((item: Categories) => (
-              <CardCategory
-                key={item.id}
-                name={item.category}
-                options={item.products}
-                onClick={() => handleCategory(item.id)}
-                active={activeCategory == item.id}
-              />
-            ))}
+            {categories &&
+              categories.length > 0 &&
+              categories.map((item: Categories) => (
+                <CardCategory
+                  key={item.id}
+                  name={item.category}
+                  options={item.products}
+                  onClick={() => handleCategory(item.id)}
+                  active={activeCategory == item.id}
+                />
+              ))}
           </div>
           <div className="flex-5 w-full p-2 flex flex-col gap-4 dark:text-[#b3b3b3]">
             <div>

@@ -146,7 +146,7 @@ declare global {
       }>;
 
       //* GET NEW SALE DATA PAGE
-      getNewSaleData: (data) => Promise<{
+      getNewSaleData: () => Promise<{
         success: boolean;
         result?: string;
         error?: string;

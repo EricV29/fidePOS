@@ -23,6 +23,7 @@ const {
 const {
   getActiveProductsCategory,
   getInvestment,
+  getCategoryOptions,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -488,7 +489,7 @@ ipcMain.handle("contactDevs", async (event, data) => {
   }
 });
 
-// Get Dashboard Data
+//* Get Dashboard Data Page
 ipcMain.handle("get-dashboard-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
@@ -644,6 +645,27 @@ ipcMain.handle("addPaymentDebt", async (event, data) => {
           error: response.error,
         };
       }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+//* Get New Sale Data Page
+ipcMain.handle("get-newsale-data", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [categoryOptions] = await Promise.all([getCategoryOptions()]);
+
+      return {
+        success: true,
+        result: {
+          categoryOptions,
+        },
+      };
     } catch (error) {
       console.log("❌ ERROR: ", error);
     }
