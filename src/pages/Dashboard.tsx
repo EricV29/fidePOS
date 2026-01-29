@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DatePicker from "@components/DatePicker";
 import CardInfoNumber from "@components/CardInfoNumber";
 import RevenueIcon from "@icons/RevenueIcon";
@@ -108,49 +108,53 @@ export default function Dashboard() {
     endDate: today,
   });
 
-  const loadDashboard = async (currentFilters = filters) => {
-    setLoading(true);
-    const response = await window.electronAPI.getDashboardData(currentFilters);
-    const dashboardData =
-      typeof response.result === "string"
-        ? JSON.parse(response.result)
-        : response.result;
+  const loadDashboard = useCallback(
+    async (currentFilters = filters) => {
+      setLoading(true);
+      const response =
+        await window.electronAPI.getDashboardData(currentFilters);
+      const dashboardData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
 
-    if (dashboardData?.topSalesCategory) {
-      const chartData = dashboardData.topSalesCategory.result;
-      setChartDataTSC(chartData);
-    }
+      if (dashboardData?.topSalesCategory) {
+        const chartData = dashboardData.topSalesCategory.result;
+        setChartDataTSC(chartData);
+      }
 
-    if (dashboardData?.activeProductsCategory) {
-      const chartPieData = dashboardData.activeProductsCategory.result;
-      setChartDataTAPCF(addRandomFill(chartPieData));
-    }
+      if (dashboardData?.activeProductsCategory) {
+        const chartPieData = dashboardData.activeProductsCategory.result;
+        setChartDataTAPCF(addRandomFill(chartPieData));
+      }
 
-    if (dashboardData?.investment) {
-      const investmentData = dashboardData.investment.result;
-      setInvestCard(investmentData[0].investment);
-    }
+      if (dashboardData?.investment) {
+        const investmentData = dashboardData.investment.result;
+        setInvestCard(investmentData[0].investment);
+      }
 
-    if (dashboardData?.revenue) {
-      const investmentData = dashboardData.revenue.result;
-      setRevenueCard(investmentData[0].revenue);
-    }
+      if (dashboardData?.revenue) {
+        const investmentData = dashboardData.revenue.result;
+        setRevenueCard(investmentData[0].revenue);
+      }
 
-    if (dashboardData?.recentSales) {
-      const recentSalesData = dashboardData.recentSales.result;
-      setDataTableRSP(recentSalesData);
-    }
+      if (dashboardData?.recentSales) {
+        const recentSalesData = dashboardData.recentSales.result;
+        setDataTableRSP(recentSalesData);
+      }
 
-    if (dashboardData?.accountsReceivable) {
-      const accountsReceivableData = dashboardData.accountsReceivable.result;
-      setDataTableAR(accountsReceivableData);
-      setLoading(false);
-    }
-  };
+      if (dashboardData?.accountsReceivable) {
+        const accountsReceivableData = dashboardData.accountsReceivable.result;
+        setDataTableAR(accountsReceivableData);
+        setLoading(false);
+      }
+    },
+    [filters, setLoading],
+  );
 
   useEffect(() => {
     loadDashboard();
-  }, []);
+  }, [loadDashboard]);
 
   const columnsrsp = columnsRSP(t, i18n.language);
   const columnsar = columnsAR(t, i18n.language);
