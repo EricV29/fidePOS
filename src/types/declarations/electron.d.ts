@@ -103,7 +103,7 @@ declare global {
         error?: string;
       }>;
 
-      // GET DASHBOARD DATA
+      //* GET DASHBOARD DATA PAGE
       getDashboardData: (data) => Promise<{
         success: boolean;
         result?: string;
@@ -140,6 +140,13 @@ declare global {
 
       // ADD PAYMENT DEBT
       addPaymentDebt: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET NEW SALE DATA PAGE
+      getNewSaleData: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;

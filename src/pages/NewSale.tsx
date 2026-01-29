@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import BarCodeIcon from "@icons/BarCodeIcon";
 import CardCategory from "@components/CardCategory";
 import type { Categories, ProductsSale } from "@typesm/products";
@@ -70,12 +70,17 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const columnsps = columnsPS(t);
   const columnssc = columnsSC(t);
 
+  const loadNewSale = useCallback(async () => {
+    const response = await window.electronAPI.getNewSaleData();
+  }, []);
+
   useEffect(() => {
+    loadNewSale();
     setCategories(categoriesDB);
     setDataProducts(dataProductsSaleDB);
     setDataCustomers(customersDB);
     setCar([]);
-  }, []);
+  }, [loadNewSale]);
 
   const handleCategory = (id: string) => {
     setActiveCategory(id);
@@ -93,7 +98,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
                 quantity: item.quantity + 1,
                 total_amount: (item.quantity + 1) * item.unit_price,
               }
-            : item
+            : item,
         );
       }
 
@@ -114,7 +119,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
 
   const subtotalCart = dataCar.reduce(
     (sum, item) => sum + item.total_amount,
-    0
+    0,
   );
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -197,7 +202,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
                     }
 
                     return updated;
-                  })
+                  }),
                 );
               }}
             />
