@@ -24,14 +24,18 @@ const ModalWarningAlert = ({
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleConfirm = () => {
-    if (onConfirm) onConfirm();
-    close();
+  const handleConfirm = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onConfirm) {
+      await onConfirm();
+    }
   };
 
-  const handleCancel = () => {
-    if (onCancel) onCancel();
-    close();
+  const handleCancel = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onCancel) {
+      onCancel();
+    }
   };
 
   const handleOk = () => {
@@ -79,7 +83,7 @@ const ModalWarningAlert = ({
         )}
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 };
 

@@ -4,11 +4,16 @@ import ModalDangerAlert from "@modals/ModalDangerAlert";
 import { useTranslation } from "react-i18next";
 import AUTH_CODES from "../../constants/authCodes.json";
 import ReactDOM from "react-dom";
+import ModalWarningAlert from "@modals/ModalWarningAlert";
 
 interface ModalContextType {
   modal: React.ReactNode | null;
   setModal: (content: React.ReactNode | null) => void;
   triggerResponseAlert: (code: string | undefined) => void;
+  triggerWarningAlert: (
+    text: string,
+    onConfirm: () => Promise<void> | void,
+  ) => void;
 }
 
 interface AlertModalProps {
@@ -21,7 +26,19 @@ const ModalContext = createContext<ModalContextType | null>(null);
 export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [modal, setModal] = useState<React.ReactNode | null>(null);
   const [alert, setAlert] = useState<React.ReactNode | null>(null);
+
   const { t } = useTranslation();
+
+  const triggerWarningAlert = (text: string, onConfirm: () => void) => {
+    setAlert(
+      <ModalWarningAlert
+        text={text}
+        btnOptions={true}
+        onConfirm={onConfirm}
+        onCancel={() => setAlert(null)}
+      />,
+    );
+  };
 
   const triggerResponseAlert = (code: string | undefined) => {
     if (!code) return;
@@ -118,7 +135,9 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <ModalContext.Provider value={{ modal, setModal, triggerResponseAlert }}>
+    <ModalContext.Provider
+      value={{ modal, setModal, triggerResponseAlert, triggerWarningAlert }}
+    >
       {children}
       {alert &&
         ReactDOM.createPortal(alert, document.getElementById("alert-root")!)}

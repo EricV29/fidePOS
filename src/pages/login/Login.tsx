@@ -11,7 +11,7 @@ const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
-  const { triggerResponseAlert } = useModal();
+  const { triggerWarningAlert, triggerResponseAlert } = useModal();
 
   const handleLogin = async (data: LoginFormValues) => {
     try {
@@ -38,29 +38,26 @@ const Login: React.FC = () => {
       return;
     }
 
-    setModal(
-      <ModalWarningAlert
-        text={t("modalWarningAlert.text_forgot_password")}
-        btnOptions={true}
-        onConfirm={async () => {
-          try {
-            setIsLoading(true);
-            const response = await window.electronAPI.forgotPassword(
-              email,
-              i18n.language,
-            );
-            if (response.success) {
-              setIsLoading(false);
-              triggerResponseAlert(response.result);
-            } else {
-              setIsLoading(false);
-              triggerResponseAlert(response.error);
-            }
-          } catch (err) {
-            console.error("Comunication Error:", err);
+    triggerWarningAlert(
+      t("modalWarningAlert.text_forgot_password"),
+      async () => {
+        try {
+          setIsLoading(true);
+          const response = await window.electronAPI.forgotPassword(
+            email,
+            i18n.language,
+          );
+          if (response.success) {
+            setIsLoading(false);
+            triggerResponseAlert(response.result);
+          } else {
+            setIsLoading(false);
+            triggerResponseAlert(response.error);
           }
-        }}
-      />,
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      },
     );
   };
 

@@ -18,7 +18,6 @@ import { useTranslation } from "react-i18next";
 import { currencyFormat } from "@utility/currencyFormat";
 import { useLoading } from "@context/LoadingContext";
 import { type NewPaymentFormValues } from "@forms/schemas/payment.schema";
-import ModalWarningAlert from "./ModalWarningAlert";
 interface Props {
   account?: AccountsReceivable;
   onSuccess: () => void;
@@ -65,7 +64,7 @@ export function ModalNewPayment({ account, onSuccess }: Props) {
   const [selectedDebtId, setSelectedDebtId] = useState<string | undefined>();
   const [generalData, setGeneralData] = useState<generalDebtData | undefined>();
   const { setLoading } = useLoading();
-  const { triggerResponseAlert } = useModal();
+  const { triggerWarningAlert, triggerResponseAlert } = useModal();
 
   //* Get Customer Debts
   const handleCustomerDebts = useCallback(async (value: string) => {
@@ -142,35 +141,30 @@ export function ModalNewPayment({ account, onSuccess }: Props) {
   }, [customerDebts]);
 
   const handlePaymentSuccess = async (values: NewPaymentFormValues) => {
-    // setModal(
-    //   <ModalWarningAlert
-    //     text={t("modalWarningAlert.text_debt_payment")}
-    //     btnOptions={true}
-    //     onConfirm={async () => {
-    try {
-      setLoading(true);
-      //* Add payment debt
-      const data = {
-        note: values.note,
-        payment_amount: parseFloat(values.payment_amount),
-        idSale: Number(selectedDebtId),
-      };
-      const response = await window.electronAPI.addPaymentDebt(data);
-      if (response.success && response.result) {
-        onSuccess();
-        handleDebtDetail(selectedDebtId!);
+    triggerWarningAlert(t("modalWarningAlert.text_debt_payment"), async () => {
+      try {
+        setLoading(true);
+        //* Add payment debt
+        const data = {
+          note: values.note,
+          payment_amount: parseFloat(values.payment_amount),
+          idSale: Number(selectedDebtId),
+        };
+        const response = await window.electronAPI.addPaymentDebt(data);
+        if (response.success && response.result) {
+          onSuccess();
+          handleDebtDetail(selectedDebtId!);
+          setLoading(false);
+          triggerResponseAlert(response.result);
+        } else {
+          triggerResponseAlert(response.error);
+        }
+      } catch (err) {
+        console.error("Comunication Error:", err);
+      } finally {
         setLoading(false);
-        triggerResponseAlert(response.result);
-      } else {
-        setLoading(false);
-        triggerResponseAlert(response.error);
       }
-    } catch (err) {
-      console.error("Comunication Error:", err);
-    }
-    //     }}
-    //   />,
-    // );
+    });
   };
 
   const columnspd = columnsPD(t, i18n.language);
