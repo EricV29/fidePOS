@@ -206,7 +206,8 @@
     "title": "¡Warning!",
     "text_forgot_password": "A password recovery email will be sent to you. Please ensure you are connected to the internet.",
     "text_write_email": "Make sure to write your email.",
-    "text_delete_user": "Delete this user? This action cannot be undone."
+    "text_delete_user": "Delete this user? This action cannot be undone.",
+    "text_debt_payment": "Add new payment? This action cannot be undone."
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
@@ -215,7 +216,8 @@
     "text_delete_user": "User deleted successfully.",
     "text_edit_user": "User edited successfully.",
     "text_change_pass_user": "Change password successfully.",
-    "text_img_upload": "Image upload successfully."
+    "text_img_upload": "Image upload successfully.",
+    "text_debt_payment_success": "Debt payment added successfully"
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -227,7 +229,8 @@
     "text_unauthorized": "Unauthorized action.",
     "text_img_invalid": "Support images: JPEG, JPG, PNG or WebP.",
     "text_img_large": "The image file is too large. Maximum size is 2MB.",
-    "text_not_internet": "Make sure have an internet conecction."
+    "text_not_internet": "Make sure have an internet conecction.",
+    "text_debt_not_found": "Debt not found"
   },
   "modalAddUser": {
     "title": "Add new user",

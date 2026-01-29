@@ -137,6 +137,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // ADD PAYMENT DEBT
+      addPaymentDebt: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

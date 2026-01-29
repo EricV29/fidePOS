@@ -18,7 +18,7 @@ import {
 import { useTranslation } from "react-i18next";
 
 interface ProductFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (values: NewPaymentFormValues) => void;
 }
 
 export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
@@ -33,8 +33,7 @@ export default function NewPaymentForm({ onSuccess }: ProductFormProps) {
   });
 
   function onSubmit(values: NewPaymentFormValues) {
-    console.log("Form submitted:", values);
-    if (onSuccess) onSuccess();
+    onSuccess?.(values);
   }
 
   return (
