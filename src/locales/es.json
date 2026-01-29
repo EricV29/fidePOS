@@ -212,7 +212,8 @@
     "title": "¡Advertencia!",
     "text_forgot_password": "Se enviará un correo electrónico con tu contraseña. Asegúrate de tener conexión a internet.",
     "text_write_email": "Asegurate de escribir tu correo electrónico.",
-    "text_delete_user": "¿Estás seguro de que quieres eliminar a este usuario?"
+    "text_delete_user": "¿Estás seguro de que quieres eliminar a este usuario?",
+    "text_debt_payment": "¿Estás seguro de que agregar un nuevo pago?"
   },
   "modalSuccessAlert": {
     "title": "¡Exito!",
@@ -221,7 +222,8 @@
     "text_delete_user": "Usuario eliminado correctamente.",
     "text_edit_user": "Usuario editado correctamente.",
     "text_change_pass_user": "Contraseña actualizada correctamente.",
-    "text_img_upload": "Imagen cargada correctamente."
+    "text_img_upload": "Imagen cargada correctamente.",
+    "text_debt_payment_success": "Pago de deuda agregado correctamente"
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -233,7 +235,8 @@
     "text_unauthorized": "Acción no permitida.",
     "text_img_invalid": "Imagenes aceptadas: JPEG, JPG, PNG o WebP.",
     "text_img_large": "Imagen demasiado pesada. Máximo 2MB.",
-    "text_not_internet": "Asegurate de tener una conexión a internet."
+    "text_not_internet": "Asegurate de tener una conexión a internet.",
+    "text_debt_not_found": "Deuda no encontrada"
   },
   "modalAddUser": {
     "title": "Agregar usuario",

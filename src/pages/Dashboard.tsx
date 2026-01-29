@@ -71,8 +71,6 @@ const dataRSPBD = [
   },
 ];
 
-*/
-
 const dataARBD = [
   {
     id: "728ed511f",
@@ -85,6 +83,7 @@ const dataARBD = [
     created_at: "2025-02-15 00:00:00",
   },
 ];
+*/
 
 interface MyContext {
   installDate: string;
@@ -263,7 +262,12 @@ export default function Dashboard() {
                       idCustomer: row.idCustomer,
                     };
 
-                    setModal(<ModalNewPayment account={data} />);
+                    setModal(
+                      <ModalNewPayment
+                        account={data}
+                        onSuccess={loadDashboard}
+                      />,
+                    );
                   },
                 }}
               />

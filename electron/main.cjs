@@ -30,7 +30,10 @@ const {
   getCustomerDebts,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
-const { getPaymentsDebt } = require("./db/queries/paymentsQueries.cjs");
+const {
+  getPaymentsDebt,
+  addPaymentDebt,
+} = require("./db/queries/paymentsQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
@@ -616,6 +619,31 @@ ipcMain.handle("get-debt-detail-data", async (event, data) => {
           paymentsDebt,
         },
       };
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Add Payment Debt
+ipcMain.handle("addPaymentDebt", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await addPaymentDebt(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
     } catch (error) {
       console.log("❌ ERROR: ", error);
     }

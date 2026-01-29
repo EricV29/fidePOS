@@ -93,6 +93,14 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_not_internet",
       },
+      [AUTH_CODES.DEBT_NOT_FOUND]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_debt_not_found",
+      },
+      [AUTH_CODES.DEBT_PAYMENT_SUCCESS]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_debt_payment_success",
+      },
     };
 
     const config = alertConfig[code];

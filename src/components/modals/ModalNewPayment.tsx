@@ -17,9 +17,11 @@ import { columnsPD } from "@columns/columnsPD";
 import { useTranslation } from "react-i18next";
 import { currencyFormat } from "@utility/currencyFormat";
 import { useLoading } from "@context/LoadingContext";
-
+import { type NewPaymentFormValues } from "@forms/schemas/payment.schema";
+import ModalWarningAlert from "./ModalWarningAlert";
 interface Props {
   account?: AccountsReceivable;
+  onSuccess: () => void;
 }
 
 /*
@@ -47,7 +49,7 @@ const dataPaymentsDB = [
   },
 ];
 
-export function ModalNewPayment({ account }: Props) {
+export function ModalNewPayment({ account, onSuccess }: Props) {
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
   const close = () => setModal(null);
@@ -63,6 +65,7 @@ export function ModalNewPayment({ account }: Props) {
   const [selectedDebtId, setSelectedDebtId] = useState<string | undefined>();
   const [generalData, setGeneralData] = useState<generalDebtData | undefined>();
   const { setLoading } = useLoading();
+  const { triggerResponseAlert } = useModal();
 
   //* Get Customer Debts
   const handleCustomerDebts = useCallback(async (value: string) => {
@@ -75,6 +78,7 @@ export function ModalNewPayment({ account }: Props) {
   //* Get Debt Details
   const handleDebtDetail = useCallback(
     async (value: string) => {
+      setSelectedDebtId(value);
       const response = await window.electronAPI.getDebtDetail(value);
       const debtDetailData =
         typeof response.result === "string"
@@ -137,7 +141,38 @@ export function ModalNewPayment({ account }: Props) {
     }));
   }, [customerDebts]);
 
-  const handlePaymentSuccess = () => {};
+  const handlePaymentSuccess = async (values: NewPaymentFormValues) => {
+    // setModal(
+    //   <ModalWarningAlert
+    //     text={t("modalWarningAlert.text_debt_payment")}
+    //     btnOptions={true}
+    //     onConfirm={async () => {
+    try {
+      setLoading(true);
+      //* Add payment debt
+      const data = {
+        note: values.note,
+        payment_amount: parseFloat(values.payment_amount),
+        idSale: Number(selectedDebtId),
+      };
+      const response = await window.electronAPI.addPaymentDebt(data);
+      if (response.success && response.result) {
+        onSuccess();
+        handleDebtDetail(selectedDebtId!);
+        setLoading(false);
+        triggerResponseAlert(response.result);
+      } else {
+        setLoading(false);
+        triggerResponseAlert(response.error);
+      }
+    } catch (err) {
+      console.error("Comunication Error:", err);
+    }
+    //     }}
+    //   />,
+    // );
+  };
+
   const columnspd = columnsPD(t, i18n.language);
 
   return ReactDOM.createPortal(
