@@ -200,7 +200,9 @@
   },
   "tableSearch": {
     "input_search": "Search register...",
-    "input_select": "Choose a column"
+    "input_select": "Choose a column",
+    "btn_previous": "Previous",
+    "btn_next": "Next"
   },
   "modalWarningAlert": {
     "title": "¡Warning!",

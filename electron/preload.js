@@ -62,5 +62,5 @@ contextBridge.exposeInMainWorld("electronAPI", {
   addPaymentDebt: (data) => ipcRenderer.invoke("addPaymentDebt", data),
 
   //* Get New Sale Data Page
-  getNewSaleData: () => ipcRenderer.invoke("get-newsale-data"),
+  getNewSaleData: (data) => ipcRenderer.invoke("get-newsale-data", data),
 });

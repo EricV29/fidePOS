@@ -24,6 +24,7 @@ const {
   getActiveProductsCategory,
   getInvestment,
   getCategoryOptions,
+  getProductsList,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -655,15 +656,21 @@ ipcMain.handle("addPaymentDebt", async (event, data) => {
 });
 
 //* Get New Sale Data Page
-ipcMain.handle("get-newsale-data", async (event) => {
+ipcMain.handle("get-newsale-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const [categoryOptions] = await Promise.all([getCategoryOptions()]);
+      const { idCategory, limit, offset } = data;
+
+      const [categoryOptions, productsList] = await Promise.all([
+        getCategoryOptions(),
+        getProductsList(idCategory, limit, offset),
+      ]);
 
       return {
         success: true,
         result: {
           categoryOptions,
+          productsList,
         },
       };
     } catch (error) {

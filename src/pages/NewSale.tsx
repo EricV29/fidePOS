@@ -69,31 +69,50 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const { t } = useTranslation();
   const columnsps = columnsPS(t);
   const columnssc = columnsSC(t);
+  const [totalRows, setTotalRows] = useState(0);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
-  const loadNewSale = useCallback(async () => {
-    const response = await window.electronAPI.getNewSaleData();
-    const newSaleData =
-      typeof response.result === "string"
-        ? JSON.parse(response.result)
-        : response.result;
+  const loadNewSale = useCallback(
+    async (idCategory?: number | null) => {
+      const limit = pagination.pageSize;
+      const offset = pagination.pageIndex * pagination.pageSize;
 
-    if (newSaleData?.categoryOptions) {
-      const categoryData = newSaleData.categoryOptions.result;
-      console.log(categoryData);
-      setCategories(categoryData);
-    }
-  }, []);
+      const response = await window.electronAPI.getNewSaleData({
+        idCategory,
+        limit: limit,
+        offset: offset,
+      });
+      const newSaleData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
+
+      if (newSaleData?.categoryOptions) {
+        const categoryData = newSaleData.categoryOptions.result;
+        setCategories(categoryData);
+      }
+
+      if (newSaleData?.productsList) {
+        const productsData = newSaleData.productsList.result;
+        setDataProducts(productsData);
+        setTotalRows(newSaleData.productsList.totalCount);
+      }
+    },
+    [pagination],
+  );
 
   useEffect(() => {
     loadNewSale();
-    setDataProducts(dataProductsSaleDB);
+    //setDataProducts(dataProductsSaleDB);
     setDataCustomers(customersDB);
     setCar([]);
   }, [loadNewSale]);
 
   const handleCategory = (id: string) => {
-    console.log(id);
-    setActiveCategory(id);
+    setActiveCategory((prev) => (prev === id ? null : id));
   };
 
   const addProductToCart = (product: ProductsSale) => {
@@ -149,7 +168,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               className="w-full h-full"
             />
           </div>
-          <div className="w-full flex-1 flex justify-start gap-2 pb-1 overflow-x-auto">
+          <div className="w-full flex min-h-25 max-h-25 justify-start gap-2 pb-1 overflow-x-auto h-24 sm:h-28">
             {categories &&
               categories.length > 0 &&
               categories.map((item: Categories) => (
@@ -162,16 +181,21 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
                 />
               ))}
           </div>
-          <div className="flex-5 w-full p-2 flex flex-col gap-4 dark:text-[#b3b3b3]">
-            <div>
+          <div className="w-full flex-1 flex flex-col p-2 min-h-0 dark:text-[#b3b3b3] overflow-hidden">
+            <div className="h-fit">
               <h2 className="font-semibold">{t("newSale.title")}</h2>
               <hr className="border border-[#b3b3b3] my-2" />
             </div>
-            <DataTableSale
-              data={dataProducts}
-              columns={columnsps}
-              addProduct={addProductToCart}
-            />
+            <div className="flex-1 min-h-0 w-full overflow-hidden">
+              <DataTableSale
+                data={dataProducts}
+                columns={columnsps}
+                addProduct={addProductToCart}
+                pagination={pagination}
+                setPagination={setPagination}
+                totalRows={totalRows}
+              />
+            </div>
           </div>
         </div>
         <div className="w-1/3 p-2 flex flex-col gap-2 bg-white dark:bg-[#353935] drop-shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-2xl ">

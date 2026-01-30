@@ -206,7 +206,9 @@
   },
   "tableSearch": {
     "input_search": "Busca un registro...",
-    "input_select": "Elige una columna"
+    "input_select": "Elige una columna",
+    "btn_previous": "Anterior",
+    "btn_next": "Siguiente"
   },
   "modalWarningAlert": {
     "title": "¡Advertencia!",

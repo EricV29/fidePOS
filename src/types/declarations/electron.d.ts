@@ -146,9 +146,10 @@ declare global {
       }>;
 
       //* GET NEW SALE DATA PAGE
-      getNewSaleData: () => Promise<{
+      getNewSaleData: (data) => Promise<{
         success: boolean;
         result?: string;
+        totalCount: number;
         error?: string;
       }>;
     };
