@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import BarCodeIcon from "@icons/BarCodeIcon";
 import CardCategory from "@components/CardCategory";
 import type { Categories, ProductsSale } from "@typesm/products";
@@ -17,16 +17,16 @@ import { useTranslation } from "react-i18next";
 
 interface NewSaleProps {}
 
-//* Example data categories
-const categoriesDB = [
-  { id: "0001", category: "Zapatos", products: 15 },
-  { id: "0002", category: "Edredones", products: 12 },
-  { id: "0003", category: "Maquillaje", products: 10 },
-  { id: "0005", category: "Juguetes", products: 20 },
-  { id: "0006", category: "Barberia", products: 45 },
-  { id: "0007", category: "Peluches", products: 90 },
-  { id: "0008", category: "Dulces", products: 14 },
-];
+// //* Example data categories
+// const categoriesDB = [
+//   { id: "0001", category: "Zapatos", products: 15 },
+//   { id: "0002", category: "Edredones", products: 12 },
+//   { id: "0003", category: "Maquillaje", products: 10 },
+//   { id: "0005", category: "Juguetes", products: 20 },
+//   { id: "0006", category: "Barberia", products: 45 },
+//   { id: "0007", category: "Peluches", products: 90 },
+//   { id: "0008", category: "Dulces", products: 14 },
+// ];
 
 //* Example data products
 const dataProductsSaleDB = [
@@ -69,16 +69,63 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const { t } = useTranslation();
   const columnsps = columnsPS(t);
   const columnssc = columnsSC(t);
+  const [totalRows, setTotalRows] = useState(0);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [selectedCustomerId, setSelectedCustomerId] = useState<
+    string | undefined
+  >();
+
+  const loadNewSale = useCallback(
+    async (idCategory?: number | null) => {
+      const limit = pagination.pageSize;
+      const offset = pagination.pageIndex * pagination.pageSize;
+
+      const response = await window.electronAPI.getNewSaleData({
+        idCategory,
+        limit: limit,
+        offset: offset,
+      });
+      const newSaleData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
+
+      if (newSaleData?.categoryOptions) {
+        const categoryData = newSaleData.categoryOptions.result;
+        setCategories(categoryData);
+      }
+
+      if (newSaleData?.productsList) {
+        const productsData = newSaleData.productsList.result;
+        setDataProducts(productsData);
+        setTotalRows(newSaleData.productsList.totalCount);
+      }
+
+      if (newSaleData?.customersList) {
+        const customersData = newSaleData.customersList.result;
+        setDataCustomers(customersData);
+      }
+    },
+    [pagination],
+  );
 
   useEffect(() => {
-    setCategories(categoriesDB);
-    setDataProducts(dataProductsSaleDB);
-    setDataCustomers(customersDB);
+    loadNewSale();
     setCar([]);
-  }, []);
+  }, [loadNewSale]);
+
+  const customerOptions = useMemo(() => {
+    return dataCustomers.map((c) => ({
+      label: `${c.name} ${c.last_name}`,
+      value: c.id?.toString(),
+    }));
+  }, [dataCustomers]);
 
   const handleCategory = (id: string) => {
-    setActiveCategory(id);
+    setActiveCategory((prev) => (prev === id ? null : id));
   };
 
   const addProductToCart = (product: ProductsSale) => {
@@ -93,7 +140,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
                 quantity: item.quantity + 1,
                 total_amount: (item.quantity + 1) * item.unit_price,
               }
-            : item
+            : item,
         );
       }
 
@@ -114,16 +161,19 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
 
   const subtotalCart = dataCar.reduce(
     (sum, item) => sum + item.total_amount,
-    0
+    0,
   );
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDisacount(e.target.value);
   };
 
+  const handleChangeCustomer = (value: string) => {
+    setSelectedCustomerId(value);
+  };
+
   const totalCart = subtotalCart - Number(discount);
 
-  if (!categories) return null;
   return (
     <>
       <div className="w-full h-full flex min-h-0">
@@ -135,27 +185,34 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               className="w-full h-full"
             />
           </div>
-          <div className="w-full flex-1 flex justify-start gap-2 pb-1 overflow-x-auto">
-            {categories.map((item: Categories) => (
-              <CardCategory
-                key={item.id}
-                name={item.category}
-                options={item.products}
-                onClick={() => handleCategory(item.id)}
-                active={activeCategory == item.id}
-              />
-            ))}
+          <div className="w-full flex min-h-25 max-h-25 justify-start gap-2 pb-1 overflow-x-auto h-24 sm:h-28">
+            {categories &&
+              categories.length > 0 &&
+              categories.map((item: Categories) => (
+                <CardCategory
+                  key={item.id}
+                  name={item.category}
+                  options={item.products}
+                  onClick={() => handleCategory(item.id)}
+                  active={activeCategory == item.id}
+                />
+              ))}
           </div>
-          <div className="flex-5 w-full p-2 flex flex-col gap-4 dark:text-[#b3b3b3]">
-            <div>
+          <div className="w-full flex-1 flex flex-col p-2 min-h-0 dark:text-[#b3b3b3] overflow-hidden">
+            <div className="h-fit">
               <h2 className="font-semibold">{t("newSale.title")}</h2>
               <hr className="border border-[#b3b3b3] my-2" />
             </div>
-            <DataTableSale
-              data={dataProducts}
-              columns={columnsps}
-              addProduct={addProductToCart}
-            />
+            <div className="flex-1 min-h-0 w-full overflow-hidden">
+              <DataTableSale
+                data={dataProducts}
+                columns={columnsps}
+                addProduct={addProductToCart}
+                pagination={pagination}
+                setPagination={setPagination}
+                totalRows={totalRows}
+              />
+            </div>
           </div>
         </div>
         <div className="w-1/3 p-2 flex flex-col gap-2 bg-white dark:bg-[#353935] drop-shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-2xl ">
@@ -164,9 +221,11 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
           </p>
           <div className="w-full flex gap-2">
             <CustomSelect
-              options={dataCustomers}
+              options={customerOptions}
               placeholder={t("newSale.input_select")}
               color="#F57C00"
+              value={selectedCustomerId}
+              onChange={handleChangeCustomer}
             />
             <button
               className="bnormal"
@@ -197,7 +256,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
                     }
 
                     return updated;
-                  })
+                  }),
                 );
               }}
             />

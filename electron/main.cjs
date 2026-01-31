@@ -23,11 +23,14 @@ const {
 const {
   getActiveProductsCategory,
   getInvestment,
+  getCategoryOptions,
+  getProductsList,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
   getIndebtedCustomers,
   getCustomerDebts,
+  getCustomersList,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -488,7 +491,7 @@ ipcMain.handle("contactDevs", async (event, data) => {
   }
 });
 
-// Get Dashboard Data
+//* Get Dashboard Data Page
 ipcMain.handle("get-dashboard-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
@@ -644,6 +647,35 @@ ipcMain.handle("addPaymentDebt", async (event, data) => {
           error: response.error,
         };
       }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+//* Get New Sale Data Page
+ipcMain.handle("get-newsale-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { idCategory, limit, offset } = data;
+
+      const [categoryOptions, productsList, customersList] = await Promise.all([
+        getCategoryOptions(),
+        getProductsList(idCategory, limit, offset),
+        getCustomersList(),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          categoryOptions,
+          productsList,
+          customersList,
+        },
+      };
     } catch (error) {
       console.log("❌ ERROR: ", error);
     }

@@ -42,7 +42,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Contact Devs
   contactDevs: (data) => ipcRenderer.invoke("contactDevs", data),
 
-  // Get Dashboard Data
+  //* Get Dashboard Data Page
   getDashboardData: (data) => ipcRenderer.invoke("get-dashboard-data", data),
 
   // Get Sale Data
@@ -60,4 +60,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Add payment debt
   addPaymentDebt: (data) => ipcRenderer.invoke("addPaymentDebt", data),
+
+  //* Get New Sale Data Page
+  getNewSaleData: (data) => ipcRenderer.invoke("get-newsale-data", data),
 });

@@ -110,7 +110,7 @@ export default function Dashboard() {
 
   const loadDashboard = useCallback(
     async (currentFilters = filters) => {
-      setLoading(true);
+      //setLoading(true);
       const response =
         await window.electronAPI.getDashboardData(currentFilters);
       const dashboardData =
@@ -146,10 +146,10 @@ export default function Dashboard() {
       if (dashboardData?.accountsReceivable) {
         const accountsReceivableData = dashboardData.accountsReceivable.result;
         setDataTableAR(accountsReceivableData);
-        setLoading(false);
+        //setLoading(false);
       }
     },
-    [filters, setLoading],
+    [filters],
   );
 
   useEffect(() => {
