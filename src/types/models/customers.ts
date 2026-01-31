@@ -33,8 +33,12 @@ export type PaymentsCustomer = {
 };
 
 export type CustomersSale = {
-  label: string;
-  value: string;
+  id: number;
+  name: string;
+  last_name: string;
+  phone: string;
+  status_id: number;
+  created_at: string;
 };
 
 export type PaymentsDebt = {

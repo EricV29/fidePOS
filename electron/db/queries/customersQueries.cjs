@@ -72,8 +72,30 @@ async function getCustomerDebts(idCustomer) {
   }
 }
 
+// Get Customers
+async function getCustomersList() {
+  try {
+    const db = await getDB();
+    const query = db.exec(
+      "SELECT id, name, last_name, phone, status_id, created_at FROM customer WHERE status_id IN (1, 3);",
+    );
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting customers:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
   getCustomerDebts,
+  getCustomersList,
 };

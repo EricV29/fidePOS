@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import BarCodeIcon from "@icons/BarCodeIcon";
 import CardCategory from "@components/CardCategory";
 import type { Categories, ProductsSale } from "@typesm/products";
@@ -74,6 +74,9 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     pageIndex: 0,
     pageSize: 10,
   });
+  const [selectedCustomerId, setSelectedCustomerId] = useState<
+    string | undefined
+  >();
 
   const loadNewSale = useCallback(
     async (idCategory?: number | null) => {
@@ -100,16 +103,26 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
         setDataProducts(productsData);
         setTotalRows(newSaleData.productsList.totalCount);
       }
+
+      if (newSaleData?.customersList) {
+        const customersData = newSaleData.customersList.result;
+        setDataCustomers(customersData);
+      }
     },
     [pagination],
   );
 
   useEffect(() => {
     loadNewSale();
-    //setDataProducts(dataProductsSaleDB);
-    setDataCustomers(customersDB);
     setCar([]);
   }, [loadNewSale]);
+
+  const customerOptions = useMemo(() => {
+    return dataCustomers.map((c) => ({
+      label: `${c.name} ${c.last_name}`,
+      value: c.id?.toString(),
+    }));
+  }, [dataCustomers]);
 
   const handleCategory = (id: string) => {
     setActiveCategory((prev) => (prev === id ? null : id));
@@ -153,6 +166,10 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDisacount(e.target.value);
+  };
+
+  const handleChangeCustomer = (value: string) => {
+    setSelectedCustomerId(value);
   };
 
   const totalCart = subtotalCart - Number(discount);
@@ -204,9 +221,11 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
           </p>
           <div className="w-full flex gap-2">
             <CustomSelect
-              options={dataCustomers}
+              options={customerOptions}
               placeholder={t("newSale.input_select")}
               color="#F57C00"
+              value={selectedCustomerId}
+              onChange={handleChangeCustomer}
             />
             <button
               className="bnormal"

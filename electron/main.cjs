@@ -30,6 +30,7 @@ const {
   getAccountsReceivable,
   getIndebtedCustomers,
   getCustomerDebts,
+  getCustomersList,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -661,9 +662,10 @@ ipcMain.handle("get-newsale-data", async (event, data) => {
     try {
       const { idCategory, limit, offset } = data;
 
-      const [categoryOptions, productsList] = await Promise.all([
+      const [categoryOptions, productsList, customersList] = await Promise.all([
         getCategoryOptions(),
         getProductsList(idCategory, limit, offset),
+        getCustomersList(),
       ]);
 
       return {
@@ -671,6 +673,7 @@ ipcMain.handle("get-newsale-data", async (event, data) => {
         result: {
           categoryOptions,
           productsList,
+          customersList,
         },
       };
     } catch (error) {
