@@ -54,15 +54,18 @@ export function DataTableSale<TData, TValue>({
   );
   const [selectedColumn, setSelectedColumn] = useState("");
   const { t } = useTranslation();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [products, setProducts] = useState<TData[]>(data);
 
   const table = useReactTable({
-    data,
+    data: products,
     columns,
     rowCount: totalRows,
     getCoreRowModel: getCoreRowModel(),
     meta: { addProduct },
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    manualFiltering: true,
     state: {
       columnFilters,
       pagination,
@@ -87,8 +90,32 @@ export function DataTableSale<TData, TValue>({
   const currentColumn = selectedColumn || columnOptions[0]?.value;
 
   useEffect(() => {
-    table.resetColumnFilters();
-  }, [table, selectedColumn]);
+    setProducts(data);
+  }, [data]);
+
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setProducts(data);
+      return;
+    }
+
+    const delayDebounceFn = setTimeout(async () => {
+      const data = {
+        column: currentColumn,
+        text: searchTerm,
+      };
+
+      const response = await window.electronAPI.getFilterSearch(data);
+
+      if (response.success && response.result) {
+        setProducts(response.result);
+      } else {
+        console.error("Error en la base de datos:", response.error);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [currentColumn, data, searchTerm]);
 
   return (
     <div className="w-full h-full overflow-hidden flex flex-col gap-4">
@@ -97,12 +124,8 @@ export function DataTableSale<TData, TValue>({
           <SearchIcon />
           <input
             placeholder={t("tableSearch.input_search")}
-            value={
-              (table.getColumn(currentColumn)?.getFilterValue() as string) ?? ""
-            }
-            onChange={(event) =>
-              table.getColumn(currentColumn)?.setFilterValue(event.target.value)
-            }
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.target.value)}
             className="w-full"
           />
         </div>
