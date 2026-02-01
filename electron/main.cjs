@@ -711,6 +711,33 @@ ipcMain.handle("get-filter-search-table", async (event, data) => {
   }
 });
 
+// Get Products List by Category
+ipcMain.handle("get-products-category", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { idCategory, limit, offset } = data;
+      const response = await getProductsList(idCategory, limit, offset);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+          totalCount: response.totalCount,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
 //* INITIALIZATION
 let isInitializing = false;
 app.whenReady().then(async () => {

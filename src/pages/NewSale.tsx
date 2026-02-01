@@ -115,9 +115,10 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   );
 
   useEffect(() => {
-    loadNewSale();
+    const categoryId = activeCategory ? Number(activeCategory) : null;
+    loadNewSale(categoryId);
     setCar([]);
-  }, [loadNewSale]);
+  }, [loadNewSale, activeCategory]);
 
   const customerOptions = useMemo(() => {
     return dataCustomers.map((c) => ({
@@ -126,8 +127,24 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     }));
   }, [dataCustomers]);
 
-  const handleCategory = (id: string) => {
-    setActiveCategory((prev) => (prev === id ? null : id));
+  const handleCategory = async (idCategory: string) => {
+    const nextCategory = activeCategory === idCategory ? null : idCategory;
+    setActiveCategory(nextCategory);
+    if (nextCategory !== null) {
+      const limit = pagination.pageSize;
+      const offset = pagination.pageIndex * pagination.pageSize;
+      const response = await window.electronAPI.getProductsCategory({
+        idCategory: idCategory,
+        limit: limit,
+        offset: offset,
+      });
+      if (response.result) {
+        setDataProducts(response.result);
+        setTotalRows(response.totalCount);
+      }
+    } else {
+      loadNewSale();
+    }
   };
 
   const addProductToCart = (product: ProductsSale) => {

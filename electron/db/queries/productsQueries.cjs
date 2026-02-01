@@ -67,10 +67,10 @@ async function getProductsList(idCategory, limit, offset) {
   try {
     const db = await getDB();
     const filterParam = idCategory || null;
-    const params = [filterParam, limit, offset];
-    const categoryCondition = idCategory
-      ? "WHERE p.category_id = ?"
-      : "WHERE ? IS NULL";
+
+    const whereClause = idCategory ? "WHERE p.category_id = ?" : "";
+    const countParams = idCategory ? [idCategory] : [];
+    const params = idCategory ? [idCategory, limit, offset] : [limit, offset];
     const sql = `
       SELECT 
         p.id, 
@@ -83,7 +83,7 @@ async function getProductsList(idCategory, limit, offset) {
         p.stock 
       FROM product p
       INNER JOIN category c ON p.category_id = c.id
-      ${categoryCondition}
+      ${whereClause}
       ORDER BY p.stock DESC
       LIMIT ? OFFSET ?;
     `;
@@ -92,17 +92,17 @@ async function getProductsList(idCategory, limit, offset) {
       SELECT COUNT(*) as total 
       FROM product p
       INNER JOIN category c ON p.category_id = c.id
-      ${categoryCondition};
+      ${whereClause};
     `;
 
     const query = db.exec(sql, params);
-    const queryCount = db.exec(sqlCount, filterParam);
+    const queryCount = db.exec(sqlCount, countParams);
+
+    const totalCount = queryCount.length > 0 ? queryCount[0].values[0][0] : 0;
 
     if (query.length === 0) {
       return { success: true, result: [] };
     }
-
-    const totalCount = queryCount.length > 0 ? queryCount[0].values[0][0] : 0;
 
     const data = mapResultToObjects(query);
     return { success: true, result: data, totalCount: totalCount };

@@ -159,6 +159,14 @@ declare global {
         result?: TData[];
         error?: string;
       }>;
+
+      // GET PRODUCTS LIST BY CATEGORY
+      getProductsCategory: (data) => Promise<{
+        success: boolean;
+        result?: ProductsSale[];
+        totalCount: number;
+        error?: string;
+      }>;
     };
   }
 }

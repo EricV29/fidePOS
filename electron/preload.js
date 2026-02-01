@@ -67,4 +67,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Filter Search Table
   getFilterSearch: (data) =>
     ipcRenderer.invoke("get-filter-search-table", data),
+
+  // Get Products List by Category
+  getProductsCategory: (data) =>
+    ipcRenderer.invoke("get-products-category", data),
 });
