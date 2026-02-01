@@ -25,6 +25,7 @@ const {
   getInvestment,
   getCategoryOptions,
   getProductsList,
+  getFilterSearch,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -676,6 +677,31 @@ ipcMain.handle("get-newsale-data", async (event, data) => {
           customersList,
         },
       };
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Filter Search Table
+ipcMain.handle("get-filter-search-table", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearch(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
     } catch (error) {
       console.log("❌ ERROR: ", error);
     }

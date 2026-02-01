@@ -63,4 +63,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   //* Get New Sale Data Page
   getNewSaleData: (data) => ipcRenderer.invoke("get-newsale-data", data),
+
+  // Get Filter Search Table
+  getFilterSearch: (data) =>
+    ipcRenderer.invoke("get-filter-search-table", data),
 });

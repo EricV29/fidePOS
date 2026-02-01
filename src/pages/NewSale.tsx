@@ -17,16 +17,17 @@ import { useTranslation } from "react-i18next";
 
 interface NewSaleProps {}
 
-// //* Example data categories
-// const categoriesDB = [
-//   { id: "0001", category: "Zapatos", products: 15 },
-//   { id: "0002", category: "Edredones", products: 12 },
-//   { id: "0003", category: "Maquillaje", products: 10 },
-//   { id: "0005", category: "Juguetes", products: 20 },
-//   { id: "0006", category: "Barberia", products: 45 },
-//   { id: "0007", category: "Peluches", products: 90 },
-//   { id: "0008", category: "Dulces", products: 14 },
-// ];
+/*
+//* Example data categories
+const categoriesDB = [
+  { id: "0001", category: "Zapatos", products: 15 },
+  { id: "0002", category: "Edredones", products: 12 },
+  { id: "0003", category: "Maquillaje", products: 10 },
+  { id: "0005", category: "Juguetes", products: 20 },
+  { id: "0006", category: "Barberia", products: 45 },
+  { id: "0007", category: "Peluches", products: 90 },
+  { id: "0008", category: "Dulces", products: 14 },
+];
 
 //* Example data products
 const dataProductsSaleDB = [
@@ -57,6 +58,7 @@ const customersDB = [
   { label: "Roberto Villeda Serrano", value: "003" },
   { label: "Wendy Fabiola Villeda Reyes", value: "004" },
 ];
+*/
 
 const NewSale: React.FC<NewSaleProps> = ({}) => {
   const [categories, setCategories] = useState<Categories[]>();

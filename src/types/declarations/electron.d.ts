@@ -152,6 +152,13 @@ declare global {
         totalCount: number;
         error?: string;
       }>;
+
+      // GET FILTER SEARCH TABLE
+      getFilterSearch: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
     };
   }
 }
