@@ -18,7 +18,7 @@ import {
 import { cn } from "@/lib/utils";
 
 interface AddCustomerFormProps {
-  onSuccess?: () => void;
+  onSuccess?: (values: AddCustomerFormValues) => void;
 }
 
 export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
@@ -28,14 +28,13 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
     resolver: zodResolver(getAddCustomerSchema(t)),
     defaultValues: {
       name: "",
-      lastname: "",
+      last_name: "",
       phone: "",
     },
   });
 
   function onSubmit(values: AddCustomerFormValues) {
-    console.log("Form submitted:", values);
-    onSuccess?.();
+    onSuccess?.(values);
   }
 
   return (
@@ -49,7 +48,7 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formAddCustomer.input1")}
@@ -61,7 +60,7 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
                   className={cn(
                     "bg-white",
                     fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                   )}
                 />
               </FormControl>
@@ -71,25 +70,25 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
         />
         <FormField
           control={form.control}
-          name="lastname"
+          name="last_name"
           render={({ field, fieldState }) => (
             <FormItem>
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formAddCustomer.input2")}
               </FormLabel>
               <FormControl>
                 <Input
-                  placeholder={t("placeholders.lastname")}
+                  placeholder={t("placeholders.last_name")}
                   {...field}
                   className={cn(
                     "bg-white",
                     fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                   )}
                 />
               </FormControl>
@@ -105,7 +104,7 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formAddCustomer.input3")}
@@ -117,7 +116,7 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
                   className={cn(
                     "bg-white",
                     fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                   )}
                 />
               </FormControl>

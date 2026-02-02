@@ -118,6 +118,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_debt_payment_success",
       },
+      [AUTH_CODES.ADD_CUSTOMER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_add_customer",
+      },
     };
 
     const config = alertConfig[code];

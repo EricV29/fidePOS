@@ -93,9 +93,45 @@ async function getCustomersList() {
   }
 }
 
+// Add Customer
+async function addCustomer(data) {
+  try {
+    const db = await getDB();
+    const { name, last_name, phone } = data;
+
+    // Search Customer
+    const query = db.exec(
+      "SELECT phone FROM customer WHERE phone = ? AND deleted_at IS NULL",
+      [phone],
+    );
+
+    const customersFound = mapResultToObjects(query);
+
+    if (customersFound.length > 0) {
+      for (const customer of customersFound) {
+        if (customer.phone === phone) {
+          return { success: false, error: AUTH_CODES.PHONE_USED };
+        }
+      }
+    }
+
+    db.run(
+      "INSERT INTO customer(name, last_name, phone, status_id) VALUES(?, ?, ?, 1)",
+      [name, last_name, phone],
+    );
+
+    saveDB(db);
+    return { success: true, result: AUTH_CODES.ADD_CUSTOMER };
+  } catch (error) {
+    console.error("Error inserting customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
   getCustomerDebts,
   getCustomersList,
+  addCustomer,
 };

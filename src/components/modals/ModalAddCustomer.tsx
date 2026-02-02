@@ -4,24 +4,34 @@ import UserPlusIcon from "@icons/UserPlusIcon";
 import CloseIcon from "@icons/CloseIcon";
 import AddCustomerForm from "@forms/form-addCustomer";
 import { useTranslation } from "react-i18next";
-import type { Customers } from "@typesm/customers";
+import type { AddCustomerFormValues } from "@forms/schemas/customer.schema";
+import { useLoading } from "@context/LoadingContext";
 
 interface Props {
-  data?: Customers;
+  onSuccess: () => void;
 }
 
-export function ModalAddCustomer({ data }: Props) {
+export function ModalAddCustomer({ onSuccess }: Props) {
   const { setModal } = useModal();
   const { t } = useTranslation();
+  const { setLoading } = useLoading();
+  const { triggerResponseAlert } = useModal();
 
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleAddCustomer = () => {
-    //window.electronAPI.signupSuccess();
+  const handleAddCustomer = async (value: AddCustomerFormValues) => {
+    setLoading(true);
+    const response = await window.electronAPI.addCustomer(value);
+    if (response.success) {
+      onSuccess();
+      setLoading(false);
+      triggerResponseAlert(response.result);
+    } else {
+      setLoading(false);
+      triggerResponseAlert(response.error);
+    }
   };
-
-  console.log(data);
 
   return ReactDOM.createPortal(
     <div
@@ -53,6 +63,6 @@ export function ModalAddCustomer({ data }: Props) {
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }

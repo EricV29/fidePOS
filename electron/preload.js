@@ -71,4 +71,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Products List by Category
   getProductsCategory: (data) =>
     ipcRenderer.invoke("get-products-category", data),
+
+  // Add Customer
+  addCustomer: (data) => ipcRenderer.invoke("addCustomer", data),
 });

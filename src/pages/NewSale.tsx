@@ -248,7 +248,9 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             />
             <button
               className="bnormal"
-              onClick={() => setModal(<ModalAddCustomer />)}
+              onClick={() =>
+                setModal(<ModalAddCustomer onSuccess={loadNewSale} />)
+              }
             >
               <UserPlusIcon />{" "}
               <p className="lg:block sm:hidden">
