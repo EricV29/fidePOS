@@ -219,7 +219,8 @@
     "text_edit_user": "User edited successfully.",
     "text_change_pass_user": "Change password successfully.",
     "text_img_upload": "Image upload successfully.",
-    "text_debt_payment_success": "Debt payment added successfully"
+    "text_debt_payment_success": "Debt payment added successfully.",
+    "text_add_customer": "Customer added successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -380,7 +381,7 @@
   },
   "placeholders": {
     "name": "name",
-    "lastname": "lastname",
+    "last_name": "last name",
     "email": "email@.com",
     "text": "text...",
     "product": "product...",

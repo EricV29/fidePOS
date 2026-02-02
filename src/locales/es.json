@@ -225,7 +225,8 @@
     "text_edit_user": "Usuario editado correctamente.",
     "text_change_pass_user": "Contraseña actualizada correctamente.",
     "text_img_upload": "Imagen cargada correctamente.",
-    "text_debt_payment_success": "Pago de deuda agregado correctamente"
+    "text_debt_payment_success": "Pago de deuda agregado correctamente",
+    "text_add_customer": "Cliente agregado correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -386,7 +387,7 @@
   },
   "placeholders": {
     "name": "nombre",
-    "lastname": "apellido",
+    "last_name": "apellido",
     "email": "correo@.com",
     "text": "texto...",
     "product": "producto...",

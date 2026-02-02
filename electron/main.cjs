@@ -32,6 +32,7 @@ const {
   getIndebtedCustomers,
   getCustomerDebts,
   getCustomersList,
+  addCustomer,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -722,6 +723,31 @@ ipcMain.handle("get-products-category", async (event, data) => {
           success: true,
           result: response.result,
           totalCount: response.totalCount,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Add Customer
+ipcMain.handle("addCustomer", async (event, data, lan) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await addCustomer(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
         };
       } else {
         return {

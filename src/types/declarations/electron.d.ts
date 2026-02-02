@@ -167,6 +167,13 @@ declare global {
         totalCount: number;
         error?: string;
       }>;
+
+      // ADD CUSTOMER
+      addCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
