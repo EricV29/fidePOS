@@ -117,7 +117,6 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   useEffect(() => {
     const categoryId = activeCategory ? Number(activeCategory) : null;
     loadNewSale(categoryId);
-    setCar([]);
   }, [loadNewSale, activeCategory]);
 
   const customerOptions = useMemo(() => {
