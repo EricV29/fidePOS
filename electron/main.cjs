@@ -26,6 +26,7 @@ const {
   getCategoryOptions,
   getProductsList,
   getFilterSearch,
+  getSearchCodeSKU,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -744,6 +745,31 @@ ipcMain.handle("addCustomer", async (event, data, lan) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await addCustomer(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Search CodeSKU Table
+ipcMain.handle("get-search-codesku-table", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getSearchCodeSKU(data);
       if (response.success) {
         return {
           success: true,

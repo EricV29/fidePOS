@@ -79,6 +79,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const [selectedCustomerId, setSelectedCustomerId] = useState<
     string | undefined
   >();
+  const [searchCodeSKU, setSearchCodeSKU] = useState("");
 
   const loadNewSale = useCallback(
     async (idCategory?: number | null) => {
@@ -118,6 +119,27 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     const categoryId = activeCategory ? Number(activeCategory) : null;
     loadNewSale(categoryId);
   }, [loadNewSale, activeCategory]);
+
+  useEffect(() => {
+    if (searchCodeSKU.trim() === "") {
+      loadNewSale();
+      return;
+    }
+
+    const delayDebounceFn = setTimeout(async () => {
+      const data = searchCodeSKU;
+
+      const response = await window.electronAPI.getSearchCodeSKU(data);
+
+      if (response.success && response.result) {
+        setDataProducts(response.result);
+      } else {
+        console.error("Error en la base de datos:", response.error);
+      }
+    }, 300);
+
+    return () => clearTimeout(delayDebounceFn);
+  }, [searchCodeSKU, loadNewSale]);
 
   const customerOptions = useMemo(() => {
     return dataCustomers.map((c) => ({
@@ -201,6 +223,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             <input
               placeholder={t("newSale.input_code")}
               className="w-full h-full"
+              onChange={(event) => setSearchCodeSKU(event.target.value)}
             />
           </div>
           <div className="w-full flex min-h-25 max-h-25 justify-start gap-2 pb-1 overflow-x-auto h-24 sm:h-28">

@@ -74,4 +74,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Add Customer
   addCustomer: (data) => ipcRenderer.invoke("addCustomer", data),
+
+  // Get Search CodeSKU Table
+  getSearchCodeSKU: (data) =>
+    ipcRenderer.invoke("get-search-codesku-table", data),
 });

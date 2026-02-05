@@ -168,10 +168,50 @@ async function getFilterSearch(data) {
   }
 }
 
+// Get Search CodeSKU Table
+async function getSearchCodeSKU(codesku) {
+  try {
+    const db = await getDB();
+
+    const sql = `
+      SELECT 
+        p.id, 
+        p.code_sku, 
+        p.name AS product, 
+        p.description, 
+        c.name AS category, 
+        c.color AS ccolor, 
+        p.unit_price,
+        p.stock,
+        p.status_id As status 
+      FROM product p
+      INNER JOIN category c ON p.category_id = c.id
+      WHERE p.code_sku LIKE ? 
+      AND status IN (1, 0)
+      ORDER BY p.stock DESC;
+    `;
+
+    const stmt = db.prepare(sql);
+    stmt.bind([codesku]);
+
+    const rows = [];
+    while (stmt.step()) {
+      rows.push(stmt.getAsObject());
+    }
+    stmt.free();
+
+    return { success: true, result: rows };
+  } catch (error) {
+    console.error("Error getting filter search table:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
   getCategoryOptions,
   getProductsList,
   getFilterSearch,
+  getSearchCodeSKU,
 };

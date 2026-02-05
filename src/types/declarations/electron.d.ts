@@ -174,6 +174,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // GET SEARCH CODESKU TABLE
+      getSearchCodeSKU: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
     };
   }
 }
