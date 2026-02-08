@@ -80,6 +80,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     string | undefined
   >();
   const [searchCodeSKU, setSearchCodeSKU] = useState("");
+  const [nextNumberSale, setNextNumberSale] = useState("");
 
   const loadNewSale = useCallback(
     async (idCategory?: number | null) => {
@@ -110,6 +111,11 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
       if (newSaleData?.customersList) {
         const customersData = newSaleData.customersList.result;
         setDataCustomers(customersData);
+      }
+
+      if (newSaleData?.nextNumberSale) {
+        const nextNumberSaleData = newSaleData.nextNumberSale.result;
+        setNextNumberSale(nextNumberSaleData[0].next_sale);
       }
     },
     [pagination],
@@ -258,7 +264,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
         </div>
         <div className="w-1/3 p-2 flex flex-col gap-2 bg-white dark:bg-[#353935] drop-shadow-[0px_0px_5px_rgba(0,0,0,0.25)] rounded-2xl ">
           <p className="font-semibold text-[20px] text-[#F57C00]">
-            {t("newSale.num_sale")}: #0001
+            {t("newSale.num_sale")}: #{nextNumberSale ? nextNumberSale : ""}
           </p>
           <div className="w-full flex gap-2">
             <CustomSelect

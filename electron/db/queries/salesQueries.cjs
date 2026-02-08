@@ -118,9 +118,30 @@ async function getSaleData(idSale) {
   }
 }
 
+// Get Next Number Sale
+async function getNextNumberSale() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT COALESCE(MAX(sale_num), 0) + 1 AS next_sale FROM sale;`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting next number sale:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
   getRecentSales,
   getSaleData,
+  getNextNumberSale,
 };
