@@ -215,7 +215,11 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   };
 
   const handleChangeCustomer = (value: string) => {
-    setSelectedCustomerId(value);
+    if (!value || value === selectedCustomerId) {
+      setSelectedCustomerId(undefined);
+    } else {
+      setSelectedCustomerId(value);
+    }
   };
 
   const totalCart = subtotalCart - Number(discount);
