@@ -19,6 +19,7 @@ const {
   getRevenue,
   getRecentSales,
   getSaleData,
+  getNextNumberSale,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -665,11 +666,13 @@ ipcMain.handle("get-newsale-data", async (event, data) => {
     try {
       const { idCategory, limit, offset } = data;
 
-      const [categoryOptions, productsList, customersList] = await Promise.all([
-        getCategoryOptions(),
-        getProductsList(idCategory, limit, offset),
-        getCustomersList(),
-      ]);
+      const [categoryOptions, productsList, customersList, nextNumberSale] =
+        await Promise.all([
+          getCategoryOptions(),
+          getProductsList(idCategory, limit, offset),
+          getCustomersList(),
+          getNextNumberSale(),
+        ]);
 
       return {
         success: true,
@@ -677,6 +680,7 @@ ipcMain.handle("get-newsale-data", async (event, data) => {
           categoryOptions,
           productsList,
           customersList,
+          nextNumberSale,
         },
       };
     } catch (error) {
