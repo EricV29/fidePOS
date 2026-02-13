@@ -170,7 +170,7 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
         <hr className="border border-[#b3b3b3] my-2" />
         <p className="dark:text-white">{t("modalNewPaid.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
-          <div className="w-full max-h-[280px] overflow-y-auto flex flex-col gap-2 dark:text-white">
+          <div className="w-full max-h-[200px] overflow-y-auto flex flex-col gap-2 dark:text-white">
             {dataNewSale?.products.map((item) => (
               <div
                 key={item.id}
@@ -223,7 +223,7 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
               </p>
             </div>
             <hr className="border border-[#b3b3b3] my-1" />
-            <div className="w-full flex justify-between bg-[#F57C00] dark:bg-[#F57C00] dark:text-white px-2 rounded-[7px]">
+            <div className="w-full flex justify-between bg-[#F57C00] dark:bg-[#F57C00] text-white px-2 rounded-[7px]">
               <p>Total</p>
               <p className="font-semibold">
                 {dataNewSale
