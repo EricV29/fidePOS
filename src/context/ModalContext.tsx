@@ -34,7 +34,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
       <ModalWarningAlert
         text={text}
         btnOptions={true}
-        onConfirm={onConfirm}
+        onConfirm={async () => {
+          await onConfirm();
+          setAlert(null);
+        }}
         onCancel={() => setAlert(null)}
       />,
     );
@@ -121,6 +124,22 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
       [AUTH_CODES.ADD_CUSTOMER]: {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_add_customer",
+      },
+      [AUTH_CODES.INSUFFICIENT_AMOUNT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_insufficient_amount",
+      },
+      [AUTH_CODES.NOT_CREDIT_SALE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_credit_sale",
+      },
+      [AUTH_CODES.INSUFFICIENT_STOCK]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_insufficient_stock",
+      },
+      [AUTH_CODES.CREATE_NEW_SALE]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_create_new_sale",
       },
     };
 

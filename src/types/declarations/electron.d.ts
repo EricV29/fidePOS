@@ -181,6 +181,13 @@ declare global {
         result?: TData[];
         error?: string;
       }>;
+
+      // CREATE NEW SALE
+      createNewSale: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
