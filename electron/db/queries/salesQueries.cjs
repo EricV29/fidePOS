@@ -233,7 +233,7 @@ async function createNewSale(data) {
     }
 
     db.exec("COMMIT;");
-    saveDB(db);
+    await saveDB(db);
     return { success: true, result: AUTH_CODES.CREATE_NEW_SALE };
   } catch (error) {
     if (db) db.exec("ROLLBACK;");

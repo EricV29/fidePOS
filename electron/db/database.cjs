@@ -29,7 +29,7 @@ async function getDB() {
 }
 
 //* SAVE DATA BASE
-function saveDB(db) {
+async function saveDB(db) {
   try {
     const data = Buffer.from(db.export());
     fs.writeFileSync(dbPath, data);

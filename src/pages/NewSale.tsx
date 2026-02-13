@@ -243,6 +243,13 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     if (response.success) {
       loadNewSale();
       setCar([]);
+      const inputCodesku = document.getElementById(
+        "code_sku",
+      ) as HTMLInputElement | null;
+      if (inputCodesku) {
+        inputCodesku.value = "";
+      }
+      setSelectedCustomerId(undefined);
       setLoading(false);
       triggerResponseAlert(response.result);
     } else {
@@ -260,6 +267,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
           <div className="inputtexto">
             <BarCodeIcon />
             <input
+              id="code_sku"
               placeholder={t("newSale.input_code")}
               className="w-full h-full"
               onChange={(event) => setSearchCodeSKU(event.target.value)}
