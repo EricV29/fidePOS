@@ -14,35 +14,9 @@ interface ModalPaidProps {
   onSuccess: (data: SaleData) => void;
 }
 
-//* Example data sale
-const dataSaleDB = [
-  {
-    sale: 1,
-    products: [
-      {
-        product: "Carrito",
-        unit_price: 100,
-        quantity: 3,
-        code_sku: "1294",
-        subtotal: 300,
-      },
-      {
-        product: "Pistola",
-        unit_price: 50,
-        quantity: 2,
-        code_sku: "6341",
-        subtotal: 100,
-      },
-    ],
-    customer: "Eric",
-    subtotal: 400,
-    discount: 40,
-  },
-];
-
 export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
   const { setModal } = useModal();
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const [dataNewSale, setDataNewSale] = useState<SaleData>();
   const { triggerWarningAlert, triggerResponseAlert } = useModal();
   const [isCreditActive, setIsCreditActive] = useState(false);
@@ -110,6 +84,11 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
       ) || 0;
 
     if (isCreditActive) {
+      if (!data.customerId) {
+        triggerResponseAlert(AUTH_CODES.NOT_CUSTOMER_SELECT);
+        return;
+      }
+
       if (paid_amount > 0) {
         if (cash_received < paid_amount) {
           triggerResponseAlert(AUTH_CODES.INSUFFICIENT_AMOUNT);
@@ -191,16 +170,6 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
         <hr className="border border-[#b3b3b3] my-2" />
         <p className="dark:text-white">{t("modalNewPaid.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
-          <div className="w-full flex justify-between dark:text-[#b3b3b3]">
-            <div className="flex gap-1">
-              {dataNewSale?.nextNumberSale && (
-                <>
-                  <p>{t("modalNewPaid.customer")}</p>{" "}
-                  <p className="font-semibold">{dataNewSale?.nextNumberSale}</p>
-                </>
-              )}
-            </div>
-          </div>
           <div className="w-full max-h-[280px] overflow-y-auto flex flex-col gap-2 dark:text-white">
             {dataNewSale?.products.map((item) => (
               <div

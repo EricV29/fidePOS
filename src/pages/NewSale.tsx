@@ -239,7 +239,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     const data = { ...finalSaleData, userId: session.id };
 
     const response = await window.electronAPI.createNewSale(data);
-    console.log(response);
+    console.log(response.result);
 
     if (response.success) {
       // getUsers();
@@ -247,7 +247,11 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
       triggerResponseAlert(response.result);
     } else {
       setLoading(false);
-      triggerResponseAlert(response.error);
+      const productFound = dataProducts.find(
+        (item) => item.id === response.result,
+      );
+      const productName = productFound ? productFound.product : "";
+      triggerResponseAlert(response.error, { product: productName });
     }
   };
 
@@ -375,6 +379,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
                       subtotal: subtotalCart,
                       discount: discount,
                       total: totalCart,
+                      customerId: selectedCustomerId,
                     }}
                     onSuccess={handleNewSale}
                   />,

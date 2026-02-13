@@ -39,6 +39,7 @@ export interface SaleData {
   subtotal: number;
   discount: number;
   total: number;
+  customerId?: string;
 }
 
 interface ProductSaleView {

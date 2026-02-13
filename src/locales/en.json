@@ -238,7 +238,8 @@
     "text_debt_not_found": "Debt not found.",
     "text_insufficient_amount": "Insufficient amount.",
     "text_not_credit_sale": "This is not a valid credit amount.",
-    "text_insufficient_stock": "Insufficient stock for this product."
+    "text_insufficient_stock": "Insufficient stock for this product: {{product}}.",
+    "text_not_customer_select": "Please select a customer to proceed with a credit sale."
   },
   "modalAddUser": {
     "title": "Add new user",
