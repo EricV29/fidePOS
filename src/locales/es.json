@@ -244,7 +244,8 @@
     "text_debt_not_found": "Deuda no encontrada.",
     "text_insufficient_amount": "Monto insuficiente.",
     "text_not_credit_sale": "Esto no es una cantidad valida para credito.",
-    "Insufficient stock for this product.": "Stock insuficiente para este producto."
+    "Insufficient stock for this product.": "Stock insuficiente para este producto: {{product}}.",
+    "text_not_customer_select": "Por favor selecciona o crea un cliente para realizar una venta a credito."
   },
   "modalAddUser": {
     "title": "Agregar usuario",

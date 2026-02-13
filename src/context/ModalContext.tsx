@@ -9,7 +9,10 @@ import ModalWarningAlert from "@modals/ModalWarningAlert";
 interface ModalContextType {
   modal: React.ReactNode | null;
   setModal: (content: React.ReactNode | null) => void;
-  triggerResponseAlert: (code: string | undefined) => void;
+  triggerResponseAlert: (
+    code: string | undefined,
+    values?: Record<string, string>,
+  ) => void;
   triggerWarningAlert: (
     text: string,
     onConfirm: () => Promise<void> | void,
@@ -43,7 +46,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const triggerResponseAlert = (code: string | undefined) => {
+  const triggerResponseAlert = (
+    code: string | undefined,
+    values?: Record<string, string>,
+  ) => {
     if (!code) return;
 
     const alertConfig: Record<
@@ -141,6 +147,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_create_new_sale",
       },
+      [AUTH_CODES.NOT_CUSTOMER_SELECT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_customer_select",
+      },
     };
 
     const config = alertConfig[code];
@@ -148,7 +158,7 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     if (config) {
       setAlert(
         <config.Component
-          text={t(config.textKey)}
+          text={t(config.textKey, values)}
           onOk={() => setAlert(null)}
         />,
       );

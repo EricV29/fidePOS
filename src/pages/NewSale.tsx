@@ -75,7 +75,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const [dataProducts, setDataProducts] = useState<ProductsSale[]>([]);
   const [dataCustomers, setDataCustomers] = useState<CustomersSale[]>([]);
   const [dataCar, setCar] = useState<ShoppingCarT[]>([]);
-  const [discount, setDisacount] = useState(0);
+  const [discount, setDiscount] = useState(0);
   const { setModal } = useModal();
   const { t } = useTranslation();
   const columnsps = columnsPS(t);
@@ -221,7 +221,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   );
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDisacount(Number(e.target.value));
+    setDiscount(Number(e.target.value));
   };
 
   const handleChangeCustomer = (value: string) => {
@@ -239,15 +239,27 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     const data = { ...finalSaleData, userId: session.id };
 
     const response = await window.electronAPI.createNewSale(data);
-    console.log(response);
+    const inputCodesku = document.getElementById(
+      "code_sku",
+    ) as HTMLInputElement | null;
+    const inputDiscount = document.getElementById(
+      "discount",
+    ) as HTMLInputElement | null;
 
     if (response.success) {
-      // getUsers();
+      loadNewSale();
+      setCar([]);
+      if (inputCodesku) inputCodesku.value = "";
+      if (inputDiscount) inputDiscount.value = "";
+      setDiscount(0);
+      setSelectedCustomerId(undefined);
       setLoading(false);
       triggerResponseAlert(response.result);
     } else {
       setLoading(false);
-      triggerResponseAlert(response.error);
+      const productFound = dataCar.find((item) => item.id === response.result);
+      const productName = productFound ? productFound.product : "";
+      triggerResponseAlert(response.error, { product: productName });
     }
   };
 
@@ -258,6 +270,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
           <div className="inputtexto">
             <BarCodeIcon />
             <input
+              id="code_sku"
               placeholder={t("newSale.input_code")}
               className="w-full h-full"
               onChange={(event) => setSearchCodeSKU(event.target.value)}
@@ -350,6 +363,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               <p>{t("newSale.discount")}</p>
               <div className="inputnumber">
                 <input
+                  id="discount"
                   type="number"
                   className="w-full text-center"
                   onChange={handleAmountChange}
@@ -375,6 +389,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
                       subtotal: subtotalCart,
                       discount: discount,
                       total: totalCart,
+                      customerId: selectedCustomerId,
                     }}
                     onSuccess={handleNewSale}
                   />,

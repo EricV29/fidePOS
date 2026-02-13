@@ -66,7 +66,6 @@ async function getCategoryOptions() {
 async function getProductsList(idCategory, limit, offset) {
   try {
     const db = await getDB();
-    const filterParam = idCategory || null;
 
     const whereClause = idCategory ? "WHERE p.category_id = ?" : "";
     const countParams = idCategory ? [idCategory] : [];
