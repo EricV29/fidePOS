@@ -9,11 +9,15 @@ import type { CustomersSale } from "@typesm/customers";
 import UserPlusIcon from "@icons/UserPlusIcon";
 import { ShoppingCart } from "@/components/shopping-cart";
 import { columnsSC } from "@columns/columnsSC";
-import type { ShoppingCarT } from "@typesm/sales";
+import type { ShoppingCarT, SaleData } from "@typesm/sales";
 import { currencyFormat } from "@utility/currencyFormat";
 import { useModal } from "@context/ModalContext";
 import { ModalAddCustomer } from "@modals/ModalAddCustomer";
 import { useTranslation } from "react-i18next";
+import { ModalPaid } from "@modals/ModalPaid";
+import { useLoading } from "@context/LoadingContext";
+import type { UserSession } from "@typesm/users";
+import { useOutletContext } from "react-router-dom";
 
 interface NewSaleProps {}
 
@@ -60,13 +64,18 @@ const customersDB = [
 ];
 */
 
+interface MyContext {
+  session: UserSession;
+  installDate: string;
+}
+
 const NewSale: React.FC<NewSaleProps> = ({}) => {
   const [categories, setCategories] = useState<Categories[]>();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [dataProducts, setDataProducts] = useState<ProductsSale[]>([]);
   const [dataCustomers, setDataCustomers] = useState<CustomersSale[]>([]);
   const [dataCar, setCar] = useState<ShoppingCarT[]>([]);
-  const [discount, setDisacount] = useState("");
+  const [discount, setDisacount] = useState(0);
   const { setModal } = useModal();
   const { t } = useTranslation();
   const columnsps = columnsPS(t);
@@ -81,49 +90,50 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   >();
   const [searchCodeSKU, setSearchCodeSKU] = useState("");
   const [nextNumberSale, setNextNumberSale] = useState("");
+  const { setLoading } = useLoading();
+  const { session } = useOutletContext<MyContext>();
+  const { triggerResponseAlert } = useModal();
 
-  const loadNewSale = useCallback(
-    async (idCategory?: number | null) => {
-      const limit = pagination.pageSize;
-      const offset = pagination.pageIndex * pagination.pageSize;
+  const loadNewSale = useCallback(async () => {
+    const idCategory = activeCategory ? Number(activeCategory) : null;
 
-      const response = await window.electronAPI.getNewSaleData({
-        idCategory,
-        limit: limit,
-        offset: offset,
-      });
-      const newSaleData =
-        typeof response.result === "string"
-          ? JSON.parse(response.result)
-          : response.result;
+    const limit = pagination.pageSize;
+    const offset = pagination.pageIndex * pagination.pageSize;
 
-      if (newSaleData?.categoryOptions) {
-        const categoryData = newSaleData.categoryOptions.result;
-        setCategories(categoryData);
-      }
+    const response = await window.electronAPI.getNewSaleData({
+      idCategory,
+      limit: limit,
+      offset: offset,
+    });
+    const newSaleData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
 
-      if (newSaleData?.productsList) {
-        const productsData = newSaleData.productsList.result;
-        setDataProducts(productsData);
-        setTotalRows(newSaleData.productsList.totalCount);
-      }
+    if (newSaleData?.categoryOptions) {
+      const categoryData = newSaleData.categoryOptions.result;
+      setCategories(categoryData);
+    }
 
-      if (newSaleData?.customersList) {
-        const customersData = newSaleData.customersList.result;
-        setDataCustomers(customersData);
-      }
+    if (newSaleData?.productsList) {
+      const productsData = newSaleData.productsList.result;
+      setDataProducts(productsData);
+      setTotalRows(newSaleData.productsList.totalCount);
+    }
 
-      if (newSaleData?.nextNumberSale) {
-        const nextNumberSaleData = newSaleData.nextNumberSale.result;
-        setNextNumberSale(nextNumberSaleData[0].next_sale);
-      }
-    },
-    [pagination],
-  );
+    if (newSaleData?.customersList) {
+      const customersData = newSaleData.customersList.result;
+      setDataCustomers(customersData);
+    }
+
+    if (newSaleData?.nextNumberSale) {
+      const nextNumberSaleData = newSaleData.nextNumberSale.result;
+      setNextNumberSale(nextNumberSaleData[0].next_sale);
+    }
+  }, [activeCategory, pagination]);
 
   useEffect(() => {
-    const categoryId = activeCategory ? Number(activeCategory) : null;
-    loadNewSale(categoryId);
+    loadNewSale();
   }, [loadNewSale, activeCategory]);
 
   useEffect(() => {
@@ -211,7 +221,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   );
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setDisacount(e.target.value);
+    setDisacount(Number(e.target.value));
   };
 
   const handleChangeCustomer = (value: string) => {
@@ -223,6 +233,23 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   };
 
   const totalCart = subtotalCart - Number(discount);
+
+  const handleNewSale = async (finalSaleData: SaleData) => {
+    setLoading(true);
+    const data = { ...finalSaleData, userId: session.id };
+
+    const response = await window.electronAPI.createNewSale(data);
+    console.log(response);
+
+    if (response.success) {
+      // getUsers();
+      setLoading(false);
+      triggerResponseAlert(response.result);
+    } else {
+      setLoading(false);
+      triggerResponseAlert(response.error);
+    }
+  };
 
   return (
     <>
@@ -323,7 +350,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
               <p>{t("newSale.discount")}</p>
               <div className="inputnumber">
                 <input
-                  type="text"
+                  type="number"
                   className="w-full text-center"
                   onChange={handleAmountChange}
                 />
@@ -336,7 +363,26 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
             </div>
           </div>
           <div className="w-full">
-            <button className="borange">{t("newSale.btn_sale")}</button>
+            <button
+              className="borange"
+              disabled={dataCar.length === 0}
+              onClick={() =>
+                setModal(
+                  <ModalPaid
+                    data={{
+                      nextNumberSale: nextNumberSale,
+                      products: dataCar,
+                      subtotal: subtotalCart,
+                      discount: discount,
+                      total: totalCart,
+                    }}
+                    onSuccess={handleNewSale}
+                  />,
+                )
+              }
+            >
+              {t("newSale.btn_sale")}
+            </button>
           </div>
         </div>
       </div>

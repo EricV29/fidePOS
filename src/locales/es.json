@@ -215,7 +215,8 @@
     "text_forgot_password": "Se enviará un correo electrónico con tu contraseña. Asegúrate de tener conexión a internet.",
     "text_write_email": "Asegurate de escribir tu correo electrónico.",
     "text_delete_user": "¿Estás seguro de que quieres eliminar a este usuario?",
-    "text_debt_payment": "¿Estás seguro de que agregar un nuevo pago?"
+    "text_debt_payment": "¿Estás seguro de que agregar un nuevo pago?",
+    "text_complete_new_sale": "¿Estás seguro de completar la venta?"
   },
   "modalSuccessAlert": {
     "title": "¡Exito!",
@@ -226,7 +227,8 @@
     "text_change_pass_user": "Contraseña actualizada correctamente.",
     "text_img_upload": "Imagen cargada correctamente.",
     "text_debt_payment_success": "Pago de deuda agregado correctamente",
-    "text_add_customer": "Cliente agregado correctamente."
+    "text_add_customer": "Cliente agregado correctamente.",
+    "text_create_new_sale": "Nueva venta realizada correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -239,7 +241,10 @@
     "text_img_invalid": "Imagenes aceptadas: JPEG, JPG, PNG o WebP.",
     "text_img_large": "Imagen demasiado pesada. Máximo 2MB.",
     "text_not_internet": "Asegurate de tener una conexión a internet.",
-    "text_debt_not_found": "Deuda no encontrada"
+    "text_debt_not_found": "Deuda no encontrada.",
+    "text_insufficient_amount": "Monto insuficiente.",
+    "text_not_credit_sale": "Esto no es una cantidad valida para credito.",
+    "Insufficient stock for this product.": "Stock insuficiente para este producto."
   },
   "modalAddUser": {
     "title": "Agregar usuario",
@@ -358,6 +363,16 @@
     "subtitle": "Información de venta.",
     "customer": "Cliente:",
     "discount": "Descuento"
+  },
+  "modalNewPaid": {
+    "title": "Nueva Venta",
+    "subtitle": "Selección de productos a crédito.",
+    "customer": "Cliente:",
+    "discount": "Descuento",
+    "change_due": "Cambio a regresar",
+    "input_paid_amount": "Cantidad que pagará",
+    "input__cash_received": "Candidad con la que paga",
+    "btn": "Completar venta"
   },
   "modalExport": {
     "title": "Exportar estadísticas",

@@ -1,6 +1,8 @@
 const { getDB, saveDB, mapResultToObjects } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
+const { success } = require("zod");
+const { CircleStop } = require("lucide-react");
 
 // Get Top 5 Sales by Category
 async function getTopSalesCategory(startDate, endDate) {
@@ -138,10 +140,109 @@ async function getNextNumberSale() {
   }
 }
 
+// Create New Sale
+async function createNewSale(data) {
+  const db = await getDB();
+  try {
+    const {
+      nextNumberSale,
+      customerId,
+      products,
+      subtotal,
+      paid_amount,
+      userId,
+      discount,
+      total,
+      credit,
+    } = data;
+
+    db.exec("BEGIN TRANSACTION;");
+
+    // Verify product stock
+    for (const item of products) {
+      const sqlStock = db.exec("SELECT stock FROM product WHERE id = ?;", [
+        item.id,
+      ]);
+      const currentStock = sqlStock[0]?.values[0][0] || 0;
+
+      if (currentStock < item.quantity) {
+        db.exec("ROLLBACK;");
+        return {
+          success: false,
+          error: AUTH_CODES.INSUFFICIENT_STOCK,
+          result: item.id,
+        };
+      }
+    }
+
+    // Insert sale
+    const statusSale = credit ? 5 : 4;
+    const querySale = db.exec(
+      "INSERT INTO sale (sale_num, total_amount, paid_amount, discount, customer_id, status_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?);",
+      [
+        nextNumberSale,
+        total,
+        paid_amount,
+        discount,
+        customerId,
+        statusSale,
+        userId,
+      ],
+    );
+
+    // Get id sale
+    const lastId = db.exec("SELECT last_insert_rowid();")[0].values[0][0];
+
+    // Insert sale detail and update stock
+    for (const product of products) {
+      // Get cost product
+      const queryCostProduct = db.exec(
+        "SELECT cost_price FROM product WHERE id = ?;",
+        [product.id],
+      );
+
+      const subtPrice = product.quantity * product.unit_price;
+      const statusProduct = product.credit ? 5 : 4;
+
+      const querySaleDeatil = db.exec(
+        "INSERT INTO sale_detail (sale_id, product_id, quantity, cost_price, subt_price, status_id) VALUES (?, ?, ?, ?, ?, ?);",
+        [
+          lastId,
+          product.id,
+          product.quantity,
+          queryCostProduct,
+          subtPrice,
+          statusProduct,
+        ],
+      );
+
+      // Update stock of product
+      const queryUpdateStock = db.exec(
+        "UPDATE product SET stock = stock - ? WHERE id = ?;",
+        [product.quantity, product.id],
+      );
+
+      // Update status of product
+      const queryUpdateStatusProduct = db.exec(
+        "UPDATE product SET status = 0 WHERE id = ? AND stock <= 0;",
+        [product.id],
+      );
+    }
+
+    db.exec("COMMIT;");
+    return { success: true, result: AUTH_CODES.CREATE_NEW_SALE };
+  } catch (error) {
+    if (db) db.exec("ROLLBACK;");
+    console.log("Error creating new sale:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
   getRecentSales,
   getSaleData,
   getNextNumberSale,
+  createNewSale,
 };

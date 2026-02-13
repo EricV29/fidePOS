@@ -20,6 +20,7 @@ const {
   getRecentSales,
   getSaleData,
   getNextNumberSale,
+  createNewSale,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -665,6 +666,7 @@ ipcMain.handle("get-newsale-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const { idCategory, limit, offset } = data;
+      console.log(idCategory);
 
       const [categoryOptions, productsList, customersList, nextNumberSale] =
         await Promise.all([
@@ -783,6 +785,32 @@ ipcMain.handle("get-search-codesku-table", async (event, data) => {
         return {
           success: false,
           error: response.error,
+        };
+      }
+    } catch (error) {
+      console.log("❌ ERROR: ", error);
+    }
+  } else {
+    console.log("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Create New Sale
+ipcMain.handle("createNewSale", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await createNewSale(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+          result: response.result,
         };
       }
     } catch (error) {

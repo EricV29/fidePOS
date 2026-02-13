@@ -209,7 +209,8 @@
     "text_forgot_password": "A password recovery email will be sent to you. Please ensure you are connected to the internet.",
     "text_write_email": "Make sure to write your email.",
     "text_delete_user": "Delete this user? This action cannot be undone.",
-    "text_debt_payment": "Add new payment? This action cannot be undone."
+    "text_debt_payment": "Add new payment? This action cannot be undone.",
+    "text_complete_new_sale": "Are you sure you want to complete the sale?"
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
@@ -220,7 +221,8 @@
     "text_change_pass_user": "Change password successfully.",
     "text_img_upload": "Image upload successfully.",
     "text_debt_payment_success": "Debt payment added successfully.",
-    "text_add_customer": "Customer added successfully."
+    "text_add_customer": "Customer added successfully.",
+    "text_create_new_sale": "Create new sale successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -233,7 +235,10 @@
     "text_img_invalid": "Support images: JPEG, JPG, PNG or WebP.",
     "text_img_large": "The image file is too large. Maximum size is 2MB.",
     "text_not_internet": "Make sure have an internet conecction.",
-    "text_debt_not_found": "Debt not found"
+    "text_debt_not_found": "Debt not found.",
+    "text_insufficient_amount": "Insufficient amount.",
+    "text_not_credit_sale": "This is not a valid credit amount.",
+    "text_insufficient_stock": "Insufficient stock for this product."
   },
   "modalAddUser": {
     "title": "Add new user",
@@ -352,6 +357,16 @@
     "subtitle": "Information of sale.",
     "customer": "Customer:",
     "discount": "Discount"
+  },
+  "modalNewPaid": {
+    "title": "New Sale",
+    "subtitle": "Select products for credit.",
+    "customer": "Customer:",
+    "discount": "Discount",
+    "change_due": "Change due",
+    "input_paid_amount": "Paid amount",
+    "input_cash_received": "Cash Received",
+    "btn": "Complete sale"
   },
   "modalExport": {
     "title": "Export statistics",

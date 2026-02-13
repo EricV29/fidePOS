@@ -24,10 +24,22 @@ export type RecentSalesPaid = {
 export type ShoppingCarT = {
   id: string;
   product: string;
+  code_sku: string;
   unit_price: number;
   quantity: number;
   total_amount: number;
+  credit?: boolean;
 };
+
+export interface SaleData {
+  nextNumberSale: number | string;
+  products: ShoppingCarT[];
+  paid_amount?: number;
+  credit?: boolean;
+  subtotal: number;
+  discount: number;
+  total: number;
+}
 
 interface ProductSaleView {
   id: number;

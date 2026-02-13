@@ -78,4 +78,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Search CodeSKU Table
   getSearchCodeSKU: (data) =>
     ipcRenderer.invoke("get-search-codesku-table", data),
+
+  // Create New Sale
+  createNewSale: (data) => ipcRenderer.invoke("createNewSale", data),
 });
