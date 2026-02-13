@@ -666,8 +666,6 @@ ipcMain.handle("get-newsale-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const { idCategory, limit, offset } = data;
-      console.log(idCategory);
-
       const [categoryOptions, productsList, customersList, nextNumberSale] =
         await Promise.all([
           getCategoryOptions(),

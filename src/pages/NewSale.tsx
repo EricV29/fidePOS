@@ -239,17 +239,15 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
     const data = { ...finalSaleData, userId: session.id };
 
     const response = await window.electronAPI.createNewSale(data);
-    console.log(response.result);
 
     if (response.success) {
-      // getUsers();
+      loadNewSale();
+      setCar([]);
       setLoading(false);
       triggerResponseAlert(response.result);
     } else {
       setLoading(false);
-      const productFound = dataProducts.find(
-        (item) => item.id === response.result,
-      );
+      const productFound = dataCar.find((item) => item.id === response.result);
       const productName = productFound ? productFound.product : "";
       triggerResponseAlert(response.error, { product: productName });
     }

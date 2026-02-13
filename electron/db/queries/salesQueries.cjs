@@ -177,6 +177,8 @@ async function createNewSale(data) {
 
     // Insert sale
     const statusSale = credit ? 5 : 4;
+    const idCustomer = customerId ? customerId : null;
+
     const querySale = db.exec(
       "INSERT INTO sale (sale_num, total_amount, paid_amount, discount, customer_id, status_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?);",
       [
@@ -184,7 +186,7 @@ async function createNewSale(data) {
         total,
         paid_amount,
         discount,
-        customerId,
+        idCustomer,
         statusSale,
         userId,
       ],
@@ -201,6 +203,7 @@ async function createNewSale(data) {
         [product.id],
       );
 
+      const costPrice = queryCostProduct[0]?.values[0][0] ?? 0;
       const subtPrice = product.quantity * product.unit_price;
       const statusProduct = product.credit ? 5 : 4;
 
@@ -210,7 +213,7 @@ async function createNewSale(data) {
           lastId,
           product.id,
           product.quantity,
-          queryCostProduct,
+          costPrice,
           subtPrice,
           statusProduct,
         ],
@@ -224,16 +227,17 @@ async function createNewSale(data) {
 
       // Update status of product
       const queryUpdateStatusProduct = db.exec(
-        "UPDATE product SET status = 0 WHERE id = ? AND stock <= 0;",
+        "UPDATE product SET status_id = 0 WHERE id = ? AND stock <= 0;",
         [product.id],
       );
     }
 
     db.exec("COMMIT;");
+    saveDB(db);
     return { success: true, result: AUTH_CODES.CREATE_NEW_SALE };
   } catch (error) {
     if (db) db.exec("ROLLBACK;");
-    console.log("Error creating new sale:", error);
+    console.error("Error creating new sale:", error);
     return { success: false, error: error.message };
   }
 }
