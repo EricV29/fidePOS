@@ -362,6 +362,7 @@
   "modalNewPaid": {
     "title": "New Sale",
     "subtitle": "Select products for credit.",
+    "debt": "Debt:",
     "customer": "Customer:",
     "discount": "Discount",
     "change_due": "Change due",

@@ -368,6 +368,7 @@
   "modalNewPaid": {
     "title": "Nueva Venta",
     "subtitle": "Selección de productos a crédito.",
+    "debt": "Deuda:",
     "customer": "Cliente:",
     "discount": "Descuento",
     "change_due": "Cambio a regresar",

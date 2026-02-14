@@ -20,7 +20,8 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
   const [dataNewSale, setDataNewSale] = useState<SaleData>();
   const { triggerWarningAlert, triggerResponseAlert } = useModal();
   const [isCreditActive, setIsCreditActive] = useState(false);
-  const [changeDue, setChangeDue] = useState(0);
+  const [changeDue, setChangeDue] = useState(0.0);
+  const [debt, setDebt] = useState(0);
 
   useEffect(() => {
     if (data) {
@@ -50,23 +51,39 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
 
       const hasCredit = updatedProducts.some((item) => item.credit);
       setIsCreditActive(hasCredit);
+      let amountToPay = 0;
 
-      if (!hasCredit) {
-        const input = document.getElementById(
-          "paid_amount",
-        ) as HTMLInputElement;
-        if (input) {
-          input.value = "";
+      if (updatedProducts.length > 1 && hasCredit) {
+        amountToPay = updatedProducts
+          .filter((item) => !item.credit)
+          .reduce((acc, item) => acc + item.quantity * item.unit_price, 0);
+      }
+
+      const input = document.getElementById(
+        "paid_amount",
+      ) as HTMLInputElement | null;
+      const received =
+        parseFloat(
+          (document.getElementById("cash_received") as HTMLInputElement)?.value,
+        ) || 0;
+
+      if (input && dataNewSale?.total) {
+        input.value = amountToPay === 0 ? "0" : String(amountToPay);
+        const debtPending = dataNewSale?.total - Number(input.value);
+        setDebt(debtPending);
+        if (hasCredit) {
+          const change = received - Number(input.value);
+          setChangeDue(change);
+        } else {
+          const change = received - dataNewSale.total;
+          setChangeDue(change);
+          setDebt(0);
         }
       }
 
       return {
         ...prev,
-        products: prev.products.map((item) =>
-          String(item.id) === String(id)
-            ? { ...item, credit: !item.credit }
-            : item,
-        ),
+        products: updatedProducts,
       };
     });
   };
@@ -139,9 +156,28 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
 
   const handleChangeDue = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const received = parseFloat(e.target.value) | 0;
+
+    const input = document.getElementById(
+      "paid_amount",
+    ) as HTMLInputElement | null;
+
+    const debtPending = dataNewSale?.total - Number(input.value);
+    setDebt(debtPending);
+
+    if (isCreditActive && input) {
+      const received =
+        parseFloat(
+          (document.getElementById("cash_received") as HTMLInputElement)?.value,
+        ) || 0;
+      const change = received - Number(input.value);
+      setChangeDue(change);
+      return;
+    }
+
     if (dataNewSale?.total) {
       const change = received - dataNewSale.total;
       setChangeDue(change);
+      return;
     }
   };
 
@@ -168,7 +204,12 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p className="dark:text-white">{t("modalNewPaid.subtitle")}</p>
+        <div className="w-full flex justify-between">
+          <p className="dark:text-white">{t("modalNewPaid.subtitle")}</p>
+          <p className="text-[#F57C00] font-bold">
+            {t("modalNewPaid.debt")} {currencyFormat(debt)}
+          </p>
+        </div>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4">
           <div className="w-full max-h-[200px] overflow-y-auto flex flex-col gap-2 dark:text-white">
             {dataNewSale?.products.map((item) => (
@@ -210,7 +251,7 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
               <p>Subtotal</p>
               <p className="font-semibold">
                 {dataNewSale
-                  ? currencyFormat(dataNewSale.total)
+                  ? currencyFormat(dataNewSale.total + dataNewSale.discount)
                   : t("global.loading")}
               </p>
             </div>
@@ -258,6 +299,7 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
                   placeholder={t("modalNewPaid.input_paid_amount")}
                   className="w-full h-full"
                   disabled={!isCreditActive}
+                  onChange={handleChangeDue}
                 />
               </div>
             </div>

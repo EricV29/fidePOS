@@ -235,7 +235,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
   const totalCart = subtotalCart - Number(discount);
 
   const handleNewSale = async (finalSaleData: SaleData) => {
-    setLoading(true);
+    //setLoading(true);
     const data = { ...finalSaleData, userId: session.id };
 
     const response = await window.electronAPI.createNewSale(data);
