@@ -178,13 +178,14 @@ async function createNewSale(data) {
     // Insert sale
     const statusSale = credit ? 5 : 4;
     const idCustomer = customerId ? customerId : null;
+    const paidAmount = paid_amount ? paid_amount : 0;
 
     const querySale = db.exec(
       "INSERT INTO sale (sale_num, total_amount, paid_amount, discount, customer_id, status_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?);",
       [
         nextNumberSale,
         total,
-        paid_amount,
+        paidAmount,
         discount,
         idCustomer,
         statusSale,
@@ -229,6 +230,13 @@ async function createNewSale(data) {
       const queryUpdateStatusProduct = db.exec(
         "UPDATE product SET status_id = 0 WHERE id = ? AND stock <= 0;",
         [product.id],
+      );
+    }
+
+    if (credit) {
+      const queryPayment = db.exec(
+        "INSERT INTO payment(amount, note, sale_id) VALUES(?, ?, ?);",
+        [paidAmount, "", lastId],
       );
     }
 
