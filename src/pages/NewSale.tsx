@@ -80,8 +80,6 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
 
     if (newSaleData?.customersList) {
       const customersData = newSaleData.customersList.result;
-      console.log(customersData);
-
       setDataCustomers(customersData);
     }
 
@@ -109,7 +107,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
       if (response.success && response.result) {
         setDataProducts(response.result);
       } else {
-        console.error("Error en la base de datos:", response.error);
+        console.warn(response.error);
       }
     }, 300);
 

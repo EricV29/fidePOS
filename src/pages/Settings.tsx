@@ -91,21 +91,23 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   };
 
   const deleteUser = async (id: number) => {
-    if (session?.role_id !== 1) {
+    if (id === 1) {
       triggerResponseAlert("UNAUTHORIZED");
+      return;
     }
 
     triggerWarningAlert(t("modalWarningAlert.text_delete_user"), async () => {
       try {
         setLoading(true);
         const response = await window.electronAPI.deleteUser(id);
+        console.log(response);
+
         if (response.success) {
           getUsers();
           setLoading(false);
           triggerResponseAlert(response.result);
         } else {
           setLoading(false);
-
           triggerResponseAlert(response.error);
         }
       } catch (err) {
