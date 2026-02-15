@@ -23,7 +23,6 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
   const [changeDue, setChangeDue] = useState(0.0);
   const [debt, setDebt] = useState(0);
   const [cashReceived, setCashReceived] = useState(0);
-  const [amountToPay, setAmountToPay] = useState(0);
   const [paidAmount, setPaidAmount] = useState(0);
 
   useEffect(() => {
@@ -45,17 +44,17 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
   const calculateChangeDebt = (
     cashReceivedP?: number,
     amountToPayP?: number,
-    hasCreditP?: number,
+    hasCreditP?: boolean,
   ) => {
     const inputPaidAmount = document.getElementById(
       "paid_amount",
     ) as HTMLInputElement | null;
-    const paid = amountToPayP === undefined ? 0 : Number(amountToPayP);
+    const paid = amountToPayP === undefined ? paidAmount : Number(amountToPayP);
     const credit = hasCreditP === undefined ? isCreditActive : hasCreditP;
 
-    if (paid === 0) {
+    if (paid === 0 && inputPaidAmount) {
       // Calculate change due
-      const change = cashReceivedP - dataNewSale?.total;
+      const change = (cashReceivedP ?? 0) - (dataNewSale?.total ?? 0);
       inputPaidAmount.value = "";
       setDebt(0);
       setChangeDue(change);
@@ -72,7 +71,8 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
         setChangeDue(finalCash - paidValue);
 
         //Calculate debt pending
-        const debtPending = dataNewSale?.total - Number(inputPaidAmount.value);
+        const debtPending =
+          (dataNewSale?.total ?? 0) - Number(inputPaidAmount.value);
         setDebt(debtPending);
       }
     }
@@ -99,7 +99,7 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
           .reduce((acc, item) => acc + item.quantity * item.unit_price, 0);
       }
 
-      setAmountToPay(amountToPay);
+      setPaidAmount(amountToPay);
       calculateChangeDebt(cashReceived, amountToPay, hasCredit);
 
       return {
@@ -186,9 +186,7 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
   const handleChangeDue = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const cash = parseFloat(e.target.value) | 0;
     setCashReceived(cash);
-    console.log(cash);
-
-    calculateChangeDebt(cash, amountToPay, isCreditActive);
+    calculateChangeDebt(cash, paidAmount, isCreditActive);
   };
 
   return ReactDOM.createPortal(
