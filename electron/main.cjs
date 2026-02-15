@@ -229,10 +229,10 @@ ipcMain.handle("signup", async (event, data, lan) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -257,10 +257,10 @@ ipcMain.handle("login", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -303,10 +303,10 @@ ipcMain.handle("forgotPassword", async (event, email, lan) => {
         return { success: false, error: response.error };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -318,7 +318,7 @@ ipcMain.on("logout", (event) => {
     mainWindow.close();
     createLoginWindow();
     sessionUser = null;
-    console.log(`🔒 Logout session: ${userName}`);
+    console.info(`🔒 Logout session: ${userName}`);
   }
 });
 
@@ -340,10 +340,10 @@ ipcMain.handle("addUser", async (event, data, lan) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -365,10 +365,10 @@ ipcMain.handle("get-users", async (event) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -390,10 +390,10 @@ ipcMain.handle("deleteUser", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -415,10 +415,10 @@ ipcMain.handle("editUser", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -440,10 +440,10 @@ ipcMain.handle("changePassword", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -460,10 +460,10 @@ ipcMain.handle("uploadImg", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -488,10 +488,10 @@ ipcMain.handle("contactDevs", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -529,10 +529,10 @@ ipcMain.handle("get-dashboard-data", async (event, data) => {
         },
       };
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -554,10 +554,10 @@ ipcMain.handle("get-sale-data", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -579,10 +579,10 @@ ipcMain.handle("get-indebted-customers-data", async (event) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -604,10 +604,10 @@ ipcMain.handle("get-customer-debts-data", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -628,10 +628,10 @@ ipcMain.handle("get-debt-detail-data", async (event, data) => {
         },
       };
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -653,10 +653,10 @@ ipcMain.handle("addPaymentDebt", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -684,10 +684,10 @@ ipcMain.handle("get-newsale-data", async (event, data) => {
         },
       };
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -709,10 +709,10 @@ ipcMain.handle("get-filter-search-table", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -736,10 +736,10 @@ ipcMain.handle("get-products-category", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -761,10 +761,10 @@ ipcMain.handle("addCustomer", async (event, data, lan) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -786,10 +786,10 @@ ipcMain.handle("get-search-codesku-table", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });
@@ -812,10 +812,10 @@ ipcMain.handle("createNewSale", async (event, data) => {
         };
       }
     } catch (error) {
-      console.log("❌ ERROR: ", error);
+      console.error("❌ ERROR: ", error);
     }
   } else {
-    console.log("❌ ERROR: NOT ALLOWED");
+    console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
 });

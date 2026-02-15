@@ -100,9 +100,14 @@ export function DataTableSale<TData, TValue>({
     }
 
     const delayDebounceFn = setTimeout(async () => {
+      let searchText = searchTerm;
+
+      if (currentColumn === "unit_price") {
+        searchText = searchTerm.replace(/[$,]/g, "");
+      }
       const data = {
         column: currentColumn,
-        text: searchTerm,
+        text: searchText,
       };
 
       const response = await window.electronAPI.getFilterSearch(data);

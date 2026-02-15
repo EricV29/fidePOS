@@ -121,14 +121,14 @@ async function getFilterSearch(data) {
       "product",
       "description",
       "category",
-      "unit price",
+      "unit_price",
     ];
 
     let targetColumn = allowedColumns.includes(column) ? column : "code_sku";
 
     if (targetColumn === "product") targetColumn = "p.name";
     else if (targetColumn === "category") targetColumn = "c.name";
-    else if (targetColumn === "unit price") targetColumn = "p.unit_price";
+    else if (targetColumn === "unit_price") targetColumn = "p.unit_price";
     else targetColumn = `p.${targetColumn}`;
 
     const sql = `

@@ -9,7 +9,6 @@ const Signup: React.FC = () => {
   const { t, i18n } = useTranslation();
 
   const handleSignup = (data: AddUserFormValues) => {
-    console.log(data);
     window.electronAPI.signup(data, i18n.language);
   };
 

@@ -38,8 +38,8 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         text={text}
         btnOptions={true}
         onConfirm={async () => {
-          await onConfirm();
           setAlert(null);
+          await onConfirm();
         }}
         onCancel={() => setAlert(null)}
       />,
