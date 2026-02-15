@@ -21,49 +21,6 @@ import { useOutletContext } from "react-router-dom";
 
 interface NewSaleProps {}
 
-/*
-//* Example data categories
-const categoriesDB = [
-  { id: "0001", category: "Zapatos", products: 15 },
-  { id: "0002", category: "Edredones", products: 12 },
-  { id: "0003", category: "Maquillaje", products: 10 },
-  { id: "0005", category: "Juguetes", products: 20 },
-  { id: "0006", category: "Barberia", products: 45 },
-  { id: "0007", category: "Peluches", products: 90 },
-  { id: "0008", category: "Dulces", products: 14 },
-];
-
-//* Example data products
-const dataProductsSaleDB = [
-  {
-    id: "34234",
-    code_sku: "JW0012",
-    product: "Labial",
-    description: "Yuya rojo",
-    category: "Maquillaje",
-    ccolor: "#5b49ff",
-    unit_price: 200,
-  },
-  {
-    id: "34235",
-    code_sku: "JW0013",
-    product: "Carrito",
-    description: "hotweels",
-    category: "Toys",
-    ccolor: "#ff49ff",
-    unit_price: 30,
-  },
-];
-
-//* Example data customers
-const customersDB = [
-  { label: "Eric Jared Villeda Reyes", value: "001" },
-  { label: "Lucila Reyes Valera", value: "002" },
-  { label: "Roberto Villeda Serrano", value: "003" },
-  { label: "Wendy Fabiola Villeda Reyes", value: "004" },
-];
-*/
-
 interface MyContext {
   session: UserSession;
   installDate: string;
@@ -123,6 +80,8 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
 
     if (newSaleData?.customersList) {
       const customersData = newSaleData.customersList.result;
+      console.log(customersData);
+
       setDataCustomers(customersData);
     }
 

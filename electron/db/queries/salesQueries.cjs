@@ -234,6 +234,13 @@ async function createNewSale(data) {
     }
 
     if (credit) {
+      // Update status customer
+      const queryUpdateCustomer = db.exec(
+        "UPDATE customer SET status_id = 3 WHERE id = ?;",
+        [idCustomer],
+      );
+
+      // Insert pauyment
       const queryPayment = db.exec(
         "INSERT INTO payment(amount, note, sale_id) VALUES(?, ?, ?);",
         [paidAmount, "", lastId],
