@@ -228,7 +228,8 @@
     "text_img_upload": "Imagen cargada correctamente.",
     "text_debt_payment_success": "Pago de deuda agregado correctamente",
     "text_add_customer": "Cliente agregado correctamente.",
-    "text_create_new_sale": "Nueva venta realizada correctamente."
+    "text_create_new_sale": "Nueva venta realizada correctamente.",
+    "text_add_category": "Categoría agregada correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -245,7 +246,8 @@
     "text_insufficient_amount": "Monto insuficiente.",
     "text_not_credit_sale": "Esto no es una cantidad valida para credito.",
     "Insufficient stock for this product.": "Stock insuficiente para este producto: {{product}}.",
-    "text_not_customer_select": "Por favor selecciona o crea un cliente para realizar una venta a credito."
+    "text_not_customer_select": "Por favor selecciona o crea un cliente para realizar una venta a credito.",
+    "text_category_used": "Categoría ya existe en el sistema."
   },
   "modalAddUser": {
     "title": "Agregar usuario",

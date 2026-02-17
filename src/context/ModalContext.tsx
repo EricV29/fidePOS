@@ -151,6 +151,14 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_not_customer_select",
       },
+      [AUTH_CODES.CATEGORY_USED]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_category_used",
+      },
+      [AUTH_CODES.ADD_CATEGORY]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_add_category",
+      },
     };
 
     const config = alertConfig[code];
