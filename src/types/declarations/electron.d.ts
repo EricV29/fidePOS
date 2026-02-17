@@ -188,6 +188,15 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      //* GET PRODUCTS DATA PAGE
+
+      // ADD CATEGORY
+      addCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

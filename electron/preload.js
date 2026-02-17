@@ -81,4 +81,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Create New Sale
   createNewSale: (data) => ipcRenderer.invoke("createNewSale", data),
+
+  // Add Category
+  addCategory: (data) => ipcRenderer.invoke("addCategory", data),
 });

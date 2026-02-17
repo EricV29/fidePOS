@@ -4,15 +4,27 @@ import CategoryIcon from "@icons/CategoryIcon";
 import CloseIcon from "@icons/CloseIcon";
 import AddCategoryForm from "@forms/form-addCategory";
 import { useTranslation } from "react-i18next";
+import { useLoading } from "@context/LoadingContext";
+import { type AddCategoryFormValues } from "@forms/schemas/category.schema";
 
 export function ModalAddCategory() {
   const { setModal } = useModal();
   const { t } = useTranslation();
   const close = () => setModal(null);
+  const { setLoading } = useLoading();
+  const { triggerResponseAlert } = useModal();
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleAddCategory = () => {
-    //window.electronAPI.signupSuccess();
+  const handleAddCategory = async (values: AddCategoryFormValues) => {
+    setLoading(true);
+    const response = await window.electronAPI.addCategory(values);
+    if (response.success) {
+      setLoading(false);
+      triggerResponseAlert(response.result);
+    } else {
+      setLoading(false);
+      triggerResponseAlert(response.error);
+    }
   };
 
   return ReactDOM.createPortal(
@@ -45,6 +57,6 @@ export function ModalAddCategory() {
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }
