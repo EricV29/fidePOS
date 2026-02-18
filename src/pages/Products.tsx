@@ -58,8 +58,23 @@ export default function Products() {
   const [dataStock, setStock] = useState<dataStockI>();
   const [dataProducts, setProducts] = useState<Products[]>([]);
   const { setModal } = useModal();
+  const [investCard, setInvestCard] = useState(Number);
+
+  const loadPorducts = async () => {
+    const response = await window.electronAPI.getProductsData();
+    const productsData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+
+    if (productsData?.investment) {
+      const investmentData = productsData.investment.result;
+      setInvestCard(investmentData[0].investment);
+    }
+  };
 
   useEffect(() => {
+    loadPorducts();
     setStock(dataStockDB);
     setProducts(dataProductsDB);
   }, []);
@@ -113,7 +128,7 @@ export default function Products() {
               icon={InvestmentIcon}
               title={t("cards.investment_title")}
               icond={null}
-              number={100000}
+              number={investCard}
               format={true}
               color="#F57C00"
             />
