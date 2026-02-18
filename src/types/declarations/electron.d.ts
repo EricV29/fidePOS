@@ -190,6 +190,11 @@ declare global {
       }>;
 
       //* GET PRODUCTS DATA PAGE
+      getProductsData: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
 
       // ADD CATEGORY
       addCategory: (data) => Promise<{

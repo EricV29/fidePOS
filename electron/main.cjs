@@ -822,6 +822,31 @@ ipcMain.handle("createNewSale", async (event, data) => {
 });
 
 //* Get Products Data Page
+ipcMain.handle("get-products-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [investment, inventoryValue, productsStock, inventoryTable] =
+        await Promise.all([
+          getInvestment(),
+          // getInventoryValue(),
+          // getProductsStock(),
+          // getInventoryTable(),
+        ]);
+
+      return {
+        success: true,
+        result: {
+          investment,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
 
 // Add Category
 ipcMain.handle("addCategory", async (event, data) => {

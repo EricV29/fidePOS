@@ -82,6 +82,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Create New Sale
   createNewSale: (data) => ipcRenderer.invoke("createNewSale", data),
 
+  //* Get Products Data Page
+  getProductsData: () => ipcRenderer.invoke("get-products-data"),
+
   // Add Category
   addCategory: (data) => ipcRenderer.invoke("addCategory", data),
 });
