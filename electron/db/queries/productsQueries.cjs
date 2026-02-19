@@ -206,6 +206,27 @@ async function getSearchCodeSKU(codesku) {
   }
 }
 
+// Get Iventory Value
+async function getInventoryValue() {
+  try {
+    const db = await getDB();
+
+    const sql = `SELECT * FROM v_inventory_value`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting inventory value:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
@@ -213,4 +234,5 @@ module.exports = {
   getProductsList,
   getFilterSearch,
   getSearchCodeSKU,
+  getInventoryValue,
 };

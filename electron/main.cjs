@@ -29,6 +29,7 @@ const {
   getProductsList,
   getFilterSearch,
   getSearchCodeSKU,
+  getInventoryValue,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -828,7 +829,7 @@ ipcMain.handle("get-products-data", async (event, data) => {
       const [investment, inventoryValue, productsStock, inventoryTable] =
         await Promise.all([
           getInvestment(),
-          // getInventoryValue(),
+          getInventoryValue(),
           // getProductsStock(),
           // getInventoryTable(),
         ]);
@@ -837,6 +838,7 @@ ipcMain.handle("get-products-data", async (event, data) => {
         success: true,
         result: {
           investment,
+          inventoryValue,
         },
       };
     } catch (error) {
