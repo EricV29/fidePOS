@@ -55,7 +55,7 @@ const dataProductsDB = [
 
 export default function Products() {
   const { t, i18n } = useTranslation();
-  const [dataStock, setStock] = useState<dataStockI>();
+  const [productsStock, setProductsStock] = useState<dataStockI>();
   const [dataProducts, setProducts] = useState<Products[]>([]);
   const { setModal } = useModal();
   const [investCard, setInvestCard] = useState(Number);
@@ -77,11 +77,15 @@ export default function Products() {
       const inventoryValueData = productsData.inventoryValue.result;
       setInventoryValueCard(inventoryValueData[0].inventory_value);
     }
+
+    if (productsData?.productsStock) {
+      const productsStockData = productsData.productsStock.result;
+      setProductsStock(productsStockData[0]);
+    }
   };
 
   useEffect(() => {
     loadPorducts();
-    setStock(dataStockDB);
     setProducts(dataProductsDB);
   }, []);
 
@@ -148,7 +152,7 @@ export default function Products() {
               color="#FFC107"
             />
             <CardInfoDetail
-              chartData={dataStock!}
+              chartData={productsStock!}
               title={t("cards.stock_title")}
               color="#1976D2"
             />

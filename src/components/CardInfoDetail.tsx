@@ -16,11 +16,11 @@ const CardInfoDetail: React.FC<CardInfoDetailProps> = ({
   color,
 }) => {
   if (!chartData) return null;
+
   const totalItems = Object.values(chartData).reduce(
     (a, b) => a + Number(b),
-    0
+    0,
   );
-
   return (
     <>
       <div
