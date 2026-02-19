@@ -227,6 +227,27 @@ async function getInventoryValue() {
   }
 }
 
+// Get Products Stock (Active/Inactive)
+async function getProductsStock() {
+  try {
+    const db = await getDB();
+
+    const sql = `SELECT * FROM v_products_stock`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting products stock:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
@@ -235,4 +256,5 @@ module.exports = {
   getFilterSearch,
   getSearchCodeSKU,
   getInventoryValue,
+  getProductsStock,
 };
