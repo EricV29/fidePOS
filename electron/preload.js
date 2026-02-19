@@ -83,8 +83,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
   createNewSale: (data) => ipcRenderer.invoke("createNewSale", data),
 
   //* Get Products Data Page
-  getProductsData: () => ipcRenderer.invoke("get-products-data"),
+  getProductsData: (data) => ipcRenderer.invoke("get-products-data", data),
 
   // Add Category
   addCategory: (data) => ipcRenderer.invoke("addCategory", data),
+
+  // Get Filter Search Table Products
+  getFilterSearchProducts: (data) =>
+    ipcRenderer.invoke("get-filter-search-products", data),
 });

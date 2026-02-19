@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ExportIcon from "@icons/ExportIcon";
 import ImportIcon from "@icons/ImportIcon";
 import CategoryIcon from "@icons/CategoryIcon";
@@ -60,9 +60,20 @@ export default function Products() {
   const { setModal } = useModal();
   const [investCard, setInvestCard] = useState(Number);
   const [inventoryValueCard, setInventoryValueCard] = useState(Number);
+  const [totalRows, setTotalRows] = useState(0);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
 
-  const loadPorducts = async () => {
-    const response = await window.electronAPI.getProductsData();
+  const loadPorducts = useCallback(async () => {
+    const limit = pagination.pageSize;
+    const offset = pagination.pageIndex * pagination.pageSize;
+
+    const response = await window.electronAPI.getProductsData({
+      limit: limit,
+      offset: offset,
+    });
     const productsData =
       typeof response.result === "string"
         ? JSON.parse(response.result)
@@ -82,12 +93,17 @@ export default function Products() {
       const productsStockData = productsData.productsStock.result;
       setProductsStock(productsStockData[0]);
     }
-  };
+
+    if (productsData?.inventoryTable) {
+      const inventoryTableData = productsData.inventoryTable.result;
+      setProducts(inventoryTableData);
+      setTotalRows(productsData.inventoryTable.totalCount);
+    }
+  }, [pagination]);
 
   useEffect(() => {
     loadPorducts();
-    setProducts(dataProductsDB);
-  }, []);
+  }, [loadPorducts]);
 
   function deleteProduct(id: string) {
     console.log("Deleting product:", id);
@@ -173,6 +189,9 @@ export default function Products() {
                   deleteProduct(row.id);
                 },
               }}
+              pagination={pagination}
+              setPagination={setPagination}
+              totalRows={totalRows}
             />
           </div>
         </div>
