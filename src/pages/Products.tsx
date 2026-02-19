@@ -59,6 +59,7 @@ export default function Products() {
   const [dataProducts, setProducts] = useState<Products[]>([]);
   const { setModal } = useModal();
   const [investCard, setInvestCard] = useState(Number);
+  const [inventoryValueCard, setInventoryValueCard] = useState(Number);
 
   const loadPorducts = async () => {
     const response = await window.electronAPI.getProductsData();
@@ -70,6 +71,11 @@ export default function Products() {
     if (productsData?.investment) {
       const investmentData = productsData.investment.result;
       setInvestCard(investmentData[0].investment);
+    }
+
+    if (productsData?.inventoryValue) {
+      const inventoryValueData = productsData.inventoryValue.result;
+      setInventoryValueCard(inventoryValueData[0].inventory_value);
     }
   };
 
@@ -137,7 +143,7 @@ export default function Products() {
               icon={RevenueIcon}
               title={t("cards.inventory_value_title")}
               icond={null}
-              number={100000}
+              number={inventoryValueCard}
               format={true}
               color="#FFC107"
             />
