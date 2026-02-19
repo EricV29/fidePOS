@@ -118,6 +118,20 @@ export const columnsP = (
     },
   },
   {
+    accessorKey: "deleted_at",
+    header: t("columns.deleted_at"),
+    meta: {
+      headerClassName: "text-center",
+    },
+    cell: ({ row }) => {
+      return (
+        <div className="text-center">
+          {formatDateColumns(row.getValue("deleted_at"), language)}
+        </div>
+      );
+    },
+  },
+  {
     id: "actions",
     header: t("columns.actions"),
     meta: {

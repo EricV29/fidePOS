@@ -164,7 +164,6 @@ declare global {
       getProductsCategory: (data) => Promise<{
         success: boolean;
         result?: ProductsSale[];
-        totalCount: number;
         error?: string;
       }>;
 
@@ -190,7 +189,7 @@ declare global {
       }>;
 
       //* GET PRODUCTS DATA PAGE
-      getProductsData: () => Promise<{
+      getProductsData: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;
@@ -200,6 +199,13 @@ declare global {
       addCategory: (data) => Promise<{
         success: boolean;
         result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH PRODUCTS
+      getFilterSearchProducts: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
         error?: string;
       }>;
     };

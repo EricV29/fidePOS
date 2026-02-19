@@ -31,6 +31,8 @@ const {
   getSearchCodeSKU,
   getInventoryValue,
   getProductsStock,
+  getProducts,
+  getFilterSearchProducts,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -827,12 +829,13 @@ ipcMain.handle("createNewSale", async (event, data) => {
 ipcMain.handle("get-products-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
+      const { limit, offset } = data;
       const [investment, inventoryValue, productsStock, inventoryTable] =
         await Promise.all([
           getInvestment(),
           getInventoryValue(),
           getProductsStock(),
-          // getInventoryTable(),
+          getProducts(limit, offset),
         ]);
 
       return {
@@ -841,6 +844,7 @@ ipcMain.handle("get-products-data", async (event, data) => {
           investment,
           inventoryValue,
           productsStock,
+          inventoryTable,
         },
       };
     } catch (error) {
@@ -857,6 +861,31 @@ ipcMain.handle("addCategory", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await addCategory(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Filter Search Products
+ipcMain.handle("get-filter-search-products", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchProducts(data);
       if (response.success) {
         return {
           success: true,

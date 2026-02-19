@@ -62,7 +62,7 @@ async function getCategoryOptions() {
   }
 }
 
-// Get Products List
+// Get Products List New Sale
 async function getProductsList(idCategory, limit, offset) {
   try {
     const db = await getDB();
@@ -248,6 +248,122 @@ async function getProductsStock() {
   }
 }
 
+// Get Products List Products
+async function getProducts(limit, offset) {
+  try {
+    const db = await getDB();
+    const params = [limit, offset];
+    const sql = `
+      SELECT 
+        p.id, 
+        p.code_sku, 
+        p.name AS product, 
+        p.description, 
+        c.name AS category, 
+        c.color AS ccolor,
+        p.cost_price,
+        p.unit_price,
+        p.stock,
+        s.description AS status, 
+        p.created_at,
+        p.delete_at 
+      FROM product p
+      INNER JOIN category c ON p.category_id = c.id
+      INNER JOIN status s ON p.status_id  = s.id 
+      ORDER BY p.stock DESC
+      LIMIT ? OFFSET ?;
+    `;
+
+    const sqlCount = `
+      SELECT COUNT(*) as total 
+      FROM product p
+      INNER JOIN category c ON p.category_id = c.id
+    `;
+
+    const query = db.exec(sql, params);
+    const queryCount = db.exec(sqlCount);
+
+    const totalCount = queryCount.length > 0 ? queryCount[0].values[0][0] : 0;
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data, totalCount: totalCount };
+  } catch (error) {
+    console.error("Error getting products:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Filter Search Table Products
+async function getFilterSearchProducts(data) {
+  try {
+    const db = await getDB();
+    const { column, text } = data;
+
+    const allowedColumns = [
+      "code_sku",
+      "product",
+      "description",
+      "category",
+      "cost_price",
+      "unit_price",
+      "stock",
+      "status",
+      "created_at",
+      "deleted_at",
+    ];
+
+    let targetColumn = allowedColumns.includes(column) ? column : "code_sku";
+
+    if (targetColumn === "product") targetColumn = "p.name";
+    else if (targetColumn === "category") targetColumn = "c.name";
+    else if (targetColumn === "unit_price") targetColumn = "p.unit_price";
+    else if (targetColumn === "status") targetColumn = "s.description";
+    else targetColumn = `p.${targetColumn}`;
+
+    const sql = `
+      SELECT 
+        p.id, 
+        p.code_sku, 
+        p.name AS product, 
+        p.description, 
+        c.name AS category, 
+        c.color AS ccolor,
+        p.cost_price,
+        p.unit_price,
+        p.stock,
+        s.description AS status, 
+        p.created_at,
+        p.delete_at 
+      FROM product p
+      INNER JOIN category c ON p.category_id = c.id
+      INNER JOIN status s ON p.status_id  = s.id 
+      WHERE ${targetColumn} LIKE ? 
+      AND p.status_id IN (1, 0)
+      ORDER BY p.stock DESC;
+    `;
+
+    const searchTerm = `%${text}%`;
+
+    const stmt = db.prepare(sql);
+    stmt.bind([searchTerm]);
+
+    const rows = [];
+    while (stmt.step()) {
+      rows.push(stmt.getAsObject());
+    }
+    stmt.free();
+
+    return { success: true, result: rows };
+  } catch (error) {
+    console.error("Error getting filter search products:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
@@ -257,4 +373,6 @@ module.exports = {
   getSearchCodeSKU,
   getInventoryValue,
   getProductsStock,
+  getProducts,
+  getFilterSearchProducts,
 };
