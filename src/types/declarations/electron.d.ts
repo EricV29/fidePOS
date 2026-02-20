@@ -208,6 +208,13 @@ declare global {
         result?: TData[];
         error?: string;
       }>;
+
+      // DELETE PRODUCT
+      deleteProduct: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

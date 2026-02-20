@@ -159,6 +159,14 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_add_category",
       },
+      [AUTH_CODES.PRODUCT_INACTIVE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_product_inactive",
+      },
+      [AUTH_CODES.DELETE_PRODUCT]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_delete_product",
+      },
     };
 
     const config = alertConfig[code];
