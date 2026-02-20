@@ -16,6 +16,7 @@ import { ModalImport } from "@modals/ModalImport";
 import { ModalAddProduct } from "@modals/ModalAddProduct";
 import { ModalAddCategory } from "@modals/ModalAddCategory";
 import { useTranslation } from "react-i18next";
+import { useLoading } from "@context/LoadingContext";
 interface dataStockI {
   [key: string]: number;
 }
@@ -32,6 +33,8 @@ export default function Products() {
     pageIndex: 0,
     pageSize: 10,
   });
+  const { triggerWarningAlert, triggerResponseAlert } = useModal();
+  const { setLoading } = useLoading();
 
   const loadPorducts = useCallback(async () => {
     const limit = pagination.pageSize;
@@ -72,9 +75,33 @@ export default function Products() {
     loadPorducts();
   }, [loadPorducts]);
 
-  function deleteProduct(id: string) {
-    console.log("Deleting product:", id);
-  }
+  const deleteProduct = async (id: number, status: string) => {
+    if (status !== "active") {
+      triggerResponseAlert("PRODUCT_INACTIVE");
+      return;
+    }
+
+    triggerWarningAlert(
+      t("modalWarningAlert.text_delete_product"),
+      async () => {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.deleteProduct(id);
+
+          if (response.success) {
+            loadPorducts();
+            setLoading(false);
+            triggerResponseAlert(response.result);
+          } else {
+            setLoading(false);
+            triggerResponseAlert(response.error);
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      },
+    );
+  };
 
   const columnsp = columnsP(t, i18n.language);
 
@@ -153,7 +180,7 @@ export default function Products() {
                   setModal(<ModalAddProduct data={row} />);
                 },
                 onDelete: (row) => {
-                  deleteProduct(row.id);
+                  deleteProduct(Number(row.id), row.status);
                 },
               }}
               pagination={pagination}

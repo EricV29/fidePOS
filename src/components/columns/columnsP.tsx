@@ -124,9 +124,11 @@ export const columnsP = (
       headerClassName: "text-center",
     },
     cell: ({ row }) => {
+      const value = row.getValue("deleted_at");
+      if (!value) return null;
       return (
         <div className="text-center">
-          {formatDateColumns(row.getValue("deleted_at"), language)}
+          {formatDateColumns(value as string, language)}
         </div>
       );
     },

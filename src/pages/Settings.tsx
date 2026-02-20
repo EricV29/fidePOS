@@ -100,7 +100,6 @@ const Settings: React.FC<SettingsProps> = ({}) => {
       try {
         setLoading(true);
         const response = await window.electronAPI.deleteUser(id);
-        console.log(response);
 
         if (response.success) {
           getUsers();

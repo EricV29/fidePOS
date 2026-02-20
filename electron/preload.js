@@ -91,4 +91,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Filter Search Table Products
   getFilterSearchProducts: (data) =>
     ipcRenderer.invoke("get-filter-search-products", data),
+
+  // Delete product
+  deleteProduct: (data) => ipcRenderer.invoke("deleteProduct", data),
 });

@@ -67,7 +67,9 @@ async function getProductsList(idCategory, limit, offset) {
   try {
     const db = await getDB();
 
-    const whereClause = idCategory ? "WHERE p.category_id = ?" : "";
+    const whereClause = idCategory
+      ? "WHERE p.category_id = ? AND p.status_id = 1"
+      : "WHERE p.status_id = 1";
     const countParams = idCategory ? [idCategory] : [];
     const params = idCategory ? [idCategory, limit, offset] : [limit, offset];
     const sql = `
@@ -145,7 +147,7 @@ async function getFilterSearch(data) {
       FROM product p
       INNER JOIN category c ON p.category_id = c.id
       WHERE ${targetColumn} LIKE ? 
-      AND status IN (1, 0)
+      AND status = 1
       ORDER BY p.stock DESC;
     `;
 
@@ -185,8 +187,8 @@ async function getSearchCodeSKU(codesku) {
         p.status_id As status 
       FROM product p
       INNER JOIN category c ON p.category_id = c.id
-      WHERE p.code_sku LIKE ? 
-      AND status IN (1, 0)
+      WHERE p.code_sku LIKE ?
+      AND status = 1
       ORDER BY p.stock DESC;
     `;
 
@@ -266,7 +268,7 @@ async function getProducts(limit, offset) {
         p.stock,
         s.description AS status, 
         p.created_at,
-        p.delete_at 
+        p.deleted_at 
       FROM product p
       INNER JOIN category c ON p.category_id = c.id
       INNER JOIN status s ON p.status_id  = s.id 
@@ -337,7 +339,7 @@ async function getFilterSearchProducts(data) {
         p.stock,
         s.description AS status, 
         p.created_at,
-        p.delete_at 
+        p.deleted_at 
       FROM product p
       INNER JOIN category c ON p.category_id = c.id
       INNER JOIN status s ON p.status_id  = s.id 
@@ -364,6 +366,42 @@ async function getFilterSearchProducts(data) {
   }
 }
 
+// Delete Product
+async function deleteProduct(id) {
+  try {
+    const db = await getDB();
+
+    // Search Product
+    const query = db.exec("SELECT id, status_id FROM product WHERE id = ?;", [
+      id,
+    ]);
+
+    const users = mapResultToObjects(query);
+    const userFound = users[0];
+
+    // Product?
+    if (!userFound) {
+      return { success: false, error: AUTH_CODES.PRODUCT_INACTIVE };
+    }
+
+    // Status?
+    if (userFound.status_id === 0) {
+      return { success: false, error: AUTH_CODES.PRODUCT_INACTIVE };
+    }
+
+    db.run(
+      "UPDATE product SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
+      [id],
+    );
+
+    saveDB(db);
+    return { success: true, result: AUTH_CODES.DELETE_PRODUCT };
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
@@ -375,4 +413,5 @@ module.exports = {
   getProductsStock,
   getProducts,
   getFilterSearchProducts,
+  deleteProduct,
 };
