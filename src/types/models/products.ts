@@ -10,6 +10,7 @@ export type Products = {
   stock: number;
   status: string;
   created_at: string;
+  deleted_at: string;
   actions?: {
     view?: boolean;
     delete?: boolean;

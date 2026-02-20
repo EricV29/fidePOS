@@ -49,13 +49,14 @@ export function DataTableSearch<TData, TValue>({
   setPagination,
   totalRows,
 }: DataTableSearchProps<TData, TValue>) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
   const [selectedColumn, setSelectedColumn] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState<TData[]>(data);
+  const language = i18n.language;
 
   const table = useReactTable({
     data: products,
@@ -94,7 +95,7 @@ export function DataTableSearch<TData, TValue>({
   }, [data]);
 
   useEffect(() => {
-    if (searchTerm.trim() === "") {
+    if (!searchTerm.trim()) {
       setProducts(data);
       return;
     }
@@ -105,6 +106,32 @@ export function DataTableSearch<TData, TValue>({
       if (currentColumn === "unit_price") {
         searchText = searchTerm.replace(/[$,]/g, "");
       }
+
+      if (currentColumn === "created_at" || currentColumn === "deleted_at") {
+        const cleanTerm = searchTerm.replace(/[^0-9/,-]/g, "");
+        const parts = cleanTerm.split(/[/-]/);
+
+        if (parts.length >= 2) {
+          const isSpanish = language.startsWith("es");
+
+          // Si es ES: [DD, MM, YYYY] -> DB quiere [YYYY, MM, DD]
+          // Si es US: [MM, DD, YYYY] -> DB quiere [YYYY, MM, DD]
+
+          const day = isSpanish ? parts[0] : parts[1];
+          const month = isSpanish ? parts[1] : parts[0];
+          const year = parts[2] || "";
+
+          if (year) {
+            searchText = `${year}-${month}-${day}`;
+          } else {
+            searchText = `-${month}-${day}`;
+          }
+        } else {
+          searchText = searchTerm;
+        }
+        console.log(searchText);
+      }
+
       const data = {
         column: currentColumn,
         text: searchText,
@@ -120,7 +147,7 @@ export function DataTableSearch<TData, TValue>({
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [currentColumn, data, searchTerm]);
+  }, [currentColumn, data, searchTerm, language]);
 
   return (
     <>

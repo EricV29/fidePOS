@@ -20,39 +20,6 @@ interface dataStockI {
   [key: string]: number;
 }
 
-//* Example data stock products
-const dataStockDB = { Stock: 100, "No Stock": 40 };
-
-//* Example data products
-const dataProductsDB = [
-  {
-    id: "34234",
-    code_sku: "JW0012",
-    product: "Labial",
-    description: "Yuya rojo",
-    category: "Maquillaje",
-    ccolor: "#5b49ff",
-    cost_price: 123.5,
-    unit_price: 20000,
-    stock: 1,
-    status: "active",
-    created_at: "01/01/2025",
-  },
-  {
-    id: "34235",
-    code_sku: "JW0013",
-    product: "Carrito",
-    description: "hotweels",
-    category: "Toys",
-    ccolor: "#ff49ff",
-    cost_price: 12000,
-    unit_price: 30000,
-    stock: 2,
-    status: "inactive",
-    created_at: "01/10/2025",
-  },
-];
-
 export default function Products() {
   const { t, i18n } = useTranslation();
   const [productsStock, setProductsStock] = useState<dataStockI>();
