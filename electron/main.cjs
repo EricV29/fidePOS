@@ -34,6 +34,7 @@ const {
   getProducts,
   getFilterSearchProducts,
   deleteProduct,
+  addProduct,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -47,7 +48,10 @@ const {
   getPaymentsDebt,
   addPaymentDebt,
 } = require("./db/queries/paymentsQueries.cjs");
-const { addCategory } = require("./db/queries/categoriesQueries.cjs");
+const {
+  addCategory,
+  getCategoriesSelect,
+} = require("./db/queries/categoriesQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
@@ -912,6 +916,56 @@ ipcMain.handle("deleteProduct", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await deleteProduct(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Categories Select
+ipcMain.handle("get-categories-select", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getCategoriesSelect(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Add Product
+ipcMain.handle("addProduct", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await addProduct(data);
       if (response.success) {
         return {
           success: true,

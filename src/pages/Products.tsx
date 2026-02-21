@@ -129,7 +129,9 @@ export default function Products() {
             </button>
             <button
               className="bnormal"
-              onClick={() => setModal(<ModalAddProduct />)}
+              onClick={() =>
+                setModal(<ModalAddProduct onSuccess={loadPorducts} />)
+              }
             >
               <BoxPlusIcon /> <p> {t("buttons.btn_add_product")}</p>
             </button>
