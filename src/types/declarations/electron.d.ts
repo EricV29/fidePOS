@@ -164,6 +164,7 @@ declare global {
       getProductsCategory: (data) => Promise<{
         success: boolean;
         result?: ProductsSale[];
+        totalCount: number;
         error?: string;
       }>;
 
@@ -211,6 +212,20 @@ declare global {
 
       // DELETE PRODUCT
       deleteProduct: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET CATEGORIES
+      getCategoriesSelect: () => Promise<{
+        success: boolean;
+        result?: CategoriesSelect[];
+        error?: string;
+      }>;
+
+      // GET CATEGORIES
+      addProduct: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;

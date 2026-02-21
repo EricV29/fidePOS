@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const getAddProductSchema = (t: (key: string) => string) =>
   z.object({
-    code_sku: z.string().regex(/^[0-9]+$/, t("errors.only_numeric")),
+    code_sku: z.string().regex(/^[0-9]*$/, t("errors.only_numeric")),
 
     product: z
       .string()

@@ -92,6 +92,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getFilterSearchProducts: (data) =>
     ipcRenderer.invoke("get-filter-search-products", data),
 
-  // Delete product
+  // Delete Product
   deleteProduct: (data) => ipcRenderer.invoke("deleteProduct", data),
+
+  // Get Categories
+  getCategoriesSelect: () => ipcRenderer.invoke("get-categories-select"),
+
+  // Add Product
+  addProduct: (data) => ipcRenderer.invoke("addProduct", data),
 });

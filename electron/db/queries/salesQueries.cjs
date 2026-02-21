@@ -180,7 +180,7 @@ async function createNewSale(data) {
     const idCustomer = customerId ? customerId : null;
     const paidAmount = paid_amount ? paid_amount : 0;
 
-    const querySale = db.exec(
+    db.exec(
       "INSERT INTO sale (sale_num, total_amount, paid_amount, discount, customer_id, status_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?);",
       [
         nextNumberSale,

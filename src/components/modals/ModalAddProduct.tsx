@@ -5,22 +5,34 @@ import CloseIcon from "@icons/CloseIcon";
 import AddProductForm from "@forms/form-addProduct";
 import { useTranslation } from "react-i18next";
 import type { Products } from "@typesm/products";
+import type { AddProductFormValues } from "../forms/schemas/product.schema";
+import { useLoading } from "@context/LoadingContext";
 
 interface Props {
   data?: Products;
+  onSuccess: () => void;
 }
 
-export function ModalAddProduct({ data }: Props) {
+export function ModalAddProduct({ data, onSuccess }: Props) {
   const { setModal } = useModal();
   const { t } = useTranslation();
+  const { setLoading } = useLoading();
+  const { triggerResponseAlert } = useModal();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleAddProduct = () => {
-    //window.electronAPI.signupSuccess();
+  const handleAddProduct = async (values: AddProductFormValues) => {
+    setLoading(true);
+    const response = await window.electronAPI.addProduct(values);
+    if (response.success) {
+      onSuccess();
+      setLoading(false);
+      triggerResponseAlert(response.result);
+    } else {
+      setLoading(false);
+      triggerResponseAlert(response.error);
+    }
   };
-
-  console.log(data);
 
   return ReactDOM.createPortal(
     <div
@@ -52,6 +64,6 @@ export function ModalAddProduct({ data }: Props) {
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }
