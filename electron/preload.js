@@ -100,4 +100,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Add Product
   addProduct: (data) => ipcRenderer.invoke("addProduct", data),
+
+  // Edit Product
+  editProduct: (data) => ipcRenderer.invoke("editProduct", data),
 });

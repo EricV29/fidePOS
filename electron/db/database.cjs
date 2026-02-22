@@ -213,7 +213,6 @@ async function createSchema(db) {
         product_id INTEGER NOT NULL,
         quantity INTEGER NOT NULL,
         cost_price REAL NOT NULL,
-        notes TEXT,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (product_id) REFERENCES product(id)
       );

@@ -21,16 +21,33 @@ export function ModalAddProduct({ data, onSuccess }: Props) {
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleAddProduct = async (values: AddProductFormValues) => {
+  const handleAddProduct = async (
+    values: AddProductFormValues,
+    editActive: boolean,
+  ) => {
     setLoading(true);
-    const response = await window.electronAPI.addProduct(values);
-    if (response.success) {
-      onSuccess();
-      setLoading(false);
-      triggerResponseAlert(response.result);
+
+    if (!editActive) {
+      const response = await window.electronAPI.addProduct(values);
+      if (response.success) {
+        onSuccess();
+        setLoading(false);
+        triggerResponseAlert(response.result);
+      } else {
+        setLoading(false);
+        triggerResponseAlert(response.error);
+      }
     } else {
-      setLoading(false);
-      triggerResponseAlert(response.error);
+      console.log(values);
+      const response = await window.electronAPI.editProduct(values);
+      if (response.success) {
+        onSuccess();
+        setLoading(false);
+        triggerResponseAlert(response.result);
+      } else {
+        setLoading(false);
+        triggerResponseAlert(response.error);
+      }
     }
   };
 
@@ -47,9 +64,15 @@ export function ModalAddProduct({ data, onSuccess }: Props) {
           <div className="flex gap-5">
             <BoxPlusIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>{t("modalAddProduct.title")}</h2>
+              <h2>
+                {data
+                  ? t("modalAddProduct.title_edit")
+                  : t("modalAddProduct.title")}
+              </h2>
               <p className="font-extralight">
-                {t("modalAddProduct.description")}
+                {data
+                  ? t("modalAddProduct.description_edit")
+                  : t("modalAddProduct.description")}
               </p>
             </div>
           </div>
@@ -60,7 +83,7 @@ export function ModalAddProduct({ data, onSuccess }: Props) {
         <hr className="border border-[#b3b3b3] my-2" />
         <p className="dark:text-white">{t("modalAddProduct.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 dark:text-[#b3b3b3]">
-          <AddProductForm onSuccess={handleAddProduct} />
+          <AddProductForm onSuccess={handleAddProduct} data={data} />
         </div>
       </div>
     </div>,

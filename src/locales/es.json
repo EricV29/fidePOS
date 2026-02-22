@@ -232,7 +232,8 @@
     "text_create_new_sale": "Nueva venta realizada correctamente.",
     "text_add_category": "Categoría agregada correctamente.",
     "text_delete_product": "Producto eliminado correctamente.",
-    "text_add_product": "Producto agregado correctamente."
+    "text_add_product": "Producto agregado correctamente.",
+    "text_edit_product": "Producto editado correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -253,7 +254,8 @@
     "text_category_used": "Categoría ya existe en el sistema.",
     "text_product_inactive": "Este producto está inactivo actualmente.",
     "text_not_category_select": "Por favor selecciona una categoria para agregar el nuevo producto.",
-    "text_code_sku_used": "Código SKU ya utilizado. Prueba con otro."
+    "text_code_sku_used": "Código SKU ya utilizado. Prueba con otro.",
+    "text_product_not_found": "Producto no encontrado."
   },
   "modalAddUser": {
     "title": "Agregar usuario",
@@ -316,7 +318,9 @@
   },
   "modalAddProduct": {
     "title": "Agrega un producto",
+    "title_edit": "Editar producto",
     "description": "Agrega nuevos productos a tu inventario.",
+    "description_edit": "Edita los campos que necesites.",
     "subtitle": "Ingresa la información de tu nuevo producto."
   },
   "formAddProduct": {
@@ -327,7 +331,8 @@
     "input5": "Stock",
     "input6": "Precio compra",
     "input7": "Precio unidad",
-    "btn": "Agregar producto"
+    "btn": "Agregar producto",
+    "btn_edit": "Editar producto"
   },
   "modalAddCategory": {
     "title": "Agrega una categoría",

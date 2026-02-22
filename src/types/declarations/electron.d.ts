@@ -224,8 +224,15 @@ declare global {
         error?: string;
       }>;
 
-      // GET CATEGORIES
+      // ADD PRODUCT
       addProduct: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // EDIT PRODUCT
+      editProduct: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;

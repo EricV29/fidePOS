@@ -226,7 +226,8 @@
     "text_create_new_sale": "Create new sale successfully.",
     "text_add_category": "Category added successfully.",
     "text_delete_product": "Product deleted successfully.",
-    "text_add_product": "Product added successfully."
+    "text_add_product": "Product added successfully.",
+    "text_edit_product": "Product edited successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -247,7 +248,8 @@
     "text_category_used": "Category already exists in the system.",
     "text_product_inactive": "This product is currently inactive.",
     "text_not_category_select": "Please select a category to proceed whit a add new product.",
-    "text_code_sku_used": "Code SKU is already in use. Try a different one."
+    "text_code_sku_used": "Code SKU is already in use. Try a different one.",
+    "text_product_not_found": "Product not found."
   },
   "modalAddUser": {
     "title": "Add new user",
@@ -310,7 +312,9 @@
   },
   "modalAddProduct": {
     "title": "Add new product",
+    "title_edit": "Edit product",
     "description": "Add individual products to your product list.",
+    "description_edit": "Edit the fields as needed.",
     "subtitle": "Enter the main information of your new product."
   },
   "formAddProduct": {
@@ -321,7 +325,8 @@
     "input5": "Stock",
     "input6": "Cost Price",
     "input7": "Unit Price",
-    "btn": "Add product"
+    "btn": "Add product",
+    "btn_edit": "Edit product"
   },
   "modalAddCategory": {
     "title": "Add new category",

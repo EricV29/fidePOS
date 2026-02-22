@@ -35,6 +35,7 @@ const {
   getFilterSearchProducts,
   deleteProduct,
   addProduct,
+  editProduct,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -966,6 +967,31 @@ ipcMain.handle("addProduct", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await addProduct(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Edit Product
+ipcMain.handle("editProduct", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await editProduct(data);
       if (response.success) {
         return {
           success: true,

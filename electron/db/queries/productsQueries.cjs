@@ -471,6 +471,53 @@ async function addProduct(data) {
   }
 }
 
+// Edit Product
+async function editProduct(data) {
+  try {
+    const db = await getDB();
+    const {
+      id,
+      code_sku,
+      product,
+      description,
+      category,
+      stock,
+      cost_price,
+      unit_price,
+    } = data;
+
+    // Search Product
+    const query = db.exec(
+      "SELECT id, status_id FROM product WHERE id = ? AND status_id = 1;",
+      [id],
+    );
+
+    const result = mapResultToObjects(query);
+    const productFound = result[0];
+
+    // Product?
+    if (!productFound) {
+      return { success: false, error: AUTH_CODES.PRODUCT_NOT_FOUND };
+    }
+
+    // Status?
+    if (productFound.status_id === 0) {
+      return { success: false, error: AUTH_CODES.PRODUCT_INACTIVE };
+    }
+
+    db.run(
+      "UPDATE product SET name = ?, description = ?, category_id = ?, stock = ?, cost_price = ?, unit_price = ? WHERE id = ?;",
+      [product, description, category, stock, cost_price, unit_price, id],
+    );
+
+    saveDB(db);
+    return { success: true, result: AUTH_CODES.EDIT_PRODUCT };
+  } catch (error) {
+    console.error("Error editing product:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
@@ -484,4 +531,5 @@ module.exports = {
   getFilterSearchProducts,
   deleteProduct,
   addProduct,
+  editProduct,
 };
