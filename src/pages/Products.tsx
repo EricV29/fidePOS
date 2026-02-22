@@ -179,7 +179,9 @@ export default function Products() {
               columns={columnsp}
               actions={{
                 onEdit: (row) => {
-                  setModal(<ModalAddProduct data={row} />);
+                  setModal(
+                    <ModalAddProduct data={row} onSuccess={loadPorducts} />,
+                  );
                 },
                 onDelete: (row) => {
                   deleteProduct(Number(row.id), row.status);

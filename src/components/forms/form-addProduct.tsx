@@ -21,12 +21,14 @@ import { useEffect, useMemo, useState } from "react";
 import type { CategoriesSelect } from "@typesm/categories";
 import { useModal } from "@/context/ModalContext";
 import AUTH_CODES from "../../../constants/authCodes.json";
+import type { Products } from "@typesm/products";
 
 interface ProductFormProps {
-  onSuccess?: (values: AddProductFormValues) => void;
+  data?: Products;
+  onSuccess?: (values: AddProductFormValues, editActive: boolean) => void;
 }
 
-export default function AddProductForm({ onSuccess }: ProductFormProps) {
+export default function AddProductForm({ data, onSuccess }: ProductFormProps) {
   const { t } = useTranslation();
   const [optionsCategory, setoptionsCategory] = useState<CategoriesSelect[]>(
     [],
@@ -35,6 +37,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
     string | undefined
   >();
   const { triggerResponseAlert } = useModal();
+  const [editActive, setEditActive] = useState(false);
 
   const form = useForm<AddProductFormValues>({
     resolver: zodResolver(getAddProductSchema(t)),
@@ -54,8 +57,8 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
       return;
     }
 
-    const data = { ...values, category: selectedCategoryId };
-    onSuccess?.(data);
+    const datav = { ...values, category: selectedCategoryId, id: data.id };
+    onSuccess?.(datav, editActive);
   }
 
   const loadSelect = async () => {
@@ -65,16 +68,39 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
     }
   };
 
-  useEffect(() => {
-    loadSelect();
-  }, []);
-
   const optionsCategories = useMemo(() => {
     return optionsCategory.map((c) => ({
       label: `${c.name}`,
       value: c.id?.toString(),
     }));
   }, [optionsCategory]);
+
+  useEffect(() => {
+    loadSelect();
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      setEditActive(true);
+      form.setValue("code_sku", data.code_sku);
+      form.setValue("product", data.product);
+      form.setValue("description", data.description);
+      if (optionsCategories.length > 0) {
+        const categoryFound = optionsCategories.find(
+          (opt) =>
+            opt.value === String(data.category) ||
+            opt.label.toLowerCase() === data.category?.toLowerCase(),
+        );
+
+        if (categoryFound) {
+          setSelectedCategoryId(categoryFound.value);
+        }
+      }
+      form.setValue("stock", String(data.stock));
+      form.setValue("cost_price", String(data.cost_price));
+      form.setValue("unit_price", String(data.unit_price));
+    }
+  }, [data, form, optionsCategories]);
 
   const handleChangeCategory = (value: string) => {
     if (!value || value === selectedCategoryId) {
@@ -83,11 +109,6 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
       setSelectedCategoryId(value);
     }
   };
-
-  // const optionsCategory = [
-  //   { label: "Toys", value: "toys" },
-  //   { label: "Maquillaje", value: "maquillaje" },
-  // ];
 
   return (
     <Form {...form}>
@@ -115,6 +136,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                   <Input
                     type="number"
                     placeholder="0000"
+                    disabled={!!data}
                     {...field}
                     className={cn(
                       "bg-white",
@@ -284,7 +306,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
           />{" "}
         </div>
         <button type="submit" className="borange">
-          {t("formAddProduct.btn")}
+          {data ? t("formAddProduct.btn_edit") : t("formAddProduct.btn")}
         </button>
       </form>
     </Form>
