@@ -15,6 +15,8 @@ export const getAddProductSchema = (t: (key: string) => string) =>
 
     cost_price: z.string().regex(/^\d+(\.\d{1,2})?$/, t("errors.only_numeric")),
     unit_price: z.string().regex(/^\d+(\.\d{1,2})?$/, t("errors.only_numeric")),
+
+    editStock: z.string().optional(),
   });
 
 export type AddProductFormValues = z.infer<

@@ -251,6 +251,14 @@
     "text_code_sku_used": "Code SKU is already in use. Try a different one.",
     "text_product_not_found": "Product not found."
   },
+  "modalQuestionAlert": {
+    "title": "¡Warning!",
+    "change_stock": "Why is the stock changing?",
+    "error_correction": "Error correction.",
+    "new_entry": "New entry",
+    "error_quantity": "I made a mistake entering the initial quantity.",
+    "text_new_entry": "Adding new stock to inventory."
+  },
   "modalAddUser": {
     "title": "Add new user",
     "description": "Add individual users for your app.",
@@ -315,7 +323,8 @@
     "title_edit": "Edit product",
     "description": "Add individual products to your product list.",
     "description_edit": "Edit the fields as needed.",
-    "subtitle": "Enter the main information of your new product."
+    "subtitle": "Enter the main information of your new product.",
+    "subtitle_edit": "Edit the main information of your product."
   },
   "formAddProduct": {
     "input1": "Code SKU",

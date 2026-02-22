@@ -473,8 +473,9 @@ async function addProduct(data) {
 
 // Edit Product
 async function editProduct(data) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
     const {
       id,
       code_sku,
@@ -484,11 +485,14 @@ async function editProduct(data) {
       stock,
       cost_price,
       unit_price,
+      editStock,
     } = data;
+
+    db.exec("BEGIN TRANSACTION;");
 
     // Search Product
     const query = db.exec(
-      "SELECT id, status_id FROM product WHERE id = ? AND status_id = 1;",
+      "SELECT id, status_id, stock FROM product WHERE id = ? AND status_id = 1;",
       [id],
     );
 
@@ -510,9 +514,37 @@ async function editProduct(data) {
       [product, description, category, stock, cost_price, unit_price, id],
     );
 
-    saveDB(db);
+    let newStockEntrie = Number(productFound.stock);
+    if (Number(stock) !== Number(productFound.stock)) {
+      newStockEntrie = Number(stock) - Number(productFound.stock);
+    }
+
+    if (editStock === "entry") {
+      // Insert entrie
+      db.run(
+        `INSERT INTO entries (product_id, quantity, cost_price) VALUES (?, ?, ?);`,
+        [id, newStockEntrie, cost_price],
+      );
+    } else if (editStock === "error") {
+      // Update entrie
+      db.run(
+        `UPDATE entries 
+          SET quantity = ?, cost_price = ? 
+          WHERE rowid = (
+            SELECT rowid FROM entries 
+            WHERE product_id = ? 
+            ORDER BY created_at DESC 
+            LIMIT 1
+        );`,
+        [stock, cost_price, id],
+      );
+    }
+
+    db.exec("COMMIT;");
+    await saveDB(db);
     return { success: true, result: AUTH_CODES.EDIT_PRODUCT };
   } catch (error) {
+    if (db) db.exec("ROLLBACK;");
     console.error("Error editing product:", error);
     return { success: false, error: error.message };
   }
