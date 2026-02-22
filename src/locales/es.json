@@ -257,6 +257,14 @@
     "text_code_sku_used": "Código SKU ya utilizado. Prueba con otro.",
     "text_product_not_found": "Producto no encontrado."
   },
+  "modalQuestionAlert": {
+    "title": "¡Cuidado!",
+    "change_stock": "¿Cual es el motivo del cambio de stock?",
+    "error_correction": "Corrección de error",
+    "new_entry": "Nueva entrada",
+    "error_quantity": "Tuve un error al colocar la cantidad inicial.",
+    "text_new_entry": "Agregar nueva cantidad al inventario."
+  },
   "modalAddUser": {
     "title": "Agregar usuario",
     "description": "Agrega usuarios a tu aplicación.",
@@ -321,7 +329,8 @@
     "title_edit": "Editar producto",
     "description": "Agrega nuevos productos a tu inventario.",
     "description_edit": "Edita los campos que necesites.",
-    "subtitle": "Ingresa la información de tu nuevo producto."
+    "subtitle": "Ingresa la información de tu nuevo producto.",
+    "subtitle_edit": "Edita la información de tu producto."
   },
   "formAddProduct": {
     "input1": "Código SKU",

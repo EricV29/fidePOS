@@ -39,3 +39,9 @@ export type ProductsSale = {
     add?: boolean;
   };
 };
+
+export type Option = {
+  id: string;
+  label: string;
+  description: string;
+};

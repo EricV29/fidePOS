@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import AUTH_CODES from "../../constants/authCodes.json";
 import ReactDOM from "react-dom";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
+import ModalQuestionAlert from "@modals/ModalQuestionAlert";
+import type { Option } from "@typesm/products";
 
 interface ModalContextType {
   modal: React.ReactNode | null;
@@ -16,6 +18,11 @@ interface ModalContextType {
   triggerWarningAlert: (
     text: string,
     onConfirm: () => Promise<void> | void,
+  ) => void;
+  triggerQuestionAlert: (
+    mainText: string,
+    motivos: Option[],
+    onConfirm: (selectedId: string) => void,
   ) => void;
 }
 
@@ -203,9 +210,33 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const triggerQuestionAlert = (
+    mainText: string,
+    options: Option[],
+    onConfirm: (selectedId: string) => void,
+  ) => {
+    setAlert(
+      <ModalQuestionAlert
+        mainText={mainText}
+        options={options}
+        onConfirm={(id) => {
+          onConfirm(id);
+          setAlert(null);
+        }}
+        onClose={() => setAlert(null)}
+      />,
+    );
+  };
+
   return (
     <ModalContext.Provider
-      value={{ modal, setModal, triggerResponseAlert, triggerWarningAlert }}
+      value={{
+        modal,
+        setModal,
+        triggerResponseAlert,
+        triggerWarningAlert,
+        triggerQuestionAlert,
+      }}
     >
       {children}
       {alert &&

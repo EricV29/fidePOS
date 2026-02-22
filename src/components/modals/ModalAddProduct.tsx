@@ -7,7 +7,6 @@ import { useTranslation } from "react-i18next";
 import type { Products } from "@typesm/products";
 import type { AddProductFormValues } from "../forms/schemas/product.schema";
 import { useLoading } from "@context/LoadingContext";
-
 interface Props {
   data?: Products;
   onSuccess: () => void;
@@ -17,16 +16,52 @@ export function ModalAddProduct({ data, onSuccess }: Props) {
   const { setModal } = useModal();
   const { t } = useTranslation();
   const { setLoading } = useLoading();
-  const { triggerResponseAlert } = useModal();
+  const { triggerResponseAlert, triggerQuestionAlert } = useModal();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
+  const optionsStockUp = [
+    {
+      id: "error",
+      label: t("modalQuestionAlert.error_correction"),
+      description: t("modalQuestionAlert.error_quantity"),
+    },
+    {
+      id: "entry",
+      label: t("modalQuestionAlert.new_entry"),
+      description: t("modalQuestionAlert.text_new_entry"),
+    },
+  ];
 
+  const optionsStockDown = [
+    {
+      id: "error",
+      label: t("modalQuestionAlert.error_correction"),
+      description: t("modalQuestionAlert.error_quantity"),
+    },
+  ];
+
+  const editProduct = async (finalValues: AddProductFormValues) => {
+    const response = await window.electronAPI.editProduct(finalValues);
+    if (response.success) {
+      onSuccess();
+      setLoading(false);
+      triggerResponseAlert(response.result);
+    } else {
+      setLoading(false);
+      triggerResponseAlert(response.error);
+    }
+    return;
+  };
+
+  // Agregar Producto
   const handleAddProduct = async (
     values: AddProductFormValues,
     editActive: boolean,
   ) => {
     setLoading(true);
+    let finalValues = values;
 
+    // Editar Product
     if (!editActive) {
       const response = await window.electronAPI.addProduct(values);
       if (response.success) {
@@ -38,17 +73,45 @@ export function ModalAddProduct({ data, onSuccess }: Props) {
         triggerResponseAlert(response.error);
       }
     } else {
-      console.log(values);
-      const response = await window.electronAPI.editProduct(values);
-      if (response.success) {
-        onSuccess();
-        setLoading(false);
-        triggerResponseAlert(response.result);
-      } else {
-        setLoading(false);
-        triggerResponseAlert(response.error);
+      if (Number(data?.stock) !== Number(values.stock)) {
+        if (Number(values.stock) > Number(data?.stock)) {
+          triggerQuestionAlert(
+            t("modalQuestionAlert.change_stock"),
+            optionsStockUp,
+            (selectedId) => {
+              finalValues = { ...values, editStock: selectedId };
+              editProduct(finalValues);
+            },
+          );
+          setLoading(false);
+          return;
+        } else {
+          triggerQuestionAlert(
+            t("modalQuestionAlert.change_stock"),
+            optionsStockDown,
+            (selectedId) => {
+              finalValues = {
+                ...values,
+                editStock: selectedId,
+              };
+              editProduct(finalValues);
+            },
+          );
+          setLoading(false);
+          return;
+        }
       }
+
+      if (Number(data?.cost_price) !== Number(values.cost_price)) {
+        finalValues = {
+          ...values,
+          editStock: "error",
+        };
+      }
+
+      editProduct(finalValues);
     }
+    setLoading(false);
   };
 
   return ReactDOM.createPortal(
@@ -81,7 +144,11 @@ export function ModalAddProduct({ data, onSuccess }: Props) {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p className="dark:text-white">{t("modalAddProduct.subtitle")}</p>
+        <p className="dark:text-white">
+          {data
+            ? t("modalAddProduct.subtitle_edit")
+            : t("modalAddProduct.subtitle")}
+        </p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 dark:text-[#b3b3b3]">
           <AddProductForm onSuccess={handleAddProduct} data={data} />
         </div>

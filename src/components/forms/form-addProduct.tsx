@@ -57,7 +57,7 @@ export default function AddProductForm({ data, onSuccess }: ProductFormProps) {
       return;
     }
 
-    const datav = { ...values, category: selectedCategoryId, id: data.id };
+    const datav = { ...values, category: selectedCategoryId, id: data?.id };
     onSuccess?.(datav, editActive);
   }
 
