@@ -33,8 +33,21 @@ export default function Products() {
     pageIndex: 0,
     pageSize: 10,
   });
-  const { triggerWarningAlert, triggerResponseAlert } = useModal();
+  const { triggerWarningAlert, triggerResponseAlert, triggerQuestionAlert } =
+    useModal();
   const { setLoading } = useLoading();
+  const optionsDelete = [
+    {
+      id: "error",
+      label: t("modalQuestionAlert.error_creation"),
+      description: t("modalQuestionAlert.error_creation_product"),
+    },
+    {
+      id: "loss",
+      label: t("modalQuestionAlert.loss_stock"),
+      description: t("modalQuestionAlert.text_loss_stock"),
+    },
+  ];
 
   const loadPorducts = useCallback(async () => {
     const limit = pagination.pageSize;
@@ -81,12 +94,15 @@ export default function Products() {
       return;
     }
 
-    triggerWarningAlert(
-      t("modalWarningAlert.text_delete_product"),
-      async () => {
+    triggerQuestionAlert(
+      t("modalQuestionAlert.delete_product"),
+      optionsDelete,
+      async (selectedId) => {
+        const values = { id: id, reason: selectedId };
+        console.log(values);
         try {
           setLoading(true);
-          const response = await window.electronAPI.deleteProduct(id);
+          const response = await window.electronAPI.deleteProduct(values);
 
           if (response.success) {
             loadPorducts();

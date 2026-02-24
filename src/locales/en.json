@@ -249,7 +249,8 @@
     "text_product_inactive": "This product is currently inactive.",
     "text_not_category_select": "Please select a category to proceed whit a add new product.",
     "text_code_sku_used": "Code SKU is already in use. Try a different one.",
-    "text_product_not_found": "Product not found."
+    "text_product_not_found": "Product not found.",
+    "text_used_product": "This product has transaction history and cannot be deleted as a creation error."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",
@@ -257,7 +258,12 @@
     "error_correction": "Error correction.",
     "new_entry": "New entry",
     "error_quantity": "I made a mistake entering the initial quantity.",
-    "text_new_entry": "Adding new stock to inventory."
+    "text_new_entry": "Adding new stock to inventory.",
+    "delete_product": "Why is the product delete?",
+    "error_creation": "Error creation.",
+    "error_creation_product": "Error creation product.",
+    "loss_stock": "Wastage / Damage / Loss",
+    "text_loss_stock": "Stock removed due to physical damage, expiration or loss."
   },
   "modalAddUser": {
     "title": "Add new user",
