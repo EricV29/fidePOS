@@ -194,6 +194,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_edit_product",
       },
+      [AUTH_CODES.USED_PRODUCT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_used_product",
+      },
     };
 
     const config = alertConfig[code];

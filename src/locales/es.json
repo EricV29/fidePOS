@@ -255,15 +255,21 @@
     "text_product_inactive": "Este producto está inactivo actualmente.",
     "text_not_category_select": "Por favor selecciona una categoria para agregar el nuevo producto.",
     "text_code_sku_used": "Código SKU ya utilizado. Prueba con otro.",
-    "text_product_not_found": "Producto no encontrado."
+    "text_product_not_found": "Producto no encontrado.",
+    "text_used_product": "Este producto tiene historial de movimientos y no se puede eliminar como un error de creación."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
-    "change_stock": "¿Cual es el motivo del cambio de stock?",
+    "change_stock": "¿Cuál es el motivo del cambio de stock?",
     "error_correction": "Corrección de error",
     "new_entry": "Nueva entrada",
     "error_quantity": "Tuve un error al colocar la cantidad inicial.",
-    "text_new_entry": "Agregar nueva cantidad al inventario."
+    "text_new_entry": "Agregar nueva cantidad al inventario.",
+    "delete_product": "¿Cuál es el motivo de eliminación del producto?",
+    "error_creation": "Error de creación.",
+    "error_creation_product": "Error al crear el producto.",
+    "loss_stock": "Merma / Daño / Perdida",
+    "text_loss_stock": "Stock eliminado por daño, expiración o perdida."
   },
   "modalAddUser": {
     "title": "Agregar usuario",

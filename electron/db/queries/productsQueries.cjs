@@ -367,10 +367,11 @@ async function getFilterSearchProducts(data) {
 }
 
 // Delete Product
-async function deleteProduct(id) {
-  try {
-    const db = await getDB();
+async function deleteProduct(data) {
+  const db = await getDB();
+  const { id, reason } = data;
 
+  try {
     // Search Product
     const query = db.exec("SELECT id, status_id FROM product WHERE id = ?;", [
       id,
@@ -389,14 +390,36 @@ async function deleteProduct(id) {
       return { success: false, error: AUTH_CODES.PRODUCT_INACTIVE };
     }
 
-    db.run(
-      "UPDATE product SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
-      [id],
-    );
+    db.exec("BEGIN TRANSACTION;");
 
-    saveDB(db);
+    if (reason === "error") {
+      const movementsProduct = db.run(
+        "SELECT id FROM sale_detail WHERE product_id = ?;",
+        [id],
+      );
+      const result = mapResultToObjects(movementsProduct);
+      if (result.length > 0) {
+        db.exec("ROLLBACK;");
+        return { success: false, error: AUTH_CODES.USED_PRODUCT };
+      } else {
+        db.run("DELETE FROM entries WHERE product_id = ?;", [id]);
+        db.run(
+          "UPDATE product SET deleted_at = CURRENT_TIMESTAMP, cost_price = 0, unit_price = 0, stock = 0, status_id = 0 WHERE id = ?;",
+          [id],
+        );
+      }
+    } else if (reason === "loss") {
+      db.run(
+        "UPDATE product SET deleted_at = CURRENT_TIMESTAMP, cost_price = 0, unit_price = 0, stock = 0, status_id = 0 WHERE id = ?;",
+        [id],
+      );
+    }
+
+    db.exec("COMMIT;");
+    await saveDB(db);
     return { success: true, result: AUTH_CODES.DELETE_PRODUCT };
   } catch (error) {
+    if (db) db.exec("ROLLBACK;");
     console.error("Error deleting product:", error);
     return { success: false, error: error.message };
   }
@@ -474,25 +497,22 @@ async function addProduct(data) {
 // Edit Product
 async function editProduct(data) {
   const db = await getDB();
+  const {
+    id,
+    code_sku,
+    product,
+    description,
+    category,
+    stock,
+    cost_price,
+    unit_price,
+    editStock,
+  } = data;
 
   try {
-    const {
-      id,
-      code_sku,
-      product,
-      description,
-      category,
-      stock,
-      cost_price,
-      unit_price,
-      editStock,
-    } = data;
-
-    db.exec("BEGIN TRANSACTION;");
-
     // Search Product
     const query = db.exec(
-      "SELECT id, status_id, stock FROM product WHERE id = ? AND status_id = 1;",
+      "SELECT id, status_id, stock FROM product WHERE id = ?;",
       [id],
     );
 
@@ -504,10 +524,7 @@ async function editProduct(data) {
       return { success: false, error: AUTH_CODES.PRODUCT_NOT_FOUND };
     }
 
-    // Status?
-    if (productFound.status_id === 0) {
-      return { success: false, error: AUTH_CODES.PRODUCT_INACTIVE };
-    }
+    db.exec("BEGIN TRANSACTION;");
 
     db.run(
       "UPDATE product SET name = ?, description = ?, category_id = ?, stock = ?, cost_price = ?, unit_price = ? WHERE id = ?;",
@@ -520,12 +537,20 @@ async function editProduct(data) {
     }
 
     if (editStock === "entry") {
+      db.run("UPDATE product SET status_id = 1 WHERE id = ?;", [id]);
+
       // Insert entrie
       db.run(
         `INSERT INTO entries (product_id, quantity, cost_price) VALUES (?, ?, ?);`,
         [id, newStockEntrie, cost_price],
       );
     } else if (editStock === "error") {
+      // Status?
+      if (productFound.status_id === 0) {
+        db.exec("ROLLBACK;");
+        return { success: false, error: AUTH_CODES.PRODUCT_INACTIVE };
+      }
+
       // Update entrie
       db.run(
         `UPDATE entries 
