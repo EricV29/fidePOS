@@ -6,7 +6,7 @@ import CustomSelect from "@components/Select";
 import { useTranslation, Trans } from "react-i18next";
 import { useState } from "react";
 import AUTH_CODES from "../../../constants/authCodes.json";
-import { exportToSpreadsheet } from "@utility/exportInfo";
+import { exportReportFile } from "@/utility/exportReportFile";
 import type { dataExportProducts } from "@typesm/products";
 
 interface Data {
@@ -19,7 +19,6 @@ export function ModalExport({ page, data }: Data) {
   const { t } = useTranslation();
   const [isTrue, setIsTrue] = useState<boolean | null>(null);
   const [selectedFormatId, setSelecteFormatId] = useState<string | undefined>();
-
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
@@ -34,7 +33,7 @@ export function ModalExport({ page, data }: Data) {
       return;
     }
 
-    exportToSpreadsheet(selectedFormatId, data, page, isTrue);
+    exportReportFile(selectedFormatId, data, page, isTrue);
   };
 
   const optionsExport = [

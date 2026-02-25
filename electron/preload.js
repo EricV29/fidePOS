@@ -106,4 +106,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Add Products Import
   addProductsImport: (data) => ipcRenderer.invoke("addProductsImport", data),
+
+  // Get All Products
+  getAllProducts: () => ipcRenderer.invoke("get-all-products"),
 });

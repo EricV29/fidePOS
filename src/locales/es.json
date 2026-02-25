@@ -276,7 +276,12 @@
     "error_creation": "Error de creación.",
     "error_creation_product": "Error al crear el producto.",
     "loss_stock": "Merma / Daño / Perdida",
-    "text_loss_stock": "Stock eliminado por daño, expiración o perdida."
+    "text_loss_stock": "Stock eliminado por daño, expiración o perdida.",
+    "export_page": "¿Quieres exportar la información actual o toda la información?",
+    "current_view": "Vista Actual",
+    "total_data": "Información Completa",
+    "text_current_view": "Solo la información visible en esta página.",
+    "text_total_data": "Toda la información disponible en el sistema."
   },
   "modalAddUser": {
     "title": "Agregar usuario",

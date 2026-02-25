@@ -270,7 +270,12 @@
     "error_creation": "Error creation.",
     "error_creation_product": "Error creation product.",
     "loss_stock": "Wastage / Damage / Loss",
-    "text_loss_stock": "Stock removed due to physical damage, expiration or loss."
+    "text_loss_stock": "Stock removed due to physical damage, expiration or loss.",
+    "export_page": "Do you want to export the current page or all data?",
+    "current_view": "Current View",
+    "total_data": "All Records",
+    "text_current_view": "Only data visible on this page.",
+    "text_total_data": "All available data in the system."
   },
   "modalAddUser": {
     "title": "Add new user",

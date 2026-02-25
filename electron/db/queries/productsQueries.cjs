@@ -656,6 +656,42 @@ async function addProductsImport(data) {
   }
 }
 
+// Get All Products
+async function getAllProducts() {
+  const db = await getDB();
+  try {
+    const query = db.exec(`
+      SELECT 
+        p.id, 
+        p.code_sku, 
+        p.name AS product, 
+        p.description, 
+        c.name AS category, 
+        c.color AS ccolor,
+        p.cost_price,
+        p.unit_price,
+        p.stock,
+        s.description AS status, 
+        p.created_at,
+        p.deleted_at  
+      FROM product p
+      INNER JOIN category c ON p.category_id = c.id
+      INNER JOIN status s ON p.status_id  = s.id
+      ORDER BY p.created_at DESC;
+    `);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const products = mapResultToObjects(query);
+    return { success: true, result: products };
+  } catch (error) {
+    console.error("Error getting all products:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
@@ -671,4 +707,5 @@ module.exports = {
   addProduct,
   editProduct,
   addProductsImport,
+  getAllProducts,
 };
