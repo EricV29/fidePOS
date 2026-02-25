@@ -250,7 +250,10 @@
     "text_not_category_select": "Please select a category to proceed whit a add new product.",
     "text_code_sku_used": "Code SKU is already in use. Try a different one.",
     "text_product_not_found": "Product not found.",
-    "text_used_product": "This product has transaction history and cannot be deleted as a creation error."
+    "text_used_product": "This product has transaction history and cannot be deleted as a creation error.",
+    "text_empty_file": "This file is empty.",
+    "text_missing_columns": "The following required columns are missing: {{columns}}",
+    "text_empty_products": "No product to insert into the system."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",
@@ -409,7 +412,15 @@
   "modalImport": {
     "title": "Import your products",
     "description": "Data will be exported in a <bold>.csv</bold> or <bold>.xlsx</bold> file.",
-    "subtitle": "Your file must include the following columns."
+    "subtitle": "Your file must include the following columns.",
+    "optional": "(Optional)",
+    "categories": "(Categories must match the categories in the system)",
+    "row": "Row",
+    "text_null_product": "Name product required.",
+    "text_null_category": "Name category required.",
+    "text_not_match_catergoy_one": "The category",
+    "text_not_match_catergoy_two": "no exist into the system.",
+    "text_number_columns": "Prices or Stock values must be valid numbers."
   },
   "errors": {
     "pass_requirements": "Password does not meet the requirements",

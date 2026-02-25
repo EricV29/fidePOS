@@ -33,8 +33,7 @@ export default function Products() {
     pageIndex: 0,
     pageSize: 10,
   });
-  const { triggerWarningAlert, triggerResponseAlert, triggerQuestionAlert } =
-    useModal();
+  const { triggerResponseAlert, triggerQuestionAlert } = useModal();
   const { setLoading } = useLoading();
   const optionsDelete = [
     {

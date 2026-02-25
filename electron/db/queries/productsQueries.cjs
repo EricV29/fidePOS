@@ -575,6 +575,65 @@ async function editProduct(data) {
   }
 }
 
+// Add Products Import
+async function addProductsImport(data) {
+  const db = await getDB();
+
+  try {
+    db.exec("BEGIN TRANSACTION;");
+
+    let nextCode = 1;
+
+    if (!code_sku || code_sku === "") {
+      // Search Next Code SKU
+      const queryCode = db.exec(
+        `SELECT (code_sku + 1) AS code FROM product ORDER BY id DESC LIMIT 1;`,
+      );
+
+      if (queryCode.length === 0 || queryCode[0].values.length === 0) {
+        nextCode = 1;
+      } else {
+        nextCode = queryCode[0].values[0][0];
+      }
+    } else {
+      // Search Product
+      const query = db.exec(
+        "SELECT id FROM product WHERE code_sku = ? AND status_id = 1;",
+        [code_sku],
+      );
+
+      const productFound = mapResultToObjects(query);
+
+      if (productFound.length > 0) {
+        return { success: false, error: AUTH_CODES.CODE_SKU_USED };
+      }
+    }
+
+    // Insert Product
+    db.run(
+      `INSERT INTO product (code_sku, name, description, category_id, cost_price, unit_price, stock, status_id) VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
+      [nextCode, product, description, category, cost_price, unit_price, stock],
+    );
+
+    // Get id product
+    const lastId = db.exec("SELECT last_insert_rowid();")[0].values[0][0];
+
+    // Insert entrie
+    db.run(
+      `INSERT INTO entries (product_id, quantity, cost_price) VALUES (?, ?, ?);`,
+      [lastId, stock, cost_price],
+    );
+
+    db.exec("COMMIT;");
+    await saveDB(db);
+    return { success: true, result: AUTH_CODES.ADD_PRODUCT };
+  } catch (error) {
+    if (db) db.exec("ROLLBACK;");
+    console.error("Error inserting user:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,

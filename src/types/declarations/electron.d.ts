@@ -237,6 +237,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // ADD PRODUCTS IMPORT
+      addProductsImport: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
