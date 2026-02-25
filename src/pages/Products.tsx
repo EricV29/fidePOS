@@ -9,7 +9,7 @@ import CardInfoNumber from "@components/CardInfoNumber";
 import CardInfoDetail from "@components/CardInfoDetail";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsP } from "@columns/columnsP";
-import type { Products } from "@typesm/products";
+import type { Products, dataExportProducts } from "@typesm/products";
 import { useModal } from "@context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
 import { ModalImport } from "@modals/ModalImport";
@@ -23,6 +23,9 @@ interface dataStockI {
 
 export default function Products() {
   const { t, i18n } = useTranslation();
+  const [dataExportPage, setDataExportPage] = useState<dataExportProducts[][]>(
+    [],
+  );
   const [productsStock, setProductsStock] = useState<dataStockI>();
   const [dataProducts, setProducts] = useState<Products[]>([]);
   const { setModal } = useModal();
@@ -45,6 +48,18 @@ export default function Products() {
       id: "loss",
       label: t("modalQuestionAlert.loss_stock"),
       description: t("modalQuestionAlert.text_loss_stock"),
+    },
+  ];
+  const optionsExportPage = [
+    {
+      id: "current",
+      label: t("modalQuestionAlert.current_view"),
+      description: t("modalQuestionAlert.text_current_view"),
+    },
+    {
+      id: "total",
+      label: t("modalQuestionAlert.total_data"),
+      description: t("modalQuestionAlert.text_total_data"),
     },
   ];
 
@@ -98,7 +113,6 @@ export default function Products() {
       optionsDelete,
       async (selectedId) => {
         const values = { id: id, reason: selectedId };
-        console.log(values);
         try {
           setLoading(true);
           const response = await window.electronAPI.deleteProduct(values);
@@ -118,6 +132,96 @@ export default function Products() {
     );
   };
 
+  const createReport = useCallback(
+    async (view: string) => {
+      let productsData: Products[] = dataProducts;
+
+      if (view === "total") {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.getAllProducts();
+          if (response.success) {
+            setLoading(false);
+            const rawData =
+              typeof response.result === "string"
+                ? JSON.parse(response.result)
+                : response.result;
+
+            productsData = rawData as Products[];
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      }
+
+      let totalProducts = 0;
+      if (productsStock) {
+        totalProducts =
+          Number(productsStock.Stock || 0) +
+          Number(productsStock["No Stock"] || 0);
+      }
+
+      // Create Data Cards
+      const statsData = [
+        [t("exportReport.products_page.title")],
+        [t("exportReport.products_page.investment"), investCard],
+        [t("exportReport.products_page.inventory_value"), inventoryValueCard],
+        [t("exportReport.products_page.total_products"), totalProducts],
+        [t("exportReport.products_page.stock_products"), productsStock?.Stock],
+        [
+          t("exportReport.products_page.out_stock_products"),
+          productsStock?.["No Stock"],
+        ],
+        [], // Fila vacía de separación
+        [t("exportReport.products_page.detail_products")],
+      ];
+
+      // Create Data Products Table
+      const tableHeaders = [
+        "ID",
+        t("columns.code"),
+        t("columns.product"),
+        t("columns.description"),
+        t("columns.category"),
+        t("columns.cost_price"),
+        t("columns.unit_price"),
+        "Stock",
+        t("columns.status"),
+        t("columns.created_at"),
+        t("columns.deleted_at"),
+      ];
+      const rows = productsData.map((p) => [
+        p.id,
+        p.code_sku,
+        p.product,
+        p.description,
+        p.category,
+        p.cost_price,
+        p.unit_price,
+        p.stock,
+        p.status,
+        p.created_at,
+        p.deleted_at,
+      ]);
+
+      const finalData: dataExportProducts[][] = [
+        ...statsData,
+        tableHeaders,
+        ...rows,
+      ];
+      setDataExportPage(finalData);
+      return finalData;
+    },
+    [
+      dataProducts,
+      inventoryValueCard,
+      investCard,
+      productsStock,
+      t,
+      setLoading,
+    ],
+  );
+
   const columnsp = columnsP(t, i18n.language);
 
   return (
@@ -130,9 +234,22 @@ export default function Products() {
           <div className="flex gap-2">
             <button
               className="bnormal"
-              onClick={() =>
-                setModal(<ModalExport data={{ data: "Products Statistics" }} />)
-              }
+              onClick={async () => {
+                triggerQuestionAlert(
+                  t("modalQuestionAlert.export_page"),
+                  optionsExportPage,
+                  async (selectedId) => {
+                    const view = selectedId;
+                    const dataExport = await createReport(view);
+                    setModal(
+                      <ModalExport
+                        page={"PRODUCTS"}
+                        data={dataExport || dataExportPage}
+                      />,
+                    );
+                  },
+                );
+              }}
             >
               <ExportIcon /> <p> {t("buttons.btn_export")}</p>
             </button>

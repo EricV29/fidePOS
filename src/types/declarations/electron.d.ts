@@ -244,6 +244,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // GET ALL PRODUCTS
+      getAllProducts: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

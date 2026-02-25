@@ -10,7 +10,8 @@
     "status_debt": "DEBT",
     "role_admin": "ADMIN",
     "role_user": "USER",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "yes": "YES"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -254,7 +255,9 @@
     "text_empty_file": "This file is empty.",
     "text_missing_columns": "The following required columns are missing: {{columns}}",
     "text_empty_products": "No product to insert into the system.",
-    "text_code_sku_used_import": "Code SKU: {{codesku}} is already in use."
+    "text_code_sku_used_import": "Code SKU: {{codesku}} is already in use.",
+    "text_not_selected_format": "Format not selected.",
+    "text_not_selected_statistics": "Statistics not selected."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",
@@ -267,7 +270,12 @@
     "error_creation": "Error creation.",
     "error_creation_product": "Error creation product.",
     "loss_stock": "Wastage / Damage / Loss",
-    "text_loss_stock": "Stock removed due to physical damage, expiration or loss."
+    "text_loss_stock": "Stock removed due to physical damage, expiration or loss.",
+    "export_page": "Do you want to export the current page or all data?",
+    "current_view": "Current View",
+    "total_data": "All Records",
+    "text_current_view": "Only data visible on this page.",
+    "text_total_data": "All available data in the system."
   },
   "modalAddUser": {
     "title": "Add new user",
@@ -406,8 +414,10 @@
     "title": "Export statistics",
     "description": "Data will be exported in a <bold>.csv</bold>, <bold>.xlsx</bold> and <bold>.pdf</bold> file.",
     "subtitle": "Choose yout favorite configuration.",
-    "form_title": "File format",
-    "form_description": "Choose a file format",
+    "text_statistics": "Statistics",
+    "text_statistics_description": "Do you want to include statistics in the file?",
+    "text_format": "File format",
+    "text_format_description": "Choose a file format",
     "form_btn": "Export"
   },
   "modalImport": {
@@ -450,5 +460,16 @@
     "support_img": "Support images .jpg, .jpeg or .web",
     "format": "format",
     "code_sku": "Scan barcode or leave empty to autogenerate."
+  },
+  "exportReport": {
+    "products_page": {
+      "title": "PRODUCTS REPORT PAGE",
+      "investment": "Investment",
+      "inventory_value": "Inventory Value",
+      "total_products": "Total Products",
+      "stock_products": "Stock Products",
+      "out_stock_products": "Out of Stock Products",
+      "detail_products": "DETAIL PRODUCTS"
+    }
   }
 }

@@ -37,6 +37,7 @@ const {
   addProduct,
   editProduct,
   addProductsImport,
+  getAllProducts,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -1028,6 +1029,31 @@ ipcMain.handle("addProductsImport", async (event, data) => {
           success: false,
           error: response.error,
           result: response.result,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get All Products
+ipcMain.handle("get-all-products", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getAllProducts();
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
         };
       }
     } catch (error) {
