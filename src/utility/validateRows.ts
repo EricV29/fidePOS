@@ -77,6 +77,9 @@ export const validateRows = async (
     const unit = parseFloat(String(row.unit_price));
     const stock = row.stock ? parseInt(String(row.stock)) : 0;
     const code_sku = row.code_sku ? String(row.code_sku).trim() : undefined;
+    const description = row.description
+      ? String(row.description).trim()
+      : undefined;
 
     if (isNaN(cost) || isNaN(unit) || isNaN(stock)) {
       return {
@@ -89,6 +92,7 @@ export const validateRows = async (
     data[i] = {
       ...row,
       product: String(row.product).trim(),
+      description: description,
       category_id: categoryFound.id,
       cost_price: cost,
       unit_price: unit,

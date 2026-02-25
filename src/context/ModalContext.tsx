@@ -210,6 +210,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_empty_products",
       },
+      [AUTH_CODES.CODE_SKU_USED_IMPORT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_code_sku_used_import",
+      },
     };
 
     const config = alertConfig[code];

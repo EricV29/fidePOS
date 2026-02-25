@@ -8,7 +8,7 @@ import { useModal } from "@context/ModalContext";
 import AUTH_CODES from "../../constants/authCodes.json";
 
 const REQUIRED_COLUMNS = ["product", "category", "cost_price", "unit_price"];
-const OPTIONAL_COLUMNS = ["code_sku", "stock"];
+const OPTIONAL_COLUMNS = ["code_sku", "stock", "description"];
 
 export default function FileDropZone() {
   const [isDragging, setIsDragging] = useState(false);
@@ -16,14 +16,17 @@ export default function FileDropZone() {
   const { setLoading } = useLoading();
   const { triggerResponseAlert } = useModal();
 
-  const insertProductsImport = async (data) => {
+  const insertProductsImport = async (data: ExcelProductRow[]) => {
     const response = await window.electronAPI.addProductsImport(data);
     if (response.success) {
       setLoading(false);
       triggerResponseAlert(response.result);
     } else {
       setLoading(false);
-      triggerResponseAlert(response.error);
+      if (response.error === AUTH_CODES.CODE_SKU_USED && response.result)
+        triggerResponseAlert(AUTH_CODES.CODE_SKU_USED_IMPORT, {
+          codesku: response.result,
+        });
     }
   };
 

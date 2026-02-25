@@ -253,7 +253,8 @@
     "text_used_product": "This product has transaction history and cannot be deleted as a creation error.",
     "text_empty_file": "This file is empty.",
     "text_missing_columns": "The following required columns are missing: {{columns}}",
-    "text_empty_products": "No product to insert into the system."
+    "text_empty_products": "No product to insert into the system.",
+    "text_code_sku_used_import": "Code SKU: {{codesku}} is already in use."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",

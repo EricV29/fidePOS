@@ -259,7 +259,8 @@
     "text_used_product": "Este producto tiene historial de movimientos y no se puede eliminar como un error de creación.",
     "text_empty_file": "El archivo esta vacío.",
     "text_missing_columns": "Faltan las siguientes columnas obligatorias: {{columns}}",
-    "text_empty_products": "No hay productos para agregar al sistema."
+    "text_empty_products": "No hay productos para agregar al sistema.",
+    "text_code_sku_used_import": "Código SKU: {{codesku}} ya utilizado."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",

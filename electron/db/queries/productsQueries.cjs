@@ -489,7 +489,7 @@ async function addProduct(data) {
     return { success: true, result: AUTH_CODES.ADD_PRODUCT };
   } catch (error) {
     if (db) db.exec("ROLLBACK;");
-    console.error("Error inserting user:", error);
+    console.error("Error inserting product:", error);
     return { success: false, error: error.message };
   }
 }
@@ -582,54 +582,76 @@ async function addProductsImport(data) {
   try {
     db.exec("BEGIN TRANSACTION;");
 
-    let nextCode = 1;
+    // Get Next Code SKU
+    const lastCodeQuery = db.exec(
+      `SELECT CAST(code_sku AS INTEGER) AS last_code FROM product WHERE code_sku GLOB '[0-9]*' ORDER BY id DESC LIMIT 1;`,
+    );
 
-    if (!code_sku || code_sku === "") {
-      // Search Next Code SKU
-      const queryCode = db.exec(
-        `SELECT (code_sku + 1) AS code FROM product ORDER BY id DESC LIMIT 1;`,
-      );
-
-      if (queryCode.length === 0 || queryCode[0].values.length === 0) {
-        nextCode = 1;
-      } else {
-        nextCode = queryCode[0].values[0][0];
-      }
-    } else {
-      // Search Product
-      const query = db.exec(
-        "SELECT id FROM product WHERE code_sku = ? AND status_id = 1;",
-        [code_sku],
-      );
-
-      const productFound = mapResultToObjects(query);
-
-      if (productFound.length > 0) {
-        return { success: false, error: AUTH_CODES.CODE_SKU_USED };
-      }
+    let currentAutoCode = 1;
+    if (lastCodeQuery.length > 0 && lastCodeQuery[0].values.length > 0) {
+      currentAutoCode = parseInt(lastCodeQuery[0].values[0][0]) + 1;
     }
 
-    // Insert Product
-    db.run(
-      `INSERT INTO product (code_sku, name, description, category_id, cost_price, unit_price, stock, status_id) VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
-      [nextCode, product, description, category, cost_price, unit_price, stock],
-    );
+    for (let i = 0; i < data.length; i++) {
+      let codeSku = data[i].code_sku;
+      let stock = data[i].stock || 0;
+      let description = data[i].description || "---";
+      let nextCode;
 
-    // Get id product
-    const lastId = db.exec("SELECT last_insert_rowid();")[0].values[0][0];
+      if (codeSku) {
+        // Search Code SKU of new product
+        const queryCode = db.exec(
+          `SELECT id FROM product WHERE code_sku = ?;`,
+          [codeSku],
+        );
 
-    // Insert entrie
-    db.run(
-      `INSERT INTO entries (product_id, quantity, cost_price) VALUES (?, ?, ?);`,
-      [lastId, stock, cost_price],
-    );
+        if (queryCode.length > 0) {
+          if (db) db.exec("ROLLBACK;");
+          return {
+            success: false,
+            error: AUTH_CODES.CODE_SKU_USED,
+            result: codeSku,
+          };
+        }
+
+        nextCode = codeSku;
+      } else {
+        nextCode = String(currentAutoCode);
+        currentAutoCode++;
+      }
+
+      // Insert Product
+      db.run(
+        `INSERT INTO product (code_sku, name, description, category_id, cost_price, unit_price, stock, status_id) VALUES (?, ?, ?, ?, ?, ?, ?, 1)`,
+        [
+          nextCode,
+          data[i].product,
+          description,
+          data[i].category_id,
+          data[i].cost_price,
+          data[i].unit_price,
+          stock,
+        ],
+      );
+
+      // Get id product
+      const lastId = db.exec("SELECT last_insert_rowid();")[0].values[0][0];
+
+      if (stock > 0) {
+        // Insert entrie
+        db.run(
+          `INSERT INTO entries (product_id, quantity, cost_price) VALUES (?, ?, ?);`,
+          [lastId, stock, data[i].cost_price],
+        );
+      }
+    }
 
     db.exec("COMMIT;");
     await saveDB(db);
     return { success: true, result: AUTH_CODES.ADD_PRODUCT };
   } catch (error) {
     if (db) db.exec("ROLLBACK;");
-    console.error("Error inserting user:", error);
+    console.error("Error inserting products import:", error);
     return { success: false, error: error.message };
   }
 }
@@ -648,4 +670,5 @@ module.exports = {
   deleteProduct,
   addProduct,
   editProduct,
+  addProductsImport,
 };

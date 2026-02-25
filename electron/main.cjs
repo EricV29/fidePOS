@@ -1013,7 +1013,7 @@ ipcMain.handle("editProduct", async (event, data) => {
   }
 });
 
-// Add Products Impot
+// Add Products Import
 ipcMain.handle("addProductsImport", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
@@ -1027,6 +1027,7 @@ ipcMain.handle("addProductsImport", async (event, data) => {
         return {
           success: false,
           error: response.error,
+          result: response.result,
         };
       }
     } catch (error) {
