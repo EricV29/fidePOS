@@ -58,3 +58,5 @@ export interface ExcelProductRow {
   code_sku?: number | string;
   [key: string]: ExcelCellValue;
 }
+
+export type dataExportProducts = string | number | boolean | null | undefined;

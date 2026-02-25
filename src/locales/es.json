@@ -10,7 +10,8 @@
     "status_debt": "EN DEUDA",
     "role_admin": "ADMINISTRADOR",
     "role_user": "USUARIO",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "yes": "SI"
   },
   "sidebar": {
     "dashboard": "Panel",
@@ -260,7 +261,9 @@
     "text_empty_file": "El archivo esta vacío.",
     "text_missing_columns": "Faltan las siguientes columnas obligatorias: {{columns}}",
     "text_empty_products": "No hay productos para agregar al sistema.",
-    "text_code_sku_used_import": "Código SKU: {{codesku}} ya utilizado."
+    "text_code_sku_used_import": "Código SKU: {{codesku}} ya utilizado.",
+    "text_not_selected_format": "Formato no seleccionado.",
+    "text_not_selected_statistics": "Estadísticas no seleccionadas."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
@@ -412,8 +415,10 @@
     "title": "Exportar estadísticas",
     "description": "La información puede ser exportada como archivos <bold>.csv</bold>, <bold>.xlsx</bold> y <bold>.pdf</bold>.",
     "subtitle": "Elige tu configuración favorita.",
-    "form_title": "Formato de archivo",
-    "form_description": "Elige tu formato de archivo",
+    "text_statistics": "Estadísticas",
+    "text_statistics_description": "¿Quieres incluir las estadísticas en el documento?",
+    "text_format": "Formato de archivo",
+    "text_format_description": "Elige tu formato de archivo",
     "form_btn": "Exportar"
   },
   "modalImport": {
@@ -456,5 +461,16 @@
     "support_img": "Soporta imágenes .jpg, .jpeg o .web",
     "format": "formato",
     "code_sku": "Escanea el código o deja vacio para autogenerar."
+  },
+  "exportReports": {
+    "products": {
+      "title": "REPORTE DE PÁGINA PRODUCTOS",
+      "investment": "Inversión",
+      "inventory_value": "Valor de Inventario",
+      "total_stock": "Total en Productos",
+      "stock_products": "Productos en Stock",
+      "out_stock_products": "Productos Agotados",
+      "detail_products": "DETALLE DE PRODUCTOS"
+    }
   }
 }
