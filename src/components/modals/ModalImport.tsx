@@ -12,10 +12,6 @@ export function ModalImport() {
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleImportStatistics = () => {
-    window.electronAPI.signupSuccess();
-  };
-
   return ReactDOM.createPortal(
     <div
       className="fixed inset-0 flex justify-center items-center z-30 bg-black/10 backdrop-blur-sm"
@@ -49,13 +45,23 @@ export function ModalImport() {
           <p className="dark:text-white">{t("modalImport.subtitle")}</p>
           <ul className="list-disc pl-5 dark:text-[#b3b3b3]">
             <li>
-              <strong>code_sku</strong>
+              <strong>
+                code_sku{" "}
+                <span className="font-normal text-red-500">
+                  {t("modalImport.optional")}
+                </span>
+              </strong>
             </li>
             <li>
               <strong>product</strong>
             </li>
             <li>
-              <strong>category</strong>
+              <strong>
+                category{" "}
+                <span className="font-normal text-red-500">
+                  {t("modalImport.categories")}
+                </span>
+              </strong>
             </li>
             <li>
               <strong>cost_price</strong>
@@ -71,6 +77,6 @@ export function ModalImport() {
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }

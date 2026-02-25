@@ -36,6 +36,7 @@ const {
   deleteProduct,
   addProduct,
   editProduct,
+  addProductsImport,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -938,10 +939,10 @@ ipcMain.handle("deleteProduct", async (event, data) => {
 });
 
 // Get Categories Select
-ipcMain.handle("get-categories-select", async (event, data) => {
+ipcMain.handle("get-categories-select", async (event) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const response = await getCategoriesSelect(data);
+      const response = await getCategoriesSelect();
       if (response.success) {
         return {
           success: true,
@@ -1001,6 +1002,32 @@ ipcMain.handle("editProduct", async (event, data) => {
         return {
           success: false,
           error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Add Products Import
+ipcMain.handle("addProductsImport", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await addProductsImport(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+          result: response.result,
         };
       }
     } catch (error) {

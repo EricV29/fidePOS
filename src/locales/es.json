@@ -256,7 +256,11 @@
     "text_not_category_select": "Por favor selecciona una categoria para agregar el nuevo producto.",
     "text_code_sku_used": "Código SKU ya utilizado. Prueba con otro.",
     "text_product_not_found": "Producto no encontrado.",
-    "text_used_product": "Este producto tiene historial de movimientos y no se puede eliminar como un error de creación."
+    "text_used_product": "Este producto tiene historial de movimientos y no se puede eliminar como un error de creación.",
+    "text_empty_file": "El archivo esta vacío.",
+    "text_missing_columns": "Faltan las siguientes columnas obligatorias: {{columns}}",
+    "text_empty_products": "No hay productos para agregar al sistema.",
+    "text_code_sku_used_import": "Código SKU: {{codesku}} ya utilizado."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
@@ -415,7 +419,15 @@
   "modalImport": {
     "title": "Importa tus productos",
     "description": "Los datos pueden ser importados como archivos <bold>.csv</bold> o <bold>.xlsx</bold>.",
-    "subtitle": "Las columnas de tu archivo debe de incluir los siguientes nombres:"
+    "subtitle": "Las columnas de tu archivo debe de incluir los siguientes nombres:",
+    "optional": "(Opcional)",
+    "categories": "(Las categorías deben coincidir con las categorías del sistema)",
+    "row": "Fila",
+    "text_null_product": "Nombre del producto obligatorio.",
+    "text_null_category": "Nombre de la categoría obligatorio.",
+    "text_not_match_catergoy_one": "La categoría",
+    "text_not_match_catergoy_two": "no existe en el sistema.",
+    "text_number_columns": "Los precios o stock no son numeros."
   },
   "errors": {
     "pass_requirements": "Contraseña no cumple las reglas",

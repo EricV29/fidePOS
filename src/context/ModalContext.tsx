@@ -198,6 +198,22 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_used_product",
       },
+      [AUTH_CODES.EMPTY_FILE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_empty_file",
+      },
+      [AUTH_CODES.MISSING_COLUMNS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_missing_columns",
+      },
+      [AUTH_CODES.EMPTY_PRODUCTS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_empty_products",
+      },
+      [AUTH_CODES.CODE_SKU_USED_IMPORT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_code_sku_used_import",
+      },
     };
 
     const config = alertConfig[code];

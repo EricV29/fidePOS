@@ -45,3 +45,16 @@ export type Option = {
   label: string;
   description: string;
 };
+
+type ExcelCellValue = string | number | boolean | null | undefined;
+export type ExcelRow = ExcelCellValue[];
+
+export interface ExcelProductRow {
+  product: string;
+  category: string;
+  cost_price: number | string;
+  unit_price: number | string;
+  stock?: number | string;
+  code_sku?: number | string;
+  [key: string]: ExcelCellValue;
+}
