@@ -226,11 +226,11 @@ async function createNewSale(data) {
         [product.quantity, product.id],
       );
 
-      // Update status of product
-      const queryUpdateStatusProduct = db.exec(
-        "UPDATE product SET status_id = 0 WHERE id = ? AND stock <= 0;",
-        [product.id],
-      );
+      //! Update status of product
+      // const queryUpdateStatusProduct = db.exec(
+      //   "UPDATE product SET status_id = 0 WHERE id = ? AND stock <= 0;",
+      //   [product.id],
+      // );
     }
 
     if (credit) {

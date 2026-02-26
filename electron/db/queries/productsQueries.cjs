@@ -537,7 +537,11 @@ async function editProduct(data) {
     }
 
     if (editStock === "entry") {
-      db.run("UPDATE product SET status_id = 1 WHERE id = ?;", [id]);
+      // Updatade status product
+      db.run(
+        "UPDATE product SET status_id = 1, deleted_at = null WHERE id = ?;",
+        [id],
+      );
 
       // Insert entrie
       db.run(
