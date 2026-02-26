@@ -82,6 +82,31 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Create New Sale
   createNewSale: (data) => ipcRenderer.invoke("createNewSale", data),
 
+  //* Get Products Data Page
+  getProductsData: (data) => ipcRenderer.invoke("get-products-data", data),
+
   // Add Category
   addCategory: (data) => ipcRenderer.invoke("addCategory", data),
+
+  // Get Filter Search Table Products
+  getFilterSearchProducts: (data) =>
+    ipcRenderer.invoke("get-filter-search-products", data),
+
+  // Delete Product
+  deleteProduct: (data) => ipcRenderer.invoke("deleteProduct", data),
+
+  // Get Categories
+  getCategoriesSelect: () => ipcRenderer.invoke("get-categories-select"),
+
+  // Add Product
+  addProduct: (data) => ipcRenderer.invoke("addProduct", data),
+
+  // Edit Product
+  editProduct: (data) => ipcRenderer.invoke("editProduct", data),
+
+  // Add Products Import
+  addProductsImport: (data) => ipcRenderer.invoke("addProductsImport", data),
+
+  // Get All Products
+  getAllProducts: () => ipcRenderer.invoke("get-all-products"),
 });

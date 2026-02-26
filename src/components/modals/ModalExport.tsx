@@ -4,19 +4,36 @@ import ChartBarIcon from "@icons/ChartBarIcon";
 import CloseIcon from "@icons/CloseIcon";
 import CustomSelect from "@components/Select";
 import { useTranslation, Trans } from "react-i18next";
+import { useState } from "react";
+import AUTH_CODES from "../../../constants/authCodes.json";
+import { exportReportFile } from "@/utility/exportReportFile";
+import type { dataExportProducts } from "@typesm/products";
+
 interface Data {
-  data: string;
+  page: string;
+  data: dataExportProducts[][];
 }
 
-export function ModalExport({ data }: { data: Data }) {
-  const { setModal } = useModal();
+export function ModalExport({ page, data }: Data) {
+  const { setModal, triggerResponseAlert } = useModal();
   const { t } = useTranslation();
-
+  const [isTrue, setIsTrue] = useState<boolean | null>(null);
+  const [selectedFormatId, setSelecteFormatId] = useState<string | undefined>();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleExportStatistics = () => {
-    window.electronAPI.signupSuccess();
+  const handleExportStatistics = async () => {
+    if (!selectedFormatId) {
+      triggerResponseAlert(AUTH_CODES.NOT_SELECTED_FORMAT);
+      return;
+    }
+
+    if (isTrue !== true && isTrue !== false) {
+      triggerResponseAlert(AUTH_CODES.NOT_SELECTED_STATISTICS);
+      return;
+    }
+
+    exportReportFile(selectedFormatId, data, page, isTrue);
   };
 
   const optionsExport = [
@@ -54,20 +71,59 @@ export function ModalExport({ data }: { data: Data }) {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p>{data.data}</p>
         <p className="dark:text-white">{t("modalExport.subtitle")}</p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 dark:text-[#b3b3b3]">
           <div className="w-full flex justify-between items-center">
             <div className="w-full">
-              <p className="font-semibold">{t("modalExport.form_title")}</p>
+              <p className="font-semibold">
+                {t("modalExport.text_statistics")}
+              </p>
               <p className="font-extralight">
-                {t("modalExport.form_description")}
+                {t("modalExport.text_statistics_description")}
+              </p>
+            </div>
+            <div className="w-[100px] flex flex-col gap-2">
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="radio"
+                  name="selection-group"
+                  value="true"
+                  checked={isTrue === true}
+                  onChange={() => setIsTrue(true)}
+                  className="cursor-pointer"
+                />
+                <span className="group-hover:text-[#F57C00] transition-colors">
+                  {t("global.yes")}
+                </span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer group">
+                <input
+                  type="radio"
+                  name="selection-group"
+                  value="false"
+                  checked={isTrue === false}
+                  onChange={() => setIsTrue(false)}
+                  className="cursor-pointer"
+                />
+                <span className="group-hover:text-[#F57C00] transition-colors">
+                  NO
+                </span>
+              </label>
+            </div>
+          </div>
+          <div className="w-full flex justify-between items-center">
+            <div className="w-full">
+              <p className="font-semibold">{t("modalExport.text_format")}</p>
+              <p className="font-extralight">
+                {t("modalExport.text_format_description")}
               </p>
             </div>
             <CustomSelect
               options={optionsExport}
               color="#F57C00"
               placeholder={t("placeholders.format")}
+              onChange={(value) => setSelecteFormatId(value)}
+              value={selectedFormatId}
             />
           </div>
           <button className="borange" onClick={handleExportStatistics}>
@@ -76,6 +132,6 @@ export function ModalExport({ data }: { data: Data }) {
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }

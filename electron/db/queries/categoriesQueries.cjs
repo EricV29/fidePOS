@@ -42,6 +42,26 @@ async function addCategory(data) {
   }
 }
 
+// Get Categories for select
+async function getCategoriesSelect() {
+  try {
+    const db = await getDB();
+
+    const query = db.exec("SELECT * FROM v_categories_active_select;");
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const categories = mapResultToObjects(query);
+    return { success: true, result: categories };
+  } catch (error) {
+    console.error("Error getting categories:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   addCategory,
+  getCategoriesSelect,
 };

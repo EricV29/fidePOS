@@ -10,7 +10,8 @@
     "status_debt": "DEBT",
     "role_admin": "ADMIN",
     "role_user": "USER",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "yes": "YES"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -210,7 +211,8 @@
     "text_write_email": "Make sure to write your email.",
     "text_delete_user": "Delete this user? This action cannot be undone.",
     "text_debt_payment": "Add new payment? This action cannot be undone.",
-    "text_complete_new_sale": "Are you sure you want to complete the sale?"
+    "text_complete_new_sale": "Are you sure you want to complete the sale?",
+    "text_delete_product": "Delete this product? This action cannot be undone."
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
@@ -223,7 +225,10 @@
     "text_debt_payment_success": "Debt payment added successfully.",
     "text_add_customer": "Customer added successfully.",
     "text_create_new_sale": "Create new sale successfully.",
-    "text_add_category": "Category added successfully."
+    "text_add_category": "Category added successfully.",
+    "text_delete_product": "Product deleted successfully.",
+    "text_add_product": "Product added successfully.",
+    "text_edit_product": "Product edited successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -241,7 +246,36 @@
     "text_not_credit_sale": "This is not a valid credit amount.",
     "text_insufficient_stock": "Insufficient stock for this product: {{product}}.",
     "text_not_customer_select": "Please select a customer to proceed with a credit sale.",
-    "text_category_used": "Category already exists in the system."
+    "text_category_used": "Category already exists in the system.",
+    "text_product_inactive": "This product is currently inactive.",
+    "text_not_category_select": "Please select a category to proceed whit a add new product.",
+    "text_code_sku_used": "Code SKU is already in use. Try a different one.",
+    "text_product_not_found": "Product not found.",
+    "text_used_product": "This product has transaction history and cannot be deleted as a creation error.",
+    "text_empty_file": "This file is empty.",
+    "text_missing_columns": "The following required columns are missing: {{columns}}",
+    "text_empty_products": "No product to insert into the system.",
+    "text_code_sku_used_import": "Code SKU: {{codesku}} is already in use.",
+    "text_not_selected_format": "Format not selected.",
+    "text_not_selected_statistics": "Statistics not selected."
+  },
+  "modalQuestionAlert": {
+    "title": "¡Warning!",
+    "change_stock": "Why is the stock changing?",
+    "error_correction": "Error correction.",
+    "new_entry": "New entry",
+    "error_quantity": "I made a mistake entering the initial quantity.",
+    "text_new_entry": "Adding new stock to inventory.",
+    "delete_product": "Why is the product delete?",
+    "error_creation": "Error creation.",
+    "error_creation_product": "Error creation product.",
+    "loss_stock": "Wastage / Damage / Loss",
+    "text_loss_stock": "Stock removed due to physical damage, expiration or loss.",
+    "export_page": "Do you want to export the current page or all data?",
+    "current_view": "Current View",
+    "total_data": "All Records",
+    "text_current_view": "Only data visible on this page.",
+    "text_total_data": "All available data in the system."
   },
   "modalAddUser": {
     "title": "Add new user",
@@ -304,8 +338,11 @@
   },
   "modalAddProduct": {
     "title": "Add new product",
+    "title_edit": "Edit product",
     "description": "Add individual products to your product list.",
-    "subtitle": "Enter the main information of your new product."
+    "description_edit": "Edit the fields as needed.",
+    "subtitle": "Enter the main information of your new product.",
+    "subtitle_edit": "Edit the main information of your product."
   },
   "formAddProduct": {
     "input1": "Code SKU",
@@ -315,7 +352,8 @@
     "input5": "Stock",
     "input6": "Cost Price",
     "input7": "Unit Price",
-    "btn": "Add product"
+    "btn": "Add product",
+    "btn_edit": "Edit product"
   },
   "modalAddCategory": {
     "title": "Add new category",
@@ -376,14 +414,24 @@
     "title": "Export statistics",
     "description": "Data will be exported in a <bold>.csv</bold>, <bold>.xlsx</bold> and <bold>.pdf</bold> file.",
     "subtitle": "Choose yout favorite configuration.",
-    "form_title": "File format",
-    "form_description": "Choose a file format",
+    "text_statistics": "Statistics",
+    "text_statistics_description": "Do you want to include statistics in the file?",
+    "text_format": "File format",
+    "text_format_description": "Choose a file format",
     "form_btn": "Export"
   },
   "modalImport": {
     "title": "Import your products",
     "description": "Data will be exported in a <bold>.csv</bold> or <bold>.xlsx</bold> file.",
-    "subtitle": "Your file must include the following columns."
+    "subtitle": "Your file must include the following columns.",
+    "optional": "(Optional)",
+    "categories": "(Categories must match the categories in the system)",
+    "row": "Row",
+    "text_null_product": "Name product required.",
+    "text_null_category": "Name category required.",
+    "text_not_match_catergoy_one": "The category",
+    "text_not_match_catergoy_two": "no exist into the system.",
+    "text_number_columns": "Prices or Stock values must be valid numbers."
   },
   "errors": {
     "pass_requirements": "Password does not meet the requirements",
@@ -410,6 +458,18 @@
     "language": "Language",
     "theme": "Theme",
     "support_img": "Support images .jpg, .jpeg or .web",
-    "format": "format"
+    "format": "format",
+    "code_sku": "Scan barcode or leave empty to autogenerate."
+  },
+  "exportReport": {
+    "products_page": {
+      "title": "PRODUCTS REPORT PAGE",
+      "investment": "Investment",
+      "inventory_value": "Inventory Value",
+      "total_products": "Total Products",
+      "stock_products": "Stock Products",
+      "out_stock_products": "Out of Stock Products",
+      "detail_products": "DETAIL PRODUCTS"
+    }
   }
 }

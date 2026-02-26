@@ -29,6 +29,15 @@ const {
   getProductsList,
   getFilterSearch,
   getSearchCodeSKU,
+  getInventoryValue,
+  getProductsStock,
+  getProducts,
+  getFilterSearchProducts,
+  deleteProduct,
+  addProduct,
+  editProduct,
+  addProductsImport,
+  getAllProducts,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -42,7 +51,10 @@ const {
   getPaymentsDebt,
   addPaymentDebt,
 } = require("./db/queries/paymentsQueries.cjs");
-const { addCategory } = require("./db/queries/categoriesQueries.cjs");
+const {
+  addCategory,
+  getCategoriesSelect,
+} = require("./db/queries/categoriesQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
@@ -822,12 +834,217 @@ ipcMain.handle("createNewSale", async (event, data) => {
 });
 
 //* Get Products Data Page
+ipcMain.handle("get-products-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { limit, offset } = data;
+      const [investment, inventoryValue, productsStock, inventoryTable] =
+        await Promise.all([
+          getInvestment(),
+          getInventoryValue(),
+          getProductsStock(),
+          getProducts(limit, offset),
+        ]);
+
+      return {
+        success: true,
+        result: {
+          investment,
+          inventoryValue,
+          productsStock,
+          inventoryTable,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
 
 // Add Category
 ipcMain.handle("addCategory", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await addCategory(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Filter Search Products
+ipcMain.handle("get-filter-search-products", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchProducts(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Delete Product
+ipcMain.handle("deleteProduct", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await deleteProduct(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Categories Select
+ipcMain.handle("get-categories-select", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getCategoriesSelect();
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Add Product
+ipcMain.handle("addProduct", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await addProduct(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Edit Product
+ipcMain.handle("editProduct", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await editProduct(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Add Products Import
+ipcMain.handle("addProductsImport", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await addProductsImport(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+          result: response.result,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get All Products
+ipcMain.handle("get-all-products", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getAllProducts();
       if (response.success) {
         return {
           success: true,

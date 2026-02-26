@@ -134,6 +134,8 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
       });
       if (response.result) {
         setDataProducts(response.result);
+        console.log(response.totalCount);
+
         setTotalRows(response.totalCount);
       }
     } else {

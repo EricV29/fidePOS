@@ -190,9 +190,63 @@ declare global {
       }>;
 
       //* GET PRODUCTS DATA PAGE
+      getProductsData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
 
       // ADD CATEGORY
       addCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH PRODUCTS
+      getFilterSearchProducts: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // DELETE PRODUCT
+      deleteProduct: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET CATEGORIES
+      getCategoriesSelect: () => Promise<{
+        success: boolean;
+        result?: CategoriesSelect[];
+        error?: string;
+      }>;
+
+      // ADD PRODUCT
+      addProduct: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // EDIT PRODUCT
+      editProduct: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // ADD PRODUCTS IMPORT
+      addProductsImport: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET ALL PRODUCTS
+      getAllProducts: () => Promise<{
         success: boolean;
         result?: string;
         error?: string;

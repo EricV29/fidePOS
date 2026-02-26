@@ -60,6 +60,8 @@
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
     "i18next": "^25.7.2",
+    "jspdf": "^4.2.0",
+    "jspdf-autotable": "^5.0.7",
     "lucide-react": "^0.554.0",
     "nodemailer": "^7.0.12",
     "react": "19.1.1",
@@ -73,6 +75,7 @@
     "tailwindcss": "^4.1.17",
     "tailwindcss-animated": "^2.0.0",
     "tw-animate-css": "^1.4.0",
+    "xlsx": "^0.18.5",
     "zod": "^4.1.13"
   },
   "devDependencies": {
@@ -85,13 +88,13 @@
     "concurrently": "9.2.1",
     "electron": "^39.2.3",
     "electron-builder": "^26.0.12",
-    "eslint": "9.36.0",
+    "eslint": "^10.0.2",
     "eslint-plugin-react-hooks": "5.2.0",
     "eslint-plugin-react-refresh": "0.4.22",
     "globals": "16.4.0",
     "postcss": "^8.5.6",
     "typescript": "~5.9.3",
-    "typescript-eslint": "8.45.0",
+    "typescript-eslint": "^8.56.1",
     "vite": "7.1.12",
     "wait-on": "9.0.1"
   },

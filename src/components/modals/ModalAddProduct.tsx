@@ -5,22 +5,114 @@ import CloseIcon from "@icons/CloseIcon";
 import AddProductForm from "@forms/form-addProduct";
 import { useTranslation } from "react-i18next";
 import type { Products } from "@typesm/products";
-
+import type { AddProductFormValues } from "../forms/schemas/product.schema";
+import { useLoading } from "@context/LoadingContext";
 interface Props {
   data?: Products;
+  onSuccess: () => void;
 }
 
-export function ModalAddProduct({ data }: Props) {
+export function ModalAddProduct({ data, onSuccess }: Props) {
   const { setModal } = useModal();
   const { t } = useTranslation();
+  const { setLoading } = useLoading();
+  const { triggerResponseAlert, triggerQuestionAlert } = useModal();
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
+  const optionsStockUp = [
+    {
+      id: "error",
+      label: t("modalQuestionAlert.error_correction"),
+      description: t("modalQuestionAlert.error_quantity"),
+    },
+    {
+      id: "entry",
+      label: t("modalQuestionAlert.new_entry"),
+      description: t("modalQuestionAlert.text_new_entry"),
+    },
+  ];
 
-  const handleAddProduct = () => {
-    //window.electronAPI.signupSuccess();
+  const optionsStockDown = [
+    {
+      id: "error",
+      label: t("modalQuestionAlert.error_correction"),
+      description: t("modalQuestionAlert.error_quantity"),
+    },
+  ];
+
+  const editProduct = async (finalValues: AddProductFormValues) => {
+    const response = await window.electronAPI.editProduct(finalValues);
+    if (response.success) {
+      onSuccess();
+      setLoading(false);
+      triggerResponseAlert(response.result);
+    } else {
+      setLoading(false);
+      triggerResponseAlert(response.error);
+    }
+    return;
   };
 
-  console.log(data);
+  // Agregar Producto
+  const handleAddProduct = async (
+    values: AddProductFormValues,
+    editActive: boolean,
+  ) => {
+    setLoading(true);
+    let finalValues = values;
+
+    // Editar Product
+    if (!editActive) {
+      const response = await window.electronAPI.addProduct(values);
+      if (response.success) {
+        onSuccess();
+        setLoading(false);
+        triggerResponseAlert(response.result);
+      } else {
+        setLoading(false);
+        triggerResponseAlert(response.error);
+      }
+    } else {
+      if (Number(data?.stock) !== Number(values.stock)) {
+        if (Number(values.stock) > Number(data?.stock)) {
+          triggerQuestionAlert(
+            t("modalQuestionAlert.change_stock"),
+            optionsStockUp,
+            (selectedId) => {
+              finalValues = { ...values, editStock: selectedId };
+              editProduct(finalValues);
+            },
+          );
+          setLoading(false);
+          return;
+        } else {
+          triggerQuestionAlert(
+            t("modalQuestionAlert.change_stock"),
+            optionsStockDown,
+            (selectedId) => {
+              finalValues = {
+                ...values,
+                editStock: selectedId,
+              };
+              editProduct(finalValues);
+            },
+          );
+          setLoading(false);
+          return;
+        }
+      }
+
+      if (Number(data?.cost_price) !== Number(values.cost_price)) {
+        finalValues = {
+          ...values,
+          editStock: "error",
+        };
+      }
+
+      editProduct(finalValues);
+    }
+    setLoading(false);
+  };
 
   return ReactDOM.createPortal(
     <div
@@ -35,9 +127,15 @@ export function ModalAddProduct({ data }: Props) {
           <div className="flex gap-5">
             <BoxPlusIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>{t("modalAddProduct.title")}</h2>
+              <h2>
+                {data
+                  ? t("modalAddProduct.title_edit")
+                  : t("modalAddProduct.title")}
+              </h2>
               <p className="font-extralight">
-                {t("modalAddProduct.description")}
+                {data
+                  ? t("modalAddProduct.description_edit")
+                  : t("modalAddProduct.description")}
               </p>
             </div>
           </div>
@@ -46,12 +144,16 @@ export function ModalAddProduct({ data }: Props) {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p className="dark:text-white">{t("modalAddProduct.subtitle")}</p>
+        <p className="dark:text-white">
+          {data
+            ? t("modalAddProduct.subtitle_edit")
+            : t("modalAddProduct.subtitle")}
+        </p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 dark:text-[#b3b3b3]">
-          <AddProductForm onSuccess={handleAddProduct} />
+          <AddProductForm onSuccess={handleAddProduct} data={data} />
         </div>
       </div>
     </div>,
-    modalRoot
+    modalRoot,
   );
 }

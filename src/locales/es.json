@@ -10,7 +10,8 @@
     "status_debt": "EN DEUDA",
     "role_admin": "ADMINISTRADOR",
     "role_user": "USUARIO",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "yes": "SI"
   },
   "sidebar": {
     "dashboard": "Panel",
@@ -216,7 +217,8 @@
     "text_write_email": "Asegurate de escribir tu correo electrónico.",
     "text_delete_user": "¿Estás seguro de que quieres eliminar a este usuario?",
     "text_debt_payment": "¿Estás seguro de que agregar un nuevo pago?",
-    "text_complete_new_sale": "¿Estás seguro de completar la venta?"
+    "text_complete_new_sale": "¿Estás seguro de completar la venta?",
+    "text_delete_product": "¿Estás seguro de que quieres eliminar este producto?."
   },
   "modalSuccessAlert": {
     "title": "¡Exito!",
@@ -229,7 +231,10 @@
     "text_debt_payment_success": "Pago de deuda agregado correctamente",
     "text_add_customer": "Cliente agregado correctamente.",
     "text_create_new_sale": "Nueva venta realizada correctamente.",
-    "text_add_category": "Categoría agregada correctamente."
+    "text_add_category": "Categoría agregada correctamente.",
+    "text_delete_product": "Producto eliminado correctamente.",
+    "text_add_product": "Producto agregado correctamente.",
+    "text_edit_product": "Producto editado correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -247,7 +252,36 @@
     "text_not_credit_sale": "Esto no es una cantidad valida para credito.",
     "Insufficient stock for this product.": "Stock insuficiente para este producto: {{product}}.",
     "text_not_customer_select": "Por favor selecciona o crea un cliente para realizar una venta a credito.",
-    "text_category_used": "Categoría ya existe en el sistema."
+    "text_category_used": "Categoría ya existe en el sistema.",
+    "text_product_inactive": "Este producto está inactivo actualmente.",
+    "text_not_category_select": "Por favor selecciona una categoria para agregar el nuevo producto.",
+    "text_code_sku_used": "Código SKU ya utilizado. Prueba con otro.",
+    "text_product_not_found": "Producto no encontrado.",
+    "text_used_product": "Este producto tiene historial de movimientos y no se puede eliminar como un error de creación.",
+    "text_empty_file": "El archivo esta vacío.",
+    "text_missing_columns": "Faltan las siguientes columnas obligatorias: {{columns}}",
+    "text_empty_products": "No hay productos para agregar al sistema.",
+    "text_code_sku_used_import": "Código SKU: {{codesku}} ya utilizado.",
+    "text_not_selected_format": "Formato no seleccionado.",
+    "text_not_selected_statistics": "Estadísticas no seleccionadas."
+  },
+  "modalQuestionAlert": {
+    "title": "¡Cuidado!",
+    "change_stock": "¿Cuál es el motivo del cambio de stock?",
+    "error_correction": "Corrección de error",
+    "new_entry": "Nueva entrada",
+    "error_quantity": "Tuve un error al colocar la cantidad inicial.",
+    "text_new_entry": "Agregar nueva cantidad al inventario.",
+    "delete_product": "¿Cuál es el motivo de eliminación del producto?",
+    "error_creation": "Error de creación.",
+    "error_creation_product": "Error al crear el producto.",
+    "loss_stock": "Merma / Daño / Perdida",
+    "text_loss_stock": "Stock eliminado por daño, expiración o perdida.",
+    "export_page": "¿Quieres exportar la información actual o toda la información?",
+    "current_view": "Vista Actual",
+    "total_data": "Información Completa",
+    "text_current_view": "Solo la información visible en esta página.",
+    "text_total_data": "Toda la información disponible en el sistema."
   },
   "modalAddUser": {
     "title": "Agregar usuario",
@@ -310,8 +344,11 @@
   },
   "modalAddProduct": {
     "title": "Agrega un producto",
+    "title_edit": "Editar producto",
     "description": "Agrega nuevos productos a tu inventario.",
-    "subtitle": "Ingresa la información de tu nuevo producto."
+    "description_edit": "Edita los campos que necesites.",
+    "subtitle": "Ingresa la información de tu nuevo producto.",
+    "subtitle_edit": "Edita la información de tu producto."
   },
   "formAddProduct": {
     "input1": "Código SKU",
@@ -321,7 +358,8 @@
     "input5": "Stock",
     "input6": "Precio compra",
     "input7": "Precio unidad",
-    "btn": "Agregar producto"
+    "btn": "Agregar producto",
+    "btn_edit": "Editar producto"
   },
   "modalAddCategory": {
     "title": "Agrega una categoría",
@@ -382,14 +420,24 @@
     "title": "Exportar estadísticas",
     "description": "La información puede ser exportada como archivos <bold>.csv</bold>, <bold>.xlsx</bold> y <bold>.pdf</bold>.",
     "subtitle": "Elige tu configuración favorita.",
-    "form_title": "Formato de archivo",
-    "form_description": "Elige tu formato de archivo",
+    "text_statistics": "Estadísticas",
+    "text_statistics_description": "¿Quieres incluir las estadísticas en el documento?",
+    "text_format": "Formato de archivo",
+    "text_format_description": "Elige tu formato de archivo",
     "form_btn": "Exportar"
   },
   "modalImport": {
     "title": "Importa tus productos",
     "description": "Los datos pueden ser importados como archivos <bold>.csv</bold> o <bold>.xlsx</bold>.",
-    "subtitle": "Las columnas de tu archivo debe de incluir los siguientes nombres:"
+    "subtitle": "Las columnas de tu archivo debe de incluir los siguientes nombres:",
+    "optional": "(Opcional)",
+    "categories": "(Las categorías deben coincidir con las categorías del sistema)",
+    "row": "Fila",
+    "text_null_product": "Nombre del producto obligatorio.",
+    "text_null_category": "Nombre de la categoría obligatorio.",
+    "text_not_match_catergoy_one": "La categoría",
+    "text_not_match_catergoy_two": "no existe en el sistema.",
+    "text_number_columns": "Los precios o stock no son numeros."
   },
   "errors": {
     "pass_requirements": "Contraseña no cumple las reglas",
@@ -416,6 +464,18 @@
     "language": "Idioma",
     "theme": "Tema",
     "support_img": "Soporta imágenes .jpg, .jpeg o .web",
-    "format": "formato"
+    "format": "formato",
+    "code_sku": "Escanea el código o deja vacio para autogenerar."
+  },
+  "exportReports": {
+    "products": {
+      "title": "REPORTE DE PÁGINA PRODUCTOS",
+      "investment": "Inversión",
+      "inventory_value": "Valor de Inventario",
+      "total_stock": "Total en Productos",
+      "stock_products": "Productos en Stock",
+      "out_stock_products": "Productos Agotados",
+      "detail_products": "DETALLE DE PRODUCTOS"
+    }
   }
 }

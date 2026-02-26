@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import AUTH_CODES from "../../constants/authCodes.json";
 import ReactDOM from "react-dom";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
+import ModalQuestionAlert from "@modals/ModalQuestionAlert";
+import type { Option } from "@typesm/products";
 
 interface ModalContextType {
   modal: React.ReactNode | null;
@@ -16,6 +18,11 @@ interface ModalContextType {
   triggerWarningAlert: (
     text: string,
     onConfirm: () => Promise<void> | void,
+  ) => void;
+  triggerQuestionAlert: (
+    mainText: string,
+    motivos: Option[],
+    onConfirm: (selectedId: string) => void,
   ) => void;
 }
 
@@ -159,6 +166,62 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_add_category",
       },
+      [AUTH_CODES.PRODUCT_INACTIVE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_product_inactive",
+      },
+      [AUTH_CODES.DELETE_PRODUCT]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_delete_product",
+      },
+      [AUTH_CODES.NOT_CATEGORY_SELECT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_category_select",
+      },
+      [AUTH_CODES.CODE_SKU_USED]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_code_sku_used",
+      },
+      [AUTH_CODES.ADD_PRODUCT]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_add_product",
+      },
+      [AUTH_CODES.PRODUCT_NOT_FOUND]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_product_not_found",
+      },
+      [AUTH_CODES.EDIT_PRODUCT]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_edit_product",
+      },
+      [AUTH_CODES.USED_PRODUCT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_used_product",
+      },
+      [AUTH_CODES.EMPTY_FILE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_empty_file",
+      },
+      [AUTH_CODES.MISSING_COLUMNS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_missing_columns",
+      },
+      [AUTH_CODES.EMPTY_PRODUCTS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_empty_products",
+      },
+      [AUTH_CODES.CODE_SKU_USED_IMPORT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_code_sku_used_import",
+      },
+      [AUTH_CODES.NOT_SELECTED_FORMAT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_selected_format",
+      },
+      [AUTH_CODES.NOT_SELECTED_STATISTICS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_selected_statistics",
+      },
     };
 
     const config = alertConfig[code];
@@ -175,9 +238,33 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const triggerQuestionAlert = (
+    mainText: string,
+    options: Option[],
+    onConfirm: (selectedId: string) => void,
+  ) => {
+    setAlert(
+      <ModalQuestionAlert
+        mainText={mainText}
+        options={options}
+        onConfirm={(id) => {
+          onConfirm(id);
+          setAlert(null);
+        }}
+        onClose={() => setAlert(null)}
+      />,
+    );
+  };
+
   return (
     <ModalContext.Provider
-      value={{ modal, setModal, triggerResponseAlert, triggerWarningAlert }}
+      value={{
+        modal,
+        setModal,
+        triggerResponseAlert,
+        triggerWarningAlert,
+        triggerQuestionAlert,
+      }}
     >
       {children}
       {alert &&

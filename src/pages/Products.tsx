@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ExportIcon from "@icons/ExportIcon";
 import ImportIcon from "@icons/ImportIcon";
 import CategoryIcon from "@icons/CategoryIcon";
@@ -9,64 +9,218 @@ import CardInfoNumber from "@components/CardInfoNumber";
 import CardInfoDetail from "@components/CardInfoDetail";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsP } from "@columns/columnsP";
-import type { Products } from "@typesm/products";
+import type { Products, dataExportProducts } from "@typesm/products";
 import { useModal } from "@context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
 import { ModalImport } from "@modals/ModalImport";
 import { ModalAddProduct } from "@modals/ModalAddProduct";
 import { ModalAddCategory } from "@modals/ModalAddCategory";
 import { useTranslation } from "react-i18next";
+import { useLoading } from "@context/LoadingContext";
 interface dataStockI {
   [key: string]: number;
 }
 
-//* Example data stock products
-const dataStockDB = { Stock: 100, "No Stock": 40 };
-
-//* Example data products
-const dataProductsDB = [
-  {
-    id: "34234",
-    code_sku: "JW0012",
-    product: "Labial",
-    description: "Yuya rojo",
-    category: "Maquillaje",
-    ccolor: "#5b49ff",
-    cost_price: 123.5,
-    unit_price: 20000,
-    stock: 1,
-    status: "active",
-    created_at: "01/01/2025",
-  },
-  {
-    id: "34235",
-    code_sku: "JW0013",
-    product: "Carrito",
-    description: "hotweels",
-    category: "Toys",
-    ccolor: "#ff49ff",
-    cost_price: 12000,
-    unit_price: 30000,
-    stock: 2,
-    status: "inactive",
-    created_at: "01/10/2025",
-  },
-];
-
 export default function Products() {
   const { t, i18n } = useTranslation();
-  const [dataStock, setStock] = useState<dataStockI>();
+  const [dataExportPage, setDataExportPage] = useState<dataExportProducts[][]>(
+    [],
+  );
+  const [productsStock, setProductsStock] = useState<dataStockI>();
   const [dataProducts, setProducts] = useState<Products[]>([]);
   const { setModal } = useModal();
+  const [investCard, setInvestCard] = useState(Number);
+  const [inventoryValueCard, setInventoryValueCard] = useState(Number);
+  const [totalRows, setTotalRows] = useState(0);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const { triggerResponseAlert, triggerQuestionAlert } = useModal();
+  const { setLoading } = useLoading();
+  const optionsDelete = [
+    {
+      id: "error",
+      label: t("modalQuestionAlert.error_creation"),
+      description: t("modalQuestionAlert.error_creation_product"),
+    },
+    {
+      id: "loss",
+      label: t("modalQuestionAlert.loss_stock"),
+      description: t("modalQuestionAlert.text_loss_stock"),
+    },
+  ];
+  const optionsExportPage = [
+    {
+      id: "current",
+      label: t("modalQuestionAlert.current_view"),
+      description: t("modalQuestionAlert.text_current_view"),
+    },
+    {
+      id: "total",
+      label: t("modalQuestionAlert.total_data"),
+      description: t("modalQuestionAlert.text_total_data"),
+    },
+  ];
+
+  const loadPorducts = useCallback(async () => {
+    const limit = pagination.pageSize;
+    const offset = pagination.pageIndex * pagination.pageSize;
+
+    const response = await window.electronAPI.getProductsData({
+      limit: limit,
+      offset: offset,
+    });
+    const productsData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+
+    if (productsData?.investment) {
+      const investmentData = productsData.investment.result;
+      setInvestCard(investmentData[0].investment);
+    }
+
+    if (productsData?.inventoryValue) {
+      const inventoryValueData = productsData.inventoryValue.result;
+      setInventoryValueCard(inventoryValueData[0].inventory_value);
+    }
+
+    if (productsData?.productsStock) {
+      const productsStockData = productsData.productsStock.result;
+      setProductsStock(productsStockData[0]);
+    }
+
+    if (productsData?.inventoryTable) {
+      const inventoryTableData = productsData.inventoryTable.result;
+      setProducts(inventoryTableData);
+      setTotalRows(productsData.inventoryTable.totalCount);
+    }
+  }, [pagination]);
 
   useEffect(() => {
-    setStock(dataStockDB);
-    setProducts(dataProductsDB);
-  }, []);
+    loadPorducts();
+  }, [loadPorducts]);
 
-  function deleteProduct(id: string) {
-    console.log("Deleting product:", id);
-  }
+  const deleteProduct = async (id: number, status: string) => {
+    if (status !== "active") {
+      triggerResponseAlert("PRODUCT_INACTIVE");
+      return;
+    }
+
+    triggerQuestionAlert(
+      t("modalQuestionAlert.delete_product"),
+      optionsDelete,
+      async (selectedId) => {
+        const values = { id: id, reason: selectedId };
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.deleteProduct(values);
+
+          if (response.success) {
+            loadPorducts();
+            setLoading(false);
+            triggerResponseAlert(response.result);
+          } else {
+            setLoading(false);
+            triggerResponseAlert(response.error);
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      },
+    );
+  };
+
+  const createReport = useCallback(
+    async (view: string) => {
+      let productsData: Products[] = dataProducts;
+
+      if (view === "total") {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.getAllProducts();
+          if (response.success) {
+            setLoading(false);
+            const rawData =
+              typeof response.result === "string"
+                ? JSON.parse(response.result)
+                : response.result;
+
+            productsData = rawData as Products[];
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      }
+
+      let totalProducts = 0;
+      if (productsStock) {
+        totalProducts =
+          Number(productsStock.Stock || 0) +
+          Number(productsStock["No Stock"] || 0);
+      }
+
+      // Create Data Cards
+      const statsData = [
+        [t("exportReport.products_page.title")],
+        [t("exportReport.products_page.investment"), investCard],
+        [t("exportReport.products_page.inventory_value"), inventoryValueCard],
+        [t("exportReport.products_page.total_products"), totalProducts],
+        [t("exportReport.products_page.stock_products"), productsStock?.Stock],
+        [
+          t("exportReport.products_page.out_stock_products"),
+          productsStock?.["No Stock"],
+        ],
+        [], // Fila vacía de separación
+        [t("exportReport.products_page.detail_products")],
+      ];
+
+      // Create Data Products Table
+      const tableHeaders = [
+        "ID",
+        t("columns.code"),
+        t("columns.product"),
+        t("columns.description"),
+        t("columns.category"),
+        t("columns.cost_price"),
+        t("columns.unit_price"),
+        "Stock",
+        t("columns.status"),
+        t("columns.created_at"),
+        t("columns.deleted_at"),
+      ];
+      const rows = productsData.map((p) => [
+        p.id,
+        p.code_sku,
+        p.product,
+        p.description,
+        p.category,
+        p.cost_price,
+        p.unit_price,
+        p.stock,
+        p.status,
+        p.created_at,
+        p.deleted_at,
+      ]);
+
+      const finalData: dataExportProducts[][] = [
+        ...statsData,
+        tableHeaders,
+        ...rows,
+      ];
+      setDataExportPage(finalData);
+      return finalData;
+    },
+    [
+      dataProducts,
+      inventoryValueCard,
+      investCard,
+      productsStock,
+      t,
+      setLoading,
+    ],
+  );
 
   const columnsp = columnsP(t, i18n.language);
 
@@ -80,9 +234,22 @@ export default function Products() {
           <div className="flex gap-2">
             <button
               className="bnormal"
-              onClick={() =>
-                setModal(<ModalExport data={{ data: "Products Statistics" }} />)
-              }
+              onClick={async () => {
+                triggerQuestionAlert(
+                  t("modalQuestionAlert.export_page"),
+                  optionsExportPage,
+                  async (selectedId) => {
+                    const view = selectedId;
+                    const dataExport = await createReport(view);
+                    setModal(
+                      <ModalExport
+                        page={"PRODUCTS"}
+                        data={dataExport || dataExportPage}
+                      />,
+                    );
+                  },
+                );
+              }}
             >
               <ExportIcon /> <p> {t("buttons.btn_export")}</p>
             </button>
@@ -94,7 +261,9 @@ export default function Products() {
             </button>
             <button
               className="bnormal"
-              onClick={() => setModal(<ModalAddProduct />)}
+              onClick={() =>
+                setModal(<ModalAddProduct onSuccess={loadPorducts} />)
+              }
             >
               <BoxPlusIcon /> <p> {t("buttons.btn_add_product")}</p>
             </button>
@@ -113,7 +282,7 @@ export default function Products() {
               icon={InvestmentIcon}
               title={t("cards.investment_title")}
               icond={null}
-              number={100000}
+              number={investCard}
               format={true}
               color="#F57C00"
             />
@@ -122,12 +291,12 @@ export default function Products() {
               icon={RevenueIcon}
               title={t("cards.inventory_value_title")}
               icond={null}
-              number={100000}
+              number={inventoryValueCard}
               format={true}
               color="#FFC107"
             />
             <CardInfoDetail
-              chartData={dataStock!}
+              chartData={productsStock!}
               title={t("cards.stock_title")}
               color="#1976D2"
             />
@@ -142,12 +311,17 @@ export default function Products() {
               columns={columnsp}
               actions={{
                 onEdit: (row) => {
-                  setModal(<ModalAddProduct data={row} />);
+                  setModal(
+                    <ModalAddProduct data={row} onSuccess={loadPorducts} />,
+                  );
                 },
                 onDelete: (row) => {
-                  deleteProduct(row.id);
+                  deleteProduct(Number(row.id), row.status);
                 },
               }}
+              pagination={pagination}
+              setPagination={setPagination}
+              totalRows={totalRows}
             />
           </div>
         </div>
