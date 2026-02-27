@@ -58,7 +58,8 @@ export default function History() {
       description: t("modalQuestionAlert.text_total_data"),
     },
   ];
-  const [numberSalesCard, setNumberSalesCard] = useState(0);
+  const [salesCardNumber, setSalesCardNumber] = useState(0);
+  const [pendingSalesCardAmount, setPendingSalesCardAmount] = useState(0);
 
   const loadHistory = async () => {
     const response = await window.electronAPI.getHistoryData();
@@ -67,9 +68,16 @@ export default function History() {
         ? JSON.parse(response.result)
         : response.result;
 
-    if (historyData.numberSales) {
-      const numberSales = historyData.numberSales.result;
-      setNumberSalesCard(numberSales[0].numberSales);
+    console.log(historyData);
+
+    if (historyData.salesNumber) {
+      const salesNumber = historyData.salesNumber.result;
+      setSalesCardNumber(salesNumber[0].salesNumber);
+    }
+
+    if (historyData.pendingSalesAmount) {
+      const pendingSalesAmount = historyData.pendingSalesAmount.result;
+      setPendingSalesCardAmount(pendingSalesAmount[0].pendingSalesAmount);
     }
   };
 
@@ -97,7 +105,7 @@ export default function History() {
               icon={null}
               title={t("cards.sales_title")}
               icond={FlagIcon}
-              number={numberSalesCard}
+              number={salesCardNumber}
               format={false}
               color="#43A047"
             />
@@ -105,7 +113,7 @@ export default function History() {
               icon={InvestmentIcon}
               title={t("cards.pending_title")}
               icond={null}
-              number={1000}
+              number={pendingSalesCardAmount}
               format={true}
               color="#D32F2F"
             />
