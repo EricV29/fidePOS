@@ -317,6 +317,26 @@ async function getDiscountsAmount() {
   }
 }
 
+// Get Paid VS Pending Number
+async function getPaidVSPendingNumber() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT * FROM v_paid_vs_pending_number`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting paid vs pending number:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
@@ -327,4 +347,5 @@ module.exports = {
   getSalesNumber,
   getPendingSalesAmount,
   getDiscountsAmount,
+  getPaidVSPendingNumber,
 };

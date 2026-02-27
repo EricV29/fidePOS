@@ -36,6 +36,10 @@ const dataSalesDB = [
   },
 ];
 
+interface paidVSPending {
+  [key: string]: number;
+}
+
 export default function History() {
   const { t, i18n } = useTranslation();
   const [dataSalesVS, setSalesVS] = useState<dataSalesVSI>();
@@ -61,6 +65,8 @@ export default function History() {
   const [salesCardNumber, setSalesCardNumber] = useState(0);
   const [pendingSalesCardAmount, setPendingSalesCardAmount] = useState(0);
   const [discountsAmountCard, setDiscountsAmountCard] = useState(0);
+  const [paidVSPendingNumberCard, setPaidVSPendingNumberCard] =
+    useState<paidVSPending>();
 
   const loadHistory = async () => {
     const response = await window.electronAPI.getHistoryData();
@@ -84,6 +90,11 @@ export default function History() {
     if (historyData.discountsAmount) {
       const discountsAmount = historyData.discountsAmount.result;
       setDiscountsAmountCard(discountsAmount[0].discountsAmount);
+    }
+
+    if (historyData.paidVSPendingNumber) {
+      const paidVSPendingNumber = historyData.paidVSPendingNumber.result;
+      setPaidVSPendingNumberCard(paidVSPendingNumber[0]);
     }
   };
 
@@ -132,7 +143,7 @@ export default function History() {
               color="#F57C00"
             />
             <CardInfoDetail
-              chartData={dataSalesVS!}
+              chartData={paidVSPendingNumberCard!}
               title={t("cards.salesvs_title")}
               color="#1976D2"
             />
