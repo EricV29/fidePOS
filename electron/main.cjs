@@ -21,6 +21,7 @@ const {
   getSaleData,
   getNextNumberSale,
   createNewSale,
+  getNumberSales,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -1066,36 +1067,34 @@ ipcMain.handle("get-all-products", async (event) => {
 });
 
 //* Get History Data Page
-(ipcMain.handle("get-history-data"),
-  async (event) => {
-    if (event.sender === mainWindow.webContents) {
-      try {
-        const [sales, pendingSales, discounts, paidVSPending, historyTable] =
-          await Promise.all([
-            getSales(),
-            getPendingSales(),
-            getDscount(),
-            getPaidVSPending(),
-            getHistoryTable(),
-          ]);
+ipcMain.handle("get-history-data", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [numberSales] = await Promise.all([
+        getNumberSales(),
+        // getPendingSales(),
+        // getDscount(),
+        // getPaidVSPending(),
+        // getHistoryTable(),
+      ]);
 
-        return {
-          success: true,
-          result: {
-            sales,
-            pendingSales,
-            discounts,
-            paidVSPending,
-            historyTable,
-          },
-        };
-      } catch (error) {
-        console.error("❌ ERROR: ", error);
-      }
-    } else {
-      console.warn("❌ ERROR: NOT ALLOWED");
+      return {
+        success: true,
+        result: {
+          numberSales,
+          // pendingSales,
+          // discounts,
+          // paidVSPending,
+          // historyTable,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
     }
-  });
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
 
 //* INITIALIZATION
 let isInitializing = false;

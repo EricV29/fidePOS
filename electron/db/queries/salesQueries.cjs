@@ -257,6 +257,26 @@ async function createNewSale(data) {
   }
 }
 
+// Get Number Sales
+async function getNumberSales() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT * FROM v_number_sales`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting number sales:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
@@ -264,4 +284,5 @@ module.exports = {
   getSaleData,
   getNextNumberSale,
   createNewSale,
+  getNumberSales,
 };

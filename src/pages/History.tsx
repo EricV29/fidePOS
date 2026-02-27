@@ -58,6 +58,7 @@ export default function History() {
       description: t("modalQuestionAlert.text_total_data"),
     },
   ];
+  const [numberSalesCard, setNumberSalesCard] = useState(0);
 
   const loadHistory = async () => {
     const response = await window.electronAPI.getHistoryData();
@@ -65,6 +66,11 @@ export default function History() {
       typeof response.result === "string"
         ? JSON.parse(response.result)
         : response.result;
+
+    if (historyData.numberSales) {
+      const numberSales = historyData.numberSales.result;
+      setNumberSalesCard(numberSales[0].numberSales);
+    }
   };
 
   useEffect(() => {
@@ -91,7 +97,7 @@ export default function History() {
               icon={null}
               title={t("cards.sales_title")}
               icond={FlagIcon}
-              number={25}
+              number={numberSalesCard}
               format={false}
               color="#43A047"
             />
