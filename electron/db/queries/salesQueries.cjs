@@ -257,11 +257,11 @@ async function createNewSale(data) {
   }
 }
 
-// Get Number Sales
-async function getNumberSales() {
+// Get Sales Number
+async function getSalesNumber() {
   try {
     const db = await getDB();
-    const sql = `SELECT * FROM v_number_sales`;
+    const sql = `SELECT * FROM v_sales_number;`;
 
     const query = db.exec(sql);
 
@@ -272,7 +272,27 @@ async function getNumberSales() {
     const data = mapResultToObjects(query);
     return { success: true, result: data };
   } catch (error) {
-    console.error("Error getting number sales:", error);
+    console.error("Error getting sales number:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Pending Sales Amount
+async function getPendingSalesAmount() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT * FROM v_pending_sales_amount`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting pending sales amount:", error);
     return { success: false, error: error.message };
   }
 }
@@ -284,5 +304,6 @@ module.exports = {
   getSaleData,
   getNextNumberSale,
   createNewSale,
-  getNumberSales,
+  getSalesNumber,
+  getPendingSalesAmount,
 };

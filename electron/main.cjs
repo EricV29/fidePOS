@@ -21,7 +21,8 @@ const {
   getSaleData,
   getNextNumberSale,
   createNewSale,
-  getNumberSales,
+  getSalesNumber,
+  getPendingSalesAmount,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -1070,9 +1071,9 @@ ipcMain.handle("get-all-products", async (event) => {
 ipcMain.handle("get-history-data", async (event) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const [numberSales] = await Promise.all([
-        getNumberSales(),
-        // getPendingSales(),
+      const [salesNumber, pendingSalesAmount] = await Promise.all([
+        getSalesNumber(),
+        getPendingSalesAmount(),
         // getDscount(),
         // getPaidVSPending(),
         // getHistoryTable(),
@@ -1081,8 +1082,8 @@ ipcMain.handle("get-history-data", async (event) => {
       return {
         success: true,
         result: {
-          numberSales,
-          // pendingSales,
+          salesNumber,
+          pendingSalesAmount,
           // discounts,
           // paidVSPending,
           // historyTable,
