@@ -60,6 +60,7 @@ export default function History() {
   ];
   const [salesCardNumber, setSalesCardNumber] = useState(0);
   const [pendingSalesCardAmount, setPendingSalesCardAmount] = useState(0);
+  const [discountsAmountCard, setDiscountsAmountCard] = useState(0);
 
   const loadHistory = async () => {
     const response = await window.electronAPI.getHistoryData();
@@ -78,6 +79,11 @@ export default function History() {
     if (historyData.pendingSalesAmount) {
       const pendingSalesAmount = historyData.pendingSalesAmount.result;
       setPendingSalesCardAmount(pendingSalesAmount[0].pendingSalesAmount);
+    }
+
+    if (historyData.discountsAmount) {
+      const discountsAmount = historyData.discountsAmount.result;
+      setDiscountsAmountCard(discountsAmount[0].discountsAmount);
     }
   };
 
@@ -121,7 +127,7 @@ export default function History() {
               icon={InvestmentIcon}
               title={t("cards.discounts_title")}
               icond={null}
-              number={1000}
+              number={discountsAmountCard}
               format={true}
               color="#F57C00"
             />
