@@ -40,9 +40,35 @@ export default function History() {
   const { t, i18n } = useTranslation();
   const [dataSalesVS, setSalesVS] = useState<dataSalesVSI>();
   const [dataSale, setSale] = useState<Sales[]>([]);
-  const { setModal } = useModal();
+  const { setModal, triggerQuestionAlert } = useModal();
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [totalRows, setTotalRows] = useState(0);
+  const optionsExportPage = [
+    {
+      id: "current",
+      label: t("modalQuestionAlert.current_view"),
+      description: t("modalQuestionAlert.text_current_view"),
+    },
+    {
+      id: "total",
+      label: t("modalQuestionAlert.total_data"),
+      description: t("modalQuestionAlert.text_total_data"),
+    },
+  ];
+
+  const loadHistory = async () => {
+    const response = await window.electronAPI.getHistoryData();
+    const historyData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+  };
 
   useEffect(() => {
+    loadHistory();
     setSalesVS(dataSalesVSDB);
     setSale(dataSalesDB);
   }, []);
@@ -56,16 +82,7 @@ export default function History() {
           <h1 style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)" }}>
             {t("history.title")}
           </h1>
-          <div className="flex gap-2">
-            <button
-              className="bnormal"
-              onClick={() =>
-                setModal(<ModalExport data={{ data: "History Statistics" }} />)
-              }
-            >
-              <ExportIcon /> <p> {t("buttons.btn_export")}</p>
-            </button>
-          </div>
+          <div className="flex gap-2">MODAL EXPORT</div>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <div className="flex-1 min-h-0 w-full flex flex-col gap-2">
@@ -108,19 +125,12 @@ export default function History() {
             <DataTableSearch
               data={dataSale}
               columns={columnss}
+              pagination={pagination}
+              setPagination={setPagination}
+              totalRows={totalRows}
               actions={{
                 onView: (row) => {
-                  setModal(
-                    <ModalSales
-                      sale={{
-                        id: row.id,
-                        num_sale: row.num_sale,
-                        status: row.status,
-                        total_amount: row.total_amount,
-                        created_at: row.created_at,
-                      }}
-                    />
-                  );
+                  setModal(<ModalSales idSale={Number(row.id)} />);
                 },
               }}
             />

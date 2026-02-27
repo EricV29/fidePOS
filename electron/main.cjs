@@ -1065,6 +1065,38 @@ ipcMain.handle("get-all-products", async (event) => {
   }
 });
 
+//* Get History Data Page
+(ipcMain.handle("get-history-data"),
+  async (event) => {
+    if (event.sender === mainWindow.webContents) {
+      try {
+        const [sales, pendingSales, discounts, paidVSPending, historyTable] =
+          await Promise.all([
+            getSales(),
+            getPendingSales(),
+            getDscount(),
+            getPaidVSPending(),
+            getHistoryTable(),
+          ]);
+
+        return {
+          success: true,
+          result: {
+            sales,
+            pendingSales,
+            discounts,
+            paidVSPending,
+            historyTable,
+          },
+        };
+      } catch (error) {
+        console.error("❌ ERROR: ", error);
+      }
+    } else {
+      console.warn("❌ ERROR: NOT ALLOWED");
+    }
+  });
+
 //* INITIALIZATION
 let isInitializing = false;
 app.whenReady().then(async () => {

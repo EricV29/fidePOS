@@ -251,6 +251,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      //* GET HISTORY DATA PAGE
+      getHistoryData: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
