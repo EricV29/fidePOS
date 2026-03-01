@@ -25,6 +25,8 @@ const {
   getPendingSalesAmount,
   getDiscountsAmount,
   getPaidVSPendingNumber,
+  getHistorySales,
+  getFilterSearchHistorySales,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -1070,20 +1072,23 @@ ipcMain.handle("get-all-products", async (event) => {
 });
 
 //* Get History Data Page
-ipcMain.handle("get-history-data", async (event) => {
+ipcMain.handle("get-history-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
+      const { limit, offset } = data;
+
       const [
         salesNumber,
         pendingSalesAmount,
         discountsAmount,
         paidVSPendingNumber,
+        historySales,
       ] = await Promise.all([
         getSalesNumber(),
         getPendingSalesAmount(),
         getDiscountsAmount(),
         getPaidVSPendingNumber(),
-        // getHistoryTable(),
+        getHistorySales(limit, offset),
       ]);
 
       return {
@@ -1093,7 +1098,7 @@ ipcMain.handle("get-history-data", async (event) => {
           pendingSalesAmount,
           discountsAmount,
           paidVSPendingNumber,
-          // historyTable,
+          historySales,
         },
       };
     } catch (error) {
@@ -1101,6 +1106,31 @@ ipcMain.handle("get-history-data", async (event) => {
     }
   } else {
     console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Filter Search History Sales
+ipcMain.handle("get-filter-search-history-sales", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchHistorySales(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 

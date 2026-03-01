@@ -146,7 +146,9 @@
     "paid_amount": "Monto Pagado",
     "email": "Correo electrónico",
     "password": "Contraseña",
-    "sale": "Venta"
+    "sale": "Venta",
+    "sale_num": "No. Venta",
+    "discount": "Descuento"
   },
   "charts": {
     "chart_tcs": "Ventas",

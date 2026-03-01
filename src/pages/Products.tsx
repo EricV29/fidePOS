@@ -309,6 +309,7 @@ export default function Products() {
             <DataTableSearch
               data={dataProducts}
               columns={columnsp}
+              page={"products"}
               actions={{
                 onEdit: (row) => {
                   setModal(
