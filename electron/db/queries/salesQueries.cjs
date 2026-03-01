@@ -337,6 +337,136 @@ async function getPaidVSPendingNumber() {
   }
 }
 
+// Get History Sales Table
+async function getHistorySales(limit, offset) {
+  try {
+    const db = await getDB();
+    const params = [limit, offset];
+    const sql = `
+      SELECT 
+	      s.id,
+	      s.sale_num,
+	      c.name,
+	      c.last_name,
+	      GROUP_CONCAT(p.name, ', ') AS products,
+	      s.total_amount,
+	      s.paid_amount,
+	      (s.total_amount - s.paid_amount) AS pending_amount,
+	      s.discount,
+	      st.description as status,
+	      s.user_id,
+	      s.created_at,
+	      s.deleted_at
+      FROM sale s
+      FULL JOIN customer c ON s.customer_id = c.id
+      INNER JOIN status st ON s.status_id = st.id
+      LEFT JOIN sale_detail sd ON s.id = sd.sale_id
+      INNER JOIN product p ON sd.product_id = p.id 
+      GROUP BY s.id
+      ORDER BY s.created_at DESC
+      LIMIT ? OFFSET ?;
+    `;
+
+    const sqlCount = `SELECT COUNT(*) as total FROM sale;`;
+
+    const query = db.exec(sql, params);
+    const queryCount = db.exec(sqlCount);
+
+    const totalCount = queryCount.length > 0 ? queryCount[0].values[0][0] : 0;
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data, totalCount: totalCount };
+  } catch (error) {
+    console.error("Error getting histoty sales:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Filter Search Table History Sales
+async function getFilterSearchHistorySales(data) {
+  try {
+    const db = await getDB();
+    const { column, text } = data;
+    const allowedColumns = [
+      "customer",
+      "products",
+      "sale_num",
+      "total_amount",
+      "paid_amount",
+      "pending_amount",
+      "discount",
+      "status",
+      "created_at",
+    ];
+
+    let whereClause = "";
+    let targetColumn = allowedColumns.includes(column) ? column : "sale_num";
+
+    if (targetColumn === "customer") {
+      targetColumn = "c.name";
+      whereClause = `WHERE ${targetColumn} LIKE ?`;
+    } else if (targetColumn === "products") {
+      targetColumn = "p.name";
+      whereClause = `WHERE s.id IN (SELECT sub_sd.sale_id FROM sale_detail sub_sd INNER JOIN product sub_p ON sub_sd.product_id = sub_p.id WHERE sub_p.name LIKE ?)`;
+    } else if (targetColumn === "products") {
+      targetColumn = "st.description";
+    } else if (targetColumn === "pending_amount") {
+      targetColumn = "pending_amount";
+      whereClause = `WHERE ${targetColumn} LIKE ?`;
+    } else if (targetColumn === "status") {
+      targetColumn = "status";
+      whereClause = `WHERE ${targetColumn} LIKE ?`;
+    } else {
+      whereClause = `WHERE s.${targetColumn} LIKE ?`;
+    }
+
+    const sql = `
+      SELECT 
+	      s.id,
+	      s.sale_num,
+	      c.name,
+	      c.last_name,
+	      GROUP_CONCAT(p.name, ', ') AS products,
+	      s.total_amount,
+	      s.paid_amount,
+	      (s.total_amount - s.paid_amount) AS pending_amount,
+	      s.discount,
+	      st.description as status,
+	      s.user_id,
+	      s.created_at,
+	      s.deleted_at
+      FROM sale s
+      LEFT JOIN customer c ON s.customer_id = c.id
+      INNER JOIN status st ON s.status_id = st.id
+      LEFT JOIN sale_detail sd ON s.id = sd.sale_id
+      LEFT JOIN product p ON sd.product_id = p.id 
+      ${whereClause}
+      GROUP BY s.id
+      ORDER BY s.created_at DESC;
+    `;
+
+    const searchTerm = `%${text}%`;
+
+    const stmt = db.prepare(sql);
+    stmt.bind([searchTerm]);
+
+    const rows = [];
+    while (stmt.step()) {
+      rows.push(stmt.getAsObject());
+    }
+    stmt.free();
+
+    return { success: true, result: rows };
+  } catch (error) {
+    console.error("Error getting filter search table history sales:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
@@ -348,4 +478,6 @@ module.exports = {
   getPendingSalesAmount,
   getDiscountsAmount,
   getPaidVSPendingNumber,
+  getHistorySales,
+  getFilterSearchHistorySales,
 };

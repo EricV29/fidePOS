@@ -253,9 +253,16 @@ declare global {
       }>;
 
       //* GET HISTORY DATA PAGE
-      getHistoryData: () => Promise<{
+      getHistoryData: (data) => Promise<{
         success: boolean;
         result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH HISTORY SALES
+      getFilterSearchHistorySales: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
         error?: string;
       }>;
     };

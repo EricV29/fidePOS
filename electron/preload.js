@@ -111,5 +111,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getAllProducts: () => ipcRenderer.invoke("get-all-products"),
 
   //* Get Hisotry Data Page
-  getHistoryData: () => ipcRenderer.invoke("get-history-data"),
+  getHistoryData: (data) => ipcRenderer.invoke("get-history-data", data),
+
+  // Get Filter Search Table History Sales
+  getFilterSearchHistorySales: (data) =>
+    ipcRenderer.invoke("get-filter-search-history-sales", data),
 });

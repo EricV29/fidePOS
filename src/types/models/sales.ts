@@ -1,5 +1,6 @@
 export type Sales = {
   id: string;
+  sale_num: number;
   name: string | null;
   last_name: string | null;
   num_sale: string;
@@ -7,6 +8,7 @@ export type Sales = {
   total_amount: number;
   paid_amount: number;
   pending_amount: number;
+  discount: number;
   status: string;
   created_at: string;
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ExportIcon from "@icons/ExportIcon";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import CardInfoNumber from "@components/CardInfoNumber";
@@ -12,38 +12,12 @@ import { useTranslation } from "react-i18next";
 import FlagIcon from "@icons/FlagIcon";
 import { ModalSales } from "@modals/ModalSales";
 
-interface dataSalesVSI {
-  [key: string]: number;
-}
-
-//* Example data pending vs paid sales
-const dataSalesVSDB = { Paid: 100, Pending: 40 };
-
-//* Example data products
-const dataSalesDB = [
-  {
-    id: "34234",
-    name: "Eric",
-    last_name: "Villeda",
-    num_sale: "0001",
-    products:
-      "Labial, carrito, estuche, peluche, edredon, manguito, peine, cepillo, bolsa, moño",
-    total_amount: 1000,
-    paid_amount: 1000,
-    pending_amount: 0,
-    status: "paid",
-    created_at: "2025-11-16 00:00:00",
-  },
-];
-
 interface paidVSPending {
   [key: string]: number;
 }
 
 export default function History() {
   const { t, i18n } = useTranslation();
-  const [dataSalesVS, setSalesVS] = useState<dataSalesVSI>();
-  const [dataSale, setSale] = useState<Sales[]>([]);
   const { setModal, triggerQuestionAlert } = useModal();
   const [pagination, setPagination] = useState({
     pageIndex: 0,
@@ -67,15 +41,19 @@ export default function History() {
   const [discountsAmountCard, setDiscountsAmountCard] = useState(0);
   const [paidVSPendingNumberCard, setPaidVSPendingNumberCard] =
     useState<paidVSPending>();
+  const [historySales, setHistorySales] = useState<Sales[]>([]);
 
-  const loadHistory = async () => {
-    const response = await window.electronAPI.getHistoryData();
+  const loadHistory = useCallback(async () => {
+    const limit = pagination.pageSize;
+    const offset = pagination.pageIndex * pagination.pageSize;
+    const response = await window.electronAPI.getHistoryData({
+      limit: limit,
+      offset: offset,
+    });
     const historyData =
       typeof response.result === "string"
         ? JSON.parse(response.result)
         : response.result;
-
-    console.log(historyData);
 
     if (historyData.salesNumber) {
       const salesNumber = historyData.salesNumber.result;
@@ -96,13 +74,17 @@ export default function History() {
       const paidVSPendingNumber = historyData.paidVSPendingNumber.result;
       setPaidVSPendingNumberCard(paidVSPendingNumber[0]);
     }
-  };
+
+    if (historyData?.historySales) {
+      const historySalesData = historyData.historySales.result;
+      setHistorySales(historySalesData);
+      setTotalRows(historyData.historySales.totalCount);
+    }
+  }, [pagination]);
 
   useEffect(() => {
     loadHistory();
-    setSalesVS(dataSalesVSDB);
-    setSale(dataSalesDB);
-  }, []);
+  }, [loadHistory]);
 
   const columnss = columnsS(t, i18n.language);
 
@@ -154,8 +136,9 @@ export default function History() {
               {t("history.table1")}
             </p>
             <DataTableSearch
-              data={dataSale}
+              data={historySales}
               columns={columnss}
+              page={"history"}
               pagination={pagination}
               setPagination={setPagination}
               totalRows={totalRows}

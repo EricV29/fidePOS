@@ -23,6 +23,14 @@ export const columnsS = (
     },
   },
   {
+    accessorKey: "sale_num",
+    header: t("columns.sale_num"),
+    cell: ({ row }) => {
+      return <div className="font-semibold">{row.getValue("sale_num")}</div>;
+    },
+    filterFn: partialNumberFilter,
+  },
+  {
     accessorKey: "customer",
     header: t("columns.customer"),
     cell: ({ row }) => {
@@ -64,6 +72,16 @@ export const columnsS = (
     header: t("columns.debt_pending"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("pending_amount")));
+
+      return <div className="font-semibold text-[#D32F2F]">{formatted}</div>;
+    },
+    filterFn: partialNumberFilter,
+  },
+  {
+    accessorKey: "discount",
+    header: t("columns.discount"),
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("discount")));
 
       return <div className="font-semibold text-[#D32F2F]">{formatted}</div>;
     },

@@ -20,10 +20,12 @@ import React, { useEffect, useState } from "react";
 import SearchIcon from "@icons/SearchIcon";
 import CustomSelect from "@components/Select";
 import { useTranslation } from "react-i18next";
+import { success } from "zod";
 
 interface DataTableSearchProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  page: string;
   actions?: {
     onView?: (row: TData) => void;
     onEdit?: (row: TData) => void;
@@ -44,6 +46,7 @@ interface TableColumns {
 export function DataTableSearch<TData, TValue>({
   columns,
   data,
+  page,
   actions,
   pagination,
   setPagination,
@@ -129,7 +132,6 @@ export function DataTableSearch<TData, TValue>({
         } else {
           searchText = searchTerm;
         }
-        console.log(searchText);
       }
 
       const data = {
@@ -137,7 +139,17 @@ export function DataTableSearch<TData, TValue>({
         text: searchText,
       };
 
-      const response = await window.electronAPI.getFilterSearchProducts(data);
+      let response = { success: false, result: [] as TData[], error: "" };
+
+      if (page === "products") {
+        response = (await window.electronAPI.getFilterSearchProducts(
+          data,
+        )) as typeof response;
+      } else if (page === "history") {
+        response = (await window.electronAPI.getFilterSearchHistorySales(
+          data,
+        )) as typeof response;
+      }
 
       if (response.success && response.result) {
         setProducts(response.result);
@@ -147,7 +159,7 @@ export function DataTableSearch<TData, TValue>({
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [currentColumn, data, searchTerm, language]);
+  }, [currentColumn, data, searchTerm, language, page]);
 
   return (
     <>
