@@ -34,6 +34,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const { setModal } = useModal();
   const [customersNumberCard, setCustomersNumberCard] = useState(0);
   const [customersInDebtNumberCard, setCustomersInDebtNumberCard] = useState(0);
+  const [totalDebtAmountCard, setTotalDebtAmountCard] = useState(0);
 
   const loadCustomerGeneral = async () => {
     // const limit = pagination.pageSize;
@@ -57,6 +58,11 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
       setCustomersInDebtNumberCard(
         customersInDebtNumber[0].customersInDebtNumber,
       );
+    }
+
+    if (customerGeneralData.totalDebtAmount) {
+      const totalDebtAmount = customerGeneralData.totalDebtAmount.result;
+      setTotalDebtAmountCard(totalDebtAmount[0].totalDebtAmount);
     }
   };
 
@@ -95,7 +101,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
             icon={InvestmentIcon}
             title={t("cards.owed_title")}
             icond={null}
-            number={12000}
+            number={totalDebtAmountCard}
             format={true}
             color="#D32F2F"
           />

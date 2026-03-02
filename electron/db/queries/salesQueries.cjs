@@ -508,6 +508,26 @@ async function getAllHistorySales() {
   }
 }
 
+// Get Total Debt Amount
+async function getTotalDebtAmount() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT * FROM v_total_debt_amount;`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting total debt amount:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
@@ -522,4 +542,5 @@ module.exports = {
   getHistorySales,
   getFilterSearchHistorySales,
   getAllHistorySales,
+  getTotalDebtAmount,
 };
