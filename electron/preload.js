@@ -116,4 +116,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Filter Search Table History Sales
   getFilterSearchHistorySales: (data) =>
     ipcRenderer.invoke("get-filter-search-history-sales", data),
+
+  // Get All History Sales
+  getAllHistorySales: () => ipcRenderer.invoke("get-all-history-sales"),
 });

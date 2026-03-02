@@ -96,7 +96,7 @@ export default function History() {
       if (view === "total") {
         try {
           setLoading(true);
-          const response = await window.electronAPI.getAllProducts();
+          const response = await window.electronAPI.getAllHistorySales();
           if (response.success) {
             setLoading(false);
             const rawData =

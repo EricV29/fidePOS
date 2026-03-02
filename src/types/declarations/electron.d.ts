@@ -265,6 +265,13 @@ declare global {
         result?: TData[];
         error?: string;
       }>;
+
+      // GET ALL HISTORY SALES
+      getAllHistorySales: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

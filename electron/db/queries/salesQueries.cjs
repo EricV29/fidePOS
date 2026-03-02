@@ -467,6 +467,46 @@ async function getFilterSearchHistorySales(data) {
   }
 }
 
+// Get All History Sales
+async function getAllHistorySales() {
+  const db = await getDB();
+  try {
+    const query = db.exec(`
+      SELECT 
+        s.id,
+	      s.sale_num,
+	      c.name,
+	      c.last_name,
+	      GROUP_CONCAT(p.name, ', ') AS products,
+	      s.total_amount,
+	      s.paid_amount,
+	      (s.total_amount - s.paid_amount) AS pending_amount,
+	      s.discount,
+	      st.description as status,
+	      s.user_id,
+	      s.created_at,
+	      s.deleted_at 
+      FROM sale s
+      LEFT JOIN customer c ON s.customer_id = c.id
+      INNER JOIN status st ON s.status_id = st.id
+      LEFT JOIN sale_detail sd ON s.id = sd.sale_id
+      LEFT JOIN product p ON sd.product_id = p.id 
+      GROUP BY s.id
+      ORDER BY s.created_at DESC;
+    `);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const products = mapResultToObjects(query);
+    return { success: true, result: products };
+  } catch (error) {
+    console.error("Error getting all history sales:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
@@ -480,4 +520,5 @@ module.exports = {
   getPaidVSPendingNumber,
   getHistorySales,
   getFilterSearchHistorySales,
+  getAllHistorySales,
 };

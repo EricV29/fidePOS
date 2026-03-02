@@ -20,7 +20,6 @@ import React, { useEffect, useState } from "react";
 import SearchIcon from "@icons/SearchIcon";
 import CustomSelect from "@components/Select";
 import { useTranslation } from "react-i18next";
-import { success } from "zod";
 
 interface DataTableSearchProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -98,6 +97,14 @@ export function DataTableSearch<TData, TValue>({
   }, [data]);
 
   useEffect(() => {
+    const status: Record<string, string> = {
+      activo: "active",
+      inactivo: "inactive",
+      deuda: "debt",
+      pagado: "paid",
+      "no pagado": "unpaid",
+    };
+
     if (!searchTerm.trim()) {
       setProducts(data);
       return;
@@ -108,6 +115,16 @@ export function DataTableSearch<TData, TValue>({
 
       if (currentColumn === "unit_price") {
         searchText = searchTerm.replace(/[$,]/g, "");
+      }
+
+      if (currentColumn === "status" && i18n.language === "es") {
+        const normalizedSearch = searchTerm.toLowerCase().trim();
+
+        const keyFound = Object.keys(status).find((key) =>
+          key.toLowerCase().includes(normalizedSearch),
+        );
+
+        searchText = keyFound ? status[keyFound] : "not_found";
       }
 
       if (currentColumn === "created_at" || currentColumn === "deleted_at") {
@@ -159,7 +176,7 @@ export function DataTableSearch<TData, TValue>({
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [currentColumn, data, searchTerm, language, page]);
+  }, [currentColumn, data, searchTerm, language, page, i18n.language]);
 
   return (
     <>

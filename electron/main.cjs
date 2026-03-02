@@ -27,6 +27,7 @@ const {
   getPaidVSPendingNumber,
   getHistorySales,
   getFilterSearchHistorySales,
+  getAllHistorySales,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -1114,6 +1115,31 @@ ipcMain.handle("get-filter-search-history-sales", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await getFilterSearchHistorySales(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get All History SAles
+ipcMain.handle("get-all-history-sales", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getAllHistorySales();
       if (response.success) {
         return {
           success: true,
