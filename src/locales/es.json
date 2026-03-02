@@ -129,7 +129,7 @@
     "total_amount": "Monto",
     "customer": "Cliente",
     "code": "Código SKU",
-    "debt_amount": "Deuda",
+    "debt_amount": "Monto adeudado",
     "debt_paid": "Monto pagado",
     "debt_pending": "Monto pendiente",
     "product": "Producto",
@@ -239,7 +239,8 @@
     "text_add_category": "Categoría agregada correctamente.",
     "text_delete_product": "Producto eliminado correctamente.",
     "text_add_product": "Producto agregado correctamente.",
-    "text_edit_product": "Producto editado correctamente."
+    "text_edit_product": "Producto editado correctamente.",
+    "text_edit_customer": "Cliente editado correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -268,7 +269,10 @@
     "text_empty_products": "No hay productos para agregar al sistema.",
     "text_code_sku_used_import": "Código SKU: {{codesku}} ya utilizado.",
     "text_not_selected_format": "Formato no seleccionado.",
-    "text_not_selected_statistics": "Estadísticas no seleccionadas."
+    "text_not_selected_statistics": "Estadísticas no seleccionadas.",
+    "text_not_changes": "No cambios por modificar.",
+    "text_customer_not_found": "Cliente no encontrado.",
+    "text_inactive_customer": "Cliente inactivo."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
@@ -338,14 +342,18 @@
   },
   "modalAddCustomer": {
     "title": "Agregar nuevo cliente",
+    "title_edit": "Editar usuario",
     "description": "Agrega un nuevo cliente a tu lista.",
-    "subtitle": "Ingresa la información principal del nuevo cliente."
+    "description_edit": "Edita el cliente de tu lista.",
+    "subtitle": "Ingresa la información principal del nuevo cliente.",
+    "subtitle_edit": "Ingresa la nueva información del cliente."
   },
   "formAddCustomer": {
     "input1": "Nombres",
     "input2": "Apellidos",
     "input3": "Teléfono",
-    "btn": "Agregar cliente"
+    "btn": "Agregar cliente",
+    "btn_edit": "Editar cliente"
   },
   "modalAddProduct": {
     "title": "Agrega un producto",

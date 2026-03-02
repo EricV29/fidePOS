@@ -51,7 +51,6 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
       limit: limit,
       offset: offset,
     });
-    console.log(response);
 
     const customerGeneralData =
       typeof response.result === "string"
@@ -150,7 +149,12 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
             totalRows={totalRows}
             actions={{
               onEdit: (row) => {
-                setModal(<ModalAddCustomer onSuccess={() => {}} />);
+                setModal(
+                  <ModalAddCustomer
+                    data={row}
+                    onSuccess={loadCustomerGeneral}
+                  />,
+                );
               },
               onDelete: (row) => {
                 setModal(<ModalAddCustomer onSuccess={() => {}} />);

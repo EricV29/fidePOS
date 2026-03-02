@@ -279,6 +279,20 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // GET FILTER SEARCH CUSTOMERS
+      getFilterSearchCustomers: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // EDIT CUSTOMER
+      editCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

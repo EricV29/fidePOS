@@ -6,12 +6,17 @@ import AddCustomerForm from "@forms/form-addCustomer";
 import { useTranslation } from "react-i18next";
 import type { AddCustomerFormValues } from "@forms/schemas/customer.schema";
 import { useLoading } from "@context/LoadingContext";
+import type { Customers } from "@typesm/customers";
+import AUTH_CODES from "../../../constants/authCodes.json";
+
+type CustomerComparation = Pick<Customers, "name" | "last_name" | "phone">;
 
 interface Props {
+  data: Customers;
   onSuccess: () => void;
 }
 
-export function ModalAddCustomer({ onSuccess }: Props) {
+export function ModalAddCustomer({ data, onSuccess }: Props) {
   const { setModal } = useModal();
   const { t } = useTranslation();
   const { setLoading } = useLoading();
@@ -20,9 +25,8 @@ export function ModalAddCustomer({ onSuccess }: Props) {
   const close = () => setModal(null);
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleAddCustomer = async (value: AddCustomerFormValues) => {
-    setLoading(true);
-    const response = await window.electronAPI.addCustomer(value);
+  const editCustomer = async (finalValues: CustomerComparation) => {
+    const response = await window.electronAPI.editCustomer(finalValues);
     if (response.success) {
       onSuccess();
       setLoading(false);
@@ -31,6 +35,39 @@ export function ModalAddCustomer({ onSuccess }: Props) {
       setLoading(false);
       triggerResponseAlert(response.error);
     }
+    return;
+  };
+
+  const handleAddCustomer = async (
+    value: AddCustomerFormValues,
+    editActive: boolean,
+  ) => {
+    setLoading(true);
+
+    if (!editActive) {
+      const response = await window.electronAPI.addCustomer(value);
+      if (response.success) {
+        onSuccess();
+        setLoading(false);
+        triggerResponseAlert(response.result);
+      } else {
+        setLoading(false);
+        triggerResponseAlert(response.error);
+      }
+    } else {
+      const { id, name, last_name, phone } = data;
+      const originalData = { id, name, last_name, phone };
+      const hasChanged = (
+        Object.keys(originalData) as Array<keyof CustomerComparation>
+      ).some((key) => originalData[key] !== value[key]);
+
+      if (!hasChanged) {
+        triggerResponseAlert(AUTH_CODES.NOT_CHANGES);
+      } else {
+        editCustomer(value);
+      }
+    }
+    setLoading(false);
   };
 
   return ReactDOM.createPortal(
@@ -46,9 +83,15 @@ export function ModalAddCustomer({ onSuccess }: Props) {
           <div className="flex gap-5">
             <UserPlusIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>{t("modalAddCustomer.title")}</h2>
+              <h2>
+                {data
+                  ? t("modalAddCustomer.title_edit")
+                  : t("modalAddCustomer.title")}
+              </h2>
               <p className="font-extralight">
-                {t("modalAddCustomer.description")}
+                {data
+                  ? t("modalAddCustomer.description_edit")
+                  : t("modalAddCustomer.description")}
               </p>
             </div>
           </div>
@@ -57,9 +100,13 @@ export function ModalAddCustomer({ onSuccess }: Props) {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p className="dark:text-white">{t("modalAddCustomer.subtitle")}</p>
+        <p className="dark:text-white">
+          {data
+            ? t("modalAddCustomer.subtitle_edit")
+            : t("modalAddCustomer.subtitle")}{" "}
+        </p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 dark:text-[#b3b3b3]">
-          <AddCustomerForm onSuccess={handleAddCustomer} />
+          <AddCustomerForm data={data} onSuccess={handleAddCustomer} />
         </div>
       </div>
     </div>,

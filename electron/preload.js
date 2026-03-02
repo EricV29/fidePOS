@@ -123,4 +123,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
   //* Get Customer General Data Page
   getCustomersGeneralData: (data) =>
     ipcRenderer.invoke("get-customers-general-data", data),
+
+  // Get Filter Search Table Customers
+  getFilterSearchCustomers: (data) =>
+    ipcRenderer.invoke("get-filter-search-customers", data),
+
+  // Edit Customer
+  editCustomer: (data) => ipcRenderer.invoke("editCustomer", data),
 });

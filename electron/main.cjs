@@ -57,6 +57,8 @@ const {
   getCustomersInDebtNumber,
   getLastCustomerNamePaid,
   getCustomersTable,
+  getFilterSearchCustomers,
+  editCustomer,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1200,6 +1202,56 @@ ipcMain.handle("get-customers-general-data", async (event, data) => {
     }
   } else {
     console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Filter Search Customers
+ipcMain.handle("get-filter-search-customers", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchCustomers(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Edit Customer
+ipcMain.handle("editCustomer", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await editCustomer(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 
