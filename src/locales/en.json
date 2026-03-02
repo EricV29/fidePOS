@@ -135,7 +135,7 @@
     "status": "Status",
     "name": "Name",
     "phone": "Phone",
-    "debts": "Debts",
+    "debts_number": "No. Debts",
     "note": "Note",
     "paid_amount": "Paid Amount",
     "email": "Email",

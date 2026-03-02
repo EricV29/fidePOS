@@ -274,7 +274,7 @@ declare global {
       }>;
 
       //* GET CUSTOMER GENERAL DATA PAGE
-      getCustomersGeneralData: () => Promise<{
+      getCustomersGeneralData: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;

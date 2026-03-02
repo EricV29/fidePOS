@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CardInfoNumber from "@components/CardInfoNumber";
 import CardInfoText from "@components/CardInfoText";
 import UserMinusIcon from "@icons/UserMinusIcon";
@@ -29,7 +29,6 @@ const dataCustomersDB = [
 ];
 
 const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
-  const [dataCustomers, setCustomers] = useState<Customers[]>([]);
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
   const [customersNumberCard, setCustomersNumberCard] = useState(0);
@@ -38,11 +37,20 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const [lastCustomerNamePaidCard, setLastCustomerNamePaidCard] = useState("");
   const [lastCustomerNamePaidCardDate, setLastCustomerNamePaidCardDate] =
     useState("");
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [totalRows, setTotalRows] = useState(0);
+  const [customerTable, setCustomerTable] = useState<Customers[]>([]);
 
-  const loadCustomerGeneral = async () => {
-    // const limit = pagination.pageSize;
-    // const offset = pagination.pageIndex * pagination.pageSize;
-    const response = await window.electronAPI.getCustomersGeneralData();
+  const loadCustomerGeneral = useCallback(async () => {
+    const limit = pagination.pageSize;
+    const offset = pagination.pageIndex * pagination.pageSize;
+    const response = await window.electronAPI.getCustomersGeneralData({
+      limit: limit,
+      offset: offset,
+    });
     console.log(response);
 
     const customerGeneralData =
@@ -74,12 +82,17 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
       setLastCustomerNamePaidCard(lastCustomerNamePaid[0].lastCustomerNamePaid);
       setLastCustomerNamePaidCardDate(lastCustomerNamePaid[0].created_at);
     }
-  };
+
+    if (customerGeneralData?.customersTable) {
+      const customersData = customerGeneralData.customersTable.result;
+      setCustomerTable(customersData);
+      setTotalRows(customerGeneralData.customersTable.totalCount);
+    }
+  }, [pagination]);
 
   useEffect(() => {
     loadCustomerGeneral();
-    setCustomers(dataCustomersDB);
-  }, []);
+  }, [loadCustomerGeneral]);
 
   const columnsc = columnsC(t, i18n.language);
 
@@ -128,6 +141,22 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
           <p className="font-semibold dark:text-white">
             {t("customers.table1")}
           </p>
+          <DataTableSearch
+            data={customerTable}
+            columns={columnsc}
+            page={"customersGeneral"}
+            pagination={pagination}
+            setPagination={setPagination}
+            totalRows={totalRows}
+            actions={{
+              onEdit: (row) => {
+                setModal(<ModalAddCustomer onSuccess={() => {}} />);
+              },
+              onDelete: (row) => {
+                setModal(<ModalAddCustomer onSuccess={() => {}} />);
+              },
+            }}
+          />
         </div>
       </div>
     </>

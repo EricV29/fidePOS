@@ -188,6 +188,50 @@ async function getLastCustomerNamePaid() {
   }
 }
 
+// Get Customers Table
+async function getCustomersTable(limit, offset) {
+  try {
+    const db = await getDB();
+    const params = [limit, offset];
+    const sql = `
+      SELECT 
+        c.id,
+        c.name,
+        c.last_name,
+        c.phone,
+        s.description AS status,
+        COUNT(CASE WHEN sl.status_id = 5 THEN 1 END) AS debts_number,
+        SUM(CASE WHEN sl.status_id = 5 THEN total_amount END) AS debts_amount,
+        SUM(CASE WHEN sl.status_id = 5 THEN paid_amount END) AS debts_paid,
+        c.created_at,
+        c.deleted_at
+      FROM customer c
+      INNER JOIN status s ON c.status_id = s.id
+      INNER JOIN sale sl ON c.id = sl.customer_id
+      GROUP BY c.id
+      ORDER BY c.created_at DESC
+      LIMIT ? OFFSET ?;
+      `;
+
+    const sqlCount = `SELECT COUNT(*) as total FROM customer;`;
+
+    const query = db.exec(sql, params);
+    const queryCount = db.exec(sqlCount);
+
+    const totalCount = queryCount.length > 0 ? queryCount[0].values[0][0] : 0;
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data, totalCount: totalCount };
+  } catch (error) {
+    console.error("Error getting customers table:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -197,4 +241,5 @@ module.exports = {
   getCustomersNumber,
   getCustomersInDebtNumber,
   getLastCustomerNamePaid,
+  getCustomersTable,
 };

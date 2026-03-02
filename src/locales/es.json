@@ -141,7 +141,7 @@
     "status": "Estado",
     "name": "Nombre",
     "phone": "Teléfono",
-    "debts": "Deudas",
+    "debts_number": "No. Deudas",
     "note": "Nota",
     "paid_amount": "Monto Pagado",
     "email": "Correo electrónico",
