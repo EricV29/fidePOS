@@ -168,6 +168,26 @@ async function getCustomersInDebtNumber() {
   }
 }
 
+// Get Last Customer Name Paid
+async function getLastCustomerNamePaid() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT * FROM v_last_customer_name_paid;`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting last customer name paid:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -176,4 +196,5 @@ module.exports = {
   addCustomer,
   getCustomersNumber,
   getCustomersInDebtNumber,
+  getLastCustomerNamePaid,
 };
