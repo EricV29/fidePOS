@@ -401,6 +401,7 @@ async function getFilterSearchHistorySales(data) {
       "discount",
       "status",
       "created_at",
+      "deleted_at",
     ];
 
     let whereClause = "";

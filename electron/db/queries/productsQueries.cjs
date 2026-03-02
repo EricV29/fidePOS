@@ -299,7 +299,7 @@ async function getProducts(limit, offset) {
   }
 }
 
-// Get Filter Search Table Products
+// Get Filter Search Products
 async function getFilterSearchProducts(data) {
   try {
     const db = await getDB();
