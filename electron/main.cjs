@@ -56,6 +56,10 @@ const {
   getCustomersNumber,
   getCustomersInDebtNumber,
   getLastCustomerNamePaid,
+  getCustomersTable,
+  getFilterSearchCustomers,
+  editCustomer,
+  deleteCustomer,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1165,21 +1169,23 @@ ipcMain.handle("get-all-history-sales", async (event) => {
 });
 
 //* Get Customers General Data Page
-ipcMain.handle("get-customers-general-data", async (event) => {
+ipcMain.handle("get-customers-general-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      // const { limit, offset } = data;
+      const { limit, offset } = data;
 
       const [
         customersNumber,
         customersInDebtNumber,
         totalDebtAmount,
         lastCustomerNamePaid,
+        customersTable,
       ] = await Promise.all([
         getCustomersNumber(),
         getCustomersInDebtNumber(),
         getTotalDebtAmount(),
         getLastCustomerNamePaid(),
+        getCustomersTable(limit, offset),
       ]);
 
       return {
@@ -1189,6 +1195,7 @@ ipcMain.handle("get-customers-general-data", async (event) => {
           customersInDebtNumber,
           totalDebtAmount,
           lastCustomerNamePaid,
+          customersTable,
         },
       };
     } catch (error) {
@@ -1196,6 +1203,81 @@ ipcMain.handle("get-customers-general-data", async (event) => {
     }
   } else {
     console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Filter Search Customers
+ipcMain.handle("get-filter-search-customers", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchCustomers(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Edit Customer
+ipcMain.handle("editCustomer", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await editCustomer(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Delete Customer
+ipcMain.handle("deleteCustomer", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await deleteCustomer(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 

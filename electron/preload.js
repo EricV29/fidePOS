@@ -121,6 +121,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
   getAllHistorySales: () => ipcRenderer.invoke("get-all-history-sales"),
 
   //* Get Customer General Data Page
-  getCustomersGeneralData: () =>
-    ipcRenderer.invoke("get-customers-general-data"),
+  getCustomersGeneralData: (data) =>
+    ipcRenderer.invoke("get-customers-general-data", data),
+
+  // Get Filter Search Table Customers
+  getFilterSearchCustomers: (data) =>
+    ipcRenderer.invoke("get-filter-search-customers", data),
+
+  // Edit Customer
+  editCustomer: (data) => ipcRenderer.invoke("editCustomer", data),
+
+  // Delete Customer
+  deleteCustomer: (data) => ipcRenderer.invoke("deleteCustomer", data),
 });

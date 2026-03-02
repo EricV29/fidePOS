@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import CardInfoNumber from "@components/CardInfoNumber";
 import CardInfoText from "@components/CardInfoText";
 import UserMinusIcon from "@icons/UserMinusIcon";
@@ -10,6 +10,8 @@ import InvestmentIcon from "@icons/InvestmentIcon";
 import { useTranslation } from "react-i18next";
 import { ModalAddCustomer } from "@components/modals/ModalAddCustomer";
 import { useModal } from "@context/ModalContext";
+import AUTH_CODES from "../../../constants/authCodes.json";
+import { useLoading } from "@context/LoadingContext";
 
 interface CustomersGeneralProps {}
 
@@ -29,21 +31,29 @@ const dataCustomersDB = [
 ];
 
 const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
-  const [dataCustomers, setCustomers] = useState<Customers[]>([]);
   const { t, i18n } = useTranslation();
-  const { setModal } = useModal();
+  const { setModal, triggerResponseAlert, triggerWarningAlert } = useModal();
   const [customersNumberCard, setCustomersNumberCard] = useState(0);
   const [customersInDebtNumberCard, setCustomersInDebtNumberCard] = useState(0);
   const [totalDebtAmountCard, setTotalDebtAmountCard] = useState(0);
   const [lastCustomerNamePaidCard, setLastCustomerNamePaidCard] = useState("");
   const [lastCustomerNamePaidCardDate, setLastCustomerNamePaidCardDate] =
     useState("");
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [totalRows, setTotalRows] = useState(0);
+  const [customerTable, setCustomerTable] = useState<Customers[]>([]);
+  const { setLoading } = useLoading();
 
-  const loadCustomerGeneral = async () => {
-    // const limit = pagination.pageSize;
-    // const offset = pagination.pageIndex * pagination.pageSize;
-    const response = await window.electronAPI.getCustomersGeneralData();
-    console.log(response);
+  const loadCustomerGeneral = useCallback(async () => {
+    const limit = pagination.pageSize;
+    const offset = pagination.pageIndex * pagination.pageSize;
+    const response = await window.electronAPI.getCustomersGeneralData({
+      limit: limit,
+      offset: offset,
+    });
 
     const customerGeneralData =
       typeof response.result === "string"
@@ -74,18 +84,52 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
       setLastCustomerNamePaidCard(lastCustomerNamePaid[0].lastCustomerNamePaid);
       setLastCustomerNamePaidCardDate(lastCustomerNamePaid[0].created_at);
     }
-  };
+
+    if (customerGeneralData?.customersTable) {
+      const customersData = customerGeneralData.customersTable.result;
+      setCustomerTable(customersData);
+      setTotalRows(customerGeneralData.customersTable.totalCount);
+    }
+  }, [pagination]);
 
   useEffect(() => {
     loadCustomerGeneral();
-    setCustomers(dataCustomersDB);
-  }, []);
+  }, [loadCustomerGeneral]);
 
   const columnsc = columnsC(t, i18n.language);
 
-  function deleteCustomer(id: string) {
-    console.log("Deleting customer:", id);
-  }
+  const deleteCustomer = async (id: number, status: string) => {
+    console.log("Deleting customer:", id, status);
+    if (status !== "active" && status !== "debt") {
+      triggerResponseAlert(AUTH_CODES.INACTIVE_CUSTOMER);
+      return;
+    }
+
+    if (status === "debt") {
+      triggerResponseAlert(AUTH_CODES.DEBT_CUSTOMER);
+      return;
+    }
+
+    triggerWarningAlert(
+      t("modalWarningAlert.text_delete_customer"),
+      async () => {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.deleteCustomer(id);
+          if (response.success) {
+            loadCustomerGeneral();
+            setLoading(false);
+            triggerResponseAlert(response.result);
+          } else {
+            setLoading(false);
+            triggerResponseAlert(response.error);
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      },
+    );
+  };
 
   return (
     <>
@@ -128,6 +172,27 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
           <p className="font-semibold dark:text-white">
             {t("customers.table1")}
           </p>
+          <DataTableSearch
+            data={customerTable}
+            columns={columnsc}
+            page={"customersGeneral"}
+            pagination={pagination}
+            setPagination={setPagination}
+            totalRows={totalRows}
+            actions={{
+              onEdit: (row) => {
+                setModal(
+                  <ModalAddCustomer
+                    data={row}
+                    onSuccess={loadCustomerGeneral}
+                  />,
+                );
+              },
+              onDelete: (row) => {
+                deleteCustomer(Number(row.id), row.status);
+              },
+            }}
+          />
         </div>
       </div>
     </>

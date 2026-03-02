@@ -100,7 +100,7 @@ export function DataTableSearch<TData, TValue>({
     const status: Record<string, string> = {
       activo: "active",
       inactivo: "inactive",
-      deuda: "debt",
+      "en deuda": "debt",
       pagado: "paid",
       "no pagado": "unpaid",
     };
@@ -164,6 +164,10 @@ export function DataTableSearch<TData, TValue>({
         )) as typeof response;
       } else if (page === "history") {
         response = (await window.electronAPI.getFilterSearchHistorySales(
+          data,
+        )) as typeof response;
+      } else if (page === "customersGeneral") {
+        response = (await window.electronAPI.getFilterSearchCustomers(
           data,
         )) as typeof response;
       }

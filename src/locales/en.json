@@ -135,7 +135,7 @@
     "status": "Status",
     "name": "Name",
     "phone": "Phone",
-    "debts": "Debts",
+    "debts_number": "No. Debts",
     "note": "Note",
     "paid_amount": "Paid Amount",
     "email": "Email",
@@ -217,7 +217,8 @@
     "text_delete_user": "Delete this user? This action cannot be undone.",
     "text_debt_payment": "Add new payment? This action cannot be undone.",
     "text_complete_new_sale": "Are you sure you want to complete the sale?",
-    "text_delete_product": "Delete this product? This action cannot be undone."
+    "text_delete_product": "Delete this product? This action cannot be undone.",
+    "text_delete_customer": "Delete this customer? This action cannot be undonde."
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
@@ -233,7 +234,9 @@
     "text_add_category": "Category added successfully.",
     "text_delete_product": "Product deleted successfully.",
     "text_add_product": "Product added successfully.",
-    "text_edit_product": "Product edited successfully."
+    "text_edit_product": "Product edited successfully.",
+    "text_edit_customer": "Customer edited successfully.",
+    "text_delete_customer": "Customer deleted successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -262,7 +265,11 @@
     "text_empty_products": "No product to insert into the system.",
     "text_code_sku_used_import": "Code SKU: {{codesku}} is already in use.",
     "text_not_selected_format": "Format not selected.",
-    "text_not_selected_statistics": "Statistics not selected."
+    "text_not_selected_statistics": "Statistics not selected.",
+    "text_not_changes": "No changes to save.",
+    "text_customer_not_found": "Customer not found.",
+    "text_inactive_customer": "Customer inactive.",
+    "text_debt_customer": "Customer with outstanding debt."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",
@@ -332,14 +339,18 @@
   },
   "modalAddCustomer": {
     "title": "Add new customer",
+    "title_edit": "Edit customer",
     "description": "Add individual clients to your customer list.",
-    "subtitle": "Enter the main information of your new customer"
+    "description_edit": "Edit individual clients to your customer list.",
+    "subtitle": "Enter the main information of your new customer",
+    "subtitle_edit": "Enter the new information of your customer"
   },
   "formAddCustomer": {
     "input1": "First Name",
     "input2": "Lastname",
     "input3": "Phone",
-    "btn": "Add customer"
+    "btn": "Add customer",
+    "btn_edit": "Edit customer"
   },
   "modalAddProduct": {
     "title": "Add new product",
