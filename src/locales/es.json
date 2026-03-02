@@ -146,7 +146,12 @@
     "paid_amount": "Monto Pagado",
     "email": "Correo electrónico",
     "password": "Contraseña",
-    "sale": "Venta"
+    "sale": "Venta",
+    "sale_num": "No. Venta",
+    "discount": "Descuento",
+    "last_name": "Apellido",
+    "pending_amount": "Monto Pendiente",
+    "user_id": "ID Usuario"
   },
   "charts": {
     "chart_tcs": "Ventas",
@@ -476,6 +481,16 @@
       "stock_products": "Productos en Stock",
       "out_stock_products": "Productos Agotados",
       "detail_products": "DETALLE DE PRODUCTOS"
+    },
+    "history_page": {
+      "title": "REPORTE DE PÁGINA HISTORIAL DE VENTAS",
+      "sales": "Número de Ventas",
+      "pending_sales_amount": "Monto de Ventas Pendientes",
+      "discounts": "Descuentos",
+      "total_paid_vs_pending": "Total de Ventas Pagadas VS Pendientes",
+      "paid_sales": "Número de Ventas Pagadas",
+      "pending_sales": "Número de Ventas Pendientes",
+      "detail_sales": "DETALLE DE HISTORIAL DE VENTAS"
     }
   }
 }

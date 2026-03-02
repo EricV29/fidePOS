@@ -172,11 +172,11 @@ export default function Products() {
           t("exportReport.products_page.out_stock_products"),
           productsStock?.["No Stock"],
         ],
-        [], // Fila vacía de separación
+        [], // Empty separator row
         [t("exportReport.products_page.detail_products")],
       ];
 
-      // Create Data Products Table
+      // Create Data Table
       const tableHeaders = [
         "ID",
         t("columns.code"),
@@ -309,6 +309,7 @@ export default function Products() {
             <DataTableSearch
               data={dataProducts}
               columns={columnsp}
+              page={"products"}
               actions={{
                 onEdit: (row) => {
                   setModal(

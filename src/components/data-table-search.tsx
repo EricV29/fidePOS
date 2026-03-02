@@ -24,6 +24,7 @@ import { useTranslation } from "react-i18next";
 interface DataTableSearchProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  page: string;
   actions?: {
     onView?: (row: TData) => void;
     onEdit?: (row: TData) => void;
@@ -44,6 +45,7 @@ interface TableColumns {
 export function DataTableSearch<TData, TValue>({
   columns,
   data,
+  page,
   actions,
   pagination,
   setPagination,
@@ -95,6 +97,14 @@ export function DataTableSearch<TData, TValue>({
   }, [data]);
 
   useEffect(() => {
+    const status: Record<string, string> = {
+      activo: "active",
+      inactivo: "inactive",
+      deuda: "debt",
+      pagado: "paid",
+      "no pagado": "unpaid",
+    };
+
     if (!searchTerm.trim()) {
       setProducts(data);
       return;
@@ -105,6 +115,16 @@ export function DataTableSearch<TData, TValue>({
 
       if (currentColumn === "unit_price") {
         searchText = searchTerm.replace(/[$,]/g, "");
+      }
+
+      if (currentColumn === "status" && i18n.language === "es") {
+        const normalizedSearch = searchTerm.toLowerCase().trim();
+
+        const keyFound = Object.keys(status).find((key) =>
+          key.toLowerCase().includes(normalizedSearch),
+        );
+
+        searchText = keyFound ? status[keyFound] : "not_found";
       }
 
       if (currentColumn === "created_at" || currentColumn === "deleted_at") {
@@ -129,7 +149,6 @@ export function DataTableSearch<TData, TValue>({
         } else {
           searchText = searchTerm;
         }
-        console.log(searchText);
       }
 
       const data = {
@@ -137,7 +156,17 @@ export function DataTableSearch<TData, TValue>({
         text: searchText,
       };
 
-      const response = await window.electronAPI.getFilterSearchProducts(data);
+      let response = { success: false, result: [] as TData[], error: "" };
+
+      if (page === "products") {
+        response = (await window.electronAPI.getFilterSearchProducts(
+          data,
+        )) as typeof response;
+      } else if (page === "history") {
+        response = (await window.electronAPI.getFilterSearchHistorySales(
+          data,
+        )) as typeof response;
+      }
 
       if (response.success && response.result) {
         setProducts(response.result);
@@ -147,7 +176,7 @@ export function DataTableSearch<TData, TValue>({
     }, 300);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [currentColumn, data, searchTerm, language]);
+  }, [currentColumn, data, searchTerm, language, page, i18n.language]);
 
   return (
     <>
