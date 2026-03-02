@@ -5,12 +5,13 @@ import CardInfoNumber from "@components/CardInfoNumber";
 import CardInfoDetail from "@components/CardInfoDetail";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsS } from "@columns/columnsS";
-import type { Sales } from "@typesm/sales";
+import type { Sales, dataExportSales } from "@typesm/sales";
 import { useModal } from "@context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
 import { useTranslation } from "react-i18next";
 import FlagIcon from "@icons/FlagIcon";
 import { ModalSales } from "@modals/ModalSales";
+import { useLoading } from "@context/LoadingContext";
 
 interface paidVSPending {
   [key: string]: number;
@@ -42,6 +43,8 @@ export default function History() {
   const [paidVSPendingNumberCard, setPaidVSPendingNumberCard] =
     useState<paidVSPending>();
   const [historySales, setHistorySales] = useState<Sales[]>([]);
+  const [dataExportPage, setDataExportPage] = useState<dataExportSales[][]>([]);
+  const { setLoading } = useLoading();
 
   const loadHistory = useCallback(async () => {
     const limit = pagination.pageSize;
@@ -86,6 +89,108 @@ export default function History() {
     loadHistory();
   }, [loadHistory]);
 
+  const createReport = useCallback(
+    async (view: string) => {
+      let historyData: Sales[] = historySales;
+
+      if (view === "total") {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.getAllProducts();
+          if (response.success) {
+            setLoading(false);
+            const rawData =
+              typeof response.result === "string"
+                ? JSON.parse(response.result)
+                : response.result;
+
+            historyData = rawData as Sales[];
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      }
+
+      let totalSales = 0;
+      if (paidVSPendingNumberCard) {
+        totalSales =
+          Number(paidVSPendingNumberCard.Paid || 0) +
+          Number(paidVSPendingNumberCard.Pending || 0);
+      }
+
+      // Create Data Cards
+      const statsData = [
+        [t("exportReport.history_page.title")],
+        [t("exportReport.history_page.sales"), salesCardNumber],
+        [
+          t("exportReport.history_page.pending_sales_amount"),
+          pendingSalesCardAmount,
+        ],
+        [t("exportReport.history_page.discounts"), discountsAmountCard],
+        [t("exportReport.history_page.total_paid_vs_pending"), totalSales],
+        [
+          t("exportReport.history_page.paid_sales"),
+          paidVSPendingNumberCard?.Paid,
+        ],
+        [
+          t("exportReport.history_page.pending_sales"),
+          paidVSPendingNumberCard?.Pending,
+        ],
+        [], // Empty separator row
+        [t("exportReport.history_page.detail_sales")],
+      ];
+
+      // Create Data Table
+      const tableHeaders = [
+        "ID",
+        t("columns.sale_num"),
+        t("columns.name"),
+        t("columns.last_name"),
+        t("columns.products"),
+        t("columns.total_amount"),
+        t("columns.paid_amount"),
+        t("columns.pending_amount"),
+        t("columns.discount"),
+        t("columns.status"),
+        t("columns.user_id"),
+        t("columns.created_at"),
+        t("columns.deleted_at"),
+      ];
+      const rows = historyData.map((h) => [
+        h.id,
+        h.sale_num,
+        h.name,
+        h.last_name,
+        h.products,
+        h.total_amount,
+        h.paid_amount,
+        h.pending_amount,
+        h.discount,
+        h.status,
+        h.user_id,
+        h.created_at,
+        h.deleted_at,
+      ]);
+
+      const finalData: dataExportSales[][] = [
+        ...statsData,
+        tableHeaders,
+        ...rows,
+      ];
+      setDataExportPage(finalData);
+      return finalData;
+    },
+    [
+      discountsAmountCard,
+      historySales,
+      paidVSPendingNumberCard,
+      pendingSalesCardAmount,
+      salesCardNumber,
+      setLoading,
+      t,
+    ],
+  );
+
   const columnss = columnsS(t, i18n.language);
 
   return (
@@ -95,7 +200,29 @@ export default function History() {
           <h1 style={{ fontSize: "clamp(1.5rem, 2.5vw, 2.25rem)" }}>
             {t("history.title")}
           </h1>
-          <div className="flex gap-2">MODAL EXPORT</div>
+          <div className="flex gap-2">
+            <button
+              className="bnormal"
+              onClick={async () => {
+                triggerQuestionAlert(
+                  t("modalQuestionAlert.export_page"),
+                  optionsExportPage,
+                  async (selectedId) => {
+                    const view = selectedId;
+                    const dataExport = await createReport(view);
+                    setModal(
+                      <ModalExport
+                        page={"HISTORY_SALES"}
+                        data={dataExport || dataExportPage}
+                      />,
+                    );
+                  },
+                );
+              }}
+            >
+              <ExportIcon /> <p> {t("buttons.btn_export")}</p>
+            </button>
+          </div>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <div className="flex-1 min-h-0 w-full flex flex-col gap-2">
