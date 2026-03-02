@@ -32,16 +32,23 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const [dataCustomers, setCustomers] = useState<Customers[]>([]);
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
+  const [customersNumberCard, setCustomersNumberCard] = useState(0);
 
   const loadCustomerGeneral = async () => {
     // const limit = pagination.pageSize;
     // const offset = pagination.pageIndex * pagination.pageSize;
-    const response = await window.electronAPI.getCustomerGeneralData();
+    const response = await window.electronAPI.getCustomersGeneralData();
+    console.log(response);
 
     const customerGeneralData =
       typeof response.result === "string"
         ? JSON.parse(response.result)
         : response.result;
+
+    if (customerGeneralData.customersNumber) {
+      const customersNumber = customerGeneralData.customersNumber.result;
+      setCustomersNumberCard(customersNumber[0].customersNumber);
+    }
   };
 
   useEffect(() => {
@@ -63,7 +70,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
             icon={null}
             title={t("cards.customers_title")}
             icond={UsersIcon}
-            number={124}
+            number={customersNumberCard}
             format={false}
             color="#43A047"
           />

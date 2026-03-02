@@ -1161,11 +1161,11 @@ ipcMain.handle("get-all-history-sales", async (event) => {
   }
 });
 
-//* Get Customer General Data Page
-ipcMain.handle("get-customer-general-data", async (event, data) => {
+//* Get Customers General Data Page
+ipcMain.handle("get-customers-general-data", async (event) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const { limit, offset } = data;
+      // const { limit, offset } = data;
 
       const [customersNumber] = await Promise.all([getCustomersNumber()]);
 

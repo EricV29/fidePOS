@@ -132,7 +132,7 @@ async function addCustomer(data) {
 async function getCustomersNumber() {
   try {
     const db = await getDB();
-    const sql = `SELECT * FROM v_sales_number;`;
+    const sql = `SELECT * FROM v_customers_number;`;
 
     const query = db.exec(sql);
 
