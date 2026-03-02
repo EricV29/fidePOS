@@ -130,4 +130,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Edit Customer
   editCustomer: (data) => ipcRenderer.invoke("editCustomer", data),
+
+  // Delete Customer
+  deleteCustomer: (data) => ipcRenderer.invoke("deleteCustomer", data),
 });

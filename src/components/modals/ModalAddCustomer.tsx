@@ -12,7 +12,7 @@ import AUTH_CODES from "../../../constants/authCodes.json";
 type CustomerComparation = Pick<Customers, "name" | "last_name" | "phone">;
 
 interface Props {
-  data: Customers;
+  data?: Customers;
   onSuccess: () => void;
 }
 
@@ -55,7 +55,10 @@ export function ModalAddCustomer({ data, onSuccess }: Props) {
         triggerResponseAlert(response.error);
       }
     } else {
-      const { id, name, last_name, phone } = data;
+      const id = data?.id;
+      const name = data?.name;
+      const last_name = data?.last_name;
+      const phone = data?.phone;
       const originalData = { id, name, last_name, phone };
       const hasChanged = (
         Object.keys(originalData) as Array<keyof CustomerComparation>

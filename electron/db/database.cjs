@@ -118,7 +118,7 @@ async function createSchema(db) {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       last_name TEXT NOT NULL,
-      phone TEXT UNIQUE,
+      phone TEXT,
       status_id INTEGER NOT NULL,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       delete_at DATETIME DEFAULT NULL,

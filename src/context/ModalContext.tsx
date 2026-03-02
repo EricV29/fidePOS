@@ -238,6 +238,14 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_edit_customer",
       },
+      [AUTH_CODES.DEBT_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_debt_customer",
+      },
+      [AUTH_CODES.DELETE_CUSTOMER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_delete_customer",
+      },
     };
 
     const config = alertConfig[code];

@@ -10,6 +10,8 @@ import InvestmentIcon from "@icons/InvestmentIcon";
 import { useTranslation } from "react-i18next";
 import { ModalAddCustomer } from "@components/modals/ModalAddCustomer";
 import { useModal } from "@context/ModalContext";
+import AUTH_CODES from "../../../constants/authCodes.json";
+import { useLoading } from "@context/LoadingContext";
 
 interface CustomersGeneralProps {}
 
@@ -30,7 +32,7 @@ const dataCustomersDB = [
 
 const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const { t, i18n } = useTranslation();
-  const { setModal } = useModal();
+  const { setModal, triggerResponseAlert, triggerWarningAlert } = useModal();
   const [customersNumberCard, setCustomersNumberCard] = useState(0);
   const [customersInDebtNumberCard, setCustomersInDebtNumberCard] = useState(0);
   const [totalDebtAmountCard, setTotalDebtAmountCard] = useState(0);
@@ -43,6 +45,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   });
   const [totalRows, setTotalRows] = useState(0);
   const [customerTable, setCustomerTable] = useState<Customers[]>([]);
+  const { setLoading } = useLoading();
 
   const loadCustomerGeneral = useCallback(async () => {
     const limit = pagination.pageSize;
@@ -95,9 +98,38 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
 
   const columnsc = columnsC(t, i18n.language);
 
-  function deleteCustomer(id: string) {
-    console.log("Deleting customer:", id);
-  }
+  const deleteCustomer = async (id: number, status: string) => {
+    console.log("Deleting customer:", id, status);
+    if (status !== "active" && status !== "debt") {
+      triggerResponseAlert(AUTH_CODES.INACTIVE_CUSTOMER);
+      return;
+    }
+
+    if (status === "debt") {
+      triggerResponseAlert(AUTH_CODES.DEBT_CUSTOMER);
+      return;
+    }
+
+    triggerWarningAlert(
+      t("modalWarningAlert.text_delete_customer"),
+      async () => {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.deleteCustomer(id);
+          if (response.success) {
+            loadCustomerGeneral();
+            setLoading(false);
+            triggerResponseAlert(response.result);
+          } else {
+            setLoading(false);
+            triggerResponseAlert(response.error);
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      },
+    );
+  };
 
   return (
     <>
@@ -157,7 +189,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
                 );
               },
               onDelete: (row) => {
-                setModal(<ModalAddCustomer onSuccess={() => {}} />);
+                deleteCustomer(Number(row.id), row.status);
               },
             }}
           />

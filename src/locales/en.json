@@ -217,7 +217,8 @@
     "text_delete_user": "Delete this user? This action cannot be undone.",
     "text_debt_payment": "Add new payment? This action cannot be undone.",
     "text_complete_new_sale": "Are you sure you want to complete the sale?",
-    "text_delete_product": "Delete this product? This action cannot be undone."
+    "text_delete_product": "Delete this product? This action cannot be undone.",
+    "text_delete_customer": "Delete this customer? This action cannot be undonde."
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
@@ -234,7 +235,8 @@
     "text_delete_product": "Product deleted successfully.",
     "text_add_product": "Product added successfully.",
     "text_edit_product": "Product edited successfully.",
-    "text_edit_customer": "Customer edited successfully."
+    "text_edit_customer": "Customer edited successfully.",
+    "text_delete_customer": "Customer deleted successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -266,7 +268,8 @@
     "text_not_selected_statistics": "Statistics not selected.",
     "text_not_changes": "No changes to save.",
     "text_customer_not_found": "Customer not found.",
-    "text_inactive_customer": "Customer inactive."
+    "text_inactive_customer": "Customer inactive.",
+    "text_debt_customer": "Customer with outstanding debt."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",

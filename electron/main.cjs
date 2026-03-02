@@ -59,6 +59,7 @@ const {
   getCustomersTable,
   getFilterSearchCustomers,
   editCustomer,
+  deleteCustomer,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1235,6 +1236,31 @@ ipcMain.handle("editCustomer", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await editCustomer(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Delete Customer
+ipcMain.handle("deleteCustomer", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await deleteCustomer(data);
       if (response.success) {
         return {
           success: true,

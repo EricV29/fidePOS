@@ -101,7 +101,7 @@ async function addCustomer(data) {
 
     // Search Customer
     const query = db.exec(
-      "SELECT phone FROM customer WHERE phone = ? AND deleted_at IS NULL",
+      "SELECT phone FROM customer WHERE phone = ? AND deleted_at IS NULL;",
       [phone],
     );
 
@@ -201,13 +201,13 @@ async function getCustomersTable(limit, offset) {
         c.phone,
         s.description AS status,
         COUNT(CASE WHEN sl.status_id = 5 THEN 1 END) AS debts_number,
-        SUM(CASE WHEN sl.status_id = 5 THEN total_amount END) AS debts_amount,
-        SUM(CASE WHEN sl.status_id = 5 THEN paid_amount END) AS debts_paid,
+        SUM(CASE WHEN sl.status_id = 5 THEN total_amount ELSE 0 END) AS debts_amount,
+	      SUM(CASE WHEN sl.status_id = 5 THEN paid_amount ELSE 0 END) AS debts_paid,
         c.created_at,
         c.deleted_at
       FROM customer c
       INNER JOIN status s ON c.status_id = s.id
-      INNER JOIN sale sl ON c.id = sl.customer_id
+      LEFT JOIN sale sl ON c.id = sl.customer_id
       GROUP BY c.id
       ORDER BY c.created_at DESC
       LIMIT ? OFFSET ?;
@@ -274,13 +274,13 @@ async function getFilterSearchCustomers(data) {
         c.phone,
         s.description AS status,
         COUNT(CASE WHEN sl.status_id = 5 THEN 1 END) AS debts_number,
-        SUM(CASE WHEN sl.status_id = 5 THEN total_amount END) AS debts_amount,
-        SUM(CASE WHEN sl.status_id = 5 THEN paid_amount END) AS debts_paid,
+        SUM(CASE WHEN sl.status_id = 5 THEN total_amount ELSE 0 END) AS debts_amount,
+	      SUM(CASE WHEN sl.status_id = 5 THEN paid_amount ELSE 0 END) AS debts_paid,
         c.created_at,
         c.deleted_at
       FROM customer c
       INNER JOIN status s ON c.status_id = s.id
-      INNER JOIN sale sl ON c.id = sl.customer_id
+      LEFT JOIN sale sl ON c.id = sl.customer_id
       ${whereClause}
       GROUP BY c.id
       ${havingClause}
@@ -361,6 +361,41 @@ async function editCustomer(data) {
   }
 }
 
+// Delete Customer
+async function deleteCustomer(data) {
+  const db = await getDB();
+  try {
+    // Search Customer
+    const query = db.exec("SELECT id, status_id FROM customer WHERE id = ?", [
+      data,
+    ]);
+
+    const customers = mapResultToObjects(query);
+    const customerFound = customers[0];
+
+    // Customer?
+    if (!customerFound) {
+      return { success: false, error: AUTH_CODES.CUSTOMER_NOT_FOUND };
+    }
+
+    // Status?
+    if (customerFound.status_id === 0 || customerFound.status_id === 3) {
+      return { success: false, error: AUTH_CODES.INACTIVE_CUSTOMER };
+    }
+
+    db.run(
+      "UPDATE customer SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
+      [data],
+    );
+
+    saveDB(db);
+    return { success: true, result: AUTH_CODES.DELETE_CUSTOMER };
+  } catch (error) {
+    console.error("Error deleting customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -373,4 +408,5 @@ module.exports = {
   getCustomersTable,
   getFilterSearchCustomers,
   editCustomer,
+  deleteCustomer,
 };

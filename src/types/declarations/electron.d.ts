@@ -293,6 +293,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // DELETE CUSTOMER
+      deleteCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
