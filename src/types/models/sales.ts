@@ -64,3 +64,5 @@ export type SaleView = {
   paid_amount: number;
   products: ProductSaleView[];
 };
+
+export type dataExportSales = string | number | boolean | null | undefined;

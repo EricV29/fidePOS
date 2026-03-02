@@ -142,7 +142,10 @@
     "password": "Password",
     "sale": "Sale",
     "sale_num": "No. Sale",
-    "discount": "Discount"
+    "discount": "Discount",
+    "last_name": "Last Name",
+    "pending_amount": "Pending Amount",
+    "user_id": "User ID"
   },
   "charts": {
     "chart_tcs": "Sales",
@@ -472,6 +475,16 @@
       "stock_products": "Stock Products",
       "out_stock_products": "Out of Stock Products",
       "detail_products": "DETAIL PRODUCTS"
+    },
+    "history_page": {
+      "title": "HISTORY SALES REPORT PAGE",
+      "sales": "Sales Number",
+      "pending_sales_amount": "Pending Sales Amount",
+      "discounts": "Dsicounts",
+      "total_paid_vs_pending": "Paid VS Pending Total",
+      "paid_sales": "Paid Sales",
+      "pending_sales": "Pending Sales",
+      "detail_sales": "DETAIL HISTORY SALES"
     }
   }
 }
