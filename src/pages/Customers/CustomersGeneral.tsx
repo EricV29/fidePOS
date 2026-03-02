@@ -33,6 +33,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
   const [customersNumberCard, setCustomersNumberCard] = useState(0);
+  const [customersInDebtNumberCard, setCustomersInDebtNumberCard] = useState(0);
 
   const loadCustomerGeneral = async () => {
     // const limit = pagination.pageSize;
@@ -48,6 +49,14 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
     if (customerGeneralData.customersNumber) {
       const customersNumber = customerGeneralData.customersNumber.result;
       setCustomersNumberCard(customersNumber[0].customersNumber);
+    }
+
+    if (customerGeneralData.customersInDebtNumber) {
+      const customersInDebtNumber =
+        customerGeneralData.customersInDebtNumber.result;
+      setCustomersInDebtNumberCard(
+        customersInDebtNumber[0].customersInDebtNumber,
+      );
     }
   };
 
@@ -78,7 +87,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
             icon={null}
             title={t("cards.customers_debt_title")}
             icond={UserMinusIcon}
-            number={36}
+            number={customersInDebtNumberCard}
             format={false}
             color="#D32F2F"
           />
