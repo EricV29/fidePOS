@@ -128,10 +128,31 @@ async function addCustomer(data) {
   }
 }
 
+// Get Customers Number
+async function getCustomersNumber() {
+  try {
+    const db = await getDB();
+    const sql = `SELECT * FROM v_sales_number;`;
+
+    const query = db.exec(sql);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting customers number:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
   getCustomerDebts,
   getCustomersList,
   addCustomer,
+  getCustomersNumber,
 };

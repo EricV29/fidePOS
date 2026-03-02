@@ -272,6 +272,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      //* GET CUSTOMER GENERAL DATA PAGE
+      getCustomerGeneralData: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

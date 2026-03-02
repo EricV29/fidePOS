@@ -119,4 +119,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Get All History Sales
   getAllHistorySales: () => ipcRenderer.invoke("get-all-history-sales"),
+
+  //* Get Customer General Data Page
+  getCustomerGeneralData: () => ipcRenderer.invoke("get-customer-general-data"),
 });

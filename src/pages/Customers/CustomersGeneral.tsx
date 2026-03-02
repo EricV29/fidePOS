@@ -28,12 +28,24 @@ const dataCustomersDB = [
   },
 ];
 
-const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
+const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const [dataCustomers, setCustomers] = useState<Customers[]>([]);
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
 
+  const loadCustomerGeneral = async () => {
+    // const limit = pagination.pageSize;
+    // const offset = pagination.pageIndex * pagination.pageSize;
+    const response = await window.electronAPI.getCustomerGeneralData();
+
+    const customerGeneralData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+  };
+
   useEffect(() => {
+    loadCustomerGeneral();
     setCustomers(dataCustomersDB);
   }, []);
 
@@ -84,18 +96,6 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = ({}) => {
           <p className="font-semibold dark:text-white">
             {t("customers.table1")}
           </p>
-          <DataTableSearch
-            data={dataCustomers}
-            columns={columnsc}
-            actions={{
-              onEdit: (row) => {
-                setModal(<ModalAddCustomer data={row} />);
-              },
-              onDelete: (row) => {
-                deleteCustomer(row.id);
-              },
-            }}
-          />
         </div>
       </div>
     </>

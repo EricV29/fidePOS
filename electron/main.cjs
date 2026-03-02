@@ -52,6 +52,7 @@ const {
   getCustomerDebts,
   getCustomersList,
   addCustomer,
+  getCustomersNumber,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1157,6 +1158,28 @@ ipcMain.handle("get-all-history-sales", async (event) => {
   } else {
     console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
+  }
+});
+
+//* Get Customer General Data Page
+ipcMain.handle("get-customer-general-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { limit, offset } = data;
+
+      const [customersNumber] = await Promise.all([getCustomersNumber()]);
+
+      return {
+        success: true,
+        result: {
+          customersNumber,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
   }
 });
 

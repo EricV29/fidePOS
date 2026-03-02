@@ -121,26 +121,11 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             <p className="font-semibold dark:text-white">
               {t("customers.table2")}
             </p>
-            <DataTableSearch
-              data={dataDebtCustomer}
-              columns={columnsdc}
-              actions={{
-                onView: (row) => {
-                  const data = {
-                    idCustomer: row.id,
-                    idSaleDetail: row.id,
-                  };
-
-                  setModal(<ModalNewPayment account={data} />);
-                },
-              }}
-            />
           </div>
           <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
             <p className="font-semibold dark:text-white">
               {t("customers.table3")}
             </p>
-            <DataTableSearch data={dataPaymentsCustomers} columns={columnspc} />
           </div>
         </div>
       </div>
