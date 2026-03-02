@@ -55,6 +55,7 @@ const {
   addCustomer,
   getCustomersNumber,
   getCustomersInDebtNumber,
+  getLastCustomerNamePaid,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1169,12 +1170,17 @@ ipcMain.handle("get-customers-general-data", async (event) => {
     try {
       // const { limit, offset } = data;
 
-      const [customersNumber, customersInDebtNumber, totalDebtAmount] =
-        await Promise.all([
-          getCustomersNumber(),
-          getCustomersInDebtNumber(),
-          getTotalDebtAmount(),
-        ]);
+      const [
+        customersNumber,
+        customersInDebtNumber,
+        totalDebtAmount,
+        lastCustomerNamePaid,
+      ] = await Promise.all([
+        getCustomersNumber(),
+        getCustomersInDebtNumber(),
+        getTotalDebtAmount(),
+        getLastCustomerNamePaid(),
+      ]);
 
       return {
         success: true,
@@ -1182,6 +1188,7 @@ ipcMain.handle("get-customers-general-data", async (event) => {
           customersNumber,
           customersInDebtNumber,
           totalDebtAmount,
+          lastCustomerNamePaid,
         },
       };
     } catch (error) {

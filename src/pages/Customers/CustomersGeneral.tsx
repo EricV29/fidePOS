@@ -35,6 +35,9 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const [customersNumberCard, setCustomersNumberCard] = useState(0);
   const [customersInDebtNumberCard, setCustomersInDebtNumberCard] = useState(0);
   const [totalDebtAmountCard, setTotalDebtAmountCard] = useState(0);
+  const [lastCustomerNamePaidCard, setLastCustomerNamePaidCard] = useState("");
+  const [lastCustomerNamePaidCardDate, setLastCustomerNamePaidCardDate] =
+    useState("");
 
   const loadCustomerGeneral = async () => {
     // const limit = pagination.pageSize;
@@ -63,6 +66,13 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
     if (customerGeneralData.totalDebtAmount) {
       const totalDebtAmount = customerGeneralData.totalDebtAmount.result;
       setTotalDebtAmountCard(totalDebtAmount[0].totalDebtAmount);
+    }
+
+    if (customerGeneralData.lastCustomerNamePaid) {
+      const lastCustomerNamePaid =
+        customerGeneralData.lastCustomerNamePaid.result;
+      setLastCustomerNamePaidCard(lastCustomerNamePaid[0].lastCustomerNamePaid);
+      setLastCustomerNamePaidCardDate(lastCustomerNamePaid[0].created_at);
     }
   };
 
@@ -109,8 +119,8 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
             icon={null}
             title={t("cards.payment_title")}
             icond={null}
-            text="Eric Villeda"
-            date="2025-11-16T00:00:00Z"
+            text={lastCustomerNamePaidCard}
+            date={lastCustomerNamePaidCardDate}
             color="#43A047"
           />
         </div>
