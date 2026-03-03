@@ -4,7 +4,6 @@ import { currencyFormat } from "@utility/currencyFormat";
 import type { DebtsCustomer } from "@typesm/customers";
 import type { TFunction } from "i18next";
 import { formatDateColumns } from "@utility/dateFormats";
-import { RowActions } from "@components/RowActions";
 
 // Columns Debts Customer
 export const columnsDC = (
@@ -118,18 +117,6 @@ export const columnsDC = (
           {formatDateColumns(row.getValue("created_at"), language)}
         </div>
       );
-    },
-  },
-  {
-    id: "actions",
-    header: t("columns.actions"),
-    meta: {
-      headerClassName: "text-center",
-    },
-    cell: ({ row, table }) => {
-      const actions = table.options.meta?.actions;
-
-      return <RowActions row={row.original} actions={actions} />;
     },
   },
 ];

@@ -66,6 +66,9 @@ const {
   getCustomerTotalDebtAmount,
   getCustomerTotalPaymentAmount,
   getCustomerDebtsTable,
+  getCustomerPaymentsTable,
+  getFilterSearchCustomersDebts,
+  getFilterSearchCustomersPayments,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1310,7 +1313,7 @@ ipcMain.handle("get-customers-payments-data", async (event) => {
 // Get Selected Customer Data
 ipcMain.handle("get-selected-customer-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
-    const { id, limitDebts, offsetDebts } = data;
+    const { id, limitDebts, offsetDebts, limitPayments, offsetPayments } = data;
     try {
       const [
         customerDebtsNumber,
@@ -1318,12 +1321,14 @@ ipcMain.handle("get-selected-customer-data", async (event, data) => {
         customerTotalDebtAmount,
         customerTotalPaymentAmount,
         customerDebts,
+        customerPayments,
       ] = await Promise.all([
         getCustomerDebtsNumber(id),
         getCustomerPaymentsNumber(id),
         getCustomerTotalDebtAmount(id),
         getCustomerTotalPaymentAmount(id),
         getCustomerDebtsTable(id, limitDebts, offsetDebts),
+        getCustomerPaymentsTable(id, limitPayments, offsetPayments),
       ]);
 
       return {
@@ -1334,6 +1339,7 @@ ipcMain.handle("get-selected-customer-data", async (event, data) => {
           customerTotalDebtAmount,
           customerTotalPaymentAmount,
           customerDebts,
+          customerPayments,
         },
       };
     } catch (error) {
@@ -1341,6 +1347,56 @@ ipcMain.handle("get-selected-customer-data", async (event, data) => {
     }
   } else {
     console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Filter Search Customers Debts (Payments)
+ipcMain.handle("get-filter-search-customers-debts", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchCustomersDebts(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Filter Search Customers Payments (Payments)
+ipcMain.handle("get-filter-search-customers-payments", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchCustomersPayments(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 

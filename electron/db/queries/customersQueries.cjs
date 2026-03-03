@@ -579,6 +579,188 @@ async function getCustomerDebtsTable(id, limit, offset) {
   }
 }
 
+// Get Filter Search Table Customers Debts (Payments)
+async function getFilterSearchCustomersDebts(data) {
+  try {
+    const db = await getDB();
+    const { column, text } = data;
+    const allowedColumns = [
+      "sale_num",
+      "codes_sku",
+      "products",
+      "descriptions",
+      "debt_amount",
+      "sale_total",
+      "debt_paid",
+      "created_at",
+    ];
+
+    let whereClause = "";
+    let targetColumn = allowedColumns.includes(column) ? column : "sale_num";
+
+    if (targetColumn === "codes_sku") {
+      targetColumn = "codes_sku";
+      whereClause = `${targetColumn} LIKE ?`;
+    } else if (targetColumn === "products") {
+      targetColumn = "products";
+      whereClause = `${targetColumn} LIKE ?`;
+    } else if (targetColumn === "descriptions") {
+      targetColumn = "descriptions";
+      whereClause = `${targetColumn} LIKE ?`;
+    } else if (targetColumn === "debt_amount") {
+      targetColumn = "(s.total_amount - s.paid_amount)";
+      whereClause = `${targetColumn} LIKE ?`;
+    } else if (targetColumn === "sale_total") {
+      targetColumn = "s.total_amount";
+      whereClause = `${targetColumn} LIKE ?`;
+    } else if (targetColumn === "debt_paid") {
+      targetColumn = "s.paid_amount";
+      whereClause = `${targetColumn} LIKE ?`;
+    } else {
+      whereClause = `s.${targetColumn} LIKE ?`;
+    }
+
+    const sql = `
+      SELECT
+        s.id, 
+        s.sale_num,
+        GROUP_CONCAT(p.code_sku,'|') AS codes_sku, 
+        GROUP_CONCAT(p.name,'|') AS products, 
+        GROUP_CONCAT(p.description,'|') AS descriptions, 
+        (s.total_amount - s.paid_amount) AS debt_amount, 
+        s.total_amount AS sale_total, 
+        s.paid_amount AS debt_paid, 
+        s.created_at 
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id
+      INNER JOIN product p ON sd.product_id = p.id 
+      WHERE sd.status_id = 5 AND s.customer_id = 1
+      GROUP BY s.id
+      HAVING ${whereClause}
+      ORDER BY s.created_at DESC;
+      `;
+
+    const searchTerm = `%${text}%`;
+
+    const stmt = db.prepare(sql);
+    stmt.bind([searchTerm]);
+
+    const rows = [];
+    while (stmt.step()) {
+      rows.push(stmt.getAsObject());
+    }
+    stmt.free();
+
+    return { success: true, result: rows };
+  } catch (error) {
+    console.error("Error getting filter search table customers debts:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Customer Payments Table
+async function getCustomerPaymentsTable(id, limit, offset) {
+  try {
+    const db = await getDB();
+    const params = [id, limit, offset];
+    const sql = `
+      SELECT 
+	      p.id, 
+        p.created_at, 
+        s.sale_num, 
+        p.amount, 
+        p.note
+      FROM payment p
+      INNER JOIN sale s ON p.sale_id = s.id
+      WHERE s.customer_id = ?
+      ORDER BY p.created_at DESC
+      LIMIT ? OFFSET ?;
+      `;
+
+    const sqlCount = `
+      SELECT 
+	      COUNT(*) as total 
+	        FROM (
+            SELECT 
+            p.id, 
+            p.created_at, 
+            s.sale_num, 
+            p.amount, 
+            p.note
+          FROM payment p
+          INNER JOIN sale s ON p.sale_id = s.id
+          WHERE s.customer_id = ?);
+    `;
+
+    const query = db.exec(sql, params);
+    const queryCount = db.exec(sqlCount, [id]);
+
+    const totalData = mapResultToObjects(queryCount);
+    const totalCount = totalData.length > 0 ? totalData[0].total : 0;
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data, totalCount: totalCount };
+  } catch (error) {
+    console.error("Error getting customer payments table:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Filter Search Table Customers Payments (Payments)
+async function getFilterSearchCustomersPayments(data) {
+  const db = await getDB();
+
+  try {
+    const { column, text } = data;
+    const allowedColumns = ["created_at", "sale_num", "amount", "note"];
+
+    let whereClause = "";
+    let targetColumn = allowedColumns.includes(column) ? column : "created_at";
+
+    if (targetColumn === "sale_num") {
+      whereClause = `s.${targetColumn} LIKE ?`;
+    } else {
+      whereClause = `p.${targetColumn} LIKE ?`;
+    }
+
+    const sql = `
+     SELECT 
+        p.id, 
+        p.created_at, 
+        s.sale_num, 
+        p.amount, 
+        p.note
+      FROM payment p
+      INNER JOIN sale s ON p.sale_id = s.id
+      WHERE ${whereClause}
+      ORDER BY p.created_at DESC;
+      `;
+
+    const searchTerm = `%${text}%`;
+
+    const stmt = db.prepare(sql);
+    stmt.bind([searchTerm]);
+
+    const rows = [];
+    while (stmt.step()) {
+      rows.push(stmt.getAsObject());
+    }
+    stmt.free();
+
+    return { success: true, result: rows };
+  } catch (error) {
+    console.error(
+      "Error getting filter search table customers payments:",
+      error,
+    );
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -598,4 +780,7 @@ module.exports = {
   getCustomerTotalDebtAmount,
   getCustomerTotalPaymentAmount,
   getCustomerDebtsTable,
+  getCustomerPaymentsTable,
+  getFilterSearchCustomersDebts,
+  getFilterSearchCustomersPayments,
 };

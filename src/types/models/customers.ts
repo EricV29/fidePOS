@@ -25,10 +25,9 @@ export type DebtsCustomer = {
 export type PaymentsCustomer = {
   id: string;
   created_at: string;
-  code_sku: string;
-  product: string;
-  note: string;
+  sale_num: number;
   amount: number;
+  note: string;
 };
 
 export type CustomersSale = {
