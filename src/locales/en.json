@@ -123,6 +123,7 @@
     "total_amount": "Amount",
     "customer": "Customer",
     "code": "Code SKU",
+    "sale_total": "Sale amount",
     "debt_amount": "Debt amount",
     "debt_paid": "Debt paid",
     "debt_pending": "Debt pending",

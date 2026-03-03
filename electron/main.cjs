@@ -65,6 +65,7 @@ const {
   getCustomerPaymentsNumber,
   getCustomerTotalDebtAmount,
   getCustomerTotalPaymentAmount,
+  getCustomerDebtsTable,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1309,17 +1310,20 @@ ipcMain.handle("get-customers-payments-data", async (event) => {
 // Get Selected Customer Data
 ipcMain.handle("get-selected-customer-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
+    const { id, limitDebts, offsetDebts } = data;
     try {
       const [
         customerDebtsNumber,
         customerPaymentsNumber,
         customerTotalDebtAmount,
         customerTotalPaymentAmount,
+        customerDebts,
       ] = await Promise.all([
-        getCustomerDebtsNumber(data),
-        getCustomerPaymentsNumber(data),
-        getCustomerTotalDebtAmount(data),
-        getCustomerTotalPaymentAmount(data),
+        getCustomerDebtsNumber(id),
+        getCustomerPaymentsNumber(id),
+        getCustomerTotalDebtAmount(id),
+        getCustomerTotalPaymentAmount(id),
+        getCustomerDebtsTable(id, limitDebts, offsetDebts),
       ]);
 
       return {
@@ -1329,6 +1333,7 @@ ipcMain.handle("get-selected-customer-data", async (event, data) => {
           customerPaymentsNumber,
           customerTotalDebtAmount,
           customerTotalPaymentAmount,
+          customerDebts,
         },
       };
     } catch (error) {
