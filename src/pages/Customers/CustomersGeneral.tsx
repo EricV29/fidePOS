@@ -15,21 +15,6 @@ import { useLoading } from "@context/LoadingContext";
 
 interface CustomersGeneralProps {}
 
-//* Example data products
-const dataCustomersDB = [
-  {
-    id: "728ed51f",
-    name: "Eric",
-    last_name: "Villeda",
-    phone: "7713940793",
-    status: "active",
-    debts: 0,
-    debts_amount: 0,
-    debts_paid: 500,
-    created_at: "03/03/2025",
-  },
-];
-
 const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const { t, i18n } = useTranslation();
   const { setModal, triggerResponseAlert, triggerWarningAlert } = useModal();
@@ -55,40 +40,40 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
       offset: offset,
     });
 
-    const customerGeneralData =
+    const customersGeneralData =
       typeof response.result === "string"
         ? JSON.parse(response.result)
         : response.result;
 
-    if (customerGeneralData.customersNumber) {
-      const customersNumber = customerGeneralData.customersNumber.result;
+    if (customersGeneralData.customersNumber) {
+      const customersNumber = customersGeneralData.customersNumber.result;
       setCustomersNumberCard(customersNumber[0].customersNumber);
     }
 
-    if (customerGeneralData.customersInDebtNumber) {
+    if (customersGeneralData.customersInDebtNumber) {
       const customersInDebtNumber =
-        customerGeneralData.customersInDebtNumber.result;
+        customersGeneralData.customersInDebtNumber.result;
       setCustomersInDebtNumberCard(
         customersInDebtNumber[0].customersInDebtNumber,
       );
     }
 
-    if (customerGeneralData.totalDebtAmount) {
-      const totalDebtAmount = customerGeneralData.totalDebtAmount.result;
+    if (customersGeneralData.totalDebtAmount) {
+      const totalDebtAmount = customersGeneralData.totalDebtAmount.result;
       setTotalDebtAmountCard(totalDebtAmount[0].totalDebtAmount);
     }
 
-    if (customerGeneralData.lastCustomerNamePaid) {
+    if (customersGeneralData.lastCustomerNamePaid) {
       const lastCustomerNamePaid =
-        customerGeneralData.lastCustomerNamePaid.result;
+        customersGeneralData.lastCustomerNamePaid.result;
       setLastCustomerNamePaidCard(lastCustomerNamePaid[0].lastCustomerNamePaid);
       setLastCustomerNamePaidCardDate(lastCustomerNamePaid[0].created_at);
     }
 
-    if (customerGeneralData?.customersTable) {
-      const customersData = customerGeneralData.customersTable.result;
+    if (customersGeneralData?.customersTable) {
+      const customersData = customersGeneralData.customersTable.result;
       setCustomerTable(customersData);
-      setTotalRows(customerGeneralData.customersTable.totalCount);
+      setTotalRows(customersGeneralData.customersTable.totalCount);
     }
   }, [pagination]);
 

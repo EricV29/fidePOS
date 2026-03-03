@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsPC } from "@columns/columnsPC";
-import type { PaymentsCustomer } from "@typesm/customers";
+import type { PaymentsCustomer, CustomersSelect } from "@typesm/customers";
 import { columnsDC } from "@columns/columnsDC";
 import type { DebtsCustomer } from "@typesm/customers";
 import CustomSelect from "@components/Select";
@@ -53,11 +53,6 @@ const dataPaymentsCustomersDB = [
   },
 ];
 
-const optionsCustomers = [
-  { label: "Eric Villeda Reyes", value: "idcustomer1" },
-  { label: "Jared Villeda Reyes", value: "idcustomer2" },
-];
-
 const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
   const [dataDebtCustomer, setDebtCustomer] = useState<DebtsCustomer[]>([]);
   const [dataPaymentsCustomers, setPaymentsCustomers] = useState<
@@ -65,11 +60,92 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
   >([]);
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
+  const [customersSelect, setCustomersSelect] = useState<CustomersSelect[]>([]);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<
+    string | undefined
+  >();
+  const [customerDebtNumberCard, setCustomerDebtsNumberCard] = useState(0);
+  const [customerPaymentsNumberCard, setCustomerPaymentsNumberCard] =
+    useState(0);
+  const [customerTotalDebtAmountCard, setCustomerTotalDebtAmountCard] =
+    useState(0);
+  const [customerTotalPaymentAmount, setCustomerTotalPaymentAmount] =
+    useState(0);
+
+  const loadCustomersPayments = async () => {
+    const response = await window.electronAPI.getCustomersPaymentsData();
+    const customersPaymentsData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+
+    if (customersPaymentsData.customersSelect) {
+      const customersSelect = customersPaymentsData.customersSelect.result;
+      setCustomersSelect(customersSelect);
+    }
+  };
 
   useEffect(() => {
+    loadCustomersPayments();
     setDebtCustomer(dataDCDB);
     setPaymentsCustomers(dataPaymentsCustomersDB);
   }, []);
+
+  const loadSelectedCustomerData = async (id: string) => {
+    const response = await window.electronAPI.getSelectedCustomerData(id);
+
+    const customerData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+
+    if (customerData.customerDebtsNumber) {
+      const customerDebtsNumber = customerData.customerDebtsNumber.result;
+      setCustomerDebtsNumberCard(customerDebtsNumber[0].customerDebtsNumber);
+    }
+
+    if (customerData.customerPaymentsNumber) {
+      const customerPaymentsNumber = customerData.customerPaymentsNumber.result;
+      setCustomerPaymentsNumberCard(
+        customerPaymentsNumber[0].customerPaymentsNumber,
+      );
+    }
+
+    if (customerData.customerTotalDebtAmount) {
+      const customerTotalDebtAmount =
+        customerData.customerTotalDebtAmount.result;
+
+      setCustomerTotalDebtAmountCard(
+        customerTotalDebtAmount[0].customerTotalDebtAmount,
+      );
+    }
+
+    if (customerData.customerTotalPaymentAmount) {
+      const customerTotalPaymentAmount =
+        customerData.customerTotalPaymentAmount.result;
+
+      setCustomerTotalPaymentAmount(
+        customerTotalPaymentAmount[0].customerTotalPaymentAmount,
+      );
+    }
+  };
+
+  const customerOptions = useMemo(() => {
+    return customersSelect.map((c) => ({
+      label: `${c.name} ${c.last_name}`,
+      value: c.id?.toString(),
+    }));
+  }, [customersSelect]);
+
+  const handleChangeCustomer = (value: string) => {
+    if (!value || value === selectedCustomerId) {
+      setSelectedCustomerId(undefined);
+    } else {
+      setSelectedCustomerId(value);
+    }
+
+    loadSelectedCustomerData(value);
+  };
 
   const columnsdc = columnsDC(t, i18n.language);
   const columnspc = columnsPC(t, i18n.language);
@@ -78,16 +154,18 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
     <>
       <div className="w-full h-full flex flex-col gap-2">
         <CustomSelect
-          options={optionsCustomers}
+          options={customerOptions}
           placeholder={t("customers.input1")}
           color="#F57C00"
+          value={selectedCustomerId}
+          onChange={handleChangeCustomer}
         />
         <div className="flex gap-2 h-[100px]">
           <CardInfoNumber
             icon={null}
             title={t("cards.debts_title")}
             icond={FlagIcon}
-            number={5}
+            number={customerDebtNumberCard}
             format={false}
             color="#D32F2F"
           />
@@ -95,7 +173,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             icon={null}
             title={t("cards.paids_title")}
             icond={FlagIcon}
-            number={5}
+            number={customerPaymentsNumberCard}
             format={false}
             color="#43A047"
           />
@@ -103,7 +181,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             icon={InvestmentIcon}
             title={t("cards.unpaid_title")}
             icond={null}
-            number={500}
+            number={customerTotalDebtAmountCard}
             format={true}
             color="#D32F2F"
           />
@@ -111,7 +189,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             icon={InvestmentIcon}
             title={t("cards.paid_title")}
             icond={null}
-            number={500}
+            number={customerTotalPaymentAmount}
             format={true}
             color="#43A047"
           />

@@ -63,3 +63,5 @@ export type CustomerDebtsMin = {
   id: number;
   customer_debt: string;
 };
+
+export type CustomersSelect = Pick<Customers, "id" | "name" | "last_name">;
