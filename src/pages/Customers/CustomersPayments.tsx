@@ -54,7 +54,6 @@ const dataPaymentsCustomersDB = [
 ];
 
 const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
-  const [dataDebtCustomer, setDebtCustomer] = useState<DebtsCustomer[]>([]);
   const [dataPaymentsCustomers, setPaymentsCustomers] = useState<
     PaymentsCustomer[]
   >([]);
@@ -71,6 +70,12 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
     useState(0);
   const [customerTotalPaymentAmount, setCustomerTotalPaymentAmount] =
     useState(0);
+  const [paginationDebtsTable, setPaginationDebtsTable] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [customerDebts, setCustomerDebts] = useState<DebtsCustomer[]>([]);
+  const [totalRowsDebtTable, setTotalRowsDebtsTable] = useState(0);
 
   const loadCustomersPayments = async () => {
     const response = await window.electronAPI.getCustomersPaymentsData();
@@ -87,12 +92,17 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
 
   useEffect(() => {
     loadCustomersPayments();
-    setDebtCustomer(dataDCDB);
     setPaymentsCustomers(dataPaymentsCustomersDB);
   }, []);
 
   const loadSelectedCustomerData = async (id: string) => {
-    const response = await window.electronAPI.getSelectedCustomerData(id);
+    const limitDebts = paginationDebtsTable.pageSize;
+    const offsetDebts =
+      paginationDebtsTable.pageIndex * paginationDebtsTable.pageSize;
+
+    const data = { id, limitDebts, offsetDebts };
+
+    const response = await window.electronAPI.getSelectedCustomerData(data);
 
     const customerData =
       typeof response.result === "string"
@@ -127,6 +137,12 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
       setCustomerTotalPaymentAmount(
         customerTotalPaymentAmount[0].customerTotalPaymentAmount,
       );
+    }
+
+    if (customerData.customerDebts) {
+      const customerDebts = customerData.customerDebts.result;
+      setCustomerDebts(customerDebts);
+      setTotalRowsDebtsTable(customerData.customerDebts.totalCount);
     }
   };
 
@@ -199,6 +215,24 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             <p className="font-semibold dark:text-white">
               {t("customers.table2")}
             </p>
+            <DataTableSearch
+              data={customerDebts}
+              columns={columnsdc}
+              page="customersPayments"
+              pagination={paginationDebtsTable}
+              setPagination={setPaginationDebtsTable}
+              totalRows={totalRowsDebtTable}
+              actions={{
+                onView: (row) => {
+                  const data = {
+                    idCustomer: row.id,
+                    idSaleDetail: row.id,
+                  };
+
+                  setModal(<ModalNewPayment account={data} />);
+                },
+              }}
+            />
           </div>
           <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
             <p className="font-semibold dark:text-white">

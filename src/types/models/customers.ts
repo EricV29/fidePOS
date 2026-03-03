@@ -12,13 +12,12 @@ export type Customers = {
 
 export type DebtsCustomer = {
   id: string;
+  sale_num: number;
   code_sku: string;
   product: string;
   description: string;
-  category: string;
-  ccolor: string;
-  status: string;
   debt_amount: number;
+  sale_total: number;
   debt_paid: number;
   created_at: string;
 };

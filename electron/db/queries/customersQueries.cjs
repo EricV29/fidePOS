@@ -525,6 +525,60 @@ async function getCustomerTotalPaymentAmount(id) {
   }
 }
 
+// Get Customer Debts Table
+async function getCustomerDebtsTable(id, limit, offset) {
+  try {
+    const db = await getDB();
+    const params = [id, limit, offset];
+    const sql = `
+      SELECT
+        s.id, 
+        s.sale_num,
+        GROUP_CONCAT(p.code_sku,'|') AS codes_sku, 
+        GROUP_CONCAT(p.name,'|') AS products, 
+        GROUP_CONCAT(p.description,'|') AS descriptions, 
+        (s.total_amount - s.paid_amount) AS debt_amount, 
+        s.total_amount AS sale_total, 
+        s.paid_amount AS debt_paid, 
+        s.created_at 
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id
+      INNER JOIN product p ON sd.product_id = p.id 
+      WHERE sd.status_id = 5 AND s.customer_id = ?
+      GROUP BY s.id
+      ORDER BY s.created_at DESC
+      LIMIT ? OFFSET ?;
+      `;
+
+    const sqlCount = `
+      SELECT 
+        COUNT(*) as total 
+          FROM (
+            SELECT s.id
+          FROM sale_detail sd
+          INNER JOIN sale s ON sd.sale_id = s.id
+          WHERE sd.status_id = 5 AND s.customer_id = ?
+          GROUP BY s.id);
+    `;
+
+    const query = db.exec(sql, params);
+    const queryCount = db.exec(sqlCount, [id]);
+
+    const totalData = mapResultToObjects(queryCount);
+    const totalCount = totalData.length > 0 ? totalData[0].total : 0;
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data, totalCount: totalCount };
+  } catch (error) {
+    console.error("Error getting customer debts table:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -543,4 +597,5 @@ module.exports = {
   getCustomerPaymentsNumber,
   getCustomerTotalDebtAmount,
   getCustomerTotalPaymentAmount,
+  getCustomerDebtsTable,
 };

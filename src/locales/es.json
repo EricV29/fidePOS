@@ -129,6 +129,7 @@
     "total_amount": "Monto",
     "customer": "Cliente",
     "code": "Código SKU",
+    "sale_total": "Monto de venta",
     "debt_amount": "Monto adeudado",
     "debt_paid": "Monto pagado",
     "debt_pending": "Monto pendiente",
