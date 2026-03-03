@@ -314,6 +314,20 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // GET FILTER SEARCH CUSTOMERS DEBTS (PAYMENTS)
+      getFilterSearchCustomersDebts: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CUSTOMERS PAYMENTS (PAYMENTS)
+      getFilterSearchCustomersPayments: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
     };
   }
 }

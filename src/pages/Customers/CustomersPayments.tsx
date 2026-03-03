@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsPC } from "@columns/columnsPC";
 import type { PaymentsCustomer, CustomersSelect } from "@typesm/customers";
@@ -14,49 +14,7 @@ import { useModal } from "@context/ModalContext";
 
 interface CustomersPaymentsProps {}
 
-//* Example data products
-const dataDCDB = [
-  {
-    id: "34234",
-    code_sku: "ASD345",
-    product: "Carrito",
-    description: "Hotweels rojo",
-    category: "toys",
-    ccolor: "#ff49ff",
-    status: "unpaid",
-    debt_amount: 100,
-    debt_paid: 50,
-    created_at: "01/02/2025",
-  },
-  {
-    id: "34234",
-    code_sku: "ASD345",
-    product: "Muñeco",
-    description: "Max Steel",
-    category: "toys",
-    ccolor: "#ff49ff",
-    status: "paid",
-    debt_amount: 100,
-    debt_paid: 100,
-    created_at: "01/02/2025",
-  },
-];
-
-const dataPaymentsCustomersDB = [
-  {
-    id: "34234",
-    created_at: "01/01/2025",
-    code_sku: "SFAS34",
-    product: "Carrito2",
-    note: "La siguiente semana liquida",
-    amount: 40,
-  },
-];
-
 const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
-  const [dataPaymentsCustomers, setPaymentsCustomers] = useState<
-    PaymentsCustomer[]
-  >([]);
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
   const [customersSelect, setCustomersSelect] = useState<CustomersSelect[]>([]);
@@ -74,8 +32,17 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
     pageIndex: 0,
     pageSize: 10,
   });
+
+  const [paginationPaymentsTable, setPaginationPaymentsTable] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
   const [customerDebts, setCustomerDebts] = useState<DebtsCustomer[]>([]);
+  const [customerPayments, setCustomerPayments] = useState<PaymentsCustomer[]>(
+    [],
+  );
   const [totalRowsDebtTable, setTotalRowsDebtsTable] = useState(0);
+  const [totalRowsPaymentsTable, setTotalRowsPaymentsTable] = useState(0);
 
   const loadCustomersPayments = async () => {
     const response = await window.electronAPI.getCustomersPaymentsData();
@@ -90,61 +57,86 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
     }
   };
 
+  const loadSelectedCustomerData = useCallback(
+    async (id: string) => {
+      const limitDebts = paginationDebtsTable.pageSize;
+      const offsetDebts =
+        paginationDebtsTable.pageIndex * paginationDebtsTable.pageSize;
+
+      const limitPayments = paginationPaymentsTable.pageSize;
+      const offsetPayments =
+        paginationPaymentsTable.pageIndex * paginationPaymentsTable.pageSize;
+
+      const data = {
+        id,
+        limitDebts,
+        offsetDebts,
+        limitPayments,
+        offsetPayments,
+      };
+
+      const response = await window.electronAPI.getSelectedCustomerData(data);
+
+      const customerData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
+
+      if (customerData.customerDebtsNumber) {
+        const customerDebtsNumber = customerData.customerDebtsNumber.result;
+        setCustomerDebtsNumberCard(customerDebtsNumber[0].customerDebtsNumber);
+      }
+
+      if (customerData.customerPaymentsNumber) {
+        const customerPaymentsNumber =
+          customerData.customerPaymentsNumber.result;
+        setCustomerPaymentsNumberCard(
+          customerPaymentsNumber[0].customerPaymentsNumber,
+        );
+      }
+
+      if (customerData.customerTotalDebtAmount) {
+        const customerTotalDebtAmount =
+          customerData.customerTotalDebtAmount.result;
+
+        setCustomerTotalDebtAmountCard(
+          customerTotalDebtAmount[0].customerTotalDebtAmount,
+        );
+      }
+
+      if (customerData.customerTotalPaymentAmount) {
+        const customerTotalPaymentAmount =
+          customerData.customerTotalPaymentAmount.result;
+
+        setCustomerTotalPaymentAmount(
+          customerTotalPaymentAmount[0].customerTotalPaymentAmount,
+        );
+      }
+
+      if (customerData.customerDebts) {
+        const customerDebts = customerData.customerDebts.result;
+        setCustomerDebts(customerDebts);
+        setTotalRowsDebtsTable(customerData.customerDebts.totalCount);
+      }
+
+      if (customerData.customerPayments) {
+        const customerDebts = customerData.customerPayments.result;
+        setCustomerPayments(customerDebts);
+        setTotalRowsPaymentsTable(customerData.customerPayments.totalCount);
+      }
+    },
+    [paginationDebtsTable, paginationPaymentsTable],
+  );
+
   useEffect(() => {
     loadCustomersPayments();
-    setPaymentsCustomers(dataPaymentsCustomersDB);
   }, []);
 
-  const loadSelectedCustomerData = async (id: string) => {
-    const limitDebts = paginationDebtsTable.pageSize;
-    const offsetDebts =
-      paginationDebtsTable.pageIndex * paginationDebtsTable.pageSize;
-
-    const data = { id, limitDebts, offsetDebts };
-
-    const response = await window.electronAPI.getSelectedCustomerData(data);
-
-    const customerData =
-      typeof response.result === "string"
-        ? JSON.parse(response.result)
-        : response.result;
-
-    if (customerData.customerDebtsNumber) {
-      const customerDebtsNumber = customerData.customerDebtsNumber.result;
-      setCustomerDebtsNumberCard(customerDebtsNumber[0].customerDebtsNumber);
+  useEffect(() => {
+    if (selectedCustomerId) {
+      loadSelectedCustomerData(selectedCustomerId);
     }
-
-    if (customerData.customerPaymentsNumber) {
-      const customerPaymentsNumber = customerData.customerPaymentsNumber.result;
-      setCustomerPaymentsNumberCard(
-        customerPaymentsNumber[0].customerPaymentsNumber,
-      );
-    }
-
-    if (customerData.customerTotalDebtAmount) {
-      const customerTotalDebtAmount =
-        customerData.customerTotalDebtAmount.result;
-
-      setCustomerTotalDebtAmountCard(
-        customerTotalDebtAmount[0].customerTotalDebtAmount,
-      );
-    }
-
-    if (customerData.customerTotalPaymentAmount) {
-      const customerTotalPaymentAmount =
-        customerData.customerTotalPaymentAmount.result;
-
-      setCustomerTotalPaymentAmount(
-        customerTotalPaymentAmount[0].customerTotalPaymentAmount,
-      );
-    }
-
-    if (customerData.customerDebts) {
-      const customerDebts = customerData.customerDebts.result;
-      setCustomerDebts(customerDebts);
-      setTotalRowsDebtsTable(customerData.customerDebts.totalCount);
-    }
-  };
+  }, [loadSelectedCustomerData, selectedCustomerId]);
 
   const customerOptions = useMemo(() => {
     return customersSelect.map((c) => ({
@@ -218,26 +210,24 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
             <DataTableSearch
               data={customerDebts}
               columns={columnsdc}
-              page="customersPayments"
+              page="customersPaymentsDebts"
               pagination={paginationDebtsTable}
               setPagination={setPaginationDebtsTable}
               totalRows={totalRowsDebtTable}
-              actions={{
-                onView: (row) => {
-                  const data = {
-                    idCustomer: row.id,
-                    idSaleDetail: row.id,
-                  };
-
-                  setModal(<ModalNewPayment account={data} />);
-                },
-              }}
             />
           </div>
           <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
             <p className="font-semibold dark:text-white">
               {t("customers.table3")}
             </p>
+            <DataTableSearch
+              data={customerPayments}
+              columns={columnspc}
+              page="customersPaymentsPayments"
+              pagination={paginationPaymentsTable}
+              setPagination={setPaginationPaymentsTable}
+              totalRows={totalRowsPaymentsTable}
+            />
           </div>
         </div>
       </div>
