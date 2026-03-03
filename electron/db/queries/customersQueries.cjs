@@ -396,6 +396,135 @@ async function deleteCustomer(data) {
   }
 }
 
+// Get Customers Select
+async function getCustomersSelect() {
+  try {
+    const db = await getDB();
+
+    const query = db.exec("SELECT * FROM v_customers_select;");
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const categories = mapResultToObjects(query);
+    return { success: true, result: categories };
+  } catch (error) {
+    console.error("Error getting customers select:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Customer Debts Number
+async function getCustomerDebtsNumber(id) {
+  const db = await getDB();
+
+  try {
+    const sql = `
+        SELECT
+          COUNT(id) AS customerDebtsNumber
+        FROM sale
+        WHERE status_id = 5 AND customer_id = ?;
+      `;
+    const query = db.exec(sql, [id]);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const customerDebtsNumber = mapResultToObjects(query);
+
+    return { success: true, result: customerDebtsNumber };
+  } catch (error) {
+    console.error("Error getting customer debts number:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Customer Payments Number
+async function getCustomerPaymentsNumber(id) {
+  const db = await getDB();
+
+  try {
+    const sql = `
+      SELECT 
+        COUNT(p.id) AS customerPaymentsNumber
+      FROM payment p
+      INNER JOIN sale s ON p.sale_id = s.id
+      WHERE s.customer_id = ?;
+      `;
+    const query = db.exec(sql, [id]);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const customerDebtsNumber = mapResultToObjects(query);
+
+    return { success: true, result: customerDebtsNumber };
+  } catch (error) {
+    console.error("Error getting customer payments number:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Customer Total Debt Amount
+async function getCustomerTotalDebtAmount(id) {
+  const db = await getDB();
+
+  try {
+    const sql = `
+      SELECT SUM(customerDebtsAmountSale) AS customerTotalDebtAmount
+      FROM (
+          SELECT (s.total_amount - s.paid_amount) AS customerDebtsAmountSale
+          FROM sale s
+          INNER JOIN payment p ON s.id = p.sale_id
+          WHERE s.status_id = 5 AND s.customer_id = ?
+          GROUP BY s.id
+      ) AS customerDebtsAmountSale;
+      `;
+    const query = db.exec(sql, [id]);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const customerTotalDebtAmount = mapResultToObjects(query);
+
+    return { success: true, result: customerTotalDebtAmount };
+  } catch (error) {
+    console.error("Error getting customer total debt amount:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Customer Total Payment Amount
+async function getCustomerTotalPaymentAmount(id) {
+  const db = await getDB();
+
+  try {
+    const sql = `
+      SELECT 
+        SUM(p.amount) AS customerTotalPaymentAmount
+      FROM payment p
+      INNER JOIN sale s ON p.sale_id  = s.id
+      WHERE s.status_id = 5 AND s.customer_id = ?;
+      `;
+    const query = db.exec(sql, [id]);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const customerTotalPaymentAmount = mapResultToObjects(query);
+
+    return { success: true, result: customerTotalPaymentAmount };
+  } catch (error) {
+    console.error("Error getting customer total payment amount:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -409,4 +538,9 @@ module.exports = {
   getFilterSearchCustomers,
   editCustomer,
   deleteCustomer,
+  getCustomersSelect,
+  getCustomerDebtsNumber,
+  getCustomerPaymentsNumber,
+  getCustomerTotalDebtAmount,
+  getCustomerTotalPaymentAmount,
 };

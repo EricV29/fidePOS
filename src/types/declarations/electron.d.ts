@@ -273,7 +273,7 @@ declare global {
         error?: string;
       }>;
 
-      //* GET CUSTOMER GENERAL DATA PAGE
+      //* GET CUSTOMERS GENERAL DATA PAGE
       getCustomersGeneralData: (data) => Promise<{
         success: boolean;
         result?: string;
@@ -296,6 +296,20 @@ declare global {
 
       // DELETE CUSTOMER
       deleteCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET CUSTOMERS PAYMENTS DATA PAGE
+      getCustomersPaymentsData: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET SELECTED CUSTOMER DATA
+      getSelectedCustomerData: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;

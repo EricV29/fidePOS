@@ -60,6 +60,11 @@ const {
   getFilterSearchCustomers,
   editCustomer,
   deleteCustomer,
+  getCustomersSelect,
+  getCustomerDebtsNumber,
+  getCustomerPaymentsNumber,
+  getCustomerTotalDebtAmount,
+  getCustomerTotalPaymentAmount,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1278,6 +1283,59 @@ ipcMain.handle("deleteCustomer", async (event, data) => {
   } else {
     console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
+  }
+});
+
+//* Get Customers Payments Data Page
+ipcMain.handle("get-customers-payments-data", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [customersSelect] = await Promise.all([getCustomersSelect()]);
+
+      return {
+        success: true,
+        result: {
+          customersSelect,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Selected Customer Data
+ipcMain.handle("get-selected-customer-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [
+        customerDebtsNumber,
+        customerPaymentsNumber,
+        customerTotalDebtAmount,
+        customerTotalPaymentAmount,
+      ] = await Promise.all([
+        getCustomerDebtsNumber(data),
+        getCustomerPaymentsNumber(data),
+        getCustomerTotalDebtAmount(data),
+        getCustomerTotalPaymentAmount(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          customerDebtsNumber,
+          customerPaymentsNumber,
+          customerTotalDebtAmount,
+          customerTotalPaymentAmount,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
   }
 });
 
