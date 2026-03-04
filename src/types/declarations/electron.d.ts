@@ -272,6 +272,83 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      //* GET CUSTOMERS GENERAL DATA PAGE
+      getCustomersGeneralData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CUSTOMERS
+      getFilterSearchCustomers: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // EDIT CUSTOMER
+      editCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // DELETE CUSTOMER
+      deleteCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET CUSTOMERS PAYMENTS DATA PAGE
+      getCustomersPaymentsData: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET SELECTED CUSTOMER DATA
+      getSelectedCustomerData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CUSTOMERS DEBTS (PAYMENTS)
+      getFilterSearchCustomersDebts: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CUSTOMERS PAYMENTS (PAYMENTS)
+      getFilterSearchCustomersPayments: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // GET ALL CUSTOMERS
+      getAllCustomers: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET ALL DEBTS AND PAYMENTS BY CUSTOMER
+      getAllDebtsPayments: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // ACTIVE CUSTOMER
+      activeCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
@@ -283,10 +360,10 @@ declare module "@tanstack/react-table" {
       onEdit?: (row: TData) => void;
       onDelete?: (row: TData) => void;
       onAdd?: (row: TData) => void;
+      onActive?: (row: TData) => void;
     };
 
     updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
-
     addProduct?: (product: TData) => void;
     deleteProduct?: (id: string) => void;
   }

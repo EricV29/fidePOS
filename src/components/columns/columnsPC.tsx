@@ -35,21 +35,8 @@ export const columnsPC = (
     },
   },
   {
-    accessorKey: "code_sku",
-    header: t("columns.code"),
-  },
-  {
-    accessorKey: "product",
-    header: t("columns.product"),
-  },
-  {
-    accessorKey: "note",
-    header: t("columns.note"),
-    cell: ({ getValue }) => (
-      <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
-        {getValue() as string}
-      </div>
-    ),
+    accessorKey: "sale_num",
+    header: t("columns.sale_num"),
   },
   {
     accessorKey: "amount",
@@ -60,5 +47,14 @@ export const columnsPC = (
       return <div className="font-semibold text-[#D32F2F]">{formatted}</div>;
     },
     filterFn: partialNumberFilter,
+  },
+  {
+    accessorKey: "note",
+    header: t("columns.note"),
+    cell: ({ getValue }) => (
+      <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
+        {getValue() as string}
+      </div>
+    ),
   },
 ];

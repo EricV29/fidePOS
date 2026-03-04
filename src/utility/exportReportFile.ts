@@ -39,12 +39,16 @@ export const exportReportFile = (
     const doc = new jsPDF("l", "mm", "a4");
     let currentY = 15;
 
+    const tableIndices = data
+      .map((row, index) => (row.includes("ID") ? index : -1))
+      .filter((index) => index !== -1);
+
     // Draw statistics
     if (statics && tableStartIndex > 0) {
       doc.setFontSize(14);
       doc.setTextColor(40);
 
-      const statsSection = data.slice(0, tableStartIndex);
+      const statsSection = data.slice(0, tableIndices[0]);
 
       statsSection.forEach((row) => {
         if (row.length === 0 || (row.length === 1 && row[0] === "")) {
@@ -71,20 +75,41 @@ export const exportReportFile = (
     }
 
     // Draw Table
-    const rawHeaders = data[tableStartIndex] || [];
-    const headers = [rawHeaders.map((cell) => cell ?? "")];
-    const body = data
-      .slice(tableStartIndex + 1)
-      .map((row) => row.map((cell) => cell ?? ""));
+    tableIndices.forEach((startIndex, i) => {
+      const nextTableIndex = tableIndices[i + 1] || data.length;
 
-    autoTable(doc, {
-      startY: currentY + 5,
-      head: headers,
-      body: body,
-      theme: "striped",
-      styles: { fontSize: 7 },
-      headStyles: { fillColor: [41, 128, 185] },
-      margin: { left: 14, right: 14 },
+      if (startIndex > 0) {
+        const potentialTitleRow = data[startIndex - 1];
+        if (potentialTitleRow.length === 1 && potentialTitleRow[0] !== "") {
+          doc.setFont("helvetica", "bold");
+          doc.setFontSize(14);
+          doc.text(`${potentialTitleRow[0]}`, 14, currentY + 5);
+          currentY += 8;
+        }
+      }
+
+      const tableData = data
+        .slice(startIndex, nextTableIndex)
+        .filter((row) => row.length > 1);
+
+      if (tableData.length > 0) {
+        const headers = [tableData[0].map((cell) => cell ?? "")];
+        const body = tableData
+          .slice(1)
+          .map((row) => row.map((cell) => cell ?? ""));
+
+        autoTable(doc, {
+          startY: currentY + 10,
+          head: headers,
+          body: body,
+          theme: "striped",
+          styles: { fontSize: 7 },
+          headStyles: { fillColor: [41, 128, 185] },
+          margin: { left: 14, right: 14 },
+        });
+
+        currentY = (doc as any).lastAutoTable.finalY;
+      }
     });
 
     doc.save(`REPORT_${page}.pdf`);

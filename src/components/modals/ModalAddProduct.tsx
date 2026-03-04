@@ -53,7 +53,6 @@ export function ModalAddProduct({ data, onSuccess }: Props) {
     return;
   };
 
-  // Agregar Producto
   const handleAddProduct = async (
     values: AddProductFormValues,
     editActive: boolean,

@@ -52,6 +52,26 @@ const {
   getCustomerDebts,
   getCustomersList,
   addCustomer,
+  getCustomersNumber,
+  getCustomersInDebtNumber,
+  getLastCustomerNamePaid,
+  getCustomersTable,
+  getFilterSearchCustomers,
+  editCustomer,
+  deleteCustomer,
+  getCustomersSelect,
+  getCustomerDebtsNumber,
+  getCustomerPaymentsNumber,
+  getCustomerTotalDebtAmount,
+  getCustomerTotalPaymentAmount,
+  getCustomerDebtsTable,
+  getCustomerPaymentsTable,
+  getFilterSearchCustomersDebts,
+  getFilterSearchCustomersPayments,
+  getAllCustomers,
+  getAllDebtsCustomer,
+  getAllPaymentsCustomer,
+  activeCustomer,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1157,6 +1177,303 @@ ipcMain.handle("get-all-history-sales", async (event) => {
   } else {
     console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
+  }
+});
+
+//* Get Customers General Data Page
+ipcMain.handle("get-customers-general-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { limit, offset } = data;
+
+      const [
+        customersNumber,
+        customersInDebtNumber,
+        totalDebtAmount,
+        lastCustomerNamePaid,
+        customersTable,
+      ] = await Promise.all([
+        getCustomersNumber(),
+        getCustomersInDebtNumber(),
+        getPendingSalesAmount(),
+        getLastCustomerNamePaid(),
+        getCustomersTable(limit, offset),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          customersNumber,
+          customersInDebtNumber,
+          totalDebtAmount,
+          lastCustomerNamePaid,
+          customersTable,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Filter Search Customers
+ipcMain.handle("get-filter-search-customers", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchCustomers(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Edit Customer
+ipcMain.handle("editCustomer", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await editCustomer(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Delete Customer
+ipcMain.handle("deleteCustomer", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await deleteCustomer(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Active Customer
+ipcMain.handle("activeCustomer", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await activeCustomer(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+//* Get Customers Payments Data Page
+ipcMain.handle("get-customers-payments-data", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [customersSelect] = await Promise.all([getCustomersSelect()]);
+
+      return {
+        success: true,
+        result: {
+          customersSelect,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Selected Customer Data
+ipcMain.handle("get-selected-customer-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    const { id, limitDebts, offsetDebts, limitPayments, offsetPayments } = data;
+    try {
+      const [
+        customerDebtsNumber,
+        customerPaymentsNumber,
+        customerTotalDebtAmount,
+        customerTotalPaymentAmount,
+        customerDebts,
+        customerPayments,
+      ] = await Promise.all([
+        getCustomerDebtsNumber(id),
+        getCustomerPaymentsNumber(id),
+        getCustomerTotalDebtAmount(id),
+        getCustomerTotalPaymentAmount(id),
+        getCustomerDebtsTable(id, limitDebts, offsetDebts),
+        getCustomerPaymentsTable(id, limitPayments, offsetPayments),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          customerDebtsNumber,
+          customerPaymentsNumber,
+          customerTotalDebtAmount,
+          customerTotalPaymentAmount,
+          customerDebts,
+          customerPayments,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Filter Search Customers Debts (Payments)
+ipcMain.handle("get-filter-search-customers-debts", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchCustomersDebts(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Filter Search Customers Payments (Payments)
+ipcMain.handle("get-filter-search-customers-payments", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchCustomersPayments(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get All Customers
+ipcMain.handle("get-all-customers", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getAllCustomers();
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get All Debts and Payments by Customer
+ipcMain.handle("get-all-debts-payments", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [allDebtsCustomer, allPaymentsCustomer] = await Promise.all([
+        getAllDebtsCustomer(data),
+        getAllPaymentsCustomer(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          allDebtsCustomer,
+          allPaymentsCustomer,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
   }
 });
 

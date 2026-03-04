@@ -119,4 +119,44 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Get All History Sales
   getAllHistorySales: () => ipcRenderer.invoke("get-all-history-sales"),
+
+  //* Get Customers General Data Page
+  getCustomersGeneralData: (data) =>
+    ipcRenderer.invoke("get-customers-general-data", data),
+
+  // Get Filter Search Table Customers
+  getFilterSearchCustomers: (data) =>
+    ipcRenderer.invoke("get-filter-search-customers", data),
+
+  // Edit Customer
+  editCustomer: (data) => ipcRenderer.invoke("editCustomer", data),
+
+  // Delete Customer
+  deleteCustomer: (data) => ipcRenderer.invoke("deleteCustomer", data),
+
+  //* Get Customers Payments Data Page
+  getCustomersPaymentsData: () =>
+    ipcRenderer.invoke("get-customers-payments-data"),
+
+  // Get Selected Customer Data
+  getSelectedCustomerData: (data) =>
+    ipcRenderer.invoke("get-selected-customer-data", data),
+
+  // Get Filter Search Table Customers Debts (Payments)
+  getFilterSearchCustomersDebts: (data) =>
+    ipcRenderer.invoke("get-filter-search-customers-debts", data),
+
+  // Get Filter Search Table Customers Payments (Payments)
+  getFilterSearchCustomersPayments: (data) =>
+    ipcRenderer.invoke("get-filter-search-customers-payments", data),
+
+  // Get All Customers
+  getAllCustomers: () => ipcRenderer.invoke("get-all-customers"),
+
+  // Get All Debts and Payments by Customer
+  getAllDebtsPayments: (data) =>
+    ipcRenderer.invoke("get-all-debts-payments", data),
+
+  // Active Customer
+  activeCustomer: (data) => ipcRenderer.invoke("activeCustomer", data),
 });

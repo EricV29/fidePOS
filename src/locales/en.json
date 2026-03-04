@@ -123,6 +123,7 @@
     "total_amount": "Amount",
     "customer": "Customer",
     "code": "Code SKU",
+    "sale_total": "Sale amount",
     "debt_amount": "Debt amount",
     "debt_paid": "Debt paid",
     "debt_pending": "Debt pending",
@@ -135,7 +136,7 @@
     "status": "Status",
     "name": "Name",
     "phone": "Phone",
-    "debts": "Debts",
+    "debts_number": "No. Debts",
     "note": "Note",
     "paid_amount": "Paid Amount",
     "email": "Email",
@@ -145,7 +146,8 @@
     "discount": "Discount",
     "last_name": "Last Name",
     "pending_amount": "Pending Amount",
-    "user_id": "User ID"
+    "user_id": "User ID",
+    "debt_num": "No. Debts"
   },
   "charts": {
     "chart_tcs": "Sales",
@@ -160,7 +162,6 @@
     "stock_title": "Products",
     "customers_title": "Customers",
     "customers_debt_title": "Customers in Debt",
-    "owed_title": "Total Owed",
     "payment_title": "Last Payment",
     "debts_title": "Debts",
     "paids_title": "Paids",
@@ -169,7 +170,7 @@
     "sales_title": "Sales",
     "products_status_title": "Products (active/inactive)",
     "options": "Options",
-    "pending_title": "Pending sales",
+    "pending_title": "Total receivable",
     "discounts_title": "Discounts",
     "salesvs_title": "Paid vs Pending"
   },
@@ -217,7 +218,9 @@
     "text_delete_user": "Delete this user? This action cannot be undone.",
     "text_debt_payment": "Add new payment? This action cannot be undone.",
     "text_complete_new_sale": "Are you sure you want to complete the sale?",
-    "text_delete_product": "Delete this product? This action cannot be undone."
+    "text_delete_product": "Delete this product? This action cannot be undone.",
+    "text_delete_customer": "Delete this customer? This action cannot be undonde.",
+    "text_active_customer": "Make sure to active this customer?"
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
@@ -233,7 +236,10 @@
     "text_add_category": "Category added successfully.",
     "text_delete_product": "Product deleted successfully.",
     "text_add_product": "Product added successfully.",
-    "text_edit_product": "Product edited successfully."
+    "text_edit_product": "Product edited successfully.",
+    "text_edit_customer": "Customer edited successfully.",
+    "text_delete_customer": "Customer deleted successfully.",
+    "text_restore_customer": "Customer active successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -262,7 +268,13 @@
     "text_empty_products": "No product to insert into the system.",
     "text_code_sku_used_import": "Code SKU: {{codesku}} is already in use.",
     "text_not_selected_format": "Format not selected.",
-    "text_not_selected_statistics": "Statistics not selected."
+    "text_not_selected_statistics": "Statistics not selected.",
+    "text_not_changes": "No changes to save.",
+    "text_customer_not_found": "Customer not found.",
+    "text_inactive_customer": "Customer inactive.",
+    "text_debt_customer": "Customer with outstanding debt.",
+    "text_not_selected_customer": "You must first select a customer.",
+    "text_active_customer": "This customer is already active."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",
@@ -332,14 +344,18 @@
   },
   "modalAddCustomer": {
     "title": "Add new customer",
+    "title_edit": "Edit customer",
     "description": "Add individual clients to your customer list.",
-    "subtitle": "Enter the main information of your new customer"
+    "description_edit": "Edit individual clients to your customer list.",
+    "subtitle": "Enter the main information of your new customer",
+    "subtitle_edit": "Enter the new information of your customer"
   },
   "formAddCustomer": {
     "input1": "First Name",
     "input2": "Lastname",
     "input3": "Phone",
-    "btn": "Add customer"
+    "btn": "Add customer",
+    "btn_edit": "Edit customer"
   },
   "modalAddProduct": {
     "title": "Add new product",
@@ -485,6 +501,25 @@
       "paid_sales": "Paid Sales",
       "pending_sales": "Pending Sales",
       "detail_sales": "DETAIL HISTORY SALES"
+    },
+    "customer_general": {
+      "title": "CUSTOMERS REPORT PAGE",
+      "customers_number": "Customers Number",
+      "customers_debts_number": "Customers Debts Number",
+      "total_debt_amount": "Total Debts Amount",
+      "last_customer_name_paid": "Last Customer Name Paid",
+      "last_customer_name_paid_date": "Last Date Paid",
+      "detail_customers": "DETAIL CUSTOMERS"
+    },
+    "customer_payments": {
+      "title": "PAYMENTS REPORT PAGE",
+      "customer_name": "Customer",
+      "debts_number": "Customers Debts Number",
+      "payments_numbers": "Customer Payments Number",
+      "total_debts_amount": "Total Debts Amount",
+      "total_payments_amount": "Total Payments Amount",
+      "detail_debts": "DETAIL DEBTS",
+      "detail_payments": "DETAIL PAYMENTS"
     }
   }
 }

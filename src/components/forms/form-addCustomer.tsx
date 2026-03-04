@@ -16,13 +16,20 @@ import {
   getAddCustomerSchema,
 } from "./schemas/customer.schema";
 import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react";
+import type { Customers } from "@typesm/customers";
 
 interface AddCustomerFormProps {
-  onSuccess?: (values: AddCustomerFormValues) => void;
+  data?: Customers;
+  onSuccess?: (values: AddCustomerFormValues, editActive: boolean) => void;
 }
 
-export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
+export default function AddCustomerForm({
+  data,
+  onSuccess,
+}: AddCustomerFormProps) {
   const { t } = useTranslation();
+  const [editActive, setEditActive] = useState(false);
 
   const form = useForm<AddCustomerFormValues>({
     resolver: zodResolver(getAddCustomerSchema(t)),
@@ -33,8 +40,18 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
     },
   });
 
+  useEffect(() => {
+    if (data) {
+      setEditActive(true);
+      form.setValue("name", data.name);
+      form.setValue("last_name", data.last_name);
+      form.setValue("phone", data.phone);
+    }
+  }, [data, form]);
+
   function onSubmit(values: AddCustomerFormValues) {
-    onSuccess?.(values);
+    const datav = { ...values, id: data?.id };
+    onSuccess?.(datav, editActive);
   }
 
   return (
@@ -125,7 +142,7 @@ export default function AddCustomerForm({ onSuccess }: AddCustomerFormProps) {
           )}
         />
         <button type="submit" className="borange">
-          {t("formAddCustomer.btn")}
+          {data ? t("formAddCustomer.btn_edit") : t("formAddCustomer.btn")}
         </button>
       </form>
     </Form>

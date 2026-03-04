@@ -2,11 +2,8 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { partialNumberFilter } from "@utility/table-filter";
 import { currencyFormat } from "@utility/currencyFormat";
 import type { DebtsCustomer } from "@typesm/customers";
-import { shadenHexColor } from "@utility/shadenHexColor";
 import type { TFunction } from "i18next";
 import { formatDateColumns } from "@utility/dateFormats";
-import { getStatusConfig } from "@utility/statusColumns";
-import { RowActions } from "@components/RowActions";
 
 // Columns Debts Customer
 export const columnsDC = (
@@ -24,52 +21,58 @@ export const columnsDC = (
     },
   },
   {
-    accessorKey: "code_sku",
+    accessorKey: "sale_num",
+    header: t("columns.sale_num"),
+  },
+  {
+    accessorKey: "codes_sku",
     header: t("columns.code"),
-  },
-  {
-    accessorKey: "product",
-    header: t("columns.product"),
-  },
-  {
-    accessorKey: "description",
-    header: t("columns.description"),
-    cell: ({ getValue }) => (
-      <div className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug">
-        {getValue() as string}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "category",
-    header: t("columns.category"),
-    cell: ({ row }) => {
-      const category = row.getValue("category") as string;
-      const ccolor = row.original.ccolor;
-      const background = shadenHexColor(ccolor);
+    cell: ({ getValue }) => {
+      const value = getValue() as string;
+      if (!value) return null;
 
       return (
-        <div
-          style={{
-            background,
-            color: ccolor,
-          }}
-          className="categoryB"
-        >
-          {category.toUpperCase()}
+        <div style={{ lineHeight: "1.2" }}>
+          {value.split("|").map((sku, index) => (
+            <div key={index}>{sku}</div>
+          ))}
         </div>
       );
     },
   },
   {
-    accessorKey: "status",
-    header: t("columns.status"),
-    cell: ({ row }) => {
-      const status = row.getValue("status") as string;
+    accessorKey: "products",
+    header: t("columns.product"),
+    cell: ({ getValue }) => {
+      const value = getValue() as string;
+      if (!value) return null;
 
-      const { label, color } = getStatusConfig(status, t);
+      return (
+        <div style={{ lineHeight: "1.2" }}>
+          {value.split("|").map((sku, index) => (
+            <div key={index}>{sku}</div>
+          ))}
+        </div>
+      );
+    },
+  },
+  {
+    accessorKey: "descriptions",
+    header: t("columns.description"),
+    cell: ({ getValue }) => {
+      const value = getValue() as string;
+      if (!value) return null;
 
-      return <div className={color}>{label}</div>;
+      return (
+        <div
+          style={{ lineHeight: "1.2" }}
+          className="max-w-[300px] min-w-[200px] whitespace-normal leading-snug"
+        >
+          {value.split("|").map((sku, index) => (
+            <div key={index}>{sku}</div>
+          ))}
+        </div>
+      );
     },
   },
   {
@@ -77,6 +80,16 @@ export const columnsDC = (
     header: t("columns.debt_amount"),
     cell: ({ row }) => {
       const formatted = currencyFormat(Number(row.getValue("debt_amount")));
+
+      return <div className="font-semibold text-[#D32F2F]">{formatted}</div>;
+    },
+    filterFn: partialNumberFilter,
+  },
+  {
+    accessorKey: "sale_total",
+    header: t("columns.sale_total"),
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("sale_total")));
 
       return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
     },
@@ -104,18 +117,6 @@ export const columnsDC = (
           {formatDateColumns(row.getValue("created_at"), language)}
         </div>
       );
-    },
-  },
-  {
-    id: "actions",
-    header: t("columns.actions"),
-    meta: {
-      headerClassName: "text-center",
-    },
-    cell: ({ row, table }) => {
-      const actions = table.options.meta?.actions;
-
-      return <RowActions row={row.original} actions={actions} />;
     },
   },
 ];

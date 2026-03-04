@@ -222,6 +222,42 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_not_selected_statistics",
       },
+      [AUTH_CODES.NOT_CHANGES]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_changes",
+      },
+      [AUTH_CODES.CUSTOMER_NOT_FOUND]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_customer_not_found",
+      },
+      [AUTH_CODES.INACTIVE_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_inactive_customer",
+      },
+      [AUTH_CODES.EDIT_CUSTOMER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_edit_customer",
+      },
+      [AUTH_CODES.DEBT_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_debt_customer",
+      },
+      [AUTH_CODES.DELETE_CUSTOMER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_delete_customer",
+      },
+      [AUTH_CODES.NOT_SELECTED_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_selected_customer",
+      },
+      [AUTH_CODES.ACTIVE_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_active_customer",
+      },
+      [AUTH_CODES.RESTORE_CUSTOMER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_restore_customer",
+      },
     };
 
     const config = alertConfig[code];

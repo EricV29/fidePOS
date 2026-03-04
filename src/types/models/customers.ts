@@ -4,7 +4,7 @@ export type Customers = {
   last_name: string;
   phone: string;
   status: string;
-  debts: number;
+  debts_number: number;
   debts_amount: number;
   debts_paid: number;
   created_at: string;
@@ -12,13 +12,12 @@ export type Customers = {
 
 export type DebtsCustomer = {
   id: string;
-  code_sku: string;
-  product: string;
-  description: string;
-  category: string;
-  ccolor: string;
-  status: string;
+  sale_num: number;
+  codes_sku: string;
+  products: string;
+  descriptions: string;
   debt_amount: number;
+  sale_total: number;
   debt_paid: number;
   created_at: string;
 };
@@ -26,10 +25,9 @@ export type DebtsCustomer = {
 export type PaymentsCustomer = {
   id: string;
   created_at: string;
-  code_sku: string;
-  product: string;
-  note: string;
+  sale_num: number;
   amount: number;
+  note: string;
 };
 
 export type CustomersSale = {
@@ -63,3 +61,7 @@ export type CustomerDebtsMin = {
   id: number;
   customer_debt: string;
 };
+
+export type CustomersSelect = Pick<Customers, "id" | "name" | "last_name">;
+
+export type dataExportCustomers = string | number | boolean | null | undefined;

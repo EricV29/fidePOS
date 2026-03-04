@@ -43,13 +43,13 @@ export const columnsC = (
     },
   },
   {
-    accessorKey: "debts",
-    header: t("columns.debts"),
+    accessorKey: "debts_number",
+    header: t("columns.debts_number"),
     meta: {
       headerClassName: "text-center",
     },
     cell: ({ row }) => {
-      return <div className="text-center">{row.getValue("debts")}</div>;
+      return <div className="text-center">{row.getValue("debts_number")}</div>;
     },
     filterFn: partialNumberFilter,
   },

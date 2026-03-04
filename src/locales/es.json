@@ -129,7 +129,8 @@
     "total_amount": "Monto",
     "customer": "Cliente",
     "code": "Código SKU",
-    "debt_amount": "Deuda",
+    "sale_total": "Monto de venta",
+    "debt_amount": "Monto adeudado",
     "debt_paid": "Monto pagado",
     "debt_pending": "Monto pendiente",
     "product": "Producto",
@@ -141,7 +142,7 @@
     "status": "Estado",
     "name": "Nombre",
     "phone": "Teléfono",
-    "debts": "Deudas",
+    "debts_number": "No. Deudas",
     "note": "Nota",
     "paid_amount": "Monto Pagado",
     "email": "Correo electrónico",
@@ -151,7 +152,8 @@
     "discount": "Descuento",
     "last_name": "Apellido",
     "pending_amount": "Monto Pendiente",
-    "user_id": "ID Usuario"
+    "user_id": "ID Usuario",
+    "debt_num": "No. Deudas"
   },
   "charts": {
     "chart_tcs": "Ventas",
@@ -223,7 +225,9 @@
     "text_delete_user": "¿Estás seguro de que quieres eliminar a este usuario?",
     "text_debt_payment": "¿Estás seguro de que agregar un nuevo pago?",
     "text_complete_new_sale": "¿Estás seguro de completar la venta?",
-    "text_delete_product": "¿Estás seguro de que quieres eliminar este producto?."
+    "text_delete_product": "¿Estás seguro de que quieres eliminar este producto?.",
+    "text_delete_customer": "¿Estás seguro de que quieres eliminar a este cliente?",
+    "text_active_customer": "¿Estás seguro de que quieres activar a este cliente?"
   },
   "modalSuccessAlert": {
     "title": "¡Exito!",
@@ -239,7 +243,10 @@
     "text_add_category": "Categoría agregada correctamente.",
     "text_delete_product": "Producto eliminado correctamente.",
     "text_add_product": "Producto agregado correctamente.",
-    "text_edit_product": "Producto editado correctamente."
+    "text_edit_product": "Producto editado correctamente.",
+    "text_edit_customer": "Cliente editado correctamente.",
+    "text_delete_customer": "Cliente eliminado correctamente.",
+    "text_restore_customer": "Cliente activado correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -268,7 +275,13 @@
     "text_empty_products": "No hay productos para agregar al sistema.",
     "text_code_sku_used_import": "Código SKU: {{codesku}} ya utilizado.",
     "text_not_selected_format": "Formato no seleccionado.",
-    "text_not_selected_statistics": "Estadísticas no seleccionadas."
+    "text_not_selected_statistics": "Estadísticas no seleccionadas.",
+    "text_not_changes": "No cambios por modificar.",
+    "text_customer_not_found": "Cliente no encontrado.",
+    "text_inactive_customer": "Cliente inactivo.",
+    "text_debt_customer": "Cliente con deudas por pagar.",
+    "text_not_selected_customer": "Primero necesitas seleccionar un cliente.",
+    "text_active_customer": "Este cliente ya se encuentra activo."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
@@ -338,14 +351,18 @@
   },
   "modalAddCustomer": {
     "title": "Agregar nuevo cliente",
+    "title_edit": "Editar usuario",
     "description": "Agrega un nuevo cliente a tu lista.",
-    "subtitle": "Ingresa la información principal del nuevo cliente."
+    "description_edit": "Edita el cliente de tu lista.",
+    "subtitle": "Ingresa la información principal del nuevo cliente.",
+    "subtitle_edit": "Ingresa la nueva información del cliente."
   },
   "formAddCustomer": {
     "input1": "Nombres",
     "input2": "Apellidos",
     "input3": "Teléfono",
-    "btn": "Agregar cliente"
+    "btn": "Agregar cliente",
+    "btn_edit": "Editar cliente"
   },
   "modalAddProduct": {
     "title": "Agrega un producto",
@@ -491,6 +508,25 @@
       "paid_sales": "Número de Ventas Pagadas",
       "pending_sales": "Número de Ventas Pendientes",
       "detail_sales": "DETALLE DE HISTORIAL DE VENTAS"
+    },
+    "customer_general": {
+      "title": "REPORTE DE PÁGINA CLIENTES",
+      "customers_number": "Número de Clientes",
+      "customers_debts_number": "Clientes con Deuda",
+      "total_debt_amount": "Deuta Total",
+      "last_customer_name_paid": "Ultimo Pago",
+      "last_customer_name_paid_date": "Fecha de Ultimo Pago",
+      "detail_customers": "DETALLE DE CLIENTES"
+    },
+    "customer_payments": {
+      "title": "REPORTE DE PÁGINA PAGOS",
+      "customer_name": "Cliente",
+      "debts_number": "Número de Deudas",
+      "payments_numbers": "Número de Pagos",
+      "total_debts_amount": "Monto Total de Adeudo",
+      "total_payments_amount": "Monto Total de Pago",
+      "detail_debts": "DETALLE DE DEUDAS",
+      "detail_payments": "DETALLE DE PAGOS"
     }
   }
 }
