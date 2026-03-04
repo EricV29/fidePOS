@@ -335,6 +335,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // GET ALL DEBTS AND PAYMENTS BY CUSTOMER
+      getAllDebtsPayments: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

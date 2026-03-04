@@ -70,6 +70,8 @@ const {
   getFilterSearchCustomersDebts,
   getFilterSearchCustomersPayments,
   getAllCustomers,
+  getAllDebtsCustomer,
+  getAllPaymentsCustomer,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1423,6 +1425,30 @@ ipcMain.handle("get-all-customers", async (event) => {
   } else {
     console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get All Debts and Payments by Customer
+ipcMain.handle("get-all-debts-payments", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [allDebtsCustomer, allPaymentsCustomer] = await Promise.all([
+        getAllDebtsCustomer(data),
+        getAllPaymentsCustomer(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          allDebtsCustomer,
+          allPaymentsCustomer,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
   }
 });
 

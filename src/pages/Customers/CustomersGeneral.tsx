@@ -174,7 +174,6 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
           lastCustomerNamePaidCardDate,
         ],
         [],
-        [t("exportReport.customer_general.detail_customers")],
       ];
 
       const tableHeaders = [
@@ -202,12 +201,11 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
       ]);
 
       const finalData: dataExportCustomers[][] = [
+        [t("exportReport.customer_general.detail_customers")],
         ...statsData,
         tableHeaders,
         ...rows,
       ];
-
-      console.log(finalData);
 
       return finalData;
     },

@@ -796,6 +796,74 @@ async function getAllCustomers() {
   }
 }
 
+// Get All Debts by Customer
+async function getAllDebtsCustomer(id) {
+  const db = await getDB();
+
+  try {
+    const sql = `
+      SELECT
+        s.id, 
+        s.sale_num,
+        GROUP_CONCAT(p.code_sku,'|') AS codes_sku, 
+        GROUP_CONCAT(p.name,'|') AS products, 
+        GROUP_CONCAT(p.description,'|') AS descriptions, 
+        (s.total_amount - s.paid_amount) AS debt_amount, 
+        s.total_amount AS sale_total, 
+        s.paid_amount AS debt_paid, 
+        s.created_at 
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id
+      INNER JOIN product p ON sd.product_id = p.id 
+      WHERE sd.status_id = 5 AND s.customer_id = ?
+      GROUP BY s.id
+      ORDER BY s.created_at DESC;
+      `;
+
+    const query = db.exec(sql, [id]);
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const allDebtsCustomer = mapResultToObjects(query);
+    return { success: true, result: allDebtsCustomer };
+  } catch (error) {
+    console.error("Error getting all debts by customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get All Payments by Customer
+async function getAllPaymentsCustomer(id) {
+  const db = await getDB();
+
+  try {
+    const sql = `
+      SELECT 
+	      p.id, 
+        p.created_at, 
+        s.sale_num, 
+        p.amount, 
+        p.note
+      FROM payment p
+      INNER JOIN sale s ON p.sale_id = s.id
+      WHERE s.customer_id = ?
+      ORDER BY p.created_at DESC;
+      `;
+
+    const query = db.exec(sql, [id]);
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const allPaymentsCustomer = mapResultToObjects(query);
+    return { success: true, result: allPaymentsCustomer };
+  } catch (error) {
+    console.error("Error getting all pauyments by customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -819,4 +887,6 @@ module.exports = {
   getFilterSearchCustomersDebts,
   getFilterSearchCustomersPayments,
   getAllCustomers,
+  getAllDebtsCustomer,
+  getAllPaymentsCustomer,
 };

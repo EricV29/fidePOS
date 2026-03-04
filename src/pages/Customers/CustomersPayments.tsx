@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useImperativeHandle,
+} from "react";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsPC } from "@columns/columnsPC";
 import type { PaymentsCustomer, CustomersSelect } from "@typesm/customers";
@@ -9,15 +15,20 @@ import CardInfoNumber from "@components/CardInfoNumber";
 import FlagIcon from "@icons/FlagIcon";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import { useTranslation } from "react-i18next";
-import { ModalNewPayment } from "@/components/modals/ModalNewPayment";
 import { useModal } from "@context/ModalContext";
 import { useLoading } from "@context/LoadingContext";
+import { useOutletContext } from "react-router-dom";
+import AUTH_CODES from "../../../constants/authCodes.json";
 
 interface CustomersPaymentsProps {}
 
+interface ExportableChild {
+  createReport: (view: string) => Promise<dataExportCustomers[][]>;
+}
+
 const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
   const { t, i18n } = useTranslation();
-  const { setModal } = useModal();
+  const { triggerResponseAlert } = useModal();
   const { setLoading } = useLoading();
 
   const [customersSelect, setCustomersSelect] = useState<CustomersSelect[]>([]);
@@ -161,107 +172,117 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
   const columnsdc = columnsDC(t, i18n.language);
   const columnspc = columnsPC(t, i18n.language);
 
-  const createReport = useCallback(
-    async (view: string) => {
-      let generalData: DebtsCustomer[] = customerDebts;
+  const childRef = useOutletContext<React.RefObject<ExportableChild>>();
+
+  useImperativeHandle(childRef, () => ({
+    createReport: async (view: string) => {
+      if (!selectedCustomerId) {
+        triggerResponseAlert(AUTH_CODES.NOT_SELECTED_CUSTOMER);
+        return [];
+      }
+
+      let debtsData: DebtsCustomer[] = customerDebts;
+      let paymentsData: PaymentsCustomer[] = customerPayments;
 
       if (view === "total") {
         try {
           setLoading(true);
-          const response = await window.electronAPI.getAllCustomers();
+
+          const response =
+            await window.electronAPI.getAllDebtsPayments(selectedCustomerId);
           if (response.success) {
-            setLoading(false);
-            const rawData =
+            const rawDataDebts =
               typeof response.result === "string"
                 ? JSON.parse(response.result)
                 : response.result;
 
-            generalData = rawData as DebtsCustomer[];
+            debtsData = rawDataDebts.allDebtsCustomer.result as DebtsCustomer[];
+            paymentsData = rawDataDebts.allPaymentsCustomer
+              .result as PaymentsCustomer[];
           }
         } catch (err) {
           console.error("Comunication Error:", err);
+        } finally {
+          setLoading(false);
         }
       }
 
-      let totalSales = 0;
-
-      // Create Data Cards
       const statsData = [
-        [t("exportReport.customerGeneral.title")],
+        [t("exportReport.customer_payments.title")],
+        [t("exportReport.customer_payments.customer_name"), selectedCustomerId],
         [
-          t("exportReport.customerGeneral.customers_number"),
+          t("exportReport.customer_payments.debts_number"),
           customerDebtNumberCard,
         ],
         [
-          t("exportReport.customerGeneral.customers_debts_number"),
-          customerPaymentsNumberCard,
+          t("exportReport.customer_payments.payments_numbers"),
+          customerDebtNumberCard,
         ],
         [
-          t("exportReport.customerGeneral.total_debt_amount"),
+          t("exportReport.customer_payments.total_debts_amount"),
           customerTotalDebtAmountCard,
         ],
         [
-          t("exportReport.customerGeneral.last_customer_name_paid"),
+          t("exportReport.customer_payments.total_payments_amount"),
           customerTotalPaymentAmount,
         ],
-        [
-          t("exportReport.history_page.paid_sales"),
-          paidVSPendingNumberCard?.Paid,
-        ],
-        [
-          t("exportReport.history_page.pending_sales"),
-          paidVSPendingNumberCard?.Pending,
-        ],
-        [], // Empty separator row
-        [t("exportReport.history_page.detail_sales")],
+        [],
       ];
 
-      // Create Data Table
-      const tableHeaders = [
+      const tableHeadersDebts = [
         "ID",
         t("columns.sale_num"),
-        t("columns.name"),
-        t("columns.last_name"),
-        t("columns.products"),
-        t("columns.total_amount"),
-        t("columns.paid_amount"),
-        t("columns.pending_amount"),
-        t("columns.discount"),
-        t("columns.status"),
-        t("columns.user_id"),
+        t("columns.code"),
+        t("columns.product"),
+        t("columns.description"),
+        t("columns.debt_amount"),
+        t("columns.sale_total"),
+        t("columns.debt_paid"),
         t("columns.created_at"),
-        t("columns.deleted_at"),
       ];
-      const rows = generalData.map((cg) => [
-        cg.id,
-        cg.sale_num,
-        cg.code_sku,
-        cg.product,
-        cg.description,
-        cg.debt_amount,
-        cg.sale_total,
-        cg.debt_paid,
-        cg.created_at,
+
+      const rowsDebts = debtsData.map((d) => [
+        d.id,
+        d.sale_num,
+        d.codes_sku,
+        d.products,
+        d.descriptions,
+        d.debt_amount,
+        d.sale_total,
+        d.debt_paid,
+        d.created_at,
+      ]);
+
+      const tableHeadersPayments = [
+        "ID",
+        t("columns.created_at"),
+        t("columns.sale_num"),
+        t("columns.total_amount"),
+        t("columns.note"),
+      ];
+
+      const rowsPayments = paymentsData.map((p) => [
+        p.id,
+        p.created_at,
+        p.sale_num,
+        p.amount,
+        p.note,
       ]);
 
       const finalData: dataExportCustomers[][] = [
         ...statsData,
-        tableHeaders,
-        ...rows,
+        [t("exportReport.customer_payments.detail_debts")],
+        tableHeadersDebts,
+        ...rowsDebts,
+        [],
+        [t("exportReport.customer_payments.detail_payments")],
+        tableHeadersPayments,
+        ...rowsPayments,
       ];
-      setDataExportPage(finalData);
+
       return finalData;
     },
-    [
-      discountsAmountCard,
-      historySales,
-      paidVSPendingNumberCard,
-      pendingSalesCardAmount,
-      salesCardNumber,
-      setLoading,
-      t,
-    ],
-  );
+  }));
 
   return (
     <>

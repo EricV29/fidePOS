@@ -246,6 +246,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_delete_customer",
       },
+      [AUTH_CODES.NOT_SELECTED_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_selected_customer",
+      },
     };
 
     const config = alertConfig[code];

@@ -271,7 +271,8 @@
     "text_not_changes": "No changes to save.",
     "text_customer_not_found": "Customer not found.",
     "text_inactive_customer": "Customer inactive.",
-    "text_debt_customer": "Customer with outstanding debt."
+    "text_debt_customer": "Customer with outstanding debt.",
+    "text_not_selected_customer": "You must first select a customer."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",
@@ -507,6 +508,16 @@
       "last_customer_name_paid": "Last Customer Name Paid",
       "last_customer_name_paid_date": "Last Date Paid",
       "detail_customers": "DETAIL CUSTOMERS"
+    },
+    "customer_payments": {
+      "title": "PAYMENTS REPORT PAGE",
+      "customer_name": "Customer",
+      "debts_number": "Customers Debts Number",
+      "payments_numbers": "Customer Payments Number",
+      "total_debts_amount": "Total Debts Amount",
+      "total_payments_amount": "Total Payments Amount",
+      "detail_debts": "DETAIL DEBTS",
+      "detail_payments": "DETAIL PAYMENTS"
     }
   }
 }

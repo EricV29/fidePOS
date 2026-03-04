@@ -27,64 +27,6 @@ interface PieChartItem {
   [key: string]: string | number;
 }
 
-/*
-//* Example data bar chart ✅
-const chartDataTCSDB = [
-  { category: "Maquillaje", sales: 186 },
-  { category: "Regalos", sales: 305 },
-  { category: "Edredones", sales: 237 },
-  { category: "Dulces", sales: 73 },
-  { category: "Zapatos", sales: 209 },
-];
-
-//* Example data pie chart ✅
-const chartDataTAPCDB = [
-  { category: "Maquillaje", products: 200 },
-  { category: "Dulces", products: 200 },
-  { category: "Edredones", products: 287 },
-  { category: "Zapatos", products: 173 },
-];
-
-//* Example data cards
-const dataRevenueBD = 100000;
-const dataInvestBD = 12238;
-
-//* Example data tables
-const dataRSPBD = [
-  {
-    id: "728ed51f",
-    num_sale: "0001",
-    created_at: "2025-11-16 00:00:00",
-    category: "Maquillaje",
-    ccolor: "#5b49ff",
-    status: "paid",
-    total_amount: 100,
-  },
-  {
-    id: "728ed52f",
-    num_sale: "0002",
-    created_at: "2025-11-16 00:00:00",
-    category: "toys",
-    ccolor: "#ff49ff",
-    status: "unpaid",
-    total_amount: 50,
-  },
-];
-
-const dataARBD = [
-  {
-    id: "728ed511f",
-    name: "Eric",
-    last_name: "Villeda",
-    code_sku: "SAD2435",
-    debt_amount: 500,
-    debt_paid: 200,
-    debt_pending: 300,
-    created_at: "2025-02-15 00:00:00",
-  },
-];
-*/
-
 interface MyContext {
   installDate: string;
 }

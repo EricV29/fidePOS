@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ExportIcon from "@icons/ExportIcon";
 import UserPlusIcon from "@icons/UserPlusIcon";
@@ -30,10 +30,8 @@ const Customers: React.FC<CustomersProps> = ({}) => {
   const currentTab =
     optionsCustomers.find((op) => op.value === currentSegment)?.value ||
     optionsCustomers[0].value;
-  const { setModal, triggerQuestionAlert } = useModal();
-  const [dataExportPage, setDataExportPage] = useState<dataExportCustomers[][]>(
-    [],
-  );
+  const { setModal, triggerQuestionAlert, triggerResponseAlert } = useModal();
+
   const optionsExportPage = [
     {
       id: "current",
@@ -46,10 +44,6 @@ const Customers: React.FC<CustomersProps> = ({}) => {
       description: t("modalQuestionAlert.text_total_data"),
     },
   ];
-
-  const handleAddCustomer = () => {
-    console.info("Add Customer");
-  };
 
   const childRef = useRef<ExportableChild>(null);
 
@@ -66,15 +60,21 @@ const Customers: React.FC<CustomersProps> = ({}) => {
                   t("modalQuestionAlert.export_page"),
                   optionsExportPage,
                   async (selectedId) => {
+                    const id = String(selectedId);
                     if (childRef.current) {
                       const dataExport =
-                        await childRef.current.createReport(selectedId);
-                      setModal(
-                        <ModalExport
-                          page="CUSTOMER_GENERAL"
-                          data={dataExport}
-                        />,
-                      );
+                        await childRef.current.createReport(id);
+
+                      if (dataExport.length > 0) {
+                        setModal(
+                          <ModalExport
+                            page="CUSTOMER_GENERAL"
+                            data={dataExport}
+                          />,
+                        );
+                      } else {
+                        triggerResponseAlert("NOT_SELECTED_CUSTOMER");
+                      }
                     } else {
                       console.warn("La página actual no soporta exportación.");
                     }
@@ -87,22 +87,14 @@ const Customers: React.FC<CustomersProps> = ({}) => {
             <button
               className="bnormal"
               onClick={() =>
-                setModal(<ModalAddCustomer onSuccess={handleAddCustomer} />)
+                setModal(<ModalAddCustomer onSuccess={() => {}} />)
               }
             >
               <UserPlusIcon /> <p>{t("buttons.btn_add_customer")}</p>
             </button>
             <button
               className="bnormal"
-              onClick={() =>
-                setModal(
-                  <ModalNewPayment
-                    onSuccess={() => {
-                      console.log("New Payment");
-                    }}
-                  />,
-                )
-              }
+              onClick={() => setModal(<ModalNewPayment onSuccess={() => {}} />)}
             >
               <PayIcon /> <p>{t("buttons.btn_add_payment")}</p>
             </button>

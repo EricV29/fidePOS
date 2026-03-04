@@ -277,7 +277,8 @@
     "text_not_changes": "No cambios por modificar.",
     "text_customer_not_found": "Cliente no encontrado.",
     "text_inactive_customer": "Cliente inactivo.",
-    "text_debt_customer": "Cliente con deudas por pagar."
+    "text_debt_customer": "Cliente con deudas por pagar.",
+    "text_not_selected_customer": "Primero necesitas seleccionar un cliente."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
@@ -513,6 +514,16 @@
       "last_customer_name_paid": "Ultimo Pago",
       "last_customer_name_paid_date": "Fecha de Ultimo Pago",
       "detail_customers": "DETALLE DE CLIENTES"
+    },
+    "customer_payments": {
+      "title": "REPORTE DE PÁGINA PAGOS",
+      "customer_name": "Cliente",
+      "debts_number": "Número de Deudas",
+      "payments_numbers": "Número de Pagos",
+      "total_debts_amount": "Monto Total de Adeudo",
+      "total_payments_amount": "Monto Total de Pago",
+      "detail_debts": "DETALLE DE DEUDAS",
+      "detail_payments": "DETALLE DE PAGOS"
     }
   }
 }

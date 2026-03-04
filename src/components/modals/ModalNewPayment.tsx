@@ -23,31 +23,6 @@ interface Props {
   onSuccess: () => void;
 }
 
-/*
-const optionsDebts = [
-  { label: "0001 Carrito $30.00", value: "id" },
-  { label: "0002 Cobija $50.00", value: "idd" },
-  { label: "0003 Labial $60.00", value: "iddd" },
-];
-
-
-const optionsCustomers = [
-  { label: "Eric Villeda", value: "id" },
-  { label: "Manuel Angas", value: "idd" },
-  { label: "Juan Perez", value: "iddd" },
-];
-*/
-
-const dataPaymentsDB = [
-  {
-    id: "00001",
-    code_sku: "12234",
-    created_at: "01/01/2025",
-    amount: 30,
-    note: "Proxima semana liquida",
-  },
-];
-
 export function ModalNewPayment({ account, onSuccess }: Props) {
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
@@ -69,6 +44,7 @@ export function ModalNewPayment({ account, onSuccess }: Props) {
   //* Get Customer Debts
   const handleCustomerDebts = useCallback(async (value: string) => {
     const response = await window.electronAPI.getCustomerDebts(value);
+
     if (response.success && response.result) {
       setCustomerDebts(response.result);
     }
@@ -123,7 +99,6 @@ export function ModalNewPayment({ account, onSuccess }: Props) {
     } else {
       loadModal();
     }
-    setDataPayments(dataPaymentsDB);
   }, [account, loadModal]);
 
   const optionsCustomers = useMemo(() => {
