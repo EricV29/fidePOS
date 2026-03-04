@@ -4,7 +4,7 @@ export type Customers = {
   last_name: string;
   phone: string;
   status: string;
-  debts: number;
+  debts_number: number;
   debts_amount: number;
   debts_paid: number;
   created_at: string;
@@ -63,3 +63,5 @@ export type CustomerDebtsMin = {
 };
 
 export type CustomersSelect = Pick<Customers, "id" | "name" | "last_name">;
+
+export type dataExportCustomers = string | number | boolean | null | undefined;

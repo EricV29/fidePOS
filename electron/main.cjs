@@ -69,6 +69,7 @@ const {
   getCustomerPaymentsTable,
   getFilterSearchCustomersDebts,
   getFilterSearchCustomersPayments,
+  getAllCustomers,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1380,6 +1381,31 @@ ipcMain.handle("get-filter-search-customers-payments", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await getFilterSearchCustomersPayments(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get All Customers
+ipcMain.handle("get-all-customers", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getAllCustomers();
       if (response.success) {
         return {
           success: true,

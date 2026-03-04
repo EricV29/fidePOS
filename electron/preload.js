@@ -149,4 +149,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Filter Search Table Customers Payments (Payments)
   getFilterSearchCustomersPayments: (data) =>
     ipcRenderer.invoke("get-filter-search-customers-payments", data),
+
+  // Get All Customers
+  getAllCustomers: () => ipcRenderer.invoke("get-all-customers"),
 });

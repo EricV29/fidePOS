@@ -152,7 +152,8 @@
     "discount": "Descuento",
     "last_name": "Apellido",
     "pending_amount": "Monto Pendiente",
-    "user_id": "ID Usuario"
+    "user_id": "ID Usuario",
+    "debt_num": "No. Deudas"
   },
   "charts": {
     "chart_tcs": "Ventas",
@@ -503,6 +504,15 @@
       "paid_sales": "Número de Ventas Pagadas",
       "pending_sales": "Número de Ventas Pendientes",
       "detail_sales": "DETALLE DE HISTORIAL DE VENTAS"
+    },
+    "customer_general": {
+      "title": "REPORTE DE PÁGINA CLIENTES",
+      "customers_number": "Número de Clientes",
+      "customers_debts_number": "Clientes con Deuda",
+      "total_debt_amount": "Deuta Total",
+      "last_customer_name_paid": "Ultimo Pago",
+      "last_customer_name_paid_date": "Fecha de Ultimo Pago",
+      "detail_customers": "DETALLE DE CLIENTES"
     }
   }
 }

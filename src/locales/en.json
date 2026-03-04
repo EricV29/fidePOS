@@ -146,7 +146,8 @@
     "discount": "Discount",
     "last_name": "Last Name",
     "pending_amount": "Pending Amount",
-    "user_id": "User ID"
+    "user_id": "User ID",
+    "debt_num": "No. Debts"
   },
   "charts": {
     "chart_tcs": "Sales",
@@ -497,6 +498,15 @@
       "paid_sales": "Paid Sales",
       "pending_sales": "Pending Sales",
       "detail_sales": "DETAIL HISTORY SALES"
+    },
+    "customer_general": {
+      "title": "CUSTOMERS REPORT PAGE",
+      "customers_number": "Customers Number",
+      "customers_debts_number": "Customers Debts Number",
+      "total_debt_amount": "Total Debts Amount",
+      "last_customer_name_paid": "Last Customer Name Paid",
+      "last_customer_name_paid_date": "Last Date Paid",
+      "detail_customers": "DETAIL CUSTOMERS"
     }
   }
 }

@@ -3,7 +3,7 @@ import { DataTableSearch } from "@components/data-table-search";
 import { columnsPC } from "@columns/columnsPC";
 import type { PaymentsCustomer, CustomersSelect } from "@typesm/customers";
 import { columnsDC } from "@columns/columnsDC";
-import type { DebtsCustomer } from "@typesm/customers";
+import type { DebtsCustomer, dataExportCustomers } from "@typesm/customers";
 import CustomSelect from "@components/Select";
 import CardInfoNumber from "@components/CardInfoNumber";
 import FlagIcon from "@icons/FlagIcon";
@@ -11,12 +11,15 @@ import InvestmentIcon from "@icons/InvestmentIcon";
 import { useTranslation } from "react-i18next";
 import { ModalNewPayment } from "@/components/modals/ModalNewPayment";
 import { useModal } from "@context/ModalContext";
+import { useLoading } from "@context/LoadingContext";
 
 interface CustomersPaymentsProps {}
 
 const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
+  const { setLoading } = useLoading();
+
   const [customersSelect, setCustomersSelect] = useState<CustomersSelect[]>([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState<
     string | undefined
@@ -157,6 +160,108 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
 
   const columnsdc = columnsDC(t, i18n.language);
   const columnspc = columnsPC(t, i18n.language);
+
+  const createReport = useCallback(
+    async (view: string) => {
+      let generalData: DebtsCustomer[] = customerDebts;
+
+      if (view === "total") {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.getAllCustomers();
+          if (response.success) {
+            setLoading(false);
+            const rawData =
+              typeof response.result === "string"
+                ? JSON.parse(response.result)
+                : response.result;
+
+            generalData = rawData as DebtsCustomer[];
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      }
+
+      let totalSales = 0;
+
+      // Create Data Cards
+      const statsData = [
+        [t("exportReport.customerGeneral.title")],
+        [
+          t("exportReport.customerGeneral.customers_number"),
+          customerDebtNumberCard,
+        ],
+        [
+          t("exportReport.customerGeneral.customers_debts_number"),
+          customerPaymentsNumberCard,
+        ],
+        [
+          t("exportReport.customerGeneral.total_debt_amount"),
+          customerTotalDebtAmountCard,
+        ],
+        [
+          t("exportReport.customerGeneral.last_customer_name_paid"),
+          customerTotalPaymentAmount,
+        ],
+        [
+          t("exportReport.history_page.paid_sales"),
+          paidVSPendingNumberCard?.Paid,
+        ],
+        [
+          t("exportReport.history_page.pending_sales"),
+          paidVSPendingNumberCard?.Pending,
+        ],
+        [], // Empty separator row
+        [t("exportReport.history_page.detail_sales")],
+      ];
+
+      // Create Data Table
+      const tableHeaders = [
+        "ID",
+        t("columns.sale_num"),
+        t("columns.name"),
+        t("columns.last_name"),
+        t("columns.products"),
+        t("columns.total_amount"),
+        t("columns.paid_amount"),
+        t("columns.pending_amount"),
+        t("columns.discount"),
+        t("columns.status"),
+        t("columns.user_id"),
+        t("columns.created_at"),
+        t("columns.deleted_at"),
+      ];
+      const rows = generalData.map((cg) => [
+        cg.id,
+        cg.sale_num,
+        cg.code_sku,
+        cg.product,
+        cg.description,
+        cg.debt_amount,
+        cg.sale_total,
+        cg.debt_paid,
+        cg.created_at,
+      ]);
+
+      const finalData: dataExportCustomers[][] = [
+        ...statsData,
+        tableHeaders,
+        ...rows,
+      ];
+      setDataExportPage(finalData);
+      return finalData;
+    },
+    [
+      discountsAmountCard,
+      historySales,
+      paidVSPendingNumberCard,
+      pendingSalesCardAmount,
+      salesCardNumber,
+      setLoading,
+      t,
+    ],
+  );
 
   return (
     <>

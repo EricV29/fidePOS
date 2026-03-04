@@ -761,6 +761,41 @@ async function getFilterSearchCustomersPayments(data) {
   }
 }
 
+// Get All Customers
+async function getAllCustomers() {
+  const db = await getDB();
+  try {
+    const query = db.exec(`
+      SELECT 
+        c.id,
+        c.name,
+        c.last_name,
+        c.phone,
+        s.description AS status,
+        COUNT(CASE WHEN sl.status_id = 5 THEN 1 END) AS debts_number,
+        SUM(CASE WHEN sl.status_id = 5 THEN total_amount ELSE 0 END) AS debts_amount,
+        SUM(CASE WHEN sl.status_id = 5 THEN paid_amount ELSE 0 END) AS debts_paid,
+        c.created_at,
+        c.deleted_at
+      FROM customer c
+      INNER JOIN status s ON c.status_id = s.id
+      LEFT JOIN sale sl ON c.id = sl.customer_id
+      GROUP BY c.id
+      ORDER BY c.created_at DESC;
+    `);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const customers = mapResultToObjects(query);
+    return { success: true, result: customers };
+  } catch (error) {
+    console.error("Error getting all customers:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -783,4 +818,5 @@ module.exports = {
   getCustomerPaymentsTable,
   getFilterSearchCustomersDebts,
   getFilterSearchCustomersPayments,
+  getAllCustomers,
 };

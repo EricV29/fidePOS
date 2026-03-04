@@ -328,6 +328,13 @@ declare global {
         result?: TData[];
         error?: string;
       }>;
+
+      // GET ALL CUSTOMERS
+      getAllCustomers: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

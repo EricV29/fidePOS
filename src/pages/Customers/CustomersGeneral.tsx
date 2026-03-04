@@ -1,19 +1,29 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useImperativeHandle,
+} from "react";
 import CardInfoNumber from "@components/CardInfoNumber";
 import CardInfoText from "@components/CardInfoText";
 import UserMinusIcon from "@icons/UserMinusIcon";
 import UsersIcon from "@icons/UsersIcon";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsC } from "@columns/columnsC";
-import type { Customers } from "@typesm/customers";
+import type { Customers, dataExportCustomers } from "@typesm/customers";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import { useTranslation } from "react-i18next";
 import { ModalAddCustomer } from "@components/modals/ModalAddCustomer";
 import { useModal } from "@context/ModalContext";
 import AUTH_CODES from "../../../constants/authCodes.json";
 import { useLoading } from "@context/LoadingContext";
+import { useOutletContext } from "react-router-dom";
 
 interface CustomersGeneralProps {}
+
+interface ExportableChild {
+  createReport: (view: string) => Promise<dataExportCustomers[][]>;
+}
 
 const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const { t, i18n } = useTranslation();
@@ -115,6 +125,93 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
       },
     );
   };
+
+  const childRef = useOutletContext<React.RefObject<ExportableChild>>();
+
+  useImperativeHandle(childRef, () => ({
+    createReport: async (view: string) => {
+      let generalData: Customers[] = customerTable;
+
+      if (view === "total") {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.getAllCustomers();
+          if (response.success) {
+            const rawData =
+              typeof response.result === "string"
+                ? JSON.parse(response.result)
+                : response.result;
+
+            generalData = rawData as Customers[];
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      const statsData = [
+        [t("exportReport.customer_general.title")],
+        [
+          t("exportReport.customer_general.customers_number"),
+          customersNumberCard,
+        ],
+        [
+          t("exportReport.customer_general.customers_debts_number"),
+          customersInDebtNumberCard,
+        ],
+        [
+          t("exportReport.customer_general.total_debt_amount"),
+          totalDebtAmountCard,
+        ],
+        [
+          t("exportReport.customer_general.last_customer_name_paid"),
+          lastCustomerNamePaidCard,
+        ],
+        [
+          t("exportReport.customer_general.last_customer_name_paid_date"),
+          lastCustomerNamePaidCardDate,
+        ],
+        [],
+        [t("exportReport.customer_general.detail_customers")],
+      ];
+
+      const tableHeaders = [
+        "ID",
+        t("columns.name"),
+        t("columns.last_name"),
+        t("columns.phone"),
+        t("columns.status"),
+        t("columns.debts_number"),
+        t("columns.debt_amount"),
+        t("columns.debt_paid"),
+        t("columns.created_at"),
+      ];
+
+      const rows = generalData.map((cg) => [
+        cg.id,
+        cg.name,
+        cg.last_name,
+        cg.phone,
+        cg.status,
+        cg.debts_number,
+        cg.debts_amount,
+        cg.debts_paid,
+        cg.created_at,
+      ]);
+
+      const finalData: dataExportCustomers[][] = [
+        ...statsData,
+        tableHeaders,
+        ...rows,
+      ];
+
+      console.log(finalData);
+
+      return finalData;
+    },
+  }));
 
   return (
     <>
