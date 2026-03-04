@@ -156,4 +156,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get All Debts and Payments by Customer
   getAllDebtsPayments: (data) =>
     ipcRenderer.invoke("get-all-debts-payments", data),
+
+  // Active Customer
+  activeCustomer: (data) => ipcRenderer.invoke("activeCustomer", data),
 });

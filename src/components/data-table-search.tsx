@@ -30,6 +30,7 @@ interface DataTableSearchProps<TData, TValue> {
     onEdit?: (row: TData) => void;
     onDelete?: (row: TData) => void;
     onAdd?: (row: TData) => void;
+    onActive?: (row: TData) => void;
   };
   pagination: PaginationState;
   totalRows: number;

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import PreviewIcon from "@icons/PreviewIcon";
 import EditIcon from "@icons/EditIcon";
 import DeleteIcon from "@icons/DeleteIcon";
+import ShieldPlusIcon from "@icons/ShieldPlusIcon";
 import type { TableMeta } from "@tanstack/react-table";
 
 interface Props<T> {
@@ -41,6 +42,16 @@ export function RowActions<T>({ row, actions }: Props<T>) {
           onClick={() => actions.onDelete?.(row)}
         >
           <DeleteIcon color="#D32F2F" />
+        </Button>
+      )}
+
+      {actions.onActive && (
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => actions.onActive?.(row)}
+        >
+          <ShieldPlusIcon color="#43A047" />
         </Button>
       )}
     </div>

@@ -114,13 +114,14 @@ async function deleteUser(data) {
 
 // Edit User
 async function editUser(data) {
-  try {
-    const db = await getDB();
+  const db = await getDB();
 
+  try {
+    const [id, name, last_name, email, phone] = data;
     // Search User
     const query = db.exec(
       "SELECT id, email, role_id, status_id FROM user WHERE id = ?",
-      [data.id],
+      [id],
     );
 
     const user = mapResultToObjects(query);
@@ -139,17 +140,17 @@ async function editUser(data) {
     // Search Users
     const users = db.exec(
       "SELECT email, phone FROM user WHERE (email = ? OR phone = ?) AND deleted_at IS NULL AND id != ?",
-      [data.email, data.phone, data.id],
+      [email, phone, id],
     );
 
     const usersFound = mapResultToObjects(users);
 
     if (usersFound.length > 0) {
       for (const user of usersFound) {
-        if (user.email === data.email) {
+        if (user.email === email) {
           return { success: false, error: AUTH_CODES.EMAIL_USED };
         }
-        if (user.phone === data.phone) {
+        if (user.phone === phone) {
           return { success: false, error: AUTH_CODES.PHONE_USED };
         }
       }
@@ -157,10 +158,10 @@ async function editUser(data) {
 
     db.run(
       "UPDATE user SET name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?",
-      [data.name, data.last_name, data.email, data.phone, data.id],
+      [name, last_name, email, phone, id],
     );
 
-    saveDB(db);
+    await saveDB(db);
     return { success: true, result: AUTH_CODES.EDIT_USER };
   } catch (error) {
     console.error("Error editing user:", error);

@@ -342,6 +342,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // ACTIVE CUSTOMER
+      activeCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
@@ -353,10 +360,10 @@ declare module "@tanstack/react-table" {
       onEdit?: (row: TData) => void;
       onDelete?: (row: TData) => void;
       onAdd?: (row: TData) => void;
+      onActive?: (row: TData) => void;
     };
 
     updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
-
     addProduct?: (product: TData) => void;
     deleteProduct?: (id: string) => void;
   }

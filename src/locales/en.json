@@ -162,7 +162,6 @@
     "stock_title": "Products",
     "customers_title": "Customers",
     "customers_debt_title": "Customers in Debt",
-    "owed_title": "Total Owed",
     "payment_title": "Last Payment",
     "debts_title": "Debts",
     "paids_title": "Paids",
@@ -220,7 +219,8 @@
     "text_debt_payment": "Add new payment? This action cannot be undone.",
     "text_complete_new_sale": "Are you sure you want to complete the sale?",
     "text_delete_product": "Delete this product? This action cannot be undone.",
-    "text_delete_customer": "Delete this customer? This action cannot be undonde."
+    "text_delete_customer": "Delete this customer? This action cannot be undonde.",
+    "text_active_customer": "Make sure to active this customer?"
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
@@ -238,7 +238,8 @@
     "text_add_product": "Product added successfully.",
     "text_edit_product": "Product edited successfully.",
     "text_edit_customer": "Customer edited successfully.",
-    "text_delete_customer": "Customer deleted successfully."
+    "text_delete_customer": "Customer deleted successfully.",
+    "text_restore_customer": "Customer active successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -272,7 +273,8 @@
     "text_customer_not_found": "Customer not found.",
     "text_inactive_customer": "Customer inactive.",
     "text_debt_customer": "Customer with outstanding debt.",
-    "text_not_selected_customer": "You must first select a customer."
+    "text_not_selected_customer": "You must first select a customer.",
+    "text_active_customer": "This customer is already active."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",

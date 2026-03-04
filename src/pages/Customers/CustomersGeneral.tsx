@@ -95,7 +95,6 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
   const columnsc = columnsC(t, i18n.language);
 
   const deleteCustomer = async (id: number, status: string) => {
-    console.log("Deleting customer:", id, status);
     if (status !== "active" && status !== "debt") {
       triggerResponseAlert(AUTH_CODES.INACTIVE_CUSTOMER);
       return;
@@ -112,6 +111,35 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
         try {
           setLoading(true);
           const response = await window.electronAPI.deleteCustomer(id);
+          if (response.success) {
+            loadCustomerGeneral();
+            setLoading(false);
+            triggerResponseAlert(response.result);
+          } else {
+            setLoading(false);
+            triggerResponseAlert(response.error);
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      },
+    );
+  };
+
+  const activeCustomer = async (id: number, status: string) => {
+    if (status !== "inactive") {
+      triggerResponseAlert(AUTH_CODES.ACTIVE_CUSTOMER);
+      return;
+    }
+
+    triggerWarningAlert(
+      t("modalWarningAlert.text_active_customer"),
+      async () => {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.activeCustomer(id);
+          console.log(response);
+
           if (response.success) {
             loadCustomerGeneral();
             setLoading(false);
@@ -271,6 +299,9 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
               },
               onDelete: (row) => {
                 deleteCustomer(Number(row.id), row.status);
+              },
+              onActive: (row) => {
+                activeCustomer(Number(row.id), row.status);
               },
             }}
           />

@@ -396,6 +396,41 @@ async function deleteCustomer(data) {
   }
 }
 
+// Active Customer
+async function activeCustomer(data) {
+  const db = await getDB();
+  try {
+    // Search Customer
+    const query = db.exec("SELECT id, status_id FROM customer WHERE id = ?", [
+      data,
+    ]);
+
+    const customers = mapResultToObjects(query);
+    const customerFound = customers[0];
+
+    // Customer?
+    if (!customerFound) {
+      return { success: false, error: AUTH_CODES.CUSTOMER_NOT_FOUND };
+    }
+
+    // Status?
+    if (!customerFound.status_id === 0) {
+      return { success: false, error: AUTH_CODES.ACTIVE_CUSTOMER };
+    }
+
+    db.run(
+      "UPDATE customer SET deleted_at = null, status_id = 1 WHERE id = ?",
+      [data],
+    );
+
+    await saveDB(db);
+    return { success: true, result: AUTH_CODES.RESTORE_CUSTOMER };
+  } catch (error) {
+    console.error("Error active customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 // Get Customers Select
 async function getCustomersSelect() {
   try {
@@ -889,4 +924,5 @@ module.exports = {
   getAllCustomers,
   getAllDebtsCustomer,
   getAllPaymentsCustomer,
+  activeCustomer,
 };
