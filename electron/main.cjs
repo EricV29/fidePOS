@@ -28,7 +28,6 @@ const {
   getHistorySales,
   getFilterSearchHistorySales,
   getAllHistorySales,
-  getTotalDebtAmount,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -1195,7 +1194,7 @@ ipcMain.handle("get-customers-general-data", async (event, data) => {
       ] = await Promise.all([
         getCustomersNumber(),
         getCustomersInDebtNumber(),
-        getTotalDebtAmount(),
+        getPendingSalesAmount(),
         getLastCustomerNamePaid(),
         getCustomersTable(limit, offset),
       ]);

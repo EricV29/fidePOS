@@ -70,7 +70,8 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
 
     if (customersGeneralData.totalDebtAmount) {
       const totalDebtAmount = customersGeneralData.totalDebtAmount.result;
-      setTotalDebtAmountCard(totalDebtAmount[0].totalDebtAmount);
+
+      setTotalDebtAmountCard(totalDebtAmount[0].pendingSalesAmount);
     }
 
     if (customersGeneralData.lastCustomerNamePaid) {
@@ -233,7 +234,7 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
           />
           <CardInfoNumber
             icon={InvestmentIcon}
-            title={t("cards.owed_title")}
+            title={t("cards.pending_title")}
             icond={null}
             number={totalDebtAmountCard}
             format={true}
