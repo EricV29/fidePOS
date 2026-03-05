@@ -38,10 +38,28 @@ async function getTopSalesCategory(startDate, endDate) {
 }
 
 // Get Revenue
-async function getRevenue() {
+async function getRevenue(filters) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_revenue`;
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE sd.status_id = 4 AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+      SELECT 
+        SUM((sd.subt_price - sd.cost_price) * sd.quantity) AS revenue
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id 
+      ${whereClause};
+      `;
+    } else {
+      sql = `SELECT * FROM v_revenue`;
+    }
 
     const query = db.exec(sql);
 

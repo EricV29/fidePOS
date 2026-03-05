@@ -198,6 +198,7 @@
       "fri": "Fri",
       "sat": "Sat"
     },
+    "onlyToday": "Only today?",
     "btn1": "Cancel",
     "btn2": "Apply"
   },

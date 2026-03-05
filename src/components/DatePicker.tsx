@@ -5,6 +5,7 @@ import LeftIcon from "@icons/LeftIcon";
 import RightIcon from "@icons/RightIcon";
 import { useTranslation } from "react-i18next";
 import { toSqlDate } from "@utility/dateFormats";
+
 interface DatePickerProps {
   installDate: string | null;
   onApply: (startDate: string | null, endDate: string | null) => void;
@@ -19,6 +20,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
   const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
   const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [onlyToday, setOnlyToday] = useState(false);
 
   const datepickerRef = useRef(null);
 
@@ -107,6 +109,7 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
       } else {
         setSelectedEndDate(selectedDay);
       }
+      setOnlyToday(false);
     }
   };
 
@@ -129,9 +132,31 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
     setIsOpen(!isOpen);
   };
 
+  const cleanDate = (dateStr: string | null) => {
+    if (!dateStr) return null;
+    return dateStr.split("T")[0];
+  };
+
   const handleApply = () => {
-    const start = toSqlDate(selectedStartDate);
-    const end = toSqlDate(selectedEndDate);
+    let start: string | null = null;
+    let end: string | null = null;
+
+    if (selectedStartDate && selectedEndDate) {
+      start = toSqlDate(selectedStartDate);
+      end = toSqlDate(selectedEndDate);
+    } else if (selectedStartDate) {
+      if (onlyToday) {
+        start = toSqlDate(selectedStartDate);
+        end = toSqlDate(selectedStartDate);
+      } else {
+        start = cleanDate(installDate);
+        end = toSqlDate(selectedStartDate);
+      }
+    } else {
+      start = installDate;
+      end = toSqlDate(new Date());
+    }
+
     onApply(start, end);
     setIsOpen(false);
   };
@@ -139,13 +164,10 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
   const handleCancel = () => {
     setSelectedStartDate(null);
     setSelectedEndDate(null);
-    const today = new Date().toISOString().split("T")[0];
-    const startDefault = installDate
-      ? new Date(installDate).toISOString().split("T")[0]
-      : today;
+    setOnlyToday(false); // Resetear check
 
-    onApply(startDefault, today);
-
+    const today = toSqlDate(new Date());
+    onApply(installDate, today);
     setIsOpen(false);
   };
 
@@ -157,6 +179,8 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
       // document.removeEventListener("click", handleDocumentClick);
     };
   }, []);
+
+  const isRangeSelected = !!(selectedStartDate && selectedEndDate);
 
   return (
     <>
@@ -239,6 +263,19 @@ const DateRangePickerWithInlineButtons: React.FC<DatePickerProps> = ({
             </div>
 
             <div className="mt-5 flex justify-end space-x-2.5 border-t-2 border-[#f57c00] p-5 border-dark-3">
+              <label
+                className={`flex items-center space-x-2 text-sm font-medium ${isRangeSelected ? "opacity-30 cursor-not-allowed" : "cursor-pointer"} text-black dark:text-white`}
+              >
+                <input
+                  type="checkbox"
+                  className="w-4 h-4 accent-[#f57c00]"
+                  disabled={isRangeSelected}
+                  checked={onlyToday}
+                  onChange={(e) => setOnlyToday(e.target.checked)}
+                />
+                <span>{t("datePicker.onlyToday") || "Only this day?"}</span>
+              </label>
+
               <button
                 id="cancelButton"
                 className="rounded-lg border border-[#f57c00] px-5 py-2.5 text-base font-medium text-[#f57c00] hover:bg-[#f57c00] hover:text-white"
