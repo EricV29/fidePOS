@@ -127,6 +127,8 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [investCard, setInvestCard] = useState(Number);
   const [revenueCard, setRevenueCard] = useState(Number);
   const [inventoryValue, setInventoryValue] = useState(Number);
+  const [salesNumber, setSalesNumber] = useState(Number);
+  const [salesAmount, setSalesAmount] = useState(Number);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -151,6 +153,13 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
       if (reportsGeneralData?.inventoryValue) {
         const inventoryValueData = reportsGeneralData.inventoryValue.result;
         setInventoryValue(inventoryValueData[0].inventory_value);
+      }
+
+      if (reportsGeneralData?.salesNumberAmount) {
+        const salesNumberAmountData =
+          reportsGeneralData.salesNumberAmount.result;
+        setSalesNumber(salesNumberAmountData.dataNumber[0].salesNumber);
+        setSalesAmount(salesNumberAmountData.dataAmount[0].salesAmount);
       }
     },
     [filters],
@@ -293,9 +302,9 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           />
           <CardInfoNumber
             icon={ShoppingCar}
-            title={t("cards.sales_title") + ": 10"}
+            title={t("cards.sales_title") + `: ${salesNumber}`}
             icond={null}
-            number={1500}
+            number={salesAmount}
             format={true}
             color="#1976D2"
           />
