@@ -326,10 +326,27 @@ async function getSalesNumberAmount(filters) {
 }
 
 // Get Pending Sales Amount
-async function getPendingSalesAmount() {
+async function getPendingSalesAmount(filters) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_pending_sales_amount`;
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE status_id = 5 AND created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+      SELECT 
+        SUM(total_amount - paid_amount) AS pendingSalesAmount
+      FROM sale
+      ${whereClause};
+      `;
+    } else {
+      sql = `SELECT * FROM v_pending_sales_amount`;
+    }
 
     const query = db.exec(sql);
 
