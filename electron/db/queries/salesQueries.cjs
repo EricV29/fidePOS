@@ -276,19 +276,49 @@ async function createNewSale(data) {
 }
 
 // Get Sales Number
-async function getSalesNumber() {
+async function getSalesNumberAmount(filters) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_sales_number;`;
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sqlNumber = "";
+    let sqlAmount = "";
+    let whereClauseNumber = "";
+    let whereClauseAmount = "";
 
-    const query = db.exec(sql);
+    if (filters) {
+      whereClauseNumber = `WHERE status_id = 4 AND created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+      whereClauseAmount = `WHERE sd.status_id = 4 AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
-    if (query.length === 0) {
+      sqlNumber = `
+      SELECT 
+        COUNT(id) AS salesNumber
+      FROM sale
+      ${whereClauseNumber};`;
+
+      sqlAmount = `
+      SELECT 
+        SUM(sd.subt_price) salesAmount
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id
+      ${whereClauseAmount};`;
+    } else {
+      sqlNumber = `SELECT * FROM v_sales_number;`;
+      sqlAmount = `SELECT * FROM v_sales_amount;`;
+    }
+
+    const queryNumber = db.exec(sqlNumber);
+    const queryAmount = db.exec(sqlAmount);
+
+    if (queryNumber.length === 0 || queryAmount.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    const dataNumber = mapResultToObjects(queryNumber);
+    const dataAmount = mapResultToObjects(queryAmount);
+
+    return { success: true, result: { dataNumber, dataAmount } };
   } catch (error) {
     console.error("Error getting sales number:", error);
     return { success: false, error: error.message };
@@ -533,7 +563,7 @@ module.exports = {
   getSaleData,
   getNextNumberSale,
   createNewSale,
-  getSalesNumber,
+  getSalesNumberAmount,
   getPendingSalesAmount,
   getDiscountsAmount,
   getPaidVSPendingNumber,
