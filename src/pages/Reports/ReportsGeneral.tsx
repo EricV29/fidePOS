@@ -126,9 +126,10 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   //* GET DATA
   const [investCard, setInvestCard] = useState(Number);
   const [revenueCard, setRevenueCard] = useState(Number);
-  const [inventoryValue, setInventoryValue] = useState(Number);
-  const [salesNumber, setSalesNumber] = useState(Number);
-  const [salesAmount, setSalesAmount] = useState(Number);
+  const [inventoryValueCard, setInventoryValueCard] = useState(Number);
+  const [salesNumberCard, setSalesNumberCard] = useState(Number);
+  const [salesAmountCard, setSalesAmountCard] = useState(Number);
+  const [salesPendingAmountCard, setSalesPendingAmountCard] = useState(Number);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -152,14 +153,20 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
 
       if (reportsGeneralData?.inventoryValue) {
         const inventoryValueData = reportsGeneralData.inventoryValue.result;
-        setInventoryValue(inventoryValueData[0].inventory_value);
+        setInventoryValueCard(inventoryValueData[0].inventory_value);
       }
 
       if (reportsGeneralData?.salesNumberAmount) {
         const salesNumberAmountData =
           reportsGeneralData.salesNumberAmount.result;
-        setSalesNumber(salesNumberAmountData.dataNumber[0].salesNumber);
-        setSalesAmount(salesNumberAmountData.dataAmount[0].salesAmount);
+        setSalesNumberCard(salesNumberAmountData.dataNumber[0].salesNumber);
+        setSalesAmountCard(salesNumberAmountData.dataAmount[0].salesAmount);
+      }
+
+      if (reportsGeneralData?.salesPendingAmount) {
+        const salesPendingAmountData =
+          reportsGeneralData.salesPendingAmount.result;
+        setSalesPendingAmountCard(salesPendingAmountData[0].pendingSalesAmount);
       }
     },
     [filters],
@@ -296,23 +303,23 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             icon={InvestmentIcon}
             title={t("cards.inventory_value_title")}
             icond={null}
-            number={inventoryValue}
+            number={inventoryValueCard}
             format={true}
             color="#FFC107"
           />
           <CardInfoNumber
             icon={ShoppingCar}
-            title={t("cards.sales_title") + `: ${salesNumber}`}
+            title={t("cards.sales_title") + `: ${salesNumberCard}`}
             icond={null}
-            number={salesAmount}
+            number={salesAmountCard}
             format={true}
             color="#1976D2"
           />
           <CardInfoNumber
             icon={InvestmentIcon}
-            title={t("cards.owed_title")}
+            title={t("cards.pending_title")}
             icond={null}
-            number={12000}
+            number={salesPendingAmountCard}
             format={true}
             color="#1976D2"
           />

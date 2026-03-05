@@ -1481,13 +1481,19 @@ ipcMain.handle("get-all-debts-payments", async (event, data) => {
 ipcMain.handle("get-reports-general-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const [investment, revenue, inventoryValue, salesNumberAmount] =
-        await Promise.all([
-          getInvestment(data),
-          getRevenue(data),
-          getInventoryValue(data),
-          getSalesNumberAmount(data),
-        ]);
+      const [
+        investment,
+        revenue,
+        inventoryValue,
+        salesNumberAmount,
+        salesPendingAmount,
+      ] = await Promise.all([
+        getInvestment(data),
+        getRevenue(data),
+        getInventoryValue(data),
+        getSalesNumberAmount(data),
+        getPendingSalesAmount(data),
+      ]);
 
       return {
         success: true,
@@ -1496,6 +1502,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
           revenue,
           inventoryValue,
           salesNumberAmount,
+          salesPendingAmount,
         },
       };
     } catch (error) {
