@@ -1481,9 +1481,10 @@ ipcMain.handle("get-all-debts-payments", async (event, data) => {
 ipcMain.handle("get-reports-general-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const [investment, revenue] = await Promise.all([
+      const [investment, revenue, inventoryValue] = await Promise.all([
         getInvestment(data),
         getRevenue(data),
+        getInventoryValue(data),
       ]);
 
       return {
@@ -1491,6 +1492,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
         result: {
           investment,
           revenue,
+          inventoryValue,
         },
       };
     } catch (error) {

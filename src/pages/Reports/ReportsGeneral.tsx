@@ -126,6 +126,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   //* GET DATA
   const [investCard, setInvestCard] = useState(Number);
   const [revenueCard, setRevenueCard] = useState(Number);
+  const [inventoryValue, setInventoryValue] = useState(Number);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -145,6 +146,11 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
       if (reportsGeneralData?.revenue) {
         const revenueData = reportsGeneralData.revenue.result;
         setRevenueCard(revenueData[0].revenue);
+      }
+
+      if (reportsGeneralData?.inventoryValue) {
+        const inventoryValueData = reportsGeneralData.inventoryValue.result;
+        setInventoryValue(inventoryValueData[0].inventory_value);
       }
     },
     [filters],
@@ -281,7 +287,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             icon={InvestmentIcon}
             title={t("cards.inventory_value_title")}
             icond={null}
-            number={100000}
+            number={inventoryValue}
             format={true}
             color="#FFC107"
           />

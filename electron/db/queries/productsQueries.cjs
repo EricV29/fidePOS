@@ -226,11 +226,33 @@ async function getSearchCodeSKU(codesku) {
 }
 
 // Get Iventory Value
-async function getInventoryValue() {
-  try {
-    const db = await getDB();
+async function getInventoryValue(filters) {
+  const db = await getDB();
 
-    const sql = `SELECT * FROM v_inventory_value`;
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+      SELECT 
+        SUM((p.stock + IFNULL(ventas_posteriores.cantidad_recuperada, 0)) * p.cost_price) AS inventory_value
+      FROM product p
+      LEFT JOIN (
+        SELECT sd.product_id, SUM(sd.quantity) AS cantidad_recuperada
+        FROM sale_detail sd
+        JOIN sale s ON sd.sale_id = s.id
+        ${whereClause}
+        GROUP BY sd.product_id
+      ) AS ventas_posteriores ON p.id = ventas_posteriores.product_id;
+      `;
+    } else {
+      sql = `SELECT * FROM v_inventory_value`;
+    }
 
     const query = db.exec(sql);
 
