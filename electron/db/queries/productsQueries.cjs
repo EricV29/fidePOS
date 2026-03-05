@@ -23,12 +23,29 @@ async function getActiveProductsCategory() {
 }
 
 // Get Investment
-async function getInvestment() {
-  try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_investment`;
+async function getInvestment(filters) {
+  const db = await getDB();
 
-    const query = db.exec(sql);
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+      SELECT 
+        SUM(cost_price) AS investment
+      FROM entries
+      ${whereClause};
+      `;
+    } else {
+      sql = `SELECT * FROM v_investment`;
+    }
+
+    const query = await db.exec(sql);
 
     if (query.length === 0) {
       return { success: true, result: [] };

@@ -75,8 +75,6 @@ const Customers: React.FC<CustomersProps> = ({}) => {
                       } else {
                         triggerResponseAlert("NOT_SELECTED_CUSTOMER");
                       }
-                    } else {
-                      console.warn("La página actual no soporta exportación.");
                     }
                   },
                 );

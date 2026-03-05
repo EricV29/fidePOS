@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useState,
+  useImperativeHandle,
+} from "react";
 import CardInfoNumber from "@components/CardInfoNumber";
 import CardInfoDetail from "@components/CardInfoDetail";
 import InvestmentIcon from "@icons/InvestmentIcon";
@@ -10,6 +15,8 @@ import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsAR } from "@columns/columnsAR";
 import { useTranslation } from "react-i18next";
+import { useOutletContext } from "react-router-dom";
+import { useLoading } from "@context/LoadingContext";
 
 interface dataCustomerI {
   [key: string]: number;
@@ -50,6 +57,22 @@ export type RecentSalesPaid = {
     edit?: boolean;
   };
 };
+
+export type dataExportReports = string | number | boolean | null | undefined;
+
+// hijo > padre
+interface ExportableChild {
+  createReport: (view: string) => Promise<dataExportReports[][]>;
+}
+
+// Padre > hijo
+interface ReportsContext {
+  childRef: React.RefObject<ExportableChild>;
+  filters: {
+    startDate: string;
+    endDate: string;
+  };
+}
 
 interface ReportsGeneralProps {}
 
@@ -97,14 +120,44 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
   const { t, i18n } = useTranslation();
+  const { setLoading } = useLoading();
+  const { filters, childRef } = useOutletContext<ReportsContext>();
+
+  //* GET DATA
+  const [investCard, setInvestCard] = useState(Number);
+  const [revenueCard, setRevenueCard] = useState(Number);
+
+  const loadReportsGeneral = useCallback(
+    async (currentFilters = filters) => {
+      // setLoading(true);
+      const response =
+        await window.electronAPI.getReportsGeneralData(currentFilters);
+      const reportsGeneralData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
+
+      if (reportsGeneralData?.investment) {
+        const investmentData = reportsGeneralData.investment.result;
+        setInvestCard(investmentData[0].investment);
+      }
+
+      if (reportsGeneralData?.revenue) {
+        const revenueData = reportsGeneralData.revenue.result;
+        setRevenueCard(revenueData[0].revenue);
+      }
+    },
+    [filters],
+  );
 
   useEffect(() => {
+    loadReportsGeneral();
     setCustomer(dataCustomerDB);
     setDataProductsS(dataStatusPSDB);
     setChartDataCSF(addRandomFill(chartDataCSDB));
     setChartDataTSC(chartDataTCSDB);
     setDataTableAR(dataARBD);
-  }, []);
+  }, [filters, loadReportsGeneral]);
 
   const columnsar = columnsAR(t, i18n.language);
 
@@ -121,6 +174,89 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
     },
   };
 
+  useImperativeHandle(childRef, () => ({
+    createReport: async (view: string) => {
+      let generalData: Customers[] = customerTable;
+
+      if (view === "total") {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.getAllCustomers();
+          if (response.success) {
+            const rawData =
+              typeof response.result === "string"
+                ? JSON.parse(response.result)
+                : response.result;
+
+            generalData = rawData as Customers[];
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      const statsData = [
+        [t("exportReport.customer_general.title")],
+        [
+          t("exportReport.customer_general.customers_number"),
+          customersNumberCard,
+        ],
+        [
+          t("exportReport.customer_general.customers_debts_number"),
+          customersInDebtNumberCard,
+        ],
+        [
+          t("exportReport.customer_general.total_debt_amount"),
+          totalDebtAmountCard,
+        ],
+        [
+          t("exportReport.customer_general.last_customer_name_paid"),
+          lastCustomerNamePaidCard,
+        ],
+        [
+          t("exportReport.customer_general.last_customer_name_paid_date"),
+          lastCustomerNamePaidCardDate,
+        ],
+        [],
+      ];
+
+      const tableHeaders = [
+        "ID",
+        t("columns.name"),
+        t("columns.last_name"),
+        t("columns.phone"),
+        t("columns.status"),
+        t("columns.debts_number"),
+        t("columns.debt_amount"),
+        t("columns.debt_paid"),
+        t("columns.created_at"),
+      ];
+
+      const rows = generalData.map((cg) => [
+        cg.id,
+        cg.name,
+        cg.last_name,
+        cg.phone,
+        cg.status,
+        cg.debts_number,
+        cg.debts_amount,
+        cg.debts_paid,
+        cg.created_at,
+      ]);
+
+      const finalData: dataExportReports[][] = [
+        [t("exportReport.customer_general.detail_customers")],
+        ...statsData,
+        tableHeaders,
+        ...rows,
+      ];
+
+      return finalData;
+    },
+  }));
+
   return (
     <>
       <div className="w-full h-full flex flex-col gap-2">
@@ -129,7 +265,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             icon={InvestmentIcon}
             title={t("cards.investment_title")}
             icond={null}
-            number={120238}
+            number={investCard}
             format={true}
             color="#F57C00"
           />
@@ -137,7 +273,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             icon={RevenueIcon}
             title={t("cards.revenue_title")}
             icond={null}
-            number={10500}
+            number={revenueCard}
             format={true}
             color="#43A047"
           />

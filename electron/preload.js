@@ -159,4 +159,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Active Customer
   activeCustomer: (data) => ipcRenderer.invoke("activeCustomer", data),
+
+  //* Get Reports General Page
+  getReportsGeneralData: (data) =>
+    ipcRenderer.invoke("get-reports-general-data", data),
 });

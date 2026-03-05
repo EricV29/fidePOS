@@ -1477,6 +1477,30 @@ ipcMain.handle("get-all-debts-payments", async (event, data) => {
   }
 });
 
+//* Get Reports General Data Page
+ipcMain.handle("get-reports-general-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [investment, revenue] = await Promise.all([
+        getInvestment(data),
+        getRevenue(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          investment,
+          revenue,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
 //* INITIALIZATION
 let isInitializing = false;
 app.whenReady().then(async () => {

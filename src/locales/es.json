@@ -205,6 +205,7 @@
       "fri": "Vie",
       "sat": "Sáb"
     },
+    "onlyToday": "¿Sólo hoy?",
     "btn1": "Cancelar",
     "btn2": "Aplicar"
   },

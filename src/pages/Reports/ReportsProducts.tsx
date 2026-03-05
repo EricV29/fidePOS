@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import CardInfoNumber from "@components/CardInfoNumber";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import RevenueIcon from "@icons/RevenueIcon";
@@ -10,6 +15,7 @@ import { columnsP } from "@columns/columnsP";
 import type { Products } from "@typesm/products";
 import CardInfoDetail from "@components/CardInfoDetail";
 import { useTranslation } from "react-i18next";
+import { useOutletContext } from "react-router-dom";
 
 interface PieChartItem {
   fill: string;
@@ -56,6 +62,22 @@ const dataPBD = [
 //* Example data status products
 const dataStatusPDB = { Active: 40, Desactive: 15 };
 
+export type dataExportReports = string | number | boolean | null | undefined;
+
+// hijo > padre
+interface ExportableChild {
+  createReport: (view: string) => Promise<dataExportReports[][]>;
+}
+
+// Padre > hijo
+interface ReportsContext {
+  childRef: React.RefObject<ExportableChild>;
+  filters: {
+    startDate: string;
+    endDate: string;
+  };
+}
+
 interface ReportsProductsProps {}
 
 const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
@@ -64,11 +86,37 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
   const [dataTableP, setDataTableP] = useState<Products[]>([]);
   const { t, i18n } = useTranslation();
 
+  const { filters, childRef } = useOutletContext<ReportsContext>();
+  //* GET DATA
+
+  const loadReportsGeneral = useCallback(
+    async (currentFilters = filters) => {
+      //setLoading(true);
+      console.log(currentFilters);
+
+      // const response =
+      //   await window.electronAPI.getReportsGeneralData(currenFilters);
+      // const dashboardData =
+      //   typeof response.result === "string"
+      //     ? JSON.parse(response.result)
+      //     : response.result;
+
+      // if (dashboardData?.investment) {
+      //   const investmentData = dashboardData.investment.result;
+      //   setInvestCard(investmentData[0].investment);
+      // }
+    },
+    [filters],
+  );
+
   useEffect(() => {
+    console.log(filters);
+
+    loadReportsGeneral();
     setChartDataCP(addRandomFill(chartDataCPDB));
     setChartDataTSP(chartDataTSPDB);
     setDataTableP(dataPBD);
-  }, []);
+  }, [filters, loadReportsGeneral]);
 
   const columnsp = columnsP(t, i18n.language);
 
@@ -84,6 +132,89 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
       color: "#1976D2",
     },
   };
+
+  useImperativeHandle(childRef, () => ({
+    createReport: async (view: string) => {
+      let generalData: Customers[] = customerTable;
+
+      if (view === "total") {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.getAllCustomers();
+          if (response.success) {
+            const rawData =
+              typeof response.result === "string"
+                ? JSON.parse(response.result)
+                : response.result;
+
+            generalData = rawData as Customers[];
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      const statsData = [
+        [t("exportReport.customer_general.title")],
+        [
+          t("exportReport.customer_general.customers_number"),
+          customersNumberCard,
+        ],
+        [
+          t("exportReport.customer_general.customers_debts_number"),
+          customersInDebtNumberCard,
+        ],
+        [
+          t("exportReport.customer_general.total_debt_amount"),
+          totalDebtAmountCard,
+        ],
+        [
+          t("exportReport.customer_general.last_customer_name_paid"),
+          lastCustomerNamePaidCard,
+        ],
+        [
+          t("exportReport.customer_general.last_customer_name_paid_date"),
+          lastCustomerNamePaidCardDate,
+        ],
+        [],
+      ];
+
+      const tableHeaders = [
+        "ID",
+        t("columns.name"),
+        t("columns.last_name"),
+        t("columns.phone"),
+        t("columns.status"),
+        t("columns.debts_number"),
+        t("columns.debt_amount"),
+        t("columns.debt_paid"),
+        t("columns.created_at"),
+      ];
+
+      const rows = generalData.map((cg) => [
+        cg.id,
+        cg.name,
+        cg.last_name,
+        cg.phone,
+        cg.status,
+        cg.debts_number,
+        cg.debts_amount,
+        cg.debts_paid,
+        cg.created_at,
+      ]);
+
+      const finalData: dataExportReports[][] = [
+        [t("exportReport.customer_general.detail_customers")],
+        ...statsData,
+        tableHeaders,
+        ...rows,
+      ];
+
+      return finalData;
+    },
+  }));
 
   return (
     <>
