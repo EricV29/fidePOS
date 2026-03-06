@@ -573,6 +573,43 @@ async function getAllHistorySales() {
   }
 }
 
+// Get Sales by Category
+async function getSalesByCategory(filters) {
+  const db = await getDB();
+
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    const params = [start, end];
+    const sql = `
+      SELECT 
+        c.name AS category,
+        IFNULL(SUM(sd.quantity), 0) AS sales 
+      FROM category c
+      LEFT JOIN product p ON c.id = p.category_id
+      LEFT JOIN sale_detail sd ON p.id = sd.product_id 
+        AND sd.status_id = 4 
+      LEFT JOIN sale s ON sd.sale_id = s.id 
+        AND s.created_at BETWEEN ? AND ?
+        AND s.deleted_at IS NULL
+      GROUP BY c.name
+      ORDER BY sales DESC;
+      `;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting sales by category:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
@@ -587,4 +624,5 @@ module.exports = {
   getHistorySales,
   getFilterSearchHistorySales,
   getAllHistorySales,
+  getSalesByCategory,
 };
