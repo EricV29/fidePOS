@@ -1495,6 +1495,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
         productsStatus,
         salesByCategory,
         topSellingProducts,
+        accountsReceivable,
       ] = await Promise.all([
         getInvestment(data),
         getRevenue(data),
@@ -1505,6 +1506,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
         getProductsStatus(data),
         getSalesByCategory(data),
         getTopSellingProducts(data),
+        getAccountsReceivable(data),
       ]);
 
       return {
@@ -1519,6 +1521,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
           productsStatus,
           salesByCategory,
           topSellingProducts,
+          accountsReceivable,
         },
       };
     } catch (error) {
