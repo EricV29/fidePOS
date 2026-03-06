@@ -93,12 +93,6 @@ const chartDataTCSDB = [
   { category: "Zapatos", sales: 209 },
 ];
 
-//* Example data stock products
-const dataCustomerDB = { Total: 40, "In Debt": 15 };
-
-//* Example data status products
-const dataStatusPSDB = { Active: 40, Desactive: 15 };
-
 //* Example data accounts receivable
 const dataARBD = [
   {
@@ -118,8 +112,6 @@ interface dataCustomersI {
 }
 
 const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
-  const [dataCustomer, setCustomer] = useState<dataCustomerI>();
-  const [dataProductsS, setDataProductsS] = useState<dataCustomerI>();
   const [chartDataCSF, setChartDataCSF] = useState<PieChartItem[]>([]);
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
@@ -135,6 +127,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [salesAmountCard, setSalesAmountCard] = useState(Number);
   const [salesPendingAmountCard, setSalesPendingAmountCard] = useState(Number);
   const [customersStatus, setCustomersStatus] = useState<dataCustomersI>();
+  const [productsStatus, setProductsStatus] = useState<dataCustomersI>();
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -178,14 +171,17 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
         const customersStatusData = reportsGeneralData.customersStatus.result;
         setCustomersStatus(customersStatusData[0]);
       }
+
+      if (reportsGeneralData?.productsStatus) {
+        const productsStatusData = reportsGeneralData.productsStatus.result;
+        setProductsStatus(productsStatusData[0]);
+      }
     },
     [filters],
   );
 
   useEffect(() => {
     loadReportsGeneral();
-    setCustomer(dataCustomerDB);
-    setDataProductsS(dataStatusPSDB);
     setChartDataCSF(addRandomFill(chartDataCSDB));
     setChartDataTSC(chartDataTCSDB);
     setDataTableAR(dataARBD);
@@ -364,7 +360,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
               />
 
               <CardInfoDetail
-                chartData={dataProductsS!}
+                chartData={productsStatus!}
                 title={t("cards.products_status_title")}
                 color="#1976D2"
               />

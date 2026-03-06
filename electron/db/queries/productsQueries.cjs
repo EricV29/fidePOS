@@ -735,6 +735,36 @@ async function getAllProducts() {
   }
 }
 
+// Get Products Status
+async function getProductsStatus(filters) {
+  const db = await getDB();
+
+  try {
+    const end = filters?.endDate || "";
+    const start = filters?.startDate || "";
+    const params = [start, end];
+    const sql = `
+      SELECT 
+        SUM(CASE WHEN status_id = 1 THEN 1 ELSE 0 END) AS Active,
+        SUM(CASE WHEN status_id = 0 THEN 1 ELSE 0 END) AS Inactive
+      FROM product
+      WHERE created_at BETWEEN ? AND ?;
+      `;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting products status:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
@@ -751,4 +781,5 @@ module.exports = {
   editProduct,
   addProductsImport,
   getAllProducts,
+  getProductsStatus,
 };
