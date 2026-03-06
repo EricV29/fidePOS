@@ -104,7 +104,6 @@ interface dataCustomersI {
 }
 
 const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
-  const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
   const { t, i18n } = useTranslation();
   const { setLoading } = useLoading();
@@ -121,6 +120,9 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [productsStatus, setProductsStatus] = useState<dataCustomersI>();
   const [salesByCategoryChart, setSalesByCategoryChart] = useState<
     PieChartItem[]
+  >([]);
+  const [topSellingProductsChart, setTopSellingProductsChart] = useState<
+    BarChartItem[]
   >([]);
 
   const loadReportsGeneral = useCallback(
@@ -176,27 +178,32 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           reportsGeneralData.salesByCategory.result;
         setSalesByCategoryChart(addRandomFill(salesByCategoryChartData));
       }
+
+      if (reportsGeneralData?.topSellingProducts) {
+        const topSellingProductsData =
+          reportsGeneralData.topSellingProducts.result;
+        setTopSellingProductsChart(topSellingProductsData);
+      }
     },
     [filters],
   );
 
   useEffect(() => {
     loadReportsGeneral();
-    setChartDataTSC(chartDataTCSDB);
     setDataTableAR(dataARBD);
   }, [filters, loadReportsGeneral]);
 
   const columnsar = columnsAR(t, i18n.language);
 
-  const chartConfigCS = {
+  const chartConfigSC = {
     items: {
-      label: t("charts.chart_tcs"),
+      label: t("charts.chart_sales"),
     },
   };
 
-  const chartConfigTCS = {
+  const chartConfigTSP = {
     sales: {
-      label: t("charts.chart_tcs"),
+      label: t("charts.chart_sales"),
       color: "#1976D2",
     },
   };
@@ -337,7 +344,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
               </p>
               <ChartPieDonutText
                 chartData={salesByCategoryChart}
-                chartConfig={chartConfigCS}
+                chartConfig={chartConfigSC}
               />
             </div>
             <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
@@ -345,9 +352,9 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
                 {t("reports.chart2")}
               </p>
               <ChartBarLabel
-                chartData={chartDataTCS}
-                chartConfig={chartConfigTCS}
-                xAxis="category"
+                chartData={topSellingProductsChart}
+                chartConfig={chartConfigTSP}
+                xAxis="product"
                 yAxis="sales"
               />
             </div>

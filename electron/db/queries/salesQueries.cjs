@@ -610,6 +610,40 @@ async function getSalesByCategory(filters) {
   }
 }
 
+// Get Top Selling Products
+async function getTopSellingProducts(filters) {
+  const db = await getDB();
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    const params = [start, end];
+    const sql = `
+      SELECT 
+        p.name AS product,
+        SUM(sd.quantity) AS sales
+      FROM sale_detail sd
+      INNER JOIN product p ON sd.product_id = p.id
+      INNER JOIN sale s ON sd.sale_id = s.id 
+      WHERE sd.status_id = 4 AND s.created_at BETWEEN ? AND ?
+      GROUP BY sd.product_id
+      ORDER BY sales DESC
+      LIMIT 5;
+    `;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting top 5 selling products:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
@@ -625,4 +659,5 @@ module.exports = {
   getFilterSearchHistorySales,
   getAllHistorySales,
   getSalesByCategory,
+  getTopSellingProducts,
 };

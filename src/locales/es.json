@@ -76,11 +76,10 @@
       "customers": "Clientes"
     },
     "chart1": "Ventas por Categoría",
-    "chart2": "Ventas por Producto",
+    "chart2": "Top Productos Vendidos",
     "table1": "Accounts Receivable",
     "table2": "Ventas",
     "chart3": "Productos por Categoría",
-    "chart4": "Top Productos Vendidos",
     "table3": "Productos",
     "chart5": "Deudas por Cliente",
     "chart6": "Total de Deudas Durante el Tiempo",
@@ -156,7 +155,7 @@
     "debt_num": "No. Deudas"
   },
   "charts": {
-    "chart_tcs": "Ventas",
+    "chart_sales": "Ventas",
     "chart_apc": "Productos",
     "totals": "Totales",
     "chart_cs": "Ventas"
