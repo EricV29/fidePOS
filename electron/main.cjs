@@ -72,6 +72,7 @@ const {
   getAllDebtsCustomer,
   getAllPaymentsCustomer,
   activeCustomer,
+  getCustomersStatus,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1487,12 +1488,14 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
         inventoryValue,
         salesNumberAmount,
         salesPendingAmount,
+        customersStatus,
       ] = await Promise.all([
         getInvestment(data),
         getRevenue(data),
         getInventoryValue(data),
         getSalesNumberAmount(data),
         getPendingSalesAmount(data),
+        getCustomersStatus(data),
       ]);
 
       return {
@@ -1503,6 +1506,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
           inventoryValue,
           salesNumberAmount,
           salesPendingAmount,
+          customersStatus,
         },
       };
     } catch (error) {
