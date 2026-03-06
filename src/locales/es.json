@@ -77,7 +77,7 @@
     },
     "chart1": "Ventas por Categoría",
     "chart2": "Top Productos Vendidos",
-    "table1": "Accounts Receivable",
+    "table1": "Cuentas por Cobrar",
     "table2": "Ventas",
     "chart3": "Productos por Categoría",
     "table3": "Productos",
@@ -152,7 +152,8 @@
     "last_name": "Apellido",
     "pending_amount": "Monto Pendiente",
     "user_id": "ID Usuario",
-    "debt_num": "No. Deudas"
+    "debt_num": "No. Deudas",
+    "code_sku": "No. Código"
   },
   "charts": {
     "chart_sales": "Ventas",
@@ -527,6 +528,24 @@
       "total_payments_amount": "Monto Total de Pago",
       "detail_debts": "DETALLE DE DEUDAS",
       "detail_payments": "DETALLE DE PAGOS"
+    },
+    "reports_general": {
+      "title": "REPORTE GENERAL",
+      "investment": "Inversión",
+      "revenue": "Ganacias",
+      "inventory_value": "Valor de inventario",
+      "sale_num": "Número de ventas",
+      "sale_amount": "Monto total de ventas",
+      "total_receivable": "Monto de cuentas por cobrar",
+      "customer_total_num": "Número total de clientes",
+      "customer_active": "Clientes activos",
+      "customer_in_debt": "En deuda",
+      "products_total_num": "Número total de productos",
+      "products_active": "Productos activos",
+      "products_inactive": "Productos inactivos",
+      "sales_by_category": "VENTAS POR CATEGORÍA",
+      "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
+      "accounts_receivable_table": "DETALLE DE CUENTAS POR COBRAR"
     }
   }
 }

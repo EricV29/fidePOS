@@ -17,6 +17,7 @@ import { columnsAR } from "@columns/columnsAR";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
 import { useLoading } from "@context/LoadingContext";
+import type { AccountsReceivable } from "@typesm/accounts";
 
 interface dataCustomerI {
   [key: string]: number;
@@ -29,22 +30,6 @@ interface PieChartItem {
 interface BarChartItem {
   [key: string]: string | number;
 }
-
-export type AccountsReceivable = {
-  id: string;
-  name: string;
-  last_name: string;
-  code_sku: string;
-  debt_amount: number;
-  debt_paid: number;
-  debt_pending: number;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
 
 export type RecentSalesPaid = {
   id: string;
@@ -76,15 +61,6 @@ interface ReportsContext {
 
 interface ReportsGeneralProps {}
 
-//* Example data bar chart
-const chartDataTCSDB = [
-  { category: "Maquillaje", sales: 186 },
-  { category: "Regalos", sales: 305 },
-  { category: "Edredones", sales: 237 },
-  { category: "Dulces", sales: 73 },
-  { category: "Zapatos", sales: 209 },
-];
-
 //* Example data accounts receivable
 const dataARBD = [
   {
@@ -104,7 +80,6 @@ interface dataCustomersI {
 }
 
 const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
-  const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
   const { t, i18n } = useTranslation();
   const { setLoading } = useLoading();
   const { filters, childRef } = useOutletContext<ReportsContext>();
@@ -123,6 +98,9 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   >([]);
   const [topSellingProductsChart, setTopSellingProductsChart] = useState<
     BarChartItem[]
+  >([]);
+  const [accountsReceivableTable, setAccountsReceivableTable] = useState<
+    AccountsReceivable[]
   >([]);
 
   const loadReportsGeneral = useCallback(
@@ -184,13 +162,18 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           reportsGeneralData.topSellingProducts.result;
         setTopSellingProductsChart(topSellingProductsData);
       }
+
+      if (reportsGeneralData?.accountsReceivable) {
+        const accountsReceivableData =
+          reportsGeneralData.accountsReceivable.result;
+        setAccountsReceivableTable(accountsReceivableData);
+      }
     },
     [filters],
   );
 
   useEffect(() => {
     loadReportsGeneral();
-    setDataTableAR(dataARBD);
   }, [filters, loadReportsGeneral]);
 
   const columnsar = columnsAR(t, i18n.language);
@@ -209,82 +192,103 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   };
 
   useImperativeHandle(childRef, () => ({
-    createReport: async (view: string) => {
-      let generalData: Customers[] = customerTable;
+    createReport: async () => {
+      const accounstReceivableData: AccountsReceivable[] =
+        accountsReceivableTable;
 
-      if (view === "total") {
-        try {
-          setLoading(true);
-          const response = await window.electronAPI.getAllCustomers();
-          if (response.success) {
-            const rawData =
-              typeof response.result === "string"
-                ? JSON.parse(response.result)
-                : response.result;
-
-            generalData = rawData as Customers[];
-          }
-        } catch (err) {
-          console.error("Comunication Error:", err);
-        } finally {
-          setLoading(false);
-        }
+      let totalCustomers = 0;
+      if (customersStatus) {
+        totalCustomers =
+          Number(customersStatus.Active || 0) +
+          Number(customersStatus["In Debt"] || 0);
       }
 
+      let totalProducts = 0;
+      if (productsStatus) {
+        totalProducts =
+          Number(productsStatus.Active || 0) +
+          Number(productsStatus.Inactive || 0);
+      }
+
+      // Stats o Cards
       const statsData = [
-        [t("exportReport.customer_general.title")],
+        [t("exportReport.reports_general.title")],
+        [t("exportReport.reports_general.investment"), investCard],
+        [t("exportReport.reports_general.revenue"), revenueCard],
+        [t("exportReport.reports_general.inventory_value"), inventoryValueCard],
+        [t("exportReport.reports_general.sale_num"), salesAmountCard],
+        [t("exportReport.reports_general.sale_amount"), salesNumberCard],
         [
-          t("exportReport.customer_general.customers_number"),
-          customersNumberCard,
+          t("exportReport.reports_general.total_receivable"),
+          salesPendingAmountCard,
+        ],
+        [],
+        [t("exportReport.reports_general.customer_total_num"), totalCustomers],
+        [
+          t("exportReport.reports_general.customer_total_num"),
+          customersStatus?.Active,
         ],
         [
-          t("exportReport.customer_general.customers_debts_number"),
-          customersInDebtNumberCard,
+          t("exportReport.reports_general.customer_in_debt"),
+          customersStatus?.["In Debt"],
+        ],
+        [],
+        [t("exportReport.reports_general.products_total_num"), totalProducts],
+        [
+          t("exportReport.reports_general.products_active"),
+          productsStatus?.Active,
         ],
         [
-          t("exportReport.customer_general.total_debt_amount"),
-          totalDebtAmountCard,
-        ],
-        [
-          t("exportReport.customer_general.last_customer_name_paid"),
-          lastCustomerNamePaidCard,
-        ],
-        [
-          t("exportReport.customer_general.last_customer_name_paid_date"),
-          lastCustomerNamePaidCardDate,
+          t("exportReport.reports_general.products_inactive"),
+          productsStatus?.Inactive,
         ],
         [],
       ];
 
-      const tableHeaders = [
+      // Table 1 -> Sales by Category Chart (SC)
+      const tableHeadersSC = [t("columns.category"), t("columns.sale_num")];
+
+      const rowsSC = salesByCategoryChart.map((x) => [x.category, x.sales]);
+
+      // Table 2 -> Top Selling Porducts Chart (TSP)
+      const tableHeadersTSP = [t("columns.product"), t("columns.sales_num")];
+
+      const rowsTSP = topSellingProductsChart.map((x) => [x.product, x.sales]);
+
+      // Table 3 -> Accounts Receivable Table (AR)
+      const tableHeadersAR = [
         "ID",
-        t("columns.name"),
-        t("columns.last_name"),
-        t("columns.phone"),
-        t("columns.status"),
-        t("columns.debts_number"),
+        t("columns.customer"),
+        t("columns.code_sku"),
         t("columns.debt_amount"),
         t("columns.debt_paid"),
+        t("columns.debt_pending"),
         t("columns.created_at"),
       ];
 
-      const rows = generalData.map((cg) => [
-        cg.id,
-        cg.name,
-        cg.last_name,
-        cg.phone,
-        cg.status,
-        cg.debts_number,
-        cg.debts_amount,
-        cg.debts_paid,
-        cg.created_at,
+      const rowsAR = accounstReceivableData.map((x) => [
+        x.idCustomer,
+        x.name + x.last_name,
+        x.code_sku,
+        x.debt_amount,
+        x.debt_paid,
+        x.debt_pending,
+        x.created_at,
       ]);
 
       const finalData: dataExportReports[][] = [
-        [t("exportReport.customer_general.detail_customers")],
         ...statsData,
-        tableHeaders,
-        ...rows,
+        [t("exportReport.reports_general.sales_by_category")],
+        tableHeadersSC,
+        ...rowsSC,
+        [],
+        [t("exportReport.reports_general.top_selling_product")],
+        tableHeadersTSP,
+        ...rowsTSP,
+        [],
+        [t("exportReport.reports_general.accounts_receivable_table")],
+        tableHeadersAR,
+        ...rowsAR,
       ];
 
       return finalData;
@@ -376,7 +380,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             <p className="font-semibold mb-2 dark:text-white">
               Accounts Receivable
             </p>
-            <DataTable columns={columnsar} data={dataTableAR} />
+            <DataTable columns={columnsar} data={accountsReceivableTable} />
           </div>
         </div>
       </div>

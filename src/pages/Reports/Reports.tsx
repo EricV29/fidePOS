@@ -75,10 +75,9 @@ const Reports: React.FC<ReportsProps> = ({}) => {
           <div className="flex gap-2">
             <button
               className="bnormal"
-              onClick={async (selectedId) => {
-                const id = String(selectedId);
+              onClick={async () => {
                 if (childRef.current) {
-                  const dataExport = await childRef.current.createReport(id);
+                  const dataExport = await childRef.current.createReport();
 
                   if (dataExport.length > 0) {
                     setModal(<ModalExport page="REPORTS" data={dataExport} />);

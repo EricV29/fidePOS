@@ -3,10 +3,51 @@ const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 
 // Get Accounts Receivable
-async function getAccountsReceivable() {
+async function getAccountsReceivable(filters) {
+  const db = await getDB();
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_accounts_receivable`;
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+        SELECT 
+          s.id AS idSale,
+          cu.id AS idCustomer,
+          cu.name,
+          cu.last_name,
+          GROUP_CONCAT(p.code_sku, ', ') AS code_sku, 
+          s.total_amount AS debt_amount, 
+          IFNULL((
+              SELECT SUM(py.amount) 
+              FROM payment py 
+              WHERE py.sale_id = s.id 
+                AND py.created_at <= ${end}
+          ), 0) AS debt_paid,
+          (s.total_amount - IFNULL((
+              SELECT SUM(py.amount) 
+              FROM payment py 
+              WHERE py.sale_id = s.id 
+                AND py.created_at <= ${end}
+          ), 0)) AS debt_pending, 
+          s.created_at 
+        FROM sale_detail sd 
+        INNER JOIN sale s ON sd.sale_id = s.id
+        INNER JOIN product p ON sd.product_id = p.id
+        INNER JOIN customer cu ON s.customer_id = cu.id
+        WHERE sd.status_id = 5 ${whereClause}
+          AND s.deleted_at IS NULL
+        GROUP BY s.id
+        HAVING debt_pending > 0
+        ORDER BY s.created_at DESC;
+      `;
+    } else {
+      sql = `SELECT * FROM v_accounts_receivable`;
+    }
 
     const query = db.exec(sql);
 

@@ -146,7 +146,8 @@
     "last_name": "Last Name",
     "pending_amount": "Pending Amount",
     "user_id": "User ID",
-    "debt_num": "No. Debts"
+    "debt_num": "No. Debts",
+    "code_sku": "No. Code"
   },
   "charts": {
     "chart_sales": "Sales",
@@ -520,6 +521,24 @@
       "total_payments_amount": "Total Payments Amount",
       "detail_debts": "DETAIL DEBTS",
       "detail_payments": "DETAIL PAYMENTS"
+    },
+    "reports_general": {
+      "title": "GENERAL REPORT",
+      "investment": "Investment",
+      "revenue": "Revenue",
+      "inventory_value": "Inventory Value",
+      "sale_num": "No. Sales",
+      "sale_amount": "Total Amount Sales",
+      "total_receivable": "Total Receivable Amount",
+      "customer_total_num": "Customers Number",
+      "customer_active": "Active Customers",
+      "customer_in_debt": "Customers In Debt",
+      "products_total_num": "Total Products Number",
+      "products_active": "Active Products",
+      "products_inactive": "Inactive Products",
+      "sales_by_category": "CATEGORY SALES",
+      "top_selling_product": "TOP SELLING PRODUCTS",
+      "accounts_receivable_table": "ACCOUNTS RECEIVABLE DETAIL"
     }
   }
 }
