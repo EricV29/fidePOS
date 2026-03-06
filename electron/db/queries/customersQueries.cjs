@@ -899,6 +899,50 @@ async function getAllPaymentsCustomer(id) {
   }
 }
 
+// Get Customers Status
+async function getCustomersStatus(filters) {
+  const db = await getDB();
+
+  try {
+    const end = filters?.endDate || "";
+    const params = [end, end, end, end];
+    const sql = `
+      SELECT 
+        SUM(CASE WHEN (IFNULL(total_deuda, 0) <= IFNULL(total_pagado, 0)) THEN 1 ELSE 0 END) AS Active,
+        SUM(CASE WHEN (total_deuda > total_pagado) THEN 1 ELSE 0 END) AS 'In Debt'
+      FROM customer c
+        LEFT JOIN (
+          SELECT 
+              s.customer_id,
+              SUM(s.total_amount - s.discount) AS total_deuda,
+              (SELECT IFNULL(SUM(p.amount), 0) 
+              FROM payment p 
+              JOIN sale s2 ON p.sale_id = s2.id 
+              WHERE s2.customer_id = s.customer_id 
+                AND p.created_at <= ?) AS total_pagado
+          FROM sale s
+          WHERE s.created_at <= ? 
+            AND s.deleted_at IS NULL
+          GROUP BY s.customer_id
+        ) finanzas ON c.id = finanzas.customer_id
+      WHERE c.created_at <= ?
+      AND (c.deleted_at IS NULL OR c.deleted_at > ?);
+      `;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting customers status:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -925,4 +969,5 @@ module.exports = {
   getAllDebtsCustomer,
   getAllPaymentsCustomer,
   activeCustomer,
+  getCustomersStatus,
 };

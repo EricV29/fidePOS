@@ -113,6 +113,10 @@ const dataARBD = [
   },
 ];
 
+interface dataCustomersI {
+  [key: string]: number;
+}
+
 const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [dataCustomer, setCustomer] = useState<dataCustomerI>();
   const [dataProductsS, setDataProductsS] = useState<dataCustomerI>();
@@ -130,6 +134,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [salesNumberCard, setSalesNumberCard] = useState(Number);
   const [salesAmountCard, setSalesAmountCard] = useState(Number);
   const [salesPendingAmountCard, setSalesPendingAmountCard] = useState(Number);
+  const [customersStatus, setCustomersStatus] = useState<dataCustomersI>();
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -167,6 +172,11 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
         const salesPendingAmountData =
           reportsGeneralData.salesPendingAmount.result;
         setSalesPendingAmountCard(salesPendingAmountData[0].pendingSalesAmount);
+      }
+
+      if (reportsGeneralData?.customersStatus) {
+        const customersStatusData = reportsGeneralData.customersStatus.result;
+        setCustomersStatus(customersStatusData[0]);
       }
     },
     [filters],
@@ -348,7 +358,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
             </div>
             <div className="flex flex-1 flex-col justify-between">
               <CardInfoDetail
-                chartData={dataCustomer!}
+                chartData={customersStatus!}
                 title={t("cards.customers_title")}
                 color="#1976D2"
               />
