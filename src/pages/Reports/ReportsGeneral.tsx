@@ -76,14 +76,6 @@ interface ReportsContext {
 
 interface ReportsGeneralProps {}
 
-//* Example data pie chart
-const chartDataCSDB = [
-  { category: "Maquillaje", sales: 10 },
-  { category: "Dulces", sales: 20 },
-  { category: "Edredones", sales: 87 },
-  { category: "Zapatos", sales: 73 },
-];
-
 //* Example data bar chart
 const chartDataTCSDB = [
   { category: "Maquillaje", sales: 186 },
@@ -112,7 +104,6 @@ interface dataCustomersI {
 }
 
 const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
-  const [chartDataCSF, setChartDataCSF] = useState<PieChartItem[]>([]);
   const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
   const { t, i18n } = useTranslation();
@@ -128,6 +119,9 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [salesPendingAmountCard, setSalesPendingAmountCard] = useState(Number);
   const [customersStatus, setCustomersStatus] = useState<dataCustomersI>();
   const [productsStatus, setProductsStatus] = useState<dataCustomersI>();
+  const [salesByCategoryChart, setSalesByCategoryChart] = useState<
+    PieChartItem[]
+  >([]);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -176,13 +170,18 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
         const productsStatusData = reportsGeneralData.productsStatus.result;
         setProductsStatus(productsStatusData[0]);
       }
+
+      if (reportsGeneralData?.salesByCategory) {
+        const salesByCategoryChartData =
+          reportsGeneralData.salesByCategory.result;
+        setSalesByCategoryChart(addRandomFill(salesByCategoryChartData));
+      }
     },
     [filters],
   );
 
   useEffect(() => {
     loadReportsGeneral();
-    setChartDataCSF(addRandomFill(chartDataCSDB));
     setChartDataTSC(chartDataTCSDB);
     setDataTableAR(dataARBD);
   }, [filters, loadReportsGeneral]);
@@ -337,7 +336,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
                 {t("reports.chart1")}
               </p>
               <ChartPieDonutText
-                chartData={chartDataCSF}
+                chartData={salesByCategoryChart}
                 chartConfig={chartConfigCS}
               />
             </div>
