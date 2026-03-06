@@ -45,6 +45,7 @@ const {
   editProduct,
   addProductsImport,
   getAllProducts,
+  getProductsStatus,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -1489,6 +1490,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
         salesNumberAmount,
         salesPendingAmount,
         customersStatus,
+        productsStatus,
       ] = await Promise.all([
         getInvestment(data),
         getRevenue(data),
@@ -1496,6 +1498,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
         getSalesNumberAmount(data),
         getPendingSalesAmount(data),
         getCustomersStatus(data),
+        getProductsStatus(data),
       ]);
 
       return {
@@ -1507,6 +1510,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
           salesNumberAmount,
           salesPendingAmount,
           customersStatus,
+          productsStatus,
         },
       };
     } catch (error) {
