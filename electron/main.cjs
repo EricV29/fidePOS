@@ -29,6 +29,7 @@ const {
   getFilterSearchHistorySales,
   getAllHistorySales,
   getSalesByCategory,
+  getTopSellingProducts,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -1493,6 +1494,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
         customersStatus,
         productsStatus,
         salesByCategory,
+        topSellingProducts,
       ] = await Promise.all([
         getInvestment(data),
         getRevenue(data),
@@ -1502,6 +1504,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
         getCustomersStatus(data),
         getProductsStatus(data),
         getSalesByCategory(data),
+        getTopSellingProducts(data),
       ]);
 
       return {
@@ -1515,6 +1518,7 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
           customersStatus,
           productsStatus,
           salesByCategory,
+          topSellingProducts,
         },
       };
     } catch (error) {

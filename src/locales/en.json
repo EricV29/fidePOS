@@ -71,11 +71,10 @@
       "customers": "Customers"
     },
     "chart1": "Sales by Category",
-    "chart2": "Sales by Products",
+    "chart2": "Top Selling Products",
     "table1": "Accounts Receivable",
     "table2": "Sales",
     "chart3": "Products by Category",
-    "chart4": "Top Selling Products",
     "table3": "Products",
     "chart5": "Debt Distribution by Customer",
     "chart6": "Total Debt Over Time",
@@ -150,7 +149,7 @@
     "debt_num": "No. Debts"
   },
   "charts": {
-    "chart_tcs": "Sales",
+    "chart_sales": "Sales",
     "chart_apc": "Products",
     "totals": "Totals",
     "chart_cs": "Sales"
