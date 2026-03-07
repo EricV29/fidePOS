@@ -1541,11 +1541,13 @@ ipcMain.handle("get-reports-sales-data", async (event, data) => {
         salesNumberAmount,
         salesByCategory,
         topSellingProducts,
+        allHistorySales,
       ] = await Promise.all([
         getInventoryValue(data),
         getSalesNumberAmount(data),
         getSalesByCategory(data),
         getTopSellingProducts(data),
+        getAllHistorySales(data),
       ]);
 
       return {
@@ -1555,6 +1557,7 @@ ipcMain.handle("get-reports-sales-data", async (event, data) => {
           salesNumberAmount,
           salesByCategory,
           topSellingProducts,
+          allHistorySales,
         },
       };
     } catch (error) {

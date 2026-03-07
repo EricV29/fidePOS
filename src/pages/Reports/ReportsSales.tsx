@@ -93,6 +93,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
   const [topSellingProductsChart, setTopSellingProductsChart] = useState<
     BarChartItem[]
   >([]);
+  const [allHistorySales, setAllHistorySales] = useState<Sales[]>([]);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -126,6 +127,11 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
         const topSellingProductsData =
           reportsSalesData.topSellingProducts.result;
         setTopSellingProductsChart(topSellingProductsData);
+      }
+
+      if (reportsSalesData?.allHistorySales) {
+        const historySalesData = reportsSalesData.allHistorySales.result;
+        setAllHistorySales(historySalesData);
       }
     },
     [filters],
@@ -284,7 +290,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
             <p className="font-semibold mb-2 dark:text-white">
               {t("reports.table2")}
             </p>
-            <DataTable columns={columnss} data={dataTableS} />
+            <DataTable columns={columnss} data={allHistorySales} />
           </div>
         </div>
       </div>
