@@ -87,6 +87,12 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
   const [inventoryValueCard, setInventoryValueCard] = useState(Number);
   const [salesNumberCard, setSalesNumberCard] = useState(Number);
   const [salesAmountCard, setSalesAmountCard] = useState(Number);
+  const [salesByCategoryChart, setSalesByCategoryChart] = useState<
+    PieChartItem[]
+  >([]);
+  const [topSellingProductsChart, setTopSellingProductsChart] = useState<
+    BarChartItem[]
+  >([]);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -110,10 +116,17 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
         setSalesAmountCard(salesNumberAmountData.dataAmount[0].salesAmount);
       }
 
-      // if (dashboardData?.investment) {
-      //   const investmentData = dashboardData.investment.result;
-      //   setInvestCard(investmentData[0].investment);
-      // }
+      if (reportsSalesData?.salesByCategory) {
+        const salesByCategoryChartData =
+          reportsSalesData.salesByCategory.result;
+        setSalesByCategoryChart(addRandomFill(salesByCategoryChartData));
+      }
+
+      if (reportsSalesData?.topSellingProducts) {
+        const topSellingProductsData =
+          reportsSalesData.topSellingProducts.result;
+        setTopSellingProductsChart(topSellingProductsData);
+      }
     },
     [filters],
   );
@@ -129,13 +142,13 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
 
   const chartConfigCS = {
     items: {
-      label: t("charts.chart_cs"),
+      label: t("charts.chart_sales"),
     },
   };
 
   const chartConfigTCS = {
     sales: {
-      label: t("charts.chart_tcs"),
+      label: t("charts.chart_sales"),
       color: "#1976D2",
     },
   };
@@ -251,7 +264,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
                 {t("reports.chart1")}
               </p>
               <ChartPieDonutText
-                chartData={chartDataCSF}
+                chartData={salesByCategoryChart}
                 chartConfig={chartConfigCS}
               />
             </div>
@@ -260,9 +273,9 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
                 {t("reports.chart2")}
               </p>
               <ChartBarLabel
-                chartData={chartDataTCS}
+                chartData={topSellingProductsChart}
                 chartConfig={chartConfigTCS}
-                xAxis="category"
+                xAxis="product"
                 yAxis="sales"
               />
             </div>
