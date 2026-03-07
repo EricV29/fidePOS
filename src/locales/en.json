@@ -539,6 +539,15 @@
       "sales_by_category": "CATEGORY SALES",
       "top_selling_product": "TOP SELLING PRODUCTS",
       "accounts_receivable_table": "ACCOUNTS RECEIVABLE DETAIL"
+    },
+    "reports_sales": {
+      "title": "SALES REPORT SALES",
+      "inventory_value": "Inventory Value",
+      "sale_num": "No. Sale",
+      "sale_amount": "Total Amount Sales",
+      "sales_by_category": "CATEGORY SALES",
+      "top_selling_product": "TOP SELLING PRODUCTS",
+      "detail_sales": "SALES DETAIL"
     }
   }
 }

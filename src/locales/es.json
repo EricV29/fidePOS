@@ -546,6 +546,15 @@
       "sales_by_category": "VENTAS POR CATEGORÍA",
       "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
       "accounts_receivable_table": "DETALLE DE CUENTAS POR COBRAR"
+    },
+    "reports_sales": {
+      "title": "REPORTE VENTAS",
+      "inventory_value": "Valor de inventario",
+      "sale_num": "Número de ventas",
+      "sale_amount": "Monto total de ventas",
+      "sales_by_category": "VENTAS POR CATEGORÍA",
+      "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
+      "detail_sales": "DETALLE DE VENTAS"
     }
   }
 }

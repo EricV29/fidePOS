@@ -24,40 +24,6 @@ interface BarChartItem {
   [key: string]: string | number;
 }
 
-//* Example data pie chart
-const chartDataCSDB = [
-  { category: "Maquillaje", sales: 10 },
-  { category: "Dulces", sales: 20 },
-  { category: "Edredones", sales: 87 },
-  { category: "Zapatos", sales: 73 },
-];
-
-//* Example data bar chart
-const chartDataTCSDB = [
-  { category: "Maquillaje", sales: 186 },
-  { category: "Regalos", sales: 305 },
-  { category: "Edredones", sales: 237 },
-  { category: "Dulces", sales: 73 },
-  { category: "Zapatos", sales: 209 },
-];
-
-//* Example data table
-const dataSBD = [
-  {
-    id: "34234",
-    name: "Eric",
-    last_name: "Villeda",
-    num_sale: "0001",
-    products:
-      "Labial, carrito, estuche, peluche, edredon, manguito, peine, cepillo, bolsa, moño",
-    total_amount: 1000,
-    paid_amount: 1000,
-    pending_amount: 0,
-    status: "paid",
-    created_at: "2025-11-16 00:00:00",
-  },
-];
-
 export type dataExportReports = string | number | boolean | null | undefined;
 
 // hijo > padre
@@ -77,9 +43,6 @@ interface ReportsContext {
 interface ReportsSalesProps {}
 
 const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
-  const [chartDataCSF, setChartDataCSF] = useState<PieChartItem[]>([]);
-  const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
-  const [dataTableS, setDataTableS] = useState<Sales[]>([]);
   const { t, i18n } = useTranslation();
   const { filters, childRef } = useOutletContext<ReportsContext>();
 
@@ -139,9 +102,6 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
 
   useEffect(() => {
     loadReportsGeneral();
-    // setChartDataCSF(addRandomFill(chartDataCSDB));
-    // setChartDataTSC(chartDataTCSDB);
-    // setDataTableS(dataSBD);
   }, [filters, loadReportsGeneral]);
 
   const columnss = columnsS(t, i18n.language);
@@ -159,88 +119,78 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
     },
   };
 
-  // useImperativeHandle(childRef, () => ({
-  //   createReport: async (view: string) => {
-  //     let generalData: Customers[] = customerTable;
+  useImperativeHandle(childRef, () => ({
+    createReport: async () => {
+      const salesData: Sales[] = allHistorySales;
 
-  //     if (view === "total") {
-  //       try {
-  //         setLoading(true);
-  //         const response = await window.electronAPI.getAllCustomers();
-  //         if (response.success) {
-  //           const rawData =
-  //             typeof response.result === "string"
-  //               ? JSON.parse(response.result)
-  //               : response.result;
+      // Stats o Cards
+      const statsData = [
+        [t("exportReport.reports_sales.title")],
+        [t("exportReport.reports_sales.inventory_value"), inventoryValueCard],
+        [t("exportReport.reports_sales.sales_num"), salesNumberCard],
+        [t("exportReport.reports_sales.sales_amount"), salesAmountCard],
+      ];
 
-  //           generalData = rawData as Customers[];
-  //         }
-  //       } catch (err) {
-  //         console.error("Comunication Error:", err);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     }
+      // Table 1 -> Sales by Category Chart (SC)
+      const tableHeadersSC = [t("columns.category"), t("columns.sale_num")];
 
-  //     const statsData = [
-  //       [t("exportReport.customer_general.title")],
-  //       [
-  //         t("exportReport.customer_general.customers_number"),
-  //         customersNumberCard,
-  //       ],
-  //       [
-  //         t("exportReport.customer_general.customers_debts_number"),
-  //         customersInDebtNumberCard,
-  //       ],
-  //       [
-  //         t("exportReport.customer_general.total_debt_amount"),
-  //         totalDebtAmountCard,
-  //       ],
-  //       [
-  //         t("exportReport.customer_general.last_customer_name_paid"),
-  //         lastCustomerNamePaidCard,
-  //       ],
-  //       [
-  //         t("exportReport.customer_general.last_customer_name_paid_date"),
-  //         lastCustomerNamePaidCardDate,
-  //       ],
-  //       [],
-  //     ];
+      const rowsSC = salesByCategoryChart.map((x) => [x.category, x.sales]);
 
-  //     const tableHeaders = [
-  //       "ID",
-  //       t("columns.name"),
-  //       t("columns.last_name"),
-  //       t("columns.phone"),
-  //       t("columns.status"),
-  //       t("columns.debts_number"),
-  //       t("columns.debt_amount"),
-  //       t("columns.debt_paid"),
-  //       t("columns.created_at"),
-  //     ];
+      // Table 2 -> Top Selling Porducts Chart (TSP)
+      const tableHeadersTSP = [t("columns.product"), t("columns.sale_num")];
 
-  //     const rows = generalData.map((cg) => [
-  //       cg.id,
-  //       cg.name,
-  //       cg.last_name,
-  //       cg.phone,
-  //       cg.status,
-  //       cg.debts_number,
-  //       cg.debts_amount,
-  //       cg.debts_paid,
-  //       cg.created_at,
-  //     ]);
+      const rowsTSP = topSellingProductsChart.map((x) => [x.product, x.sales]);
 
-  //     const finalData: dataExportReports[][] = [
-  //       [t("exportReport.customer_general.detail_customers")],
-  //       ...statsData,
-  //       tableHeaders,
-  //       ...rows,
-  //     ];
+      // Table 3 -> Sales
+      const tableHeaders = [
+        "ID",
+        t("columns.sale_num"),
+        t("columns.name"),
+        t("columns.last_name"),
+        t("columns.products"),
+        t("columns.total_amount"),
+        t("columns.paid_amount"),
+        t("columns.pending_amount"),
+        t("columns.discount"),
+        t("columns.status"),
+        t("columns.user_id"),
+        t("columns.created_at"),
+      ];
 
-  //     return finalData;
-  //   },
-  // }));
+      const rows = salesData.map((x) => [
+        x.id,
+        x.sale_num,
+        x.name,
+        x.last_name,
+        x.products,
+        x.total_amount,
+        x.paid_amount,
+        x.pending_amount,
+        x.discount,
+        x.status,
+        x.user_id,
+        x.created_at,
+      ]);
+
+      const finalData: dataExportReports[][] = [
+        ...statsData,
+        [],
+        [t("exportReport.reports_sales.sales_by_category")],
+        tableHeadersSC,
+        ...rowsSC,
+        [],
+        [t("exportReport.reports_sales.top_selling_product")],
+        tableHeadersTSP,
+        ...rowsTSP,
+        [],
+        [t("exportReport.reports_sales.detail_sales")],
+        tableHeaders,
+        ...rows,
+      ];
+
+      return finalData;
+    },
+  }));
 
   return (
     <>
