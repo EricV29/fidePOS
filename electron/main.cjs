@@ -1536,9 +1536,16 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
 ipcMain.handle("get-reports-sales-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const [inventoryValue, salesNumberAmount] = await Promise.all([
+      const [
+        inventoryValue,
+        salesNumberAmount,
+        salesByCategory,
+        topSellingProducts,
+      ] = await Promise.all([
         getInventoryValue(data),
         getSalesNumberAmount(data),
+        getSalesByCategory(data),
+        getTopSellingProducts(data),
       ]);
 
       return {
@@ -1546,6 +1553,8 @@ ipcMain.handle("get-reports-sales-data", async (event, data) => {
         result: {
           inventoryValue,
           salesNumberAmount,
+          salesByCategory,
+          topSellingProducts,
         },
       };
     } catch (error) {
