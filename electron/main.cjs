@@ -1532,6 +1532,30 @@ ipcMain.handle("get-reports-general-data", async (event, data) => {
   }
 });
 
+//* Get Reports Sales Data Page
+ipcMain.handle("get-reports-sales-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [inventoryValue, salesNumberAmount] = await Promise.all([
+        getInventoryValue(data),
+        getSalesNumberAmount(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          inventoryValue,
+          salesNumberAmount,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
 //* INITIALIZATION
 let isInitializing = false;
 app.whenReady().then(async () => {

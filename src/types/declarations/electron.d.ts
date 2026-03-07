@@ -356,6 +356,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      //* GET REPORTS SALES PAGE
+      getReportsSalesData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
