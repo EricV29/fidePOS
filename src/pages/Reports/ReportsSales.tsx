@@ -84,18 +84,31 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
   const { filters, childRef } = useOutletContext<ReportsContext>();
 
   //* GET DATA
+  const [inventoryValueCard, setInventoryValueCard] = useState(Number);
+  const [salesNumberCard, setSalesNumberCard] = useState(Number);
+  const [salesAmountCard, setSalesAmountCard] = useState(Number);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
       //setLoading(true);
-      console.log(currentFilters);
 
-      // const response =
-      //   await window.electronAPI.getReportsGeneralData(currenFilters);
-      // const dashboardData =
-      //   typeof response.result === "string"
-      //     ? JSON.parse(response.result)
-      //     : response.result;
+      const response =
+        await window.electronAPI.getReportsSalesData(currentFilters);
+      const reportsSalesData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
+
+      if (reportsSalesData?.inventoryValue) {
+        const inventoryValueData = reportsSalesData.inventoryValue.result;
+        setInventoryValueCard(inventoryValueData[0].inventory_value);
+      }
+
+      if (reportsSalesData?.salesNumberAmount) {
+        const salesNumberAmountData = reportsSalesData.salesNumberAmount.result;
+        setSalesNumberCard(salesNumberAmountData.dataNumber[0].salesNumber);
+        setSalesAmountCard(salesNumberAmountData.dataAmount[0].salesAmount);
+      }
 
       // if (dashboardData?.investment) {
       //   const investmentData = dashboardData.investment.result;
@@ -106,12 +119,11 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
   );
 
   useEffect(() => {
-    console.log(filters);
     loadReportsGeneral();
-    setChartDataCSF(addRandomFill(chartDataCSDB));
-    setChartDataTSC(chartDataTCSDB);
-    setDataTableS(dataSBD);
-  }, [filters]);
+    // setChartDataCSF(addRandomFill(chartDataCSDB));
+    // setChartDataTSC(chartDataTCSDB);
+    // setDataTableS(dataSBD);
+  }, [filters, loadReportsGeneral]);
 
   const columnss = columnsS(t, i18n.language);
 
@@ -128,88 +140,88 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
     },
   };
 
-  useImperativeHandle(childRef, () => ({
-    createReport: async (view: string) => {
-      let generalData: Customers[] = customerTable;
+  // useImperativeHandle(childRef, () => ({
+  //   createReport: async (view: string) => {
+  //     let generalData: Customers[] = customerTable;
 
-      if (view === "total") {
-        try {
-          setLoading(true);
-          const response = await window.electronAPI.getAllCustomers();
-          if (response.success) {
-            const rawData =
-              typeof response.result === "string"
-                ? JSON.parse(response.result)
-                : response.result;
+  //     if (view === "total") {
+  //       try {
+  //         setLoading(true);
+  //         const response = await window.electronAPI.getAllCustomers();
+  //         if (response.success) {
+  //           const rawData =
+  //             typeof response.result === "string"
+  //               ? JSON.parse(response.result)
+  //               : response.result;
 
-            generalData = rawData as Customers[];
-          }
-        } catch (err) {
-          console.error("Comunication Error:", err);
-        } finally {
-          setLoading(false);
-        }
-      }
+  //           generalData = rawData as Customers[];
+  //         }
+  //       } catch (err) {
+  //         console.error("Comunication Error:", err);
+  //       } finally {
+  //         setLoading(false);
+  //       }
+  //     }
 
-      const statsData = [
-        [t("exportReport.customer_general.title")],
-        [
-          t("exportReport.customer_general.customers_number"),
-          customersNumberCard,
-        ],
-        [
-          t("exportReport.customer_general.customers_debts_number"),
-          customersInDebtNumberCard,
-        ],
-        [
-          t("exportReport.customer_general.total_debt_amount"),
-          totalDebtAmountCard,
-        ],
-        [
-          t("exportReport.customer_general.last_customer_name_paid"),
-          lastCustomerNamePaidCard,
-        ],
-        [
-          t("exportReport.customer_general.last_customer_name_paid_date"),
-          lastCustomerNamePaidCardDate,
-        ],
-        [],
-      ];
+  //     const statsData = [
+  //       [t("exportReport.customer_general.title")],
+  //       [
+  //         t("exportReport.customer_general.customers_number"),
+  //         customersNumberCard,
+  //       ],
+  //       [
+  //         t("exportReport.customer_general.customers_debts_number"),
+  //         customersInDebtNumberCard,
+  //       ],
+  //       [
+  //         t("exportReport.customer_general.total_debt_amount"),
+  //         totalDebtAmountCard,
+  //       ],
+  //       [
+  //         t("exportReport.customer_general.last_customer_name_paid"),
+  //         lastCustomerNamePaidCard,
+  //       ],
+  //       [
+  //         t("exportReport.customer_general.last_customer_name_paid_date"),
+  //         lastCustomerNamePaidCardDate,
+  //       ],
+  //       [],
+  //     ];
 
-      const tableHeaders = [
-        "ID",
-        t("columns.name"),
-        t("columns.last_name"),
-        t("columns.phone"),
-        t("columns.status"),
-        t("columns.debts_number"),
-        t("columns.debt_amount"),
-        t("columns.debt_paid"),
-        t("columns.created_at"),
-      ];
+  //     const tableHeaders = [
+  //       "ID",
+  //       t("columns.name"),
+  //       t("columns.last_name"),
+  //       t("columns.phone"),
+  //       t("columns.status"),
+  //       t("columns.debts_number"),
+  //       t("columns.debt_amount"),
+  //       t("columns.debt_paid"),
+  //       t("columns.created_at"),
+  //     ];
 
-      const rows = generalData.map((cg) => [
-        cg.id,
-        cg.name,
-        cg.last_name,
-        cg.phone,
-        cg.status,
-        cg.debts_number,
-        cg.debts_amount,
-        cg.debts_paid,
-        cg.created_at,
-      ]);
+  //     const rows = generalData.map((cg) => [
+  //       cg.id,
+  //       cg.name,
+  //       cg.last_name,
+  //       cg.phone,
+  //       cg.status,
+  //       cg.debts_number,
+  //       cg.debts_amount,
+  //       cg.debts_paid,
+  //       cg.created_at,
+  //     ]);
 
-      const finalData: dataExportReports[][] = [
-        [t("exportReport.customer_general.detail_customers")],
-        ...statsData,
-        tableHeaders,
-        ...rows,
-      ];
+  //     const finalData: dataExportReports[][] = [
+  //       [t("exportReport.customer_general.detail_customers")],
+  //       ...statsData,
+  //       tableHeaders,
+  //       ...rows,
+  //     ];
 
-      return finalData;
-    },
-  }));
+  //     return finalData;
+  //   },
+  // }));
 
   return (
     <>
@@ -219,15 +231,15 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
             icon={BoxIcon}
             title={t("cards.inventory_value_title")}
             icond={null}
-            number={100000}
+            number={inventoryValueCard}
             format={true}
             color="#FFC107"
           />
           <CardInfoNumber
             icon={ShoppingCar}
-            title={t("cards.sales_title") + ": 10"}
+            title={t("cards.sales_title") + `: ${salesNumberCard}`}
             icond={null}
-            number={1500}
+            number={salesAmountCard}
             format={true}
             color="#1976D2"
           />
