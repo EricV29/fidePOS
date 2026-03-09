@@ -48,6 +48,7 @@ const {
   addProductsImport,
   getAllProducts,
   getProductsStatus,
+  getProductsByCategory,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -1558,6 +1559,45 @@ ipcMain.handle("get-reports-sales-data", async (event, data) => {
           salesByCategory,
           topSellingProducts,
           allHistorySales,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+//* Get Reports Products Data Page
+ipcMain.handle("get-reports-products-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [
+        investment,
+        revenue,
+        inventoryValue,
+        productsByCategory,
+        topSellingProducts,
+        productsStatus,
+      ] = await Promise.all([
+        getInvestment(data),
+        getRevenue(data),
+        getInventoryValue(data),
+        getProductsByCategory(data),
+        getTopSellingProducts(data),
+        getProductsStatus(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          investment,
+          revenue,
+          inventoryValue,
+          productsByCategory,
+          topSellingProducts,
+          productsStatus,
         },
       };
     } catch (error) {

@@ -61,7 +61,6 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
       //setLoading(true);
-
       const response =
         await window.electronAPI.getReportsSalesData(currentFilters);
       const reportsSalesData =

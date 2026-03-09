@@ -765,6 +765,39 @@ async function getProductsStatus(filters) {
   }
 }
 
+// Get Products by Category
+async function getProductsByCategory(filters) {
+  const db = await getDB();
+
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    const params = [start, end];
+    const sql = `
+      SELECT 
+        c.name AS category,
+        COUNT(p.id) AS products
+      FROM category c
+      LEFT JOIN product p ON c.id = p.category_id
+      LEFT JOIN sale_detail sd ON p.id = sd.product_id 
+      WHERE p.status_id = 1 AND p.created_at BETWEEN ? AND ?
+      GROUP BY c.id, c.name
+      ORDER BY products DESC;
+    `;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting products by category:", error);
+    return { success: false, error: error.message };
+  }
+}
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
@@ -782,4 +815,5 @@ module.exports = {
   addProductsImport,
   getAllProducts,
   getProductsStatus,
+  getProductsByCategory,
 };
