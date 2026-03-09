@@ -548,6 +548,18 @@
       "sales_by_category": "CATEGORY SALES",
       "top_selling_product": "TOP SELLING PRODUCTS",
       "detail_sales": "SALES DETAIL"
+    },
+    "reports_products": {
+      "title": "PRODUCTS REPORTS",
+      "investment": "Investment",
+      "revenue": "Revenue",
+      "inventory_value": "Inventory Value",
+      "products_total_num": "Total Products Number",
+      "products_active": "Active Products",
+      "products_inactive": "Inactive Products",
+      "products_by_category": "PRODUCTS BY CATEGORY",
+      "top_selling_product": "TOP SELLING PRODUCTS",
+      "detail_sales": "DETAIL PRODUCTS"
     }
   }
 }
