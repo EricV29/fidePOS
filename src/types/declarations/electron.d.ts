@@ -363,6 +363,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      //* GET REPORTS PRODUCTS PAGE
+      getReportsProductsData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

@@ -25,14 +25,6 @@ interface BarChartItem {
   [key: string]: string | number;
 }
 
-//* Example data pie chart
-const chartDataCPDB = [
-  { category: "Maquillaje", products: 10 },
-  { category: "Dulces", products: 20 },
-  { category: "Edredones", products: 87 },
-  { category: "Zapatos", products: 73 },
-];
-
 //* Example data bar chart
 const chartDataTSPDB = [
   { product: "Edredon 2", sales: 86 },
@@ -80,40 +72,75 @@ interface ReportsContext {
 
 interface ReportsProductsProps {}
 
+interface dataProductsI {
+  [key: string]: number;
+}
+
 const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
-  const [chartDataCP, setChartDataCP] = useState<PieChartItem[]>([]);
   const [chartDataTSP, setChartDataTSP] = useState<BarChartItem[]>([]);
   const [dataTableP, setDataTableP] = useState<Products[]>([]);
   const { t, i18n } = useTranslation();
-
   const { filters, childRef } = useOutletContext<ReportsContext>();
+
   //* GET DATA
+  const [investmentCard, setInvestmentCard] = useState(Number);
+  const [revenueCard, setRevenueCard] = useState(Number);
+  const [inventoryValueCard, setInventoryValueCard] = useState(Number);
+  const [productsByCategoryChart, setProductsByCategoryChart] = useState<
+    PieChartItem[]
+  >([]);
+  const [topSellingProductsChart, setTopSellingProductsChart] = useState<
+    BarChartItem[]
+  >([]);
+  const [productsStatus, setProductsStatus] = useState<dataProductsI>();
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
-      //setLoading(true);
-      console.log(currentFilters);
+      // setLoading(true);
+      const response =
+        await window.electronAPI.getReportsProductsData(currentFilters);
+      const reportsProductsData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
 
-      // const response =
-      //   await window.electronAPI.getReportsGeneralData(currenFilters);
-      // const dashboardData =
-      //   typeof response.result === "string"
-      //     ? JSON.parse(response.result)
-      //     : response.result;
+      if (reportsProductsData?.investment) {
+        const investmentData = reportsProductsData.investment.result;
+        setInvestmentCard(investmentData[0].investment);
+      }
 
-      // if (dashboardData?.investment) {
-      //   const investmentData = dashboardData.investment.result;
-      //   setInvestCard(investmentData[0].investment);
-      // }
+      if (reportsProductsData?.revenue) {
+        const revenueData = reportsProductsData.revenue.result;
+        setRevenueCard(revenueData[0].revenue);
+      }
+
+      if (reportsProductsData?.inventoryValue) {
+        const inventoryValueData = reportsProductsData.inventoryValue.result;
+        setInventoryValueCard(inventoryValueData[0].inventory_value);
+      }
+
+      if (reportsProductsData?.productsByCategory) {
+        const productsByCategoryChartData =
+          reportsProductsData.productsByCategory.result;
+        setProductsByCategoryChart(addRandomFill(productsByCategoryChartData));
+      }
+
+      if (reportsProductsData?.topSellingProducts) {
+        const topSellingProductsData =
+          reportsProductsData.topSellingProducts.result;
+        setTopSellingProductsChart(topSellingProductsData);
+      }
+
+      if (reportsProductsData?.productsStatus) {
+        const productsStatusData = reportsProductsData.productsStatus.result;
+        setProductsStatus(productsStatusData[0]);
+      }
     },
     [filters],
   );
 
   useEffect(() => {
-    console.log(filters);
-
     loadReportsGeneral();
-    setChartDataCP(addRandomFill(chartDataCPDB));
     setChartDataTSP(chartDataTSPDB);
     setDataTableP(dataPBD);
   }, [filters, loadReportsGeneral]);
@@ -224,7 +251,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
             icon={InvestmentIcon}
             title={t("cards.investment_title")}
             icond={null}
-            number={120238}
+            number={investmentCard}
             format={true}
             color="#F57C00"
           />
@@ -232,7 +259,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
             icon={RevenueIcon}
             title={t("cards.revenue_title")}
             icond={null}
-            number={10500}
+            number={revenueCard}
             format={true}
             color="#43A047"
           />
@@ -240,7 +267,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
             icon={InvestmentIcon}
             title={t("cards.inventory_value_title")}
             icond={null}
-            number={100000}
+            number={inventoryValueCard}
             format={true}
             color="#FFC107"
           />
@@ -252,7 +279,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
                 {t("reports.chart3")}
               </p>
               <ChartPieDonutText
-                chartData={chartDataCP}
+                chartData={productsByCategoryChart}
                 chartConfig={chartConfigCP}
               />
             </div>
@@ -261,7 +288,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
                 {t("reports.chart4")}
               </p>
               <ChartBarLabel
-                chartData={chartDataTSP}
+                chartData={topSellingProductsChart}
                 chartConfig={chartConfigTSP}
                 xAxis="product"
                 yAxis="sales"
@@ -269,7 +296,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
             </div>
             <div className="flex flex-1 flex-col justify-between">
               <CardInfoDetail
-                chartData={dataStatusPDB!}
+                chartData={productsStatus!}
                 title={t("cards.products_status_title")}
                 color="#1976D2"
               />
