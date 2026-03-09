@@ -61,21 +61,7 @@ interface ReportsContext {
 
 interface ReportsGeneralProps {}
 
-//* Example data accounts receivable
-const dataARBD = [
-  {
-    id: "728ed511f",
-    name: "Eric",
-    last_name: "Villeda",
-    code_sku: "SAD2435",
-    debt_amount: 500,
-    debt_paid: 200,
-    debt_pending: 300,
-    created_at: "2025-02-15 00:00:00",
-  },
-];
-
-interface dataCustomersI {
+interface dataGeneralI {
   [key: string]: number;
 }
 
@@ -91,8 +77,8 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [salesNumberCard, setSalesNumberCard] = useState(Number);
   const [salesAmountCard, setSalesAmountCard] = useState(Number);
   const [salesPendingAmountCard, setSalesPendingAmountCard] = useState(Number);
-  const [customersStatus, setCustomersStatus] = useState<dataCustomersI>();
-  const [productsStatus, setProductsStatus] = useState<dataCustomersI>();
+  const [customersStatus, setCustomersStatus] = useState<dataGeneralI>();
+  const [productsStatus, setProductsStatus] = useState<dataGeneralI>();
   const [salesByCategoryChart, setSalesByCategoryChart] = useState<
     PieChartItem[]
   >([]);

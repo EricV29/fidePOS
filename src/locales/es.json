@@ -555,6 +555,18 @@
       "sales_by_category": "VENTAS POR CATEGORÍA",
       "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
       "detail_sales": "DETALLE DE VENTAS"
+    },
+    "reports_products": {
+      "title": "REPORTE PRODUCTOS",
+      "investment": "Inversión",
+      "revenue": "Ganancia",
+      "inventory_value": "Valor de inventario",
+      "products_total_num": "Productos Totales",
+      "products_active": "Productos Activos",
+      "products_inactive": "Productos Inactivos",
+      "products_by_category": "PRODUCTOS POR CATEGORÍA",
+      "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
+      "detail_sales": "DETALLE DE PRODUCTOS"
     }
   }
 }

@@ -700,28 +700,42 @@ async function addProductsImport(data) {
 }
 
 // Get All Products
-async function getAllProducts() {
+async function getAllProducts(filters) {
   const db = await getDB();
   try {
-    const query = db.exec(`
-      SELECT 
-        p.id, 
-        p.code_sku, 
-        p.name AS product, 
-        p.description, 
-        c.name AS category, 
-        c.color AS ccolor,
-        p.cost_price,
-        p.unit_price,
-        p.stock,
-        s.description AS status, 
-        p.created_at,
-        p.deleted_at  
-      FROM product p
-      INNER JOIN category c ON p.category_id = c.id
-      INNER JOIN status s ON p.status_id  = s.id
-      ORDER BY p.created_at DESC;
-    `);
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE p.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+        SELECT 
+          p.id, 
+          p.code_sku, 
+          p.name AS product, 
+          p.description, 
+          c.name AS category, 
+          c.color AS ccolor,
+          p.cost_price,
+          p.unit_price,
+          p.stock,
+          s.description AS status, 
+          p.created_at,
+          p.deleted_at  
+        FROM product p
+        INNER JOIN category c ON p.category_id = c.id
+        INNER JOIN status s ON p.status_id  = s.id
+        ${whereClause}
+        ORDER BY p.created_at DESC;
+      `;
+    } else {
+      sql = `SELECT * FROM v_all_products`;
+    }
+
+    const query = await db.exec(sql);
 
     if (query.length === 0) {
       return { success: true, result: [] };

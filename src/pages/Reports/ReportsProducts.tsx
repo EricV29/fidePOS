@@ -25,35 +25,6 @@ interface BarChartItem {
   [key: string]: string | number;
 }
 
-//* Example data bar chart
-const chartDataTSPDB = [
-  { product: "Edredon 2", sales: 86 },
-  { product: "Bota azul", sales: 35 },
-  { product: "Bolsa roja", sales: 37 },
-  { product: "Mazapan", sales: 73 },
-  { product: "Labial yuya", sales: 29 },
-];
-
-//* Example data table
-const dataPBD = [
-  {
-    id: "123123",
-    code_sku: "DASD45",
-    product: "Carrito",
-    description: "Hotweels",
-    category: "toys",
-    ccolor: "#ff49ff",
-    cost_price: 100,
-    unit_price: 120,
-    stock: 2,
-    status: "active",
-    created_at: "01/01/2025",
-  },
-];
-
-//* Example data status products
-const dataStatusPDB = { Active: 40, Desactive: 15 };
-
 export type dataExportReports = string | number | boolean | null | undefined;
 
 // hijo > padre
@@ -77,8 +48,6 @@ interface dataProductsI {
 }
 
 const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
-  const [chartDataTSP, setChartDataTSP] = useState<BarChartItem[]>([]);
-  const [dataTableP, setDataTableP] = useState<Products[]>([]);
   const { t, i18n } = useTranslation();
   const { filters, childRef } = useOutletContext<ReportsContext>();
 
@@ -93,6 +62,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
     BarChartItem[]
   >([]);
   const [productsStatus, setProductsStatus] = useState<dataProductsI>();
+  const [productsTable, setProductsTable] = useState<Products[]>([]);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -135,14 +105,17 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
         const productsStatusData = reportsProductsData.productsStatus.result;
         setProductsStatus(productsStatusData[0]);
       }
+
+      if (reportsProductsData?.products) {
+        const productsData = reportsProductsData.products.result;
+        setProductsTable(productsData);
+      }
     },
     [filters],
   );
 
   useEffect(() => {
     loadReportsGeneral();
-    setChartDataTSP(chartDataTSPDB);
-    setDataTableP(dataPBD);
   }, [filters, loadReportsGeneral]);
 
   const columnsp = columnsP(t, i18n.language);
@@ -161,82 +134,92 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
   };
 
   useImperativeHandle(childRef, () => ({
-    createReport: async (view: string) => {
-      let generalData: Customers[] = customerTable;
+    createReport: async () => {
+      const productsData: Products[] = productsTable;
 
-      if (view === "total") {
-        try {
-          setLoading(true);
-          const response = await window.electronAPI.getAllCustomers();
-          if (response.success) {
-            const rawData =
-              typeof response.result === "string"
-                ? JSON.parse(response.result)
-                : response.result;
-
-            generalData = rawData as Customers[];
-          }
-        } catch (err) {
-          console.error("Comunication Error:", err);
-        } finally {
-          setLoading(false);
-        }
+      let totalProducts = 0;
+      if (productsStatus) {
+        totalProducts =
+          Number(productsStatus.Active || 0) +
+          Number(productsStatus.Inactive || 0);
       }
 
       const statsData = [
-        [t("exportReport.customer_general.title")],
+        [t("exportReport.reports_products.title")],
+        [t("exportReport.reports_products.investment"), investmentCard],
+        [t("exportReport.reports_products.revenue"), revenueCard],
         [
-          t("exportReport.customer_general.customers_number"),
-          customersNumberCard,
+          t("exportReport.reports_products.inventory_value"),
+          inventoryValueCard,
+        ],
+        [t("exportReport.reports_products.products_total_num"), totalProducts],
+        [
+          t("exportReport.reports_products.products_active"),
+          productsStatus?.Active,
         ],
         [
-          t("exportReport.customer_general.customers_debts_number"),
-          customersInDebtNumberCard,
-        ],
-        [
-          t("exportReport.customer_general.total_debt_amount"),
-          totalDebtAmountCard,
-        ],
-        [
-          t("exportReport.customer_general.last_customer_name_paid"),
-          lastCustomerNamePaidCard,
-        ],
-        [
-          t("exportReport.customer_general.last_customer_name_paid_date"),
-          lastCustomerNamePaidCardDate,
+          t("exportReport.reports_products.products_inactive"),
+          productsStatus?.Inactive,
         ],
         [],
       ];
 
-      const tableHeaders = [
+      // Table 1 -> Products by Category Chart (PC)
+      const tableHeadersPC = [t("columns.category"), t("columns.sale_num")];
+      const rowsPC = productsByCategoryChart.map((x) => [
+        x.category,
+        x.products,
+      ]);
+
+      // Table 2 -> Top Selling Products Chart (TSP)
+      const tableHeadersTSP = [t("columns.products"), t("columns.sale_num")];
+      const rowsTSP = topSellingProductsChart.map((x) => [x.products, x.sales]);
+
+      // Table 3 -> Products Table
+      const tableHeadersP = [
         "ID",
-        t("columns.name"),
-        t("columns.last_name"),
-        t("columns.phone"),
+        t("columns.code_sku"),
+        t("columns.product"),
+        t("columns.description"),
+        t("columns.category"),
+        "Color",
+        t("columns.cost_price"),
+        t("columns.unit_price"),
+        "Stock",
         t("columns.status"),
-        t("columns.debts_number"),
-        t("columns.debt_amount"),
-        t("columns.debt_paid"),
         t("columns.created_at"),
+        t("columns.deleted_at"),
       ];
 
-      const rows = generalData.map((cg) => [
-        cg.id,
-        cg.name,
-        cg.last_name,
-        cg.phone,
-        cg.status,
-        cg.debts_number,
-        cg.debts_amount,
-        cg.debts_paid,
-        cg.created_at,
+      const rowsP = productsData.map((x) => [
+        x.id,
+        x.code_sku,
+        x.product,
+        x.description,
+        x.category,
+        x.ccolor,
+        x.cost_price,
+        x.unit_price,
+        x.stock,
+        x.status,
+        x.created_at,
+        x.deleted_at,
       ]);
 
       const finalData: dataExportReports[][] = [
-        [t("exportReport.customer_general.detail_customers")],
         ...statsData,
-        tableHeaders,
-        ...rows,
+        [],
+        [t("exportReport.reports_products.products_by_category")],
+        tableHeadersPC,
+        ...rowsPC,
+        [],
+        [t("exportReport.reports_products.top_selling_product")],
+        tableHeadersTSP,
+        ...rowsTSP,
+        [],
+        [t("exportReport.reports_products.detail_sales")],
+        tableHeadersP,
+        ...rowsP,
       ];
 
       return finalData;
@@ -306,7 +289,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
             <p className="font-semibold mb-2 dark:text-white">
               {t("reports.table3")}
             </p>
-            <DataTable columns={columnsp} data={dataTableP} />
+            <DataTable columns={columnsp} data={productsTable} />
           </div>
         </div>
       </div>
