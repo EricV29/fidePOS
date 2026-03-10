@@ -268,7 +268,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
             </div>
             <div className="max-w-[600px] min-w-[400px] w-[600px] h-full flex flex-col justify-center items-start p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
               <p className="font-semibold mb-2 dark:text-white">
-                {t("reports.chart4")}
+                {t("reports.chart2")}
               </p>
               <ChartBarLabel
                 chartData={topSellingProductsChart}

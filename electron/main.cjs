@@ -77,6 +77,7 @@ const {
   getAllPaymentsCustomer,
   activeCustomer,
   getCustomersStatus,
+  getDebtsByCustomers,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1601,6 +1602,39 @@ ipcMain.handle("get-reports-products-data", async (event, data) => {
           topSellingProducts,
           productsStatus,
           products,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+//* Get Reports Customers Data Page
+ipcMain.handle("get-reports-customers-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [
+        salesPendingAmount,
+        salesNumberAmount,
+        customersStatus,
+        debtsByCustomers,
+      ] = await Promise.all([
+        getPendingSalesAmount(data),
+        getSalesNumberAmount(data),
+        getCustomersStatus(data),
+        getDebtsByCustomers(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          salesPendingAmount,
+          salesNumberAmount,
+          customersStatus,
+          debtsByCustomers,
         },
       };
     } catch (error) {

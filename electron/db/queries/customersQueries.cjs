@@ -984,6 +984,41 @@ async function getCustomersStatus(filters) {
   }
 }
 
+// Get Debts by Customer
+async function getDebtsByCustomers(filters) {
+  const db = await getDB();
+
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let whereClause = "";
+
+    whereClause = `WHERE s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+    const sql = `
+      SELECT 
+        c.name AS customer,
+        COUNT(CASE WHEN s.status_id = 5 THEN 1 END) AS debts
+      FROM customer c
+      LEFT JOIN sale s ON c.id = s.customer_id 
+     ${whereClause}
+      GROUP BY c.name
+      ORDER BY debts DESC;
+    `;
+
+    const query = db.exec(sql);
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const allDebtsCustomer = mapResultToObjects(query);
+    return { success: true, result: allDebtsCustomer };
+  } catch (error) {
+    console.error("Error getting debts by customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getAccountsReceivable,
   getIndebtedCustomers,
@@ -1011,4 +1046,5 @@ module.exports = {
   getAllPaymentsCustomer,
   activeCustomer,
   getCustomersStatus,
+  getDebtsByCustomers,
 };
