@@ -178,4 +178,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Get Debts Over Time
   getDebtsOverTime: (data) => ipcRenderer.invoke("get-debts-over-time", data),
+
+  // Get Debts and Payments Customer Selected by Date
+  getSelectedCustomerDataDate: (data) =>
+    ipcRenderer.invoke("get-debts-payments-customer-date", data),
 });

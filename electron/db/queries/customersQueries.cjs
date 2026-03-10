@@ -473,11 +473,28 @@ async function activeCustomer(data) {
 }
 
 // Get Customers Select
-async function getCustomersSelect() {
-  try {
-    const db = await getDB();
+async function getCustomersSelect(filters) {
+  const db = await getDB();
 
-    const query = db.exec("SELECT * FROM v_customers_select;");
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+        SELECT id, name, last_name
+          FROM customer
+          ${whereClause};
+      `;
+    } else {
+      sql = `SELECT * FROM v_customers_select`;
+    }
+
+    const query = await db.exec(sql);
 
     if (query.length === 0) {
       return { success: true, result: [] };
@@ -602,11 +619,18 @@ async function getCustomerTotalPaymentAmount(id) {
 }
 
 // Get Customer Debts Table
-async function getCustomerDebtsTable(id, limit, offset) {
+async function getCustomerDebtsTable(id, limit, offset, filters) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
-    const params = [id, limit, offset];
-    const sql = `
+    let params = [id];
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+
+    if (!filters) {
+      params = [id, limit, offset];
+
+      const sql = `
       SELECT
         s.id, 
         s.sale_num,
@@ -626,7 +650,7 @@ async function getCustomerDebtsTable(id, limit, offset) {
       LIMIT ? OFFSET ?;
       `;
 
-    const sqlCount = `
+      const sqlCount = `
       SELECT 
         COUNT(*) as total 
           FROM (
@@ -637,18 +661,50 @@ async function getCustomerDebtsTable(id, limit, offset) {
           GROUP BY s.id);
     `;
 
-    const query = db.exec(sql, params);
-    const queryCount = db.exec(sqlCount, [id]);
+      const query = db.exec(sql, params);
+      const queryCount = db.exec(sqlCount, [id]);
 
-    const totalData = mapResultToObjects(queryCount);
-    const totalCount = totalData.length > 0 ? totalData[0].total : 0;
+      const totalData = mapResultToObjects(queryCount);
+      const totalCount = totalData.length > 0 ? totalData[0].total : 0;
 
-    if (query.length === 0) {
-      return { success: true, result: [] };
+      if (query.length === 0) {
+        return { success: true, result: [] };
+      }
+
+      const data = mapResultToObjects(query);
+      return { success: true, result: data, totalCount: totalCount };
+    } else {
+      params = [id, start, end];
+      whereClause = `WHERE sd.status_id = 5 AND s.customer_id = ${id} AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      const sql = `
+        SELECT
+          s.id, 
+          s.sale_num,
+          GROUP_CONCAT(p.code_sku,'|') AS codes_sku, 
+          GROUP_CONCAT(p.name,'|') AS products, 
+          GROUP_CONCAT(p.description,'|') AS descriptions, 
+          (s.total_amount - s.paid_amount) AS debt_amount, 
+          s.total_amount AS sale_total, 
+          s.paid_amount AS debt_paid, 
+          s.created_at 
+        FROM sale_detail sd
+        INNER JOIN sale s ON sd.sale_id = s.id
+        INNER JOIN product p ON sd.product_id = p.id 
+        ${whereClause}
+        GROUP BY s.id
+        ORDER BY s.created_at DESC;
+      `;
+
+      const query = await db.exec(sql);
+
+      if (query.length === 0) {
+        return { success: true, result: [] };
+      }
+
+      const data = mapResultToObjects(query);
+      return { success: true, result: data };
     }
-
-    const data = mapResultToObjects(query);
-    return { success: true, result: data, totalCount: totalCount };
   } catch (error) {
     console.error("Error getting customer debts table:", error);
     return { success: false, error: error.message };
@@ -735,11 +791,16 @@ async function getFilterSearchCustomersDebts(data) {
 }
 
 // Get Customer Payments Table
-async function getCustomerPaymentsTable(id, limit, offset) {
+async function getCustomerPaymentsTable(id, limit, offset, filters) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
-    const params = [id, limit, offset];
-    const sql = `
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+
+    if (!filters) {
+      const params = [id, limit, offset];
+      const sql = `
       SELECT 
 	      p.id, 
         p.created_at, 
@@ -753,7 +814,7 @@ async function getCustomerPaymentsTable(id, limit, offset) {
       LIMIT ? OFFSET ?;
       `;
 
-    const sqlCount = `
+      const sqlCount = `
       SELECT 
 	      COUNT(*) as total 
 	        FROM (
@@ -768,18 +829,43 @@ async function getCustomerPaymentsTable(id, limit, offset) {
           WHERE s.customer_id = ?);
     `;
 
-    const query = db.exec(sql, params);
-    const queryCount = db.exec(sqlCount, [id]);
+      const query = db.exec(sql, params);
+      const queryCount = db.exec(sqlCount, [id]);
 
-    const totalData = mapResultToObjects(queryCount);
-    const totalCount = totalData.length > 0 ? totalData[0].total : 0;
+      const totalData = mapResultToObjects(queryCount);
+      const totalCount = totalData.length > 0 ? totalData[0].total : 0;
 
-    if (query.length === 0) {
-      return { success: true, result: [] };
+      if (query.length === 0) {
+        return { success: true, result: [] };
+      }
+
+      const data = mapResultToObjects(query);
+      return { success: true, result: data, totalCount: totalCount };
+    } else {
+      whereClause = `WHERE s.customer_id = ${id} AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      const sql = `
+      SELECT 
+	      p.id, 
+        p.created_at, 
+        s.sale_num, 
+        p.amount, 
+        p.note
+      FROM payment p
+      INNER JOIN sale s ON p.sale_id = s.id
+      ${whereClause}
+      ORDER BY p.created_at DESC;
+      `;
+
+      const query = db.exec(sql);
+
+      if (query.length === 0) {
+        return { success: true, result: [] };
+      }
+
+      const data = mapResultToObjects(query);
+      return { success: true, result: data };
     }
-
-    const data = mapResultToObjects(query);
-    return { success: true, result: data, totalCount: totalCount };
   } catch (error) {
     console.error("Error getting customer payments table:", error);
     return { success: false, error: error.message };
@@ -838,27 +924,42 @@ async function getFilterSearchCustomersPayments(data) {
 }
 
 // Get All Customers
-async function getAllCustomers() {
+async function getAllCustomers(filters) {
   const db = await getDB();
+
   try {
-    const query = db.exec(`
-      SELECT 
-        c.id,
-        c.name,
-        c.last_name,
-        c.phone,
-        s.description AS status,
-        COUNT(CASE WHEN sl.status_id = 5 THEN 1 END) AS debts_number,
-        SUM(CASE WHEN sl.status_id = 5 THEN total_amount ELSE 0 END) AS debts_amount,
-        SUM(CASE WHEN sl.status_id = 5 THEN paid_amount ELSE 0 END) AS debts_paid,
-        c.created_at,
-        c.deleted_at
-      FROM customer c
-      INNER JOIN status s ON c.status_id = s.id
-      LEFT JOIN sale sl ON c.id = sl.customer_id
-      GROUP BY c.id
-      ORDER BY c.created_at DESC;
-    `);
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE c.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+        SELECT 
+          c.id,
+          c.name,
+          c.last_name,
+          c.phone,
+          s.description AS status,
+          COUNT(CASE WHEN sl.status_id = 5 THEN 1 END) AS debts_number,
+          SUM(CASE WHEN sl.status_id = 5 THEN total_amount ELSE 0 END) AS debts_amount,
+          SUM(CASE WHEN sl.status_id = 5 THEN paid_amount ELSE 0 END) AS debts_paid,
+          c.created_at,
+          c.deleted_at
+        FROM customer c
+        INNER JOIN status s ON c.status_id = s.id
+        LEFT JOIN sale sl ON c.id = sl.customer_id
+        ${whereClause}
+        GROUP BY c.id
+        ORDER BY c.created_at DESC;
+      `;
+    } else {
+      sql = `SELECT * FROM v_all_customers`;
+    }
+
+    const query = await db.exec(sql);
 
     if (query.length === 0) {
       return { success: true, result: [] };
