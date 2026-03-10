@@ -658,6 +658,46 @@ async function getTopSellingProducts(filters) {
   }
 }
 
+// Get Total Debts Over Time
+async function getTotalDebtsOverTime(year) {
+  const db = await getDB();
+  try {
+    const sql = `
+      WITH RECURSIVE all_months(month_num) AS (
+          SELECT 1
+          UNION ALL
+          SELECT month_num + 1 FROM all_months WHERE month_num < 12
+      )
+      SELECT 
+          CASE m.month_num
+              WHEN 1 THEN 'January' WHEN 2 THEN 'February' WHEN 3 THEN 'March'
+              WHEN 4 THEN 'April' WHEN 5 THEN 'May' WHEN 6 THEN 'June'
+              WHEN 7 THEN 'July' WHEN 8 THEN 'August' WHEN 9 THEN 'September'
+              WHEN 10 THEN 'October' WHEN 11 THEN 'November' WHEN 12 THEN 'December'
+          END AS month,
+          COUNT(s.id) AS debts
+      FROM all_months m
+      LEFT JOIN sale s ON CAST(strftime('%m', s.created_at) AS INTEGER) = m.month_num
+          AND strftime('%Y', s.created_at) = ?
+          AND s.status_id = 5
+      GROUP BY m.month_num
+      ORDER BY m.month_num ASC;
+    `;
+
+    const query = db.exec(sql, [year]);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting total debts over time:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
@@ -674,4 +714,5 @@ module.exports = {
   getAllHistorySales,
   getSalesByCategory,
   getTopSellingProducts,
+  getTotalDebtsOverTime,
 };

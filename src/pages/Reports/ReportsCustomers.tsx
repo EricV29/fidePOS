@@ -42,14 +42,6 @@ export type dataPaymentI = {
   };
 };
 
-//* Example data pie chart
-const chartDataDDCDB = [
-  { customer: "Eric", debts: 2 },
-  { customer: "Jared", debts: 1 },
-  { customer: "Wendy", debts: 3 },
-  { customer: "Lucy", debts: 2 },
-];
-
 //* Example data table
 
 const dataCustomersDB = [
@@ -104,22 +96,14 @@ const dataPaymentsDB = [
   },
 ];
 
-//* Example data status products
-const dataCustomersSDB = { Total: 40, "In Debt": 15 };
-
 const optionsCustomers = [
   { label: "Eric Villeda Reyes", value: "idcustomer1" },
   { label: "Jared Villeda Reyes", value: "idcustomer2" },
 ];
 
-//* Example data chart AREA
-const chartDataTDOT = [
-  { month: "January", debts: 4 },
-  { month: "February", debts: 5 },
-  { month: "March", debts: 7 },
-  { month: "April", debts: 3 },
-  { month: "May", debts: 9 },
-  { month: "June", debts: 4 },
+const optionsYears = [
+  { label: "2025", value: "2025" },
+  { label: "2026", value: "2026" },
 ];
 
 export type dataExportReports = string | number | boolean | null | undefined;
@@ -144,7 +128,6 @@ interface dataGeneralI {
 interface ReportsCustomersProps {}
 
 const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
-  const [chartDataDDC, setChartDataDDC] = useState<PieChartItem[]>([]);
   const [dataTableC, setDataTableC] = useState<Customers[]>([]);
   const [dataTableDC, setDataTableDC] = useState<DebtsCustomer[]>([]);
   const [dataTablePC, setDataTablePC] = useState<PaymentsCustomer[]>([]);
@@ -157,6 +140,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   const [salesAmountCard, setSalesAmountCard] = useState(Number);
   const [customersStatus, setCustomersStatus] = useState<dataGeneralI>();
   const [debtsByCustomers, setDebtsByCustomers] = useState<PieChartItem[]>([]);
+  const [debtsOverTime, setDebtsOverTime] = useState<[]>([]);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
@@ -197,7 +181,6 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
 
   useEffect(() => {
     loadReportsGeneral();
-    setChartDataDDC(addRandomFill(chartDataDDCDB));
     setDataTableC(dataCustomersDB);
     setDataTableDC(dataCBD);
     setDataTablePC(dataPaymentsDB);
@@ -218,6 +201,17 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
       label: t("placeholders.debt"),
       color: "#F57C00",
     },
+  };
+
+  const handleSelectYear = async (value: string) => {
+    console.log(value);
+    const response = await window.electronAPI.getDebtsOverTime(value);
+    const debtsOverTimeData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+
+    setDebtsOverTime(debtsOverTimeData);
   };
 
   useImperativeHandle(childRef, () => ({
@@ -330,7 +324,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
           />
         </div>
         <div className="w-full h-auto flex-1 flex flex-col overflow-y-auto gap-2">
-          <div className="w-full flex gap-2 h-[280px]">
+          <div className="w-full flex gap-2 h-[300px]">
             <div className="max-w-[300px] min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
               <p className="font-semibold dark:text-white">
                 {t("reports.chart5")}
@@ -341,11 +335,19 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
               />
             </div>
             <div className=" min-w-0 w-full h-full flex flex-col justify-center items-center p-5 gap-5 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
-              <p className="font-semibold dark:text-white">
-                {t("reports.chart6")}
-              </p>
+              <div className="w-full flex items-center justify-between">
+                <p className="font-semibold dark:text-white">
+                  {t("reports.chart6")}
+                </p>
+                <CustomSelect
+                  options={optionsYears}
+                  placeholder={t("reports.input2")}
+                  color="#F57C00"
+                  onChange={handleSelectYear}
+                />
+              </div>
               <ChartAreaDefault
-                chartData={chartDataTDOT}
+                chartData={debtsOverTime}
                 chartConfig={chartConfigTDOT}
               />
             </div>

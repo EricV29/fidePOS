@@ -30,6 +30,7 @@ const {
   getAllHistorySales,
   getSalesByCategory,
   getTopSellingProducts,
+  getTotalDebtsOverTime,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -1637,6 +1638,30 @@ ipcMain.handle("get-reports-customers-data", async (event, data) => {
           debtsByCustomers,
         },
       };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Debts Over Time
+ipcMain.handle("get-debts-over-time", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getTotalDebtsOverTime(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
     } catch (error) {
       console.error("❌ ERROR: ", error);
     }

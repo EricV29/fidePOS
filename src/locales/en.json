@@ -80,6 +80,7 @@
     "chart6": "Total Debt Over Time",
     "table4": "Customers",
     "input1": "Select your customer",
+    "input2": "Select a year",
     "table5": "Debts Table",
     "table6": "Payments Table"
   },
@@ -476,7 +477,7 @@
     "product": "product...",
     "select": "select",
     "category": "category...",
-    "debt": "Debt",
+    "debt": "Debts",
     "language": "Language",
     "theme": "Theme",
     "support_img": "Support images .jpg, .jpeg or .web",
