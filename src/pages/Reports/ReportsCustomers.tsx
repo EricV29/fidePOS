@@ -2,6 +2,7 @@ import React, {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useState,
 } from "react";
 import CardInfoNumber from "@components/CardInfoNumber";
@@ -22,6 +23,7 @@ import InvestmentIcon from "@icons/InvestmentIcon";
 import ShoppingCar from "@icons/ShoppingCar";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
+import type { CustomersSelect } from "@typesm/customers";
 
 interface PieChartItem {
   fill: string;
@@ -41,65 +43,6 @@ export type dataPaymentI = {
     edit?: boolean;
   };
 };
-
-//* Example data table
-
-const dataCustomersDB = [
-  {
-    id: "728ed51f",
-    name: "Eric",
-    last_name: "Villeda",
-    phone: "7713940793",
-    status: "active",
-    debts: 0,
-    debts_amount: 0,
-    debts_paid: 500,
-    created_at: "03/03/2025",
-  },
-];
-
-const dataCBD = [
-  {
-    id: "34234",
-    code_sku: "ASD345",
-    product: "Carrito",
-    description: "Hotweels rojo",
-    category: "toys",
-    ccolor: "#ff49ff",
-    status: "unpaid",
-    debt_amount: 100,
-    debt_paid: 50,
-    created_at: "01/02/2025",
-  },
-  {
-    id: "34234",
-    code_sku: "ASD345",
-    product: "Muñeco",
-    description: "Max Steel",
-    category: "toys",
-    ccolor: "#ff49ff",
-    status: "paid",
-    debt_amount: 100,
-    debt_paid: 100,
-    created_at: "01/02/2025",
-  },
-];
-
-const dataPaymentsDB = [
-  {
-    id: "34234",
-    created_at: "01/01/2025",
-    code_sku: "SFAS34",
-    product: "Carrito2",
-    note: "La siguiente semana liquida",
-    amount: 40,
-  },
-];
-
-const optionsCustomers = [
-  { label: "Eric Villeda Reyes", value: "idcustomer1" },
-  { label: "Jared Villeda Reyes", value: "idcustomer2" },
-];
 
 const optionsYears = [
   { label: "2025", value: "2025" },
@@ -128,9 +71,6 @@ interface dataGeneralI {
 interface ReportsCustomersProps {}
 
 const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
-  const [dataTableC, setDataTableC] = useState<Customers[]>([]);
-  const [dataTableDC, setDataTableDC] = useState<DebtsCustomer[]>([]);
-  const [dataTablePC, setDataTablePC] = useState<PaymentsCustomer[]>([]);
   const { t, i18n } = useTranslation();
   const { filters, childRef } = useOutletContext<ReportsContext>();
 
@@ -141,8 +81,18 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   const [customersStatus, setCustomersStatus] = useState<dataGeneralI>();
   const [debtsByCustomers, setDebtsByCustomers] = useState<PieChartItem[]>([]);
   const [debtsOverTime, setDebtsOverTime] = useState<[]>([]);
+  const [customersTable, setCustomersTable] = useState<Customers[]>([]);
+  const [customersSelect, setCustomersSelect] = useState<CustomersSelect[]>([]);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<
+    string | undefined
+  >();
 
-  const loadReportsGeneral = useCallback(
+  const [customerDebts, setCustomerDebts] = useState<DebtsCustomer[]>([]);
+  const [customerPayments, setCustomerPayments] = useState<PaymentsCustomer[]>(
+    [],
+  );
+
+  const loadReportsCustomers = useCallback(
     async (currentFilters = filters) => {
       //setLoading(true);
       const response =
@@ -175,20 +125,71 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
           reportsCustomersData.debtsByCustomers.result;
         setDebtsByCustomers(addRandomFill(debtsByCustomersChartData));
       }
+
+      if (reportsCustomersData?.customers) {
+        const customersData = reportsCustomersData.customers.result;
+        setCustomersTable(customersData);
+      }
+
+      if (reportsCustomersData.customersSelect) {
+        const customersSelect = reportsCustomersData.customersSelect.result;
+        setCustomersSelect(customersSelect);
+      }
+
+      setCustomerDebts([]);
+      setCustomerPayments([]);
     },
     [filters],
   );
 
   useEffect(() => {
-    loadReportsGeneral();
-    setDataTableC(dataCustomersDB);
-    setDataTableDC(dataCBD);
-    setDataTablePC(dataPaymentsDB);
-  }, []);
+    loadReportsCustomers();
+  }, [loadReportsCustomers]);
 
   const columnsc = columnsC(t, i18n.language);
   const columnsdc = columnsDC(t, i18n.language);
   const columnspc = columnsPC(t, i18n.language);
+
+  const customerOptions = useMemo(() => {
+    return customersSelect.map((c) => ({
+      label: `${c.name} ${c.last_name}`,
+      value: c.id?.toString(),
+    }));
+  }, [customersSelect]);
+
+  const loadSelectedCustomerData = useCallback(
+    async (id: string, currentFilters = filters) => {
+      const data = { id, currentFilters };
+      const response =
+        await window.electronAPI.getSelectedCustomerDataDate(data);
+
+      const customerData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
+
+      if (customerData.customerDebts) {
+        const customerDebts = customerData.customerDebts.result;
+        setCustomerDebts(customerDebts);
+      }
+
+      if (customerData.customerPayments) {
+        const customerDebts = customerData.customerPayments.result;
+        setCustomerPayments(customerDebts);
+      }
+    },
+    [filters],
+  );
+
+  const handleChangeCustomer = (value: string) => {
+    if (!value || value === selectedCustomerId) {
+      setSelectedCustomerId(undefined);
+    } else {
+      setSelectedCustomerId(value);
+    }
+
+    loadSelectedCustomerData(value);
+  };
 
   const chartConfigDDC = {
     items: {
@@ -204,7 +205,6 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   };
 
   const handleSelectYear = async (value: string) => {
-    console.log(value);
     const response = await window.electronAPI.getDebtsOverTime(value);
     const debtsOverTimeData =
       typeof response.result === "string"
@@ -216,26 +216,9 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
 
   useImperativeHandle(childRef, () => ({
     createReport: async (view: string) => {
-      let generalData: Customers[] = customerTable;
-
-      if (view === "total") {
-        try {
-          setLoading(true);
-          const response = await window.electronAPI.getAllCustomers();
-          if (response.success) {
-            const rawData =
-              typeof response.result === "string"
-                ? JSON.parse(response.result)
-                : response.result;
-
-            generalData = rawData as Customers[];
-          }
-        } catch (err) {
-          console.error("Comunication Error:", err);
-        } finally {
-          setLoading(false);
-        }
-      }
+      let customersData: Customers[] = customersTable;
+      let customersDebetsData: DebtsCustomer[] = customerDebts;
+      let customersPaymentsData: PaymentsCustomer[] = customerPayments;
 
       const statsData = [
         [t("exportReport.customer_general.title")],
@@ -352,29 +335,32 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
               />
             </div>
           </div>
+
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent flex flex-col">
             <p className="font-semibold mb-2 dark:text-white">
               {t("reports.table4")}
             </p>
-            <DataTable columns={columnsc} data={dataTableC} />
+            <DataTable columns={columnsc} data={customersTable} />
           </div>
           <CustomSelect
-            options={optionsCustomers}
-            placeholder={t("reports.input1")}
+            options={customerOptions}
+            placeholder={t("customers.input1")}
             color="#F57C00"
+            value={selectedCustomerId}
+            onChange={handleChangeCustomer}
           />
           <div className="w-full min-w-0 flex gap-2">
             <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
               <p className="font-semibold dark:text-white">
                 {t("reports.table5")}
               </p>
-              {/* <DataTableSearch data={dataTableDC} columns={columnsdc} /> */}
+              <DataTable data={customerDebts} columns={columnsdc} />
             </div>
             <div className="w-1/2 min-h-0 min-w-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
               <p className="font-semibold dark:text-white">
                 {t("reports.table6")}
               </p>
-              {/* <DataTableSearch data={dataTablePC} columns={columnspc} /> */}
+              <DataTable data={customerPayments} columns={columnspc} />
             </div>
           </div>
         </div>

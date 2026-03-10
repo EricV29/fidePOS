@@ -384,6 +384,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // GET DEBTS AND PAYMENTS CUSTOMER SELECTED BY DATE
+      getSelectedCustomerDataDate: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

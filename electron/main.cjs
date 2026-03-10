@@ -1622,11 +1622,15 @@ ipcMain.handle("get-reports-customers-data", async (event, data) => {
         salesNumberAmount,
         customersStatus,
         debtsByCustomers,
+        customers,
+        customersSelect,
       ] = await Promise.all([
         getPendingSalesAmount(data),
         getSalesNumberAmount(data),
         getCustomersStatus(data),
         getDebtsByCustomers(data),
+        getAllCustomers(data),
+        getCustomersSelect(data),
       ]);
 
       return {
@@ -1636,6 +1640,8 @@ ipcMain.handle("get-reports-customers-data", async (event, data) => {
           salesNumberAmount,
           customersStatus,
           debtsByCustomers,
+          customers,
+          customersSelect,
         },
       };
     } catch (error) {
@@ -1662,6 +1668,31 @@ ipcMain.handle("get-debts-over-time", async (event, data) => {
           error: response.error,
         };
       }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Debts and Payments Customer (Date)
+ipcMain.handle("get-debts-payments-customer-date", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { id, currentFilters } = data;
+      const [customerDebts, customerPayments] = await Promise.all([
+        getCustomerDebtsTable(id, null, null, currentFilters),
+        getCustomerPaymentsTable(id, null, null, currentFilters),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          customerDebts,
+          customerPayments,
+        },
+      };
     } catch (error) {
       console.error("❌ ERROR: ", error);
     }

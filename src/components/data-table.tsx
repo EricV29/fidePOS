@@ -49,7 +49,7 @@ export function DataTable<TData, TValue>({
 
     if (typeof key !== "string") return;
 
-    const excluded = ["stock", "sale_num"];
+    const excluded = ["stock", "sale_num", "debts_number"];
 
     if (
       !excluded.includes(key) &&
