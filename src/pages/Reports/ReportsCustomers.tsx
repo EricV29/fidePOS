@@ -137,6 +137,10 @@ interface ReportsContext {
   };
 }
 
+interface dataGeneralI {
+  [key: string]: number;
+}
+
 interface ReportsCustomersProps {}
 
 const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
@@ -146,31 +150,52 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   const [dataTablePC, setDataTablePC] = useState<PaymentsCustomer[]>([]);
   const { t, i18n } = useTranslation();
   const { filters, childRef } = useOutletContext<ReportsContext>();
+
   //* GET DATA
+  const [pendingAmountCard, setPendingAmountCard] = useState(Number);
+  const [salesNumberCard, setSalesNumberCard] = useState(Number);
+  const [salesAmountCard, setSalesAmountCard] = useState(Number);
+  const [customersStatus, setCustomersStatus] = useState<dataGeneralI>();
+  const [debtsByCustomers, setDebtsByCustomers] = useState<PieChartItem[]>([]);
 
   const loadReportsGeneral = useCallback(
     async (currentFilters = filters) => {
       //setLoading(true);
-      console.log(currentFilters);
+      const response =
+        await window.electronAPI.getReportsCustomersData(currentFilters);
+      const reportsCustomersData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
 
-      // const response =
-      //   await window.electronAPI.getReportsGeneralData(currenFilters);
-      // const dashboardData =
-      //   typeof response.result === "string"
-      //     ? JSON.parse(response.result)
-      //     : response.result;
+      if (reportsCustomersData?.salesPendingAmount) {
+        const salesPendingAmountData =
+          reportsCustomersData.salesPendingAmount.result;
+        setPendingAmountCard(salesPendingAmountData[0].pendingSalesAmount);
+      }
 
-      // if (dashboardData?.investment) {
-      //   const investmentData = dashboardData.investment.result;
-      //   setInvestCard(investmentData[0].investment);
-      // }
+      if (reportsCustomersData?.salesNumberAmount) {
+        const salesNumberAmountData =
+          reportsCustomersData.salesNumberAmount.result;
+        setSalesNumberCard(salesNumberAmountData.dataNumber[0].salesNumber);
+        setSalesAmountCard(salesNumberAmountData.dataAmount[0].salesAmount);
+      }
+
+      if (reportsCustomersData?.customersStatus) {
+        const customersStatusData = reportsCustomersData.customersStatus.result;
+        setCustomersStatus(customersStatusData[0]);
+      }
+
+      if (reportsCustomersData?.debtsByCustomers) {
+        const debtsByCustomersChartData =
+          reportsCustomersData.debtsByCustomers.result;
+        setDebtsByCustomers(addRandomFill(debtsByCustomersChartData));
+      }
     },
     [filters],
   );
 
   useEffect(() => {
-    console.log(filters);
-
     loadReportsGeneral();
     setChartDataDDC(addRandomFill(chartDataDDCDB));
     setDataTableC(dataCustomersDB);
@@ -284,22 +309,22 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
         <div className="flex gap-2 h-[110px] overflow-x-auto overflow-y-hidden">
           <CardInfoNumber
             icon={InvestmentIcon}
-            title={t("cards.owed_title")}
+            title={t("cards.pending_title")}
             icond={null}
-            number={12000}
+            number={pendingAmountCard}
             format={true}
             color="#1976D2"
           />
           <CardInfoNumber
             icon={ShoppingCar}
-            title={t("cards.sales_title") + ": 10"}
+            title={t("cards.sales_title") + `: ${salesNumberCard}`}
             icond={null}
-            number={1500}
+            number={salesAmountCard}
             format={true}
             color="#1976D2"
           />
           <CardInfoDetail
-            chartData={dataCustomersSDB!}
+            chartData={customersStatus!}
             title={t("cards.customers_title")}
             color="#1976D2"
           />
@@ -311,7 +336,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
                 {t("reports.chart5")}
               </p>
               <ChartPieDonutText
-                chartData={chartDataDDC}
+                chartData={debtsByCustomers}
                 chartConfig={chartConfigDDC}
               />
             </div>
