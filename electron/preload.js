@@ -175,4 +175,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   //* Get Reports Customers Page
   getReportsCustomersData: (data) =>
     ipcRenderer.invoke("get-reports-customers-data", data),
+
+  // Get Debts Over Time
+  getDebtsOverTime: (data) => ipcRenderer.invoke("get-debts-over-time", data),
 });

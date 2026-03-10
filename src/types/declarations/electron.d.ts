@@ -377,6 +377,13 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // GET DEBTS OVER TIME
+      getDebtsOverTime: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
