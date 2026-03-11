@@ -128,6 +128,7 @@
     "actions": "Acciones",
     "total_amount": "Monto",
     "customer": "Cliente",
+    "customers": "Clientes",
     "code": "Código SKU",
     "sale_total": "Monto de venta",
     "debt_amount": "Monto adeudado",
@@ -154,7 +155,11 @@
     "pending_amount": "Monto Pendiente",
     "user_id": "ID Usuario",
     "debt_num": "No. Deudas",
-    "code_sku": "No. Código"
+    "code_sku": "No. Código",
+    "debts": "Deudas",
+    "month": "Meses",
+    "sale_amount": "Monto total de ventas",
+    "total_payment_amount": "Monto de pago"
   },
   "charts": {
     "chart_sales": "Ventas",
@@ -568,6 +573,23 @@
       "products_by_category": "PRODUCTOS POR CATEGORÍA",
       "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
       "detail_sales": "DETALLE DE PRODUCTOS"
+    },
+    "reports_customers": {
+      "title": "REPORTE CLIENTES",
+      "total_receivable": "Monto de cuentas por cobrar",
+      "sale_num": "Número de ventas",
+      "sale_amount": "Monto total de ventas",
+      "customer_total_num": "Número total de clientes",
+      "customer_active": "Clientes activos",
+      "customer_inactive": "Clientes inactivos",
+      "debt_distribution_customer": "NÚMERO DE DEUDAS POR CLIENTE",
+      "total_debt_over_time": "DEUDAS DURANTE EL AÑO",
+      "year": "Año",
+      "detail_customers": "DETALLE DE CLIENTES",
+      "detail_customer": "DETALLE DE CLIENTE",
+      "customer": "Cliente",
+      "detail_debts": "DETALLE DE DEUDAS",
+      "detail_payments": "DETALLE DE PAGOS"
     }
   }
 }

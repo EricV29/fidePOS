@@ -122,6 +122,7 @@
     "actions": "Actions",
     "total_amount": "Amount",
     "customer": "Customer",
+    "customers": "Customers",
     "code": "Code SKU",
     "sale_total": "Sale amount",
     "debt_amount": "Debt amount",
@@ -148,7 +149,11 @@
     "pending_amount": "Pending Amount",
     "user_id": "User ID",
     "debt_num": "No. Debts",
-    "code_sku": "No. Code"
+    "code_sku": "No. Code",
+    "debts": "Debts",
+    "month": "Months",
+    "sale_amount": "Total Amount Sales",
+    "total_payment_amount": "Payment Amount"
   },
   "charts": {
     "chart_sales": "Sales",
@@ -561,6 +566,23 @@
       "products_by_category": "PRODUCTS BY CATEGORY",
       "top_selling_product": "TOP SELLING PRODUCTS",
       "detail_sales": "DETAIL PRODUCTS"
+    },
+    "reports_customers": {
+      "title": "CUSTOMER REPORT",
+      "total_receivable": "Total Receivable Amount",
+      "sale_num": "No. Sales",
+      "sale_amount": "Total Amount Sales",
+      "customer_total_num": "Total Customers Number",
+      "customer_active": "Active Customers",
+      "customer_inactive": "Inactive Customers",
+      "debt_distribution_customer": "DEBTS DISTRIBUTION BY CUSTOMER",
+      "total_debt_over_time": "TOTAL DEBTS OVER TIME",
+      "year": "Year",
+      "detail_customers": "DETAIL CUSTOMERS",
+      "detail_customer": "DETAIL CUSTOMER",
+      "customer": "Customer",
+      "detail_debts": "DETAIL DEBTS",
+      "detail_payments": "DETAIL PAYMENTS"
     }
   }
 }
