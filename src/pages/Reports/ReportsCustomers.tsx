@@ -68,6 +68,10 @@ interface dataGeneralI {
   [key: string]: number;
 }
 
+interface DataItem {
+  [key: string]: string | number;
+}
+
 interface ReportsCustomersProps {}
 
 const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
@@ -80,12 +84,14 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   const [salesAmountCard, setSalesAmountCard] = useState(Number);
   const [customersStatus, setCustomersStatus] = useState<dataGeneralI>();
   const [debtsByCustomers, setDebtsByCustomers] = useState<PieChartItem[]>([]);
-  const [debtsOverTime, setDebtsOverTime] = useState<[]>([]);
+  const [debtsOverTime, setDebtsOverTime] = useState<DataItem[]>([]);
   const [customersTable, setCustomersTable] = useState<Customers[]>([]);
   const [customersSelect, setCustomersSelect] = useState<CustomersSelect[]>([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState<
     string | undefined
   >();
+
+  const [year, setSelectYear] = useState<string | undefined>();
 
   const [customerDebts, setCustomerDebts] = useState<DebtsCustomer[]>([]);
   const [customerPayments, setCustomerPayments] = useState<PaymentsCustomer[]>(
@@ -205,6 +211,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   };
 
   const handleSelectYear = async (value: string) => {
+    setSelectYear(value);
     const response = await window.electronAPI.getDebtsOverTime(value);
     const debtsOverTimeData =
       typeof response.result === "string"
@@ -215,37 +222,48 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
   };
 
   useImperativeHandle(childRef, () => ({
-    createReport: async (view: string) => {
-      let customersData: Customers[] = customersTable;
-      let customersDebetsData: DebtsCustomer[] = customerDebts;
-      let customersPaymentsData: PaymentsCustomer[] = customerPayments;
+    createReport: async () => {
+      const customersData: Customers[] = customersTable;
+      const customersDebetsData: DebtsCustomer[] = customerDebts;
+      const customersPaymentsData: PaymentsCustomer[] = customerPayments;
+
+      let totalCustomer = 0;
+      if (customersStatus) {
+        totalCustomer =
+          Number(customersStatus.Active || 0) +
+          Number(customersStatus["In Debt"] || 0);
+      }
 
       const statsData = [
-        [t("exportReport.customer_general.title")],
+        [t("exportReport.reports_customers.title")],
         [
-          t("exportReport.customer_general.customers_number"),
-          customersNumberCard,
+          t("exportReport.reports_customers.total_receivable"),
+          pendingAmountCard,
+        ],
+        [t("exportReport.reports_customers.sale_num"), salesNumberCard],
+        [t("exportReport.reports_customers.sale_amount"), salesAmountCard],
+        [t("exportReport.reports_customers.customer_total_num"), totalCustomer],
+        [
+          t("exportReport.reports_customers.customer_active"),
+          customersStatus?.Active,
         ],
         [
-          t("exportReport.customer_general.customers_debts_number"),
-          customersInDebtNumberCard,
-        ],
-        [
-          t("exportReport.customer_general.total_debt_amount"),
-          totalDebtAmountCard,
-        ],
-        [
-          t("exportReport.customer_general.last_customer_name_paid"),
-          lastCustomerNamePaidCard,
-        ],
-        [
-          t("exportReport.customer_general.last_customer_name_paid_date"),
-          lastCustomerNamePaidCardDate,
+          t("exportReport.reports_customers.customer_inactive"),
+          customersStatus?.["In Debt"],
         ],
         [],
       ];
 
-      const tableHeaders = [
+      // Table 1 -> Debt Distribution by Customer (DDC)
+      const tableHeadersDDC = [t("columns.customers"), t("columns.debts")];
+      const rowsDDC = debtsByCustomers.map((x) => [x.customer, x.debts]);
+
+      // Table 2 -> Total Debt Over Time (TDOT)
+      const tableHeadersTDOT = [t("columns.month"), t("columns.debts")];
+      const rowsTDOT = debtsOverTime.map((x) => [x.month, x.debts]);
+
+      // Table 3 -> Customer Table (CT)
+      const tableHeadersCT = [
         "ID",
         t("columns.name"),
         t("columns.last_name"),
@@ -257,23 +275,87 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
         t("columns.created_at"),
       ];
 
-      const rows = generalData.map((cg) => [
-        cg.id,
-        cg.name,
-        cg.last_name,
-        cg.phone,
-        cg.status,
-        cg.debts_number,
-        cg.debts_amount,
-        cg.debts_paid,
-        cg.created_at,
+      const rowsCT = customersData.map((x) => [
+        x.id,
+        x.name,
+        x.last_name,
+        x.phone,
+        x.status,
+        x.debts_number,
+        x.debts_amount,
+        x.debts_paid,
+        x.created_at,
+      ]);
+
+      // Table 4 -> Debts Table (DT)
+      const tableHeadersDT = [
+        "ID",
+        t("columns.sale_num"),
+        t("columns.code_sku"),
+        t("columns.product"),
+        t("columns.description"),
+        t("columns.debt_amount"),
+        t("columns.sale_amount"),
+        t("columns.debt_paid"),
+        t("columns.created_at"),
+      ];
+
+      const rowsDT = customersDebetsData.map((x) => [
+        x.id,
+        x.sale_num,
+        x.codes_sku,
+        x.products,
+        x.descriptions,
+        x.debt_amount,
+        x.sale_total,
+        x.debt_paid,
+        x.created_at,
+      ]);
+
+      // Table 4 -> Payments Table (PT)
+      const tableHeadersPT = [
+        "ID",
+        t("columns.created_at"),
+        t("columns.sale_num"),
+        t("columns.total_payment_amount"),
+        t("columns.note"),
+      ];
+
+      const rowsPT = customersPaymentsData.map((x) => [
+        x.id,
+        x.created_at,
+        x.sale_num,
+        x.amount,
+        x.note,
       ]);
 
       const finalData: dataExportReports[][] = [
-        [t("exportReport.customer_general.detail_customers")],
         ...statsData,
-        tableHeaders,
-        ...rows,
+        [],
+        [t("exportReport.reports_customers.debt_distribution_customer")],
+        tableHeadersDDC,
+        ...rowsDDC,
+        [],
+        [t("exportReport.reports_customers.total_debt_over_time")],
+        [t("exportReport.reports_customers.year")],
+        [year],
+        tableHeadersTDOT,
+        ...rowsTDOT,
+        [],
+        [t("exportReport.reports_customers.detail_customers")],
+        tableHeadersCT,
+        ...rowsCT,
+        [],
+        [t("exportReport.reports_customers.detail_customer")],
+        [t("exportReport.reports_customers.customer")],
+        [selectedCustomerId],
+        [t("exportReport.reports_customers.detail_debts")],
+        tableHeadersDT,
+        ...rowsDT,
+        [],
+        [t("exportReport.reports_customers.detail_payments")],
+        tableHeadersPT,
+        ...rowsPT,
       ];
 
       return finalData;
@@ -326,6 +408,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
                   options={optionsYears}
                   placeholder={t("reports.input2")}
                   color="#F57C00"
+                  value={year}
                   onChange={handleSelectYear}
                 />
               </div>
