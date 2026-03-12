@@ -49,7 +49,7 @@ export function DataTable<TData, TValue>({
 
     if (typeof key !== "string") return;
 
-    const excluded = ["stock"];
+    const excluded = ["stock", "sale_num", "debts_number"];
 
     if (
       !excluded.includes(key) &&
@@ -57,7 +57,7 @@ export function DataTable<TData, TValue>({
     ) {
       numericTotals[key] = data.reduce(
         (sum, row) => sum + (row as Record<string, number>)[key],
-        0
+        0,
       );
     }
   });
@@ -76,7 +76,7 @@ export function DataTable<TData, TValue>({
               >
                 {flexRender(
                   header.column.columnDef.header,
-                  header.getContext()
+                  header.getContext(),
                 )}
               </TableHead>
             ))}
@@ -106,8 +106,8 @@ export function DataTable<TData, TValue>({
                     {numericTotals[key] !== undefined
                       ? currencyFormat(numericTotals[key])
                       : index === 0
-                      ? t("charts.totals")
-                      : ""}
+                        ? t("charts.totals")
+                        : ""}
                   </TableCell>
                 );
               })}

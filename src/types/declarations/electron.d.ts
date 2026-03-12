@@ -349,6 +349,48 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      //* GET REPORTS GENERAL PAGE
+      getReportsGeneralData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET REPORTS SALES PAGE
+      getReportsSalesData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET REPORTS PRODUCTS PAGE
+      getReportsProductsData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET REPORTS CUSTOMERS PAGE
+      getReportsCustomersData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET DEBTS OVER TIME
+      getDebtsOverTime: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET DEBTS AND PAYMENTS CUSTOMER SELECTED BY DATE
+      getSelectedCustomerDataDate: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }

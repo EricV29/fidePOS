@@ -159,4 +159,27 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Active Customer
   activeCustomer: (data) => ipcRenderer.invoke("activeCustomer", data),
+
+  //* Get Reports General Page
+  getReportsGeneralData: (data) =>
+    ipcRenderer.invoke("get-reports-general-data", data),
+
+  //* Get Reports Sales Page
+  getReportsSalesData: (data) =>
+    ipcRenderer.invoke("get-reports-sales-data", data),
+
+  //* Get Reports Products Page
+  getReportsProductsData: (data) =>
+    ipcRenderer.invoke("get-reports-products-data", data),
+
+  //* Get Reports Customers Page
+  getReportsCustomersData: (data) =>
+    ipcRenderer.invoke("get-reports-customers-data", data),
+
+  // Get Debts Over Time
+  getDebtsOverTime: (data) => ipcRenderer.invoke("get-debts-over-time", data),
+
+  // Get Debts and Payments Customer Selected by Date
+  getSelectedCustomerDataDate: (data) =>
+    ipcRenderer.invoke("get-debts-payments-customer-date", data),
 });

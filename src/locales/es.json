@@ -76,16 +76,16 @@
       "customers": "Clientes"
     },
     "chart1": "Ventas por Categoría",
-    "chart2": "Ventas por Producto",
-    "table1": "Accounts Receivable",
+    "chart2": "Top Productos Vendidos",
+    "table1": "Cuentas por Cobrar",
     "table2": "Ventas",
     "chart3": "Productos por Categoría",
-    "chart4": "Top Productos Vendidos",
     "table3": "Productos",
     "chart5": "Deudas por Cliente",
     "chart6": "Total de Deudas Durante el Tiempo",
     "table4": "Clientes",
     "input1": "Selecciona tu cliente",
+    "input2": "Selecciona un año",
     "table5": "Tabla de Deudas",
     "table6": "Tabla de Pagos"
   },
@@ -128,6 +128,7 @@
     "actions": "Acciones",
     "total_amount": "Monto",
     "customer": "Cliente",
+    "customers": "Clientes",
     "code": "Código SKU",
     "sale_total": "Monto de venta",
     "debt_amount": "Monto adeudado",
@@ -153,10 +154,15 @@
     "last_name": "Apellido",
     "pending_amount": "Monto Pendiente",
     "user_id": "ID Usuario",
-    "debt_num": "No. Deudas"
+    "debt_num": "No. Deudas",
+    "code_sku": "No. Código",
+    "debts": "Deudas",
+    "month": "Meses",
+    "sale_amount": "Monto total de ventas",
+    "total_payment_amount": "Monto de pago"
   },
   "charts": {
-    "chart_tcs": "Ventas",
+    "chart_sales": "Ventas",
     "chart_apc": "Productos",
     "totals": "Totales",
     "chart_cs": "Ventas"
@@ -205,6 +211,7 @@
       "fri": "Vie",
       "sat": "Sáb"
     },
+    "onlyToday": "¿Sólo hoy?",
     "btn1": "Cancelar",
     "btn2": "Aplicar"
   },
@@ -525,6 +532,62 @@
       "payments_numbers": "Número de Pagos",
       "total_debts_amount": "Monto Total de Adeudo",
       "total_payments_amount": "Monto Total de Pago",
+      "detail_debts": "DETALLE DE DEUDAS",
+      "detail_payments": "DETALLE DE PAGOS"
+    },
+    "reports_general": {
+      "title": "REPORTE GENERAL",
+      "investment": "Inversión",
+      "revenue": "Ganacias",
+      "inventory_value": "Valor de inventario",
+      "sale_num": "Número de ventas",
+      "sale_amount": "Monto total de ventas",
+      "total_receivable": "Monto de cuentas por cobrar",
+      "customer_total_num": "Número total de clientes",
+      "customer_active": "Clientes activos",
+      "customer_in_debt": "En deuda",
+      "products_total_num": "Número total de productos",
+      "products_active": "Productos activos",
+      "products_inactive": "Productos inactivos",
+      "sales_by_category": "VENTAS POR CATEGORÍA",
+      "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
+      "accounts_receivable_table": "DETALLE DE CUENTAS POR COBRAR"
+    },
+    "reports_sales": {
+      "title": "REPORTE VENTAS",
+      "inventory_value": "Valor de inventario",
+      "sale_num": "Número de ventas",
+      "sale_amount": "Monto total de ventas",
+      "sales_by_category": "VENTAS POR CATEGORÍA",
+      "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
+      "detail_sales": "DETALLE DE VENTAS"
+    },
+    "reports_products": {
+      "title": "REPORTE PRODUCTOS",
+      "investment": "Inversión",
+      "revenue": "Ganancia",
+      "inventory_value": "Valor de inventario",
+      "products_total_num": "Productos Totales",
+      "products_active": "Productos Activos",
+      "products_inactive": "Productos Inactivos",
+      "products_by_category": "PRODUCTOS POR CATEGORÍA",
+      "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
+      "detail_sales": "DETALLE DE PRODUCTOS"
+    },
+    "reports_customers": {
+      "title": "REPORTE CLIENTES",
+      "total_receivable": "Monto de cuentas por cobrar",
+      "sale_num": "Número de ventas",
+      "sale_amount": "Monto total de ventas",
+      "customer_total_num": "Número total de clientes",
+      "customer_active": "Clientes activos",
+      "customer_inactive": "Clientes inactivos",
+      "debt_distribution_customer": "NÚMERO DE DEUDAS POR CLIENTE",
+      "total_debt_over_time": "DEUDAS DURANTE EL AÑO",
+      "year": "Año",
+      "detail_customers": "DETALLE DE CLIENTES",
+      "detail_customer": "DETALLE DE CLIENTE",
+      "customer": "Cliente",
       "detail_debts": "DETALLE DE DEUDAS",
       "detail_payments": "DETALLE DE PAGOS"
     }

@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
+import { useOutletContext } from "react-router-dom";
 import CardInfoNumber from "@components/CardInfoNumber";
 import BoxIcon from "@icons/BoxIcon";
 import ShoppingCar from "@icons/ShoppingCar";
@@ -7,79 +13,173 @@ import { addRandomFill } from "@utility/AddFill";
 import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsS } from "@columns/columnsS";
-import type { Sales } from "@typesm/sales";
 import { useTranslation } from "react-i18next";
+import type { Sales } from "@typesm/sales";
+import type {
+  PieChartValue,
+  BarChartValue,
+  ExportReportValue,
+} from "@typesm/global";
 
-interface PieChartItem {
-  fill: string;
-  [key: string]: string | number;
+// hijo > padre
+interface ExportableChild {
+  createReport: (view: string) => Promise<ExportReportValue[][]>;
 }
-interface BarChartItem {
-  [key: string]: string | number;
+
+// Padre > hijo
+interface ReportsContext {
+  childRef: React.RefObject<ExportableChild>;
+  filters: {
+    startDate: string;
+    endDate: string;
+  };
 }
 
-//* Example data pie chart
-const chartDataCSDB = [
-  { category: "Maquillaje", sales: 10 },
-  { category: "Dulces", sales: 20 },
-  { category: "Edredones", sales: 87 },
-  { category: "Zapatos", sales: 73 },
-];
-
-//* Example data bar chart
-const chartDataTCSDB = [
-  { category: "Maquillaje", sales: 186 },
-  { category: "Regalos", sales: 305 },
-  { category: "Edredones", sales: 237 },
-  { category: "Dulces", sales: 73 },
-  { category: "Zapatos", sales: 209 },
-];
-
-//* Example data table
-const dataSBD = [
-  {
-    id: "34234",
-    name: "Eric",
-    last_name: "Villeda",
-    num_sale: "0001",
-    products:
-      "Labial, carrito, estuche, peluche, edredon, manguito, peine, cepillo, bolsa, moño",
-    total_amount: 1000,
-    paid_amount: 1000,
-    pending_amount: 0,
-    status: "paid",
-    created_at: "2025-11-16 00:00:00",
-  },
-];
-
-interface ReportsSalesProps {}
-
-const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
-  const [chartDataCSF, setChartDataCSF] = useState<PieChartItem[]>([]);
-  const [chartDataTCS, setChartDataTSC] = useState<BarChartItem[]>([]);
-  const [dataTableS, setDataTableS] = useState<Sales[]>([]);
+const ReportsSales = () => {
   const { t, i18n } = useTranslation();
-
-  useEffect(() => {
-    setChartDataCSF(addRandomFill(chartDataCSDB));
-    setChartDataTSC(chartDataTCSDB);
-    setDataTableS(dataSBD);
-  }, []);
-
+  const { filters, childRef } = useOutletContext<ReportsContext>();
   const columnss = columnsS(t, i18n.language);
-
   const chartConfigCS = {
     items: {
-      label: t("charts.chart_cs"),
+      label: t("charts.chart_sales"),
     },
   };
-
   const chartConfigTCS = {
     sales: {
-      label: t("charts.chart_tcs"),
+      label: t("charts.chart_sales"),
       color: "#1976D2",
     },
   };
+
+  //* GET DATA
+  const [inventoryValueCard, setInventoryValueCard] = useState(Number);
+  const [salesNumberCard, setSalesNumberCard] = useState(Number);
+  const [salesAmountCard, setSalesAmountCard] = useState(Number);
+  const [salesByCategoryChart, setSalesByCategoryChart] = useState<
+    PieChartValue[]
+  >([]);
+  const [topSellingProductsChart, setTopSellingProductsChart] = useState<
+    BarChartValue[]
+  >([]);
+  const [allHistorySales, setAllHistorySales] = useState<Sales[]>([]);
+
+  const loadReportsGeneral = useCallback(
+    async (currentFilters = filters) => {
+      //setLoading(true);
+      const response =
+        await window.electronAPI.getReportsSalesData(currentFilters);
+      const reportsSalesData =
+        typeof response.result === "string"
+          ? JSON.parse(response.result)
+          : response.result;
+
+      if (reportsSalesData?.inventoryValue) {
+        const inventoryValueData = reportsSalesData.inventoryValue.result;
+        setInventoryValueCard(inventoryValueData[0].inventory_value);
+      }
+
+      if (reportsSalesData?.salesNumberAmount) {
+        const salesNumberAmountData = reportsSalesData.salesNumberAmount.result;
+        setSalesNumberCard(salesNumberAmountData.dataNumber[0].salesNumber);
+        setSalesAmountCard(salesNumberAmountData.dataAmount[0].salesAmount);
+      }
+
+      if (reportsSalesData?.salesByCategory) {
+        const salesByCategoryChartData =
+          reportsSalesData.salesByCategory.result;
+        setSalesByCategoryChart(addRandomFill(salesByCategoryChartData));
+      }
+
+      if (reportsSalesData?.topSellingProducts) {
+        const topSellingProductsData =
+          reportsSalesData.topSellingProducts.result;
+        setTopSellingProductsChart(topSellingProductsData);
+      }
+
+      if (reportsSalesData?.allHistorySales) {
+        const historySalesData = reportsSalesData.allHistorySales.result;
+        setAllHistorySales(historySalesData);
+      }
+    },
+    [filters],
+  );
+
+  useEffect(() => {
+    loadReportsGeneral();
+  }, [filters, loadReportsGeneral]);
+
+  useImperativeHandle(childRef, () => ({
+    createReport: async () => {
+      const salesData: Sales[] = allHistorySales;
+
+      // Stats o Cards
+      const statsData = [
+        [t("exportReport.reports_sales.title")],
+        [t("exportReport.reports_sales.inventory_value"), inventoryValueCard],
+        [t("exportReport.reports_sales.sales_num"), salesNumberCard],
+        [t("exportReport.reports_sales.sales_amount"), salesAmountCard],
+      ];
+
+      // Table 1 -> Sales by Category Chart (SC)
+      const tableHeadersSC = [t("columns.category"), t("columns.sale_num")];
+
+      const rowsSC = salesByCategoryChart.map((x) => [x.category, x.sales]);
+
+      // Table 2 -> Top Selling Porducts Chart (TSP)
+      const tableHeadersTSP = [t("columns.product"), t("columns.sale_num")];
+
+      const rowsTSP = topSellingProductsChart.map((x) => [x.product, x.sales]);
+
+      // Table 3 -> Sales
+      const tableHeaders = [
+        "ID",
+        t("columns.sale_num"),
+        t("columns.name"),
+        t("columns.last_name"),
+        t("columns.products"),
+        t("columns.total_amount"),
+        t("columns.paid_amount"),
+        t("columns.pending_amount"),
+        t("columns.discount"),
+        t("columns.status"),
+        t("columns.user_id"),
+        t("columns.created_at"),
+      ];
+
+      const rows = salesData.map((x) => [
+        x.id,
+        x.sale_num,
+        x.name,
+        x.last_name,
+        x.products,
+        x.total_amount,
+        x.paid_amount,
+        x.pending_amount,
+        x.discount,
+        x.status,
+        x.user_id,
+        x.created_at,
+      ]);
+
+      const finalData: ExportReportValue[][] = [
+        ...statsData,
+        [],
+        [t("exportReport.reports_sales.sales_by_category")],
+        tableHeadersSC,
+        ...rowsSC,
+        [],
+        [t("exportReport.reports_sales.top_selling_product")],
+        tableHeadersTSP,
+        ...rowsTSP,
+        [],
+        [t("exportReport.reports_sales.detail_sales")],
+        tableHeaders,
+        ...rows,
+      ];
+
+      return finalData;
+    },
+  }));
 
   return (
     <>
@@ -89,15 +189,15 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
             icon={BoxIcon}
             title={t("cards.inventory_value_title")}
             icond={null}
-            number={100000}
+            number={inventoryValueCard}
             format={true}
             color="#FFC107"
           />
           <CardInfoNumber
             icon={ShoppingCar}
-            title={t("cards.sales_title") + ": 10"}
+            title={t("cards.sales_title") + `: ${salesNumberCard}`}
             icond={null}
-            number={1500}
+            number={salesAmountCard}
             format={true}
             color="#1976D2"
           />
@@ -109,7 +209,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
                 {t("reports.chart1")}
               </p>
               <ChartPieDonutText
-                chartData={chartDataCSF}
+                chartData={salesByCategoryChart}
                 chartConfig={chartConfigCS}
               />
             </div>
@@ -118,9 +218,9 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
                 {t("reports.chart2")}
               </p>
               <ChartBarLabel
-                chartData={chartDataTCS}
+                chartData={topSellingProductsChart}
                 chartConfig={chartConfigTCS}
-                xAxis="category"
+                xAxis="product"
                 yAxis="sales"
               />
             </div>
@@ -129,7 +229,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
             <p className="font-semibold mb-2 dark:text-white">
               {t("reports.table2")}
             </p>
-            <DataTable columns={columnss} data={dataTableS} />
+            <DataTable columns={columnss} data={allHistorySales} />
           </div>
         </div>
       </div>

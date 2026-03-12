@@ -21,13 +21,16 @@ const {
   getSaleData,
   getNextNumberSale,
   createNewSale,
-  getSalesNumber,
+  getSalesNumberAmount,
   getPendingSalesAmount,
   getDiscountsAmount,
   getPaidVSPendingNumber,
   getHistorySales,
   getFilterSearchHistorySales,
   getAllHistorySales,
+  getSalesByCategory,
+  getTopSellingProducts,
+  getTotalDebtsOverTime,
 } = require("./db/queries/salesQueries.cjs");
 const {
   getActiveProductsCategory,
@@ -45,6 +48,8 @@ const {
   editProduct,
   addProductsImport,
   getAllProducts,
+  getProductsStatus,
+  getProductsByCategory,
 } = require("./db/queries/productsQueries.cjs");
 const {
   getAccountsReceivable,
@@ -72,6 +77,8 @@ const {
   getAllDebtsCustomer,
   getAllPaymentsCustomer,
   activeCustomer,
+  getCustomersStatus,
+  getDebtsByCustomers,
 } = require("./db/queries/customersQueries.cjs");
 const { getDetailDebt } = require("./db/queries/debtsQueries.cjs");
 const {
@@ -1105,7 +1112,7 @@ ipcMain.handle("get-history-data", async (event, data) => {
         paidVSPendingNumber,
         historySales,
       ] = await Promise.all([
-        getSalesNumber(),
+        getSalesNumberAmount(),
         getPendingSalesAmount(),
         getDiscountsAmount(),
         getPaidVSPendingNumber(),
@@ -1467,6 +1474,223 @@ ipcMain.handle("get-all-debts-payments", async (event, data) => {
         result: {
           allDebtsCustomer,
           allPaymentsCustomer,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+//* Get Reports General Data Page
+ipcMain.handle("get-reports-general-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [
+        investment,
+        revenue,
+        inventoryValue,
+        salesNumberAmount,
+        salesPendingAmount,
+        customersStatus,
+        productsStatus,
+        salesByCategory,
+        topSellingProducts,
+        accountsReceivable,
+      ] = await Promise.all([
+        getInvestment(data),
+        getRevenue(data),
+        getInventoryValue(data),
+        getSalesNumberAmount(data),
+        getPendingSalesAmount(data),
+        getCustomersStatus(data),
+        getProductsStatus(data),
+        getSalesByCategory(data),
+        getTopSellingProducts(data),
+        getAccountsReceivable(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          investment,
+          revenue,
+          inventoryValue,
+          salesNumberAmount,
+          salesPendingAmount,
+          customersStatus,
+          productsStatus,
+          salesByCategory,
+          topSellingProducts,
+          accountsReceivable,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+//* Get Reports Sales Data Page
+ipcMain.handle("get-reports-sales-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [
+        inventoryValue,
+        salesNumberAmount,
+        salesByCategory,
+        topSellingProducts,
+        allHistorySales,
+      ] = await Promise.all([
+        getInventoryValue(data),
+        getSalesNumberAmount(data),
+        getSalesByCategory(data),
+        getTopSellingProducts(data),
+        getAllHistorySales(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          inventoryValue,
+          salesNumberAmount,
+          salesByCategory,
+          topSellingProducts,
+          allHistorySales,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+//* Get Reports Products Data Page
+ipcMain.handle("get-reports-products-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [
+        investment,
+        revenue,
+        inventoryValue,
+        productsByCategory,
+        topSellingProducts,
+        productsStatus,
+        products,
+      ] = await Promise.all([
+        getInvestment(data),
+        getRevenue(data),
+        getInventoryValue(data),
+        getProductsByCategory(data),
+        getTopSellingProducts(data),
+        getProductsStatus(data),
+        getAllProducts(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          investment,
+          revenue,
+          inventoryValue,
+          productsByCategory,
+          topSellingProducts,
+          productsStatus,
+          products,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+//* Get Reports Customers Data Page
+ipcMain.handle("get-reports-customers-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [
+        salesPendingAmount,
+        salesNumberAmount,
+        customersStatus,
+        debtsByCustomers,
+        customers,
+        customersSelect,
+      ] = await Promise.all([
+        getPendingSalesAmount(data),
+        getSalesNumberAmount(data),
+        getCustomersStatus(data),
+        getDebtsByCustomers(data),
+        getAllCustomers(data),
+        getCustomersSelect(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          salesPendingAmount,
+          salesNumberAmount,
+          customersStatus,
+          debtsByCustomers,
+          customers,
+          customersSelect,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Debts Over Time
+ipcMain.handle("get-debts-over-time", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getTotalDebtsOverTime(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Debts and Payments Customer (Date)
+ipcMain.handle("get-debts-payments-customer-date", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { id, currentFilters } = data;
+      const [customerDebts, customerPayments] = await Promise.all([
+        getCustomerDebtsTable(id, null, null, currentFilters),
+        getCustomerPaymentsTable(id, null, null, currentFilters),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          customerDebts,
+          customerPayments,
         },
       };
     } catch (error) {

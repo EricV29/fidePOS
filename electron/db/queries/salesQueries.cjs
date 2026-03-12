@@ -38,10 +38,28 @@ async function getTopSalesCategory(startDate, endDate) {
 }
 
 // Get Revenue
-async function getRevenue() {
+async function getRevenue(filters) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_revenue`;
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE sd.status_id = 4 AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+      SELECT 
+        SUM((sd.subt_price - sd.cost_price) * sd.quantity) AS revenue
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id 
+      ${whereClause};
+      `;
+    } else {
+      sql = `SELECT * FROM v_revenue`;
+    }
 
     const query = db.exec(sql);
 
@@ -258,19 +276,49 @@ async function createNewSale(data) {
 }
 
 // Get Sales Number
-async function getSalesNumber() {
+async function getSalesNumberAmount(filters) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_sales_number;`;
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sqlNumber = "";
+    let sqlAmount = "";
+    let whereClauseNumber = "";
+    let whereClauseAmount = "";
 
-    const query = db.exec(sql);
+    if (filters) {
+      whereClauseNumber = `WHERE status_id = 4 AND created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+      whereClauseAmount = `WHERE sd.status_id = 4 AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
-    if (query.length === 0) {
+      sqlNumber = `
+      SELECT 
+        COUNT(id) AS salesNumber
+      FROM sale
+      ${whereClauseNumber};`;
+
+      sqlAmount = `
+      SELECT 
+        SUM(sd.subt_price) salesAmount
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id
+      ${whereClauseAmount};`;
+    } else {
+      sqlNumber = `SELECT * FROM v_sales_number;`;
+      sqlAmount = `SELECT * FROM v_sales_amount;`;
+    }
+
+    const queryNumber = db.exec(sqlNumber);
+    const queryAmount = db.exec(sqlAmount);
+
+    if (queryNumber.length === 0 || queryAmount.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    const dataNumber = mapResultToObjects(queryNumber);
+    const dataAmount = mapResultToObjects(queryAmount);
+
+    return { success: true, result: { dataNumber, dataAmount } };
   } catch (error) {
     console.error("Error getting sales number:", error);
     return { success: false, error: error.message };
@@ -278,10 +326,27 @@ async function getSalesNumber() {
 }
 
 // Get Pending Sales Amount
-async function getPendingSalesAmount() {
+async function getPendingSalesAmount(filters) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_pending_sales_amount`;
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE status_id = 5 AND created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+      SELECT 
+        SUM(total_amount - paid_amount) AS pendingSalesAmount
+      FROM sale
+      ${whereClause};
+      `;
+    } else {
+      sql = `SELECT * FROM v_pending_sales_amount`;
+    }
 
     const query = db.exec(sql);
 
@@ -469,32 +534,46 @@ async function getFilterSearchHistorySales(data) {
 }
 
 // Get All History Sales
-async function getAllHistorySales() {
+async function getAllHistorySales(filters) {
   const db = await getDB();
   try {
-    const query = db.exec(`
-      SELECT 
-        s.id,
-	      s.sale_num,
-	      c.name,
-	      c.last_name,
-	      GROUP_CONCAT(p.name, ', ') AS products,
-	      s.total_amount,
-	      s.paid_amount,
-	      (s.total_amount - s.paid_amount) AS pending_amount,
-	      s.discount,
-	      st.description as status,
-	      s.user_id,
-	      s.created_at,
-	      s.deleted_at 
-      FROM sale s
-      LEFT JOIN customer c ON s.customer_id = c.id
-      INNER JOIN status st ON s.status_id = st.id
-      LEFT JOIN sale_detail sd ON s.id = sd.sale_id
-      LEFT JOIN product p ON sd.product_id = p.id 
-      GROUP BY s.id
-      ORDER BY s.created_at DESC;
-    `);
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+        SELECT 
+          s.id,
+          s.sale_num,
+          c.name,
+          c.last_name,
+          GROUP_CONCAT(p.name, ', ') AS products,
+          s.total_amount,
+          s.paid_amount,
+          (s.total_amount - s.paid_amount) AS pending_amount,
+          s.discount,
+          st.description as status,
+          s.user_id,
+          s.created_at,
+          s.deleted_at 
+        FROM sale s
+        LEFT JOIN customer c ON s.customer_id = c.id
+        INNER JOIN status st ON s.status_id = st.id
+        LEFT JOIN sale_detail sd ON s.id = sd.sale_id
+        LEFT JOIN product p ON sd.product_id = p.id 
+        ${whereClause}
+        GROUP BY s.id
+        ORDER BY s.created_at DESC;
+      `;
+    } else {
+      sql = `SELECT * FROM v_all_history_sales`;
+    }
+
+    const query = await db.exec(sql);
 
     if (query.length === 0) {
       return { success: true, result: [] };
@@ -508,6 +587,117 @@ async function getAllHistorySales() {
   }
 }
 
+// Get Sales by Category
+async function getSalesByCategory(filters) {
+  const db = await getDB();
+
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    const params = [start, end];
+    const sql = `
+      SELECT 
+        c.name AS category,
+        IFNULL(SUM(sd.quantity), 0) AS sales 
+      FROM category c
+      LEFT JOIN product p ON c.id = p.category_id
+      LEFT JOIN sale_detail sd ON p.id = sd.product_id 
+        AND sd.status_id = 4 
+      LEFT JOIN sale s ON sd.sale_id = s.id 
+        AND s.created_at BETWEEN ? AND ?
+        AND s.deleted_at IS NULL
+      GROUP BY c.name
+      ORDER BY sales DESC;
+      `;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting sales by category:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Top Selling Products
+async function getTopSellingProducts(filters) {
+  const db = await getDB();
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    const params = [start, end];
+    const sql = `
+      SELECT 
+        p.name AS product,
+        SUM(sd.quantity) AS sales
+      FROM sale_detail sd
+      INNER JOIN product p ON sd.product_id = p.id
+      INNER JOIN sale s ON sd.sale_id = s.id 
+      WHERE sd.status_id = 4 AND s.created_at BETWEEN ? AND ?
+      GROUP BY sd.product_id
+      ORDER BY sales DESC
+      LIMIT 5;
+    `;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting top 5 selling products:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Total Debts Over Time
+async function getTotalDebtsOverTime(year) {
+  const db = await getDB();
+  try {
+    const sql = `
+      WITH RECURSIVE all_months(month_num) AS (
+          SELECT 1
+          UNION ALL
+          SELECT month_num + 1 FROM all_months WHERE month_num < 12
+      )
+      SELECT 
+          CASE m.month_num
+              WHEN 1 THEN 'January' WHEN 2 THEN 'February' WHEN 3 THEN 'March'
+              WHEN 4 THEN 'April' WHEN 5 THEN 'May' WHEN 6 THEN 'June'
+              WHEN 7 THEN 'July' WHEN 8 THEN 'August' WHEN 9 THEN 'September'
+              WHEN 10 THEN 'October' WHEN 11 THEN 'November' WHEN 12 THEN 'December'
+          END AS month,
+          COUNT(s.id) AS debts
+      FROM all_months m
+      LEFT JOIN sale s ON CAST(strftime('%m', s.created_at) AS INTEGER) = m.month_num
+          AND strftime('%Y', s.created_at) = ?
+          AND s.status_id = 5
+      GROUP BY m.month_num
+      ORDER BY m.month_num ASC;
+    `;
+
+    const query = db.exec(sql, [year]);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting total debts over time:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   getTopSalesCategory,
   getRevenue,
@@ -515,11 +705,14 @@ module.exports = {
   getSaleData,
   getNextNumberSale,
   createNewSale,
-  getSalesNumber,
+  getSalesNumberAmount,
   getPendingSalesAmount,
   getDiscountsAmount,
   getPaidVSPendingNumber,
   getHistorySales,
   getFilterSearchHistorySales,
   getAllHistorySales,
+  getSalesByCategory,
+  getTopSellingProducts,
+  getTotalDebtsOverTime,
 };

@@ -23,12 +23,29 @@ async function getActiveProductsCategory() {
 }
 
 // Get Investment
-async function getInvestment() {
-  try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_investment`;
+async function getInvestment(filters) {
+  const db = await getDB();
 
-    const query = db.exec(sql);
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+      SELECT 
+        SUM(cost_price) AS investment
+      FROM entries
+      ${whereClause};
+      `;
+    } else {
+      sql = `SELECT * FROM v_investment`;
+    }
+
+    const query = await db.exec(sql);
 
     if (query.length === 0) {
       return { success: true, result: [] };
@@ -209,11 +226,33 @@ async function getSearchCodeSKU(codesku) {
 }
 
 // Get Iventory Value
-async function getInventoryValue() {
-  try {
-    const db = await getDB();
+async function getInventoryValue(filters) {
+  const db = await getDB();
 
-    const sql = `SELECT * FROM v_inventory_value`;
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+      SELECT 
+        SUM((p.stock + IFNULL(ventas_posteriores.cantidad_recuperada, 0)) * p.cost_price) AS inventory_value
+      FROM product p
+      LEFT JOIN (
+        SELECT sd.product_id, SUM(sd.quantity) AS cantidad_recuperada
+        FROM sale_detail sd
+        JOIN sale s ON sd.sale_id = s.id
+        ${whereClause}
+        GROUP BY sd.product_id
+      ) AS ventas_posteriores ON p.id = ventas_posteriores.product_id;
+      `;
+    } else {
+      sql = `SELECT * FROM v_inventory_value`;
+    }
 
     const query = db.exec(sql);
 
@@ -661,28 +700,42 @@ async function addProductsImport(data) {
 }
 
 // Get All Products
-async function getAllProducts() {
+async function getAllProducts(filters) {
   const db = await getDB();
   try {
-    const query = db.exec(`
-      SELECT 
-        p.id, 
-        p.code_sku, 
-        p.name AS product, 
-        p.description, 
-        c.name AS category, 
-        c.color AS ccolor,
-        p.cost_price,
-        p.unit_price,
-        p.stock,
-        s.description AS status, 
-        p.created_at,
-        p.deleted_at  
-      FROM product p
-      INNER JOIN category c ON p.category_id = c.id
-      INNER JOIN status s ON p.status_id  = s.id
-      ORDER BY p.created_at DESC;
-    `);
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let sql = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE p.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      sql = `
+        SELECT 
+          p.id, 
+          p.code_sku, 
+          p.name AS product, 
+          p.description, 
+          c.name AS category, 
+          c.color AS ccolor,
+          p.cost_price,
+          p.unit_price,
+          p.stock,
+          s.description AS status, 
+          p.created_at,
+          p.deleted_at  
+        FROM product p
+        INNER JOIN category c ON p.category_id = c.id
+        INNER JOIN status s ON p.status_id  = s.id
+        ${whereClause}
+        ORDER BY p.created_at DESC;
+      `;
+    } else {
+      sql = `SELECT * FROM v_all_products`;
+    }
+
+    const query = await db.exec(sql);
 
     if (query.length === 0) {
       return { success: true, result: [] };
@@ -696,6 +749,69 @@ async function getAllProducts() {
   }
 }
 
+// Get Products Status
+async function getProductsStatus(filters) {
+  const db = await getDB();
+
+  try {
+    const end = filters?.endDate || "";
+    const start = filters?.startDate || "";
+    const params = [start, end];
+    const sql = `
+      SELECT 
+        SUM(CASE WHEN status_id = 1 THEN 1 ELSE 0 END) AS Active,
+        SUM(CASE WHEN status_id = 0 THEN 1 ELSE 0 END) AS Inactive
+      FROM product
+      WHERE created_at BETWEEN ? AND ?;
+      `;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting products status:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Products by Category
+async function getProductsByCategory(filters) {
+  const db = await getDB();
+
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    const params = [start, end];
+    const sql = `
+      SELECT 
+        c.name AS category,
+        COUNT(p.id) AS products
+      FROM category c
+      LEFT JOIN product p ON c.id = p.category_id
+      LEFT JOIN sale_detail sd ON p.id = sd.product_id 
+      WHERE p.status_id = 1 AND p.created_at BETWEEN ? AND ?
+      GROUP BY c.id, c.name
+      ORDER BY products DESC;
+    `;
+
+    const query = db.exec(sql, params);
+
+    if (query.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = mapResultToObjects(query);
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("Error getting products by category:", error);
+    return { success: false, error: error.message };
+  }
+}
 module.exports = {
   getActiveProductsCategory,
   getInvestment,
@@ -712,4 +828,6 @@ module.exports = {
   editProduct,
   addProductsImport,
   getAllProducts,
+  getProductsStatus,
+  getProductsByCategory,
 };

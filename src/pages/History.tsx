@@ -9,7 +9,7 @@ import type { Sales, dataExportSales } from "@typesm/sales";
 import { useModal } from "@context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
 import { useTranslation } from "react-i18next";
-import FlagIcon from "@icons/FlagIcon";
+import ShoppingCar from "@icons/ShoppingCar";
 import { ModalSales } from "@modals/ModalSales";
 import { useLoading } from "@context/LoadingContext";
 
@@ -39,6 +39,8 @@ export default function History() {
   ];
   const [salesCardNumber, setSalesCardNumber] = useState(0);
   const [pendingSalesCardAmount, setPendingSalesCardAmount] = useState(0);
+  const [salesNumber, setSalesNumber] = useState(Number);
+  const [salesAmount, setSalesAmount] = useState(Number);
   const [discountsAmountCard, setDiscountsAmountCard] = useState(0);
   const [paidVSPendingNumberCard, setPaidVSPendingNumberCard] =
     useState<paidVSPending>();
@@ -60,7 +62,8 @@ export default function History() {
 
     if (historyData.salesNumber) {
       const salesNumber = historyData.salesNumber.result;
-      setSalesCardNumber(salesNumber[0].salesNumber);
+      setSalesNumber(salesNumber.dataNumber[0].salesNumber);
+      setSalesAmount(salesNumber.dataAmount[0].salesAmount);
     }
 
     if (historyData.pendingSalesAmount) {
@@ -228,11 +231,11 @@ export default function History() {
         <div className="flex-1 min-h-0 w-full flex flex-col gap-2">
           <div className="w-full h-[120px] flex justify-between gap-2 overflow-x-auto overflow-y-hidden">
             <CardInfoNumber
-              icon={null}
-              title={t("cards.sales_title")}
-              icond={FlagIcon}
-              number={salesCardNumber}
-              format={false}
+              icon={ShoppingCar}
+              title={t("cards.sales_title") + `: ${salesNumber}`}
+              icond={null}
+              number={salesAmount}
+              format={true}
               color="#43A047"
             />
             <CardInfoNumber
