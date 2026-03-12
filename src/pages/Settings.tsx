@@ -15,18 +15,16 @@ import { ModalContact } from "@modals/ModalContact";
 import { useTranslation } from "react-i18next";
 import { getAvatar } from "@utility/getAvatar";
 import { useLoading } from "@context/LoadingContext";
-import ModalEditUser from "@/components/modals/ModalEditUser";
+import ModalEditUser from "@components/modals/ModalEditUser";
 import AUTH_CODES from "../../constants/authCodes.json";
 
-interface SettingsProps {}
-
-interface MyContext {
+interface Context {
   session: UserSession;
   installDate: string;
 }
 
-const Settings: React.FC<SettingsProps> = ({}) => {
-  const { session } = useOutletContext<MyContext>();
+const Settings = () => {
+  const { session } = useOutletContext<Context>();
   const [dataUsers, setUsers] = useState<Users[]>([]);
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
@@ -37,6 +35,12 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   const { triggerWarningAlert, triggerResponseAlert } = useModal();
   const { setLoading } = useLoading();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [totalRows, setTotalRows] = useState(0);
+  const columnsu = columnsU(t, i18n.language);
 
   const getInitialTheme = () => {
     const savedTheme = localStorage.getItem("theme");
@@ -48,13 +52,26 @@ const Settings: React.FC<SettingsProps> = ({}) => {
       ? "dark"
       : "light";
   };
-
   const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
 
   const getUsers = async () => {
-    const response = await window.electronAPI.getUsers();
-    if (response) {
-      setUsers(response.result ?? []);
+    const limit = pagination.pageSize;
+    const offset = pagination.pageIndex * pagination.pageSize;
+
+    const response = await window.electronAPI.getUsers({
+      limit: limit,
+      offset: offset,
+    });
+
+    const usersData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+
+    if (usersData?.users) {
+      const usersTableData = usersData.users.result;
+      setUsers(usersTableData);
+      setTotalRows(usersData.users.totalCount);
     }
   };
 
@@ -73,13 +90,10 @@ const Settings: React.FC<SettingsProps> = ({}) => {
     localStorage.setItem("theme", theme);
   }, [theme, session?.role_id]);
 
-  const columnsu = columnsU(t, i18n.language);
-
   const optionsLanguage = [
     { label: t("settings.input1_option1"), value: "en" },
     { label: t("settings.input1_option2"), value: "es" },
   ];
-
   const optionsTheme = [
     { label: t("settings.input2_option1"), value: "light" },
     { label: t("settings.input2_option2"), value: "dark" },
@@ -92,7 +106,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
 
   const deleteUser = async (id: number) => {
     if (id === 1) {
-      triggerResponseAlert("UNAUTHORIZED");
+      triggerResponseAlert(AUTH_CODES.UNAUTHORIZED);
       return;
     }
 
@@ -283,6 +297,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               <DataTableSearch
                 data={dataUsers}
                 columns={columnsu}
+                page={"settings"}
                 actions={{
                   onEdit: (row) => {
                     setModal(<ModalEditUser data={row} onSuccess={getUsers} />);
@@ -291,6 +306,9 @@ const Settings: React.FC<SettingsProps> = ({}) => {
                     deleteUser(row.id);
                   },
                 }}
+                pagination={pagination}
+                setPagination={setPagination}
+                totalRows={totalRows}
               />
             </div>
           )}

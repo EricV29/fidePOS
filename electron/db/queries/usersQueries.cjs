@@ -50,20 +50,43 @@ async function addUser(data) {
 }
 
 // Get Users
-async function getUsers() {
+async function getUsers(limit, offset) {
+  const db = await getDB();
+
   try {
-    const db = await getDB();
-    const query = db.exec(
-      "SELECT u.id, u.name, u.last_name, u.email, u.phone, u.img, r.description AS role, s.description AS status, u.created_at, u.deleted_at FROM user AS u INNER JOIN role AS r ON u.role_id = r.id INNER JOIN status AS s ON u.status_id = s.id;",
-    );
+    const params = [limit, offset];
+    const sql = `
+      SELECT 
+        u.id, 
+        u.name, 
+        u.last_name,
+        u.email, 
+        u.phone, 
+        u.img, 
+        r.description AS role,
+        s.description AS status, 
+        u.created_at, 
+        u.deleted_at
+      FROM user u
+      INNER JOIN role AS r ON u.role_id = r.id 
+      INNER JOIN status AS s ON u.status_id = s.id
+      ORDER BY u.created_at ASC
+      LIMIT ? OFFSET ?;
+    `;
+
+    const sqlCount = `SELECT COUNT(*) as total FROM user;`;
+
+    const query = db.exec(sql, params);
+    const queryCount = db.exec(sqlCount);
+
+    const totalCount = queryCount.length > 0 ? queryCount[0].values[0][0] : 0;
 
     if (query.length === 0) {
       return { success: true, result: [] };
     }
 
-    const users = mapResultToObjects(query);
-
-    return { success: true, result: users };
+    const data = mapResultToObjects(query);
+    return { success: true, result: data, totalCount: totalCount };
   } catch (error) {
     console.error("Error getting users:", error);
     return { success: false, error: error.message };

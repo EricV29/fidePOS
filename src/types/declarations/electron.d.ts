@@ -62,7 +62,7 @@ declare global {
       }>;
 
       // GET USERS
-      getUsers: () => Promise<{
+      getUsers: (data) => Promise<{
         success: boolean;
         result?: Users[];
         error?: string;

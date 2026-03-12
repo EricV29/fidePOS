@@ -396,21 +396,19 @@ ipcMain.handle("addUser", async (event, data, lan) => {
 });
 
 // Get Users
-ipcMain.handle("get-users", async (event) => {
+ipcMain.handle("get-users", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const response = await getUsers();
-      if (response.success) {
-        return {
-          success: true,
-          result: response.result,
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error,
-        };
-      }
+      const { limit, offset } = data;
+
+      const [users] = await Promise.all([getUsers(limit, offset)]);
+
+      return {
+        success: true,
+        result: {
+          users,
+        },
+      };
     } catch (error) {
       console.error("❌ ERROR: ", error);
     }
