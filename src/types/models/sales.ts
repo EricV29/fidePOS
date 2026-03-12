@@ -10,6 +10,7 @@ export type Sales = {
   pending_amount: number;
   discount: number;
   status: string;
+  user_id: number;
   created_at: string;
 };
 

@@ -4,6 +4,8 @@ import React, {
   useState,
   useImperativeHandle,
 } from "react";
+import { useOutletContext } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import CardInfoNumber from "@components/CardInfoNumber";
 import CardInfoDetail from "@components/CardInfoDetail";
 import InvestmentIcon from "@icons/InvestmentIcon";
@@ -14,40 +16,18 @@ import { addRandomFill } from "@utility/AddFill";
 import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsAR } from "@columns/columnsAR";
-import { useTranslation } from "react-i18next";
-import { useOutletContext } from "react-router-dom";
-import { useLoading } from "@context/LoadingContext";
+// import { useLoading } from "@context/LoadingContext";
 import type { AccountsReceivable } from "@typesm/accounts";
-
-interface dataCustomerI {
-  [key: string]: number;
-}
-
-interface PieChartItem {
-  fill: string;
-  [key: string]: string | number;
-}
-interface BarChartItem {
-  [key: string]: string | number;
-}
-
-export type RecentSalesPaid = {
-  id: string;
-  date: string;
-  category: string;
-  amount: number;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
-
-export type dataExportReports = string | number | boolean | null | undefined;
+import type {
+  PieChartValue,
+  BarChartValue,
+  ExportReportValue,
+  CardInfoValue,
+} from "@typesm/global";
 
 // hijo > padre
 interface ExportableChild {
-  createReport: (view: string) => Promise<dataExportReports[][]>;
+  createReport: (view: string) => Promise<ExportReportValue[][]>;
 }
 
 // Padre > hijo
@@ -59,16 +39,23 @@ interface ReportsContext {
   };
 }
 
-interface ReportsGeneralProps {}
-
-interface dataGeneralI {
-  [key: string]: number;
-}
-
-const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
+const ReportsGeneral = () => {
   const { t, i18n } = useTranslation();
-  const { setLoading } = useLoading();
+  // const { setLoading } = useLoading();
   const { filters, childRef } = useOutletContext<ReportsContext>();
+  const columnsar = columnsAR(t, i18n.language);
+  const chartConfigSC = {
+    items: {
+      label: t("charts.chart_sales"),
+    },
+  };
+
+  const chartConfigTSP = {
+    sales: {
+      label: t("charts.chart_sales"),
+      color: "#1976D2",
+    },
+  };
 
   //* GET DATA
   const [investCard, setInvestCard] = useState(Number);
@@ -77,13 +64,13 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   const [salesNumberCard, setSalesNumberCard] = useState(Number);
   const [salesAmountCard, setSalesAmountCard] = useState(Number);
   const [salesPendingAmountCard, setSalesPendingAmountCard] = useState(Number);
-  const [customersStatus, setCustomersStatus] = useState<dataGeneralI>();
-  const [productsStatus, setProductsStatus] = useState<dataGeneralI>();
+  const [customersStatus, setCustomersStatus] = useState<CardInfoValue>();
+  const [productsStatus, setProductsStatus] = useState<CardInfoValue>();
   const [salesByCategoryChart, setSalesByCategoryChart] = useState<
-    PieChartItem[]
+    PieChartValue[]
   >([]);
   const [topSellingProductsChart, setTopSellingProductsChart] = useState<
-    BarChartItem[]
+    BarChartValue[]
   >([]);
   const [accountsReceivableTable, setAccountsReceivableTable] = useState<
     AccountsReceivable[]
@@ -161,21 +148,6 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
   useEffect(() => {
     loadReportsGeneral();
   }, [filters, loadReportsGeneral]);
-
-  const columnsar = columnsAR(t, i18n.language);
-
-  const chartConfigSC = {
-    items: {
-      label: t("charts.chart_sales"),
-    },
-  };
-
-  const chartConfigTSP = {
-    sales: {
-      label: t("charts.chart_sales"),
-      color: "#1976D2",
-    },
-  };
 
   useImperativeHandle(childRef, () => ({
     createReport: async () => {
@@ -262,7 +234,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
         x.created_at,
       ]);
 
-      const finalData: dataExportReports[][] = [
+      const finalData: ExportReportValue[][] = [
         ...statsData,
         [t("exportReport.reports_general.sales_by_category")],
         tableHeadersSC,
@@ -364,7 +336,7 @@ const ReportsGeneral: React.FC<ReportsGeneralProps> = ({}) => {
           </div>
           <div className="w-full h-[500px] p-4 gap-1 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent flex flex-col">
             <p className="font-semibold mb-2 dark:text-white">
-              Accounts Receivable
+              {t("reports.table1")}
             </p>
             <DataTable columns={columnsar} data={accountsReceivableTable} />
           </div>

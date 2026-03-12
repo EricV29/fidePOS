@@ -10,49 +10,30 @@ import ChartPieDonutText from "@components/chart-pie-donut";
 import { addRandomFill } from "@utility/AddFill";
 import { DataTable } from "@components/data-table";
 import { columnsC } from "@columns/columnsC";
-import type { Customers } from "@typesm/customers";
+import type {
+  Customers,
+  DebtsCustomer,
+  PaymentsCustomer,
+  CustomersSelect,
+} from "@typesm/customers";
+import type {
+  PieChartValue,
+  ExportReportValue,
+  CardInfoValue,
+  ChartAreaValue,
+} from "@typesm/global";
 import { columnsDC } from "@columns/columnsDC";
-import type { DebtsCustomer } from "@typesm/customers";
 import { columnsPC } from "@columns/columnsPC";
-import type { PaymentsCustomer } from "@typesm/customers";
 import CardInfoDetail from "@components/CardInfoDetail";
-import { DataTableSearch } from "@components/data-table-search";
 import CustomSelect from "@components/Select";
 import ChartAreaDefault from "@components/chart-area-default";
 import InvestmentIcon from "@icons/InvestmentIcon";
 import ShoppingCar from "@icons/ShoppingCar";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
-import type { CustomersSelect } from "@typesm/customers";
-
-interface PieChartItem {
-  fill: string;
-  [key: string]: string | number;
-}
-
-export type dataPaymentI = {
-  id: string;
-  name: string;
-  last_name: string;
-  phone: string;
-  status: string;
-  created_at: string;
-  actions?: {
-    view?: boolean;
-    delete?: boolean;
-    edit?: boolean;
-  };
-};
-
-const optionsYears = [
-  { label: "2025", value: "2025" },
-  { label: "2026", value: "2026" },
-];
-
-export type dataExportReports = string | number | boolean | null | undefined;
 
 interface ExportableChild {
-  createReport: (view: string) => Promise<dataExportReports[][]>;
+  createReport: (view: string) => Promise<ExportReportValue[][]>;
 }
 
 // Padre > hijo
@@ -64,27 +45,36 @@ interface ReportsContext {
   };
 }
 
-interface dataGeneralI {
-  [key: string]: number;
-}
-
-interface DataItem {
-  [key: string]: string | number;
-}
-
-interface ReportsCustomersProps {}
-
-const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
+const ReportsCustomers = () => {
   const { t, i18n } = useTranslation();
   const { filters, childRef } = useOutletContext<ReportsContext>();
+  const optionsYears = [
+    { label: "2025", value: "2025" },
+    { label: "2026", value: "2026" },
+  ];
+  const columnsc = columnsC(t, i18n.language);
+  const columnsdc = columnsDC(t, i18n.language);
+  const columnspc = columnsPC(t, i18n.language);
+  const chartConfigDDC = {
+    items: {
+      label: t("placeholders.debt"),
+    },
+  };
+
+  const chartConfigTDOT = {
+    debts: {
+      label: t("placeholders.debt"),
+      color: "#F57C00",
+    },
+  };
 
   //* GET DATA
   const [pendingAmountCard, setPendingAmountCard] = useState(Number);
   const [salesNumberCard, setSalesNumberCard] = useState(Number);
   const [salesAmountCard, setSalesAmountCard] = useState(Number);
-  const [customersStatus, setCustomersStatus] = useState<dataGeneralI>();
-  const [debtsByCustomers, setDebtsByCustomers] = useState<PieChartItem[]>([]);
-  const [debtsOverTime, setDebtsOverTime] = useState<DataItem[]>([]);
+  const [customersStatus, setCustomersStatus] = useState<CardInfoValue>();
+  const [debtsByCustomers, setDebtsByCustomers] = useState<PieChartValue[]>([]);
+  const [debtsOverTime, setDebtsOverTime] = useState<ChartAreaValue[]>([]);
   const [customersTable, setCustomersTable] = useState<Customers[]>([]);
   const [customersSelect, setCustomersSelect] = useState<CustomersSelect[]>([]);
   const [selectedCustomerId, setSelectedCustomerId] = useState<
@@ -152,10 +142,6 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
     loadReportsCustomers();
   }, [loadReportsCustomers]);
 
-  const columnsc = columnsC(t, i18n.language);
-  const columnsdc = columnsDC(t, i18n.language);
-  const columnspc = columnsPC(t, i18n.language);
-
   const customerOptions = useMemo(() => {
     return customersSelect.map((c) => ({
       label: `${c.name} ${c.last_name}`,
@@ -195,19 +181,6 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
     }
 
     loadSelectedCustomerData(value);
-  };
-
-  const chartConfigDDC = {
-    items: {
-      label: t("placeholders.debt"),
-    },
-  };
-
-  const chartConfigTDOT = {
-    debts: {
-      label: t("placeholders.debt"),
-      color: "#F57C00",
-    },
   };
 
   const handleSelectYear = async (value: string) => {
@@ -329,7 +302,7 @@ const ReportsCustomers: React.FC<ReportsCustomersProps> = ({}) => {
         x.note,
       ]);
 
-      const finalData: dataExportReports[][] = [
+      const finalData: ExportReportValue[][] = [
         ...statsData,
         [],
         [t("exportReport.reports_customers.debt_distribution_customer")],

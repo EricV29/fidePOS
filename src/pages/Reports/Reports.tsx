@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import ExportIcon from "@icons/ExportIcon";
 import DatePicker from "@components/DatePicker";
@@ -7,20 +7,16 @@ import { Outlet } from "react-router-dom";
 import { useModal } from "@context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
 import { useTranslation } from "react-i18next";
-
-export type dataExportReports = string | number | boolean | null | undefined;
-
-interface ReportsProps {}
-
+import type { dataExportReport } from "@typesm/global";
 interface MyContext {
   installDate: string;
 }
 
 interface ExportableChild {
-  createReport: (selectedId: string) => Promise<dataExportReports[][]>;
+  createReport: () => Promise<dataExportReport[][]>;
 }
 
-const Reports: React.FC<ReportsProps> = ({}) => {
+const Reports = () => {
   const { installDate } = useOutletContext<MyContext>();
   const navigate = useNavigate();
   const location = useLocation();
@@ -62,7 +58,6 @@ const Reports: React.FC<ReportsProps> = ({}) => {
       endDate: endDate || "",
     };
     setFilters(newFilters);
-    // loadDashboard(newFilters);
   };
 
   if (!installDate) return null;
@@ -81,8 +76,6 @@ const Reports: React.FC<ReportsProps> = ({}) => {
 
                   if (dataExport.length > 0) {
                     setModal(<ModalExport page="REPORTS" data={dataExport} />);
-                  } else {
-                    console.log("Nada");
                   }
                 }
               }}

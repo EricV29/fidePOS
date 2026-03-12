@@ -12,24 +12,20 @@ import { addRandomFill } from "@utility/AddFill";
 import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsP } from "@columns/columnsP";
-import type { Products } from "@typesm/products";
 import CardInfoDetail from "@components/CardInfoDetail";
 import { useTranslation } from "react-i18next";
 import { useOutletContext } from "react-router-dom";
-
-interface PieChartItem {
-  fill: string;
-  [key: string]: string | number;
-}
-interface BarChartItem {
-  [key: string]: string | number;
-}
-
-export type dataExportReports = string | number | boolean | null | undefined;
+import type { Products } from "@typesm/products";
+import type {
+  PieChartValue,
+  BarChartValue,
+  ExportReportValue,
+  CardInfoValue,
+} from "@typesm/global";
 
 // hijo > padre
 interface ExportableChild {
-  createReport: (view: string) => Promise<dataExportReports[][]>;
+  createReport: (view: string) => Promise<ExportReportValue[][]>;
 }
 
 // Padre > hijo
@@ -41,27 +37,34 @@ interface ReportsContext {
   };
 }
 
-interface ReportsProductsProps {}
-
-interface dataProductsI {
-  [key: string]: number;
-}
-
-const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
+const ReportsProducts = () => {
   const { t, i18n } = useTranslation();
   const { filters, childRef } = useOutletContext<ReportsContext>();
+  const columnsp = columnsP(t, i18n.language);
+  const chartConfigCP = {
+    items: {
+      label: "Products",
+    },
+  };
+
+  const chartConfigTSP = {
+    sales: {
+      label: "Sales",
+      color: "#1976D2",
+    },
+  };
 
   //* GET DATA
   const [investmentCard, setInvestmentCard] = useState(Number);
   const [revenueCard, setRevenueCard] = useState(Number);
   const [inventoryValueCard, setInventoryValueCard] = useState(Number);
   const [productsByCategoryChart, setProductsByCategoryChart] = useState<
-    PieChartItem[]
+    PieChartValue[]
   >([]);
   const [topSellingProductsChart, setTopSellingProductsChart] = useState<
-    BarChartItem[]
+    BarChartValue[]
   >([]);
-  const [productsStatus, setProductsStatus] = useState<dataProductsI>();
+  const [productsStatus, setProductsStatus] = useState<CardInfoValue>();
   const [productsTable, setProductsTable] = useState<Products[]>([]);
 
   const loadReportsGeneral = useCallback(
@@ -117,21 +120,6 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
   useEffect(() => {
     loadReportsGeneral();
   }, [filters, loadReportsGeneral]);
-
-  const columnsp = columnsP(t, i18n.language);
-
-  const chartConfigCP = {
-    items: {
-      label: "Products",
-    },
-  };
-
-  const chartConfigTSP = {
-    sales: {
-      label: "Sales",
-      color: "#1976D2",
-    },
-  };
 
   useImperativeHandle(childRef, () => ({
     createReport: async () => {
@@ -206,7 +194,7 @@ const ReportsProducts: React.FC<ReportsProductsProps> = ({}) => {
         x.deleted_at,
       ]);
 
-      const finalData: dataExportReports[][] = [
+      const finalData: ExportReportValue[][] = [
         ...statsData,
         [],
         [t("exportReport.reports_products.products_by_category")],

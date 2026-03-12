@@ -4,6 +4,7 @@ import React, {
   useImperativeHandle,
   useState,
 } from "react";
+import { useOutletContext } from "react-router-dom";
 import CardInfoNumber from "@components/CardInfoNumber";
 import BoxIcon from "@icons/BoxIcon";
 import ShoppingCar from "@icons/ShoppingCar";
@@ -12,23 +13,17 @@ import { addRandomFill } from "@utility/AddFill";
 import ChartBarLabel from "@components/char-bar-label";
 import { DataTable } from "@components/data-table";
 import { columnsS } from "@columns/columnsS";
-import type { Sales } from "@typesm/sales";
 import { useTranslation } from "react-i18next";
-import { useOutletContext } from "react-router-dom";
-
-interface PieChartItem {
-  fill: string;
-  [key: string]: string | number;
-}
-interface BarChartItem {
-  [key: string]: string | number;
-}
-
-export type dataExportReports = string | number | boolean | null | undefined;
+import type { Sales } from "@typesm/sales";
+import type {
+  PieChartValue,
+  BarChartValue,
+  ExportReportValue,
+} from "@typesm/global";
 
 // hijo > padre
 interface ExportableChild {
-  createReport: (view: string) => Promise<dataExportReports[][]>;
+  createReport: (view: string) => Promise<ExportReportValue[][]>;
 }
 
 // Padre > hijo
@@ -40,21 +35,31 @@ interface ReportsContext {
   };
 }
 
-interface ReportsSalesProps {}
-
-const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
+const ReportsSales = () => {
   const { t, i18n } = useTranslation();
   const { filters, childRef } = useOutletContext<ReportsContext>();
+  const columnss = columnsS(t, i18n.language);
+  const chartConfigCS = {
+    items: {
+      label: t("charts.chart_sales"),
+    },
+  };
+  const chartConfigTCS = {
+    sales: {
+      label: t("charts.chart_sales"),
+      color: "#1976D2",
+    },
+  };
 
   //* GET DATA
   const [inventoryValueCard, setInventoryValueCard] = useState(Number);
   const [salesNumberCard, setSalesNumberCard] = useState(Number);
   const [salesAmountCard, setSalesAmountCard] = useState(Number);
   const [salesByCategoryChart, setSalesByCategoryChart] = useState<
-    PieChartItem[]
+    PieChartValue[]
   >([]);
   const [topSellingProductsChart, setTopSellingProductsChart] = useState<
-    BarChartItem[]
+    BarChartValue[]
   >([]);
   const [allHistorySales, setAllHistorySales] = useState<Sales[]>([]);
 
@@ -102,21 +107,6 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
   useEffect(() => {
     loadReportsGeneral();
   }, [filters, loadReportsGeneral]);
-
-  const columnss = columnsS(t, i18n.language);
-
-  const chartConfigCS = {
-    items: {
-      label: t("charts.chart_sales"),
-    },
-  };
-
-  const chartConfigTCS = {
-    sales: {
-      label: t("charts.chart_sales"),
-      color: "#1976D2",
-    },
-  };
 
   useImperativeHandle(childRef, () => ({
     createReport: async () => {
@@ -171,7 +161,7 @@ const ReportsSales: React.FC<ReportsSalesProps> = ({}) => {
         x.created_at,
       ]);
 
-      const finalData: dataExportReports[][] = [
+      const finalData: ExportReportValue[][] = [
         ...statsData,
         [],
         [t("exportReport.reports_sales.sales_by_category")],
