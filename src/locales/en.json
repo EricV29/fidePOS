@@ -101,7 +101,8 @@
     "input4": "Support",
     "description4": "Report problems with the app developer.",
     "input4_btn": "Contact",
-    "table1": "Users Table"
+    "table1": "Users Table",
+    "table2": "Category Table"
   },
   "buttons": {
     "btn_ok": "ACCEPT",
@@ -222,12 +223,13 @@
     "title": "¡Warning!",
     "text_forgot_password": "A password recovery email will be sent to you. Please ensure you are connected to the internet.",
     "text_write_email": "Make sure to write your email.",
-    "text_delete_user": "Delete this user? This action cannot be undone.",
+    "text_delete_user": "Delete this user?",
     "text_debt_payment": "Add new payment? This action cannot be undone.",
     "text_complete_new_sale": "Are you sure you want to complete the sale?",
     "text_delete_product": "Delete this product? This action cannot be undone.",
     "text_delete_customer": "Delete this customer? This action cannot be undonde.",
-    "text_active_customer": "Make sure to active this customer?"
+    "text_active_customer": "Make sure to active this customer?",
+    "text_delete_category": "Delete this category?"
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
@@ -246,7 +248,9 @@
     "text_edit_product": "Product edited successfully.",
     "text_edit_customer": "Customer edited successfully.",
     "text_delete_customer": "Customer deleted successfully.",
-    "text_restore_customer": "Customer active successfully."
+    "text_restore_customer": "Customer active successfully.",
+    "text_edit_category": "Category edited successfully.",
+    "text_delete_category": "Category deleted successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -281,7 +285,11 @@
     "text_inactive_customer": "Customer inactive.",
     "text_debt_customer": "Customer with outstanding debt.",
     "text_not_selected_customer": "You must first select a customer.",
-    "text_active_customer": "This customer is already active."
+    "text_active_customer": "This customer is already active.",
+    "text_category_not_found": "Category not found.",
+    "text_inactive_category": "Category inactive.",
+    "text_category_name_used": "Category name is already in use.",
+    "text_category_have_products": "This category still has products."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",
@@ -385,13 +393,17 @@
   },
   "modalAddCategory": {
     "title": "Add new category",
+    "title_edit": "Edit category",
     "description": "Add news categories to your products.",
-    "subtitle": "Enter the main information of your new category."
+    "description_edit": "Edit categories to your system.",
+    "subtitle": "Enter the main information of your new category.",
+    "subtitle_edit": "Edit the main information of your category."
   },
   "formAddCategory": {
     "input1": "Name Category",
     "input3": "Description",
-    "btn": "Add category"
+    "btn": "Add category",
+    "btn_edit": "Edit category"
   },
   "modalNewPayment": {
     "title": "New payment",

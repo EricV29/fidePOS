@@ -88,6 +88,9 @@ const {
 const {
   addCategory,
   getCategoriesSelect,
+  getCategories,
+  editCategory,
+  deteleCategory,
 } = require("./db/queries/categoriesQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
@@ -395,18 +398,23 @@ ipcMain.handle("addUser", async (event, data, lan) => {
   }
 });
 
-// Get Users
-ipcMain.handle("get-users", async (event, data) => {
+//* Get Settings Data Page
+ipcMain.handle("get-settings-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
-      const { limit, offset } = data;
+      const { limitUsers, offsetUsers, limitCategories, offsetCategories } =
+        data;
 
-      const [users] = await Promise.all([getUsers(limit, offset)]);
+      const [users, categories] = await Promise.all([
+        getUsers(limitUsers, offsetUsers),
+        getCategories(limitCategories, offsetCategories),
+      ]);
 
       return {
         success: true,
         result: {
           users,
+          categories,
         },
       };
     } catch (error) {
@@ -901,6 +909,58 @@ ipcMain.handle("addCategory", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await addCategory(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Edit Category
+ipcMain.handle("editCategory", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await editCategory(data);
+
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Delete Category
+ipcMain.handle("deleteCategory", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await deteleCategory(data);
+
       if (response.success) {
         return {
           success: true,

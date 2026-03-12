@@ -88,6 +88,12 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Add Category
   addCategory: (data) => ipcRenderer.invoke("addCategory", data),
 
+  // Delete Category
+  deleteCategory: (data) => ipcRenderer.invoke("deleteCategory", data),
+
+  // Edit Category
+  editCategory: (data) => ipcRenderer.invoke("editCategory", data),
+
   // Get Filter Search Table Products
   getFilterSearchProducts: (data) =>
     ipcRenderer.invoke("get-filter-search-products", data),
@@ -182,4 +188,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Debts and Payments Customer Selected by Date
   getSelectedCustomerDataDate: (data) =>
     ipcRenderer.invoke("get-debts-payments-customer-date", data),
+
+  //* Get Settings Page
+  getSettingsData: (data) => ipcRenderer.invoke("get-settings-data", data),
 });

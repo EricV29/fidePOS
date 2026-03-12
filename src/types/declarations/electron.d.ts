@@ -203,6 +203,20 @@ declare global {
         error?: string;
       }>;
 
+      // EDIT CATEGORY
+      editCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // DELETE CATEGORY
+      deleteCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
       // GET FILTER SEARCH PRODUCTS
       getFilterSearchProducts: (data) => Promise<{
         success: boolean;
@@ -387,6 +401,13 @@ declare global {
 
       // GET DEBTS AND PAYMENTS CUSTOMER SELECTED BY DATE
       getSelectedCustomerDataDate: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET SETTINGS PAGE
+      getSettingsData: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;

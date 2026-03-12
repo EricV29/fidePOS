@@ -258,6 +258,30 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_restore_customer",
       },
+      [AUTH_CODES.CATEGORY_NOT_FOUND]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_category_not_found",
+      },
+      [AUTH_CODES.INACTIVE_CATEGORY]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_inactive_category",
+      },
+      [AUTH_CODES.CATEGORY_NAME_USED]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_category_name_used",
+      },
+      [AUTH_CODES.EDIT_CATEGORY]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_edit_category",
+      },
+      [AUTH_CODES.CATEGORY_HAVE_PRODUCTS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_category_have_products",
+      },
+      [AUTH_CODES.DELETE_CATEGORY]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_deleted_category",
+      },
     };
 
     const config = alertConfig[code];

@@ -60,7 +60,7 @@ export function ModalAddProduct({ data, onSuccess }: Props) {
     setLoading(true);
     let finalValues = values;
 
-    // Editar Product
+    // Edit Product
     if (!editActive) {
       const response = await window.electronAPI.addProduct(values);
       if (response.success) {

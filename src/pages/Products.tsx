@@ -14,7 +14,7 @@ import { useModal } from "@context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
 import { ModalImport } from "@modals/ModalImport";
 import { ModalAddProduct } from "@modals/ModalAddProduct";
-import { ModalAddCategory } from "@modals/ModalAddCategory";
+import ModalAddCategory from "@modals/ModalAddCategory";
 import { useTranslation } from "react-i18next";
 import { useLoading } from "@context/LoadingContext";
 interface dataStockI {
@@ -269,7 +269,9 @@ export default function Products() {
             </button>
             <button
               className="bnormal"
-              onClick={() => setModal(<ModalAddCategory />)}
+              onClick={() =>
+                setModal(<ModalAddCategory onSuccess={loadPorducts} />)
+              }
             >
               <CategoryIcon /> <p> {t("buttons.btn_add_category")}</p>
             </button>

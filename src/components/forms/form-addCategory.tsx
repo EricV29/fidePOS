@@ -16,13 +16,18 @@ import {
 } from "./schemas/category.schema";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import type { Categories } from "@typesm/categories";
+import { useEffect, useState } from "react";
 
 interface ProductFormProps {
-  onSuccess?: (values: AddCategoryFormValues) => void;
+  data?: Categories;
+  onSuccess?: (values: AddCategoryFormValues, editActive: boolean) => void;
 }
 
-export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
+export default function AddCategoryForm({ data, onSuccess }: ProductFormProps) {
   const { t } = useTranslation();
+  const [editActive, setEditActive] = useState(false);
+  const [categoryId, setCategoryId] = useState<number | undefined>();
 
   const form = useForm<AddCategoryFormValues>({
     resolver: zodResolver(getAddCategorySchema(t)),
@@ -34,8 +39,20 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
   });
 
   function onSubmit(values: AddCategoryFormValues) {
-    onSuccess?.(values);
+    const datav = { ...values, id: categoryId };
+    onSuccess?.(datav, editActive);
   }
+
+  useEffect(() => {
+    if (data) {
+      setEditActive(true);
+      form.setValue("name", data.name);
+      form.setValue("description", data.description);
+      form.setValue("color", data.color);
+
+      setCategoryId(data.id);
+    }
+  }, [data, form]);
 
   return (
     <Form {...form}>
@@ -123,7 +140,7 @@ export default function AddCategoryForm({ onSuccess }: ProductFormProps) {
           )}
         />
         <button type="submit" className="borange">
-          {t("formAddCategory.btn")}
+          {data ? t("formAddCategory.btn_edit") : t("formAddCategory.btn")}
         </button>
       </form>
     </Form>
