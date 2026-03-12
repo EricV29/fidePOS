@@ -13,6 +13,7 @@ const {
   deleteUser,
   editUser,
   changePassword,
+  getFilterSearchUsers,
 } = require("./db/queries/usersQueries.cjs");
 const {
   getTopSalesCategory,
@@ -91,6 +92,7 @@ const {
   getCategories,
   editCategory,
   deteleCategory,
+  getFilterSearchCategories,
 } = require("./db/queries/categoriesQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
@@ -476,6 +478,31 @@ ipcMain.handle("editUser", async (event, data) => {
   }
 });
 
+// Get Filter Search Users
+ipcMain.handle("get-filter-search-users", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchUsers(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
 // Change Password
 ipcMain.handle("changePassword", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
@@ -745,7 +772,7 @@ ipcMain.handle("get-newsale-data", async (event, data) => {
   }
 });
 
-// Get Filter Search Table
+// Get Filter Search Table Products
 ipcMain.handle("get-filter-search-table", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
@@ -961,6 +988,31 @@ ipcMain.handle("deleteCategory", async (event, data) => {
     try {
       const response = await deteleCategory(data);
 
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Filter Search Categories
+ipcMain.handle("get-filter-search-categories", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchCategories(data);
       if (response.success) {
         return {
           success: true,

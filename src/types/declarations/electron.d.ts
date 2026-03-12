@@ -82,7 +82,14 @@ declare global {
         error?: string;
       }>;
 
-      // EDIT USER
+      // GET FILTER SEARCH USERS
+      getFilterSearchUsers: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // CHANGE PASSWORD
       changePassword: (data) => Promise<{
         success: boolean;
         result?: string;
@@ -207,6 +214,13 @@ declare global {
       editCategory: (data) => Promise<{
         success: boolean;
         result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CATEGORIES
+      getFilterSearchCategories: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
         error?: string;
       }>;
 

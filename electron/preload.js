@@ -33,6 +33,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Edit user
   editUser: (data) => ipcRenderer.invoke("editUser", data),
 
+  // Get Filter Search Users
+  getFilterSearchUsers: (data) =>
+    ipcRenderer.invoke("get-filter-search-users", data),
+
   // Change password
   changePassword: (data) => ipcRenderer.invoke("changePassword", data),
 
@@ -93,6 +97,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Edit Category
   editCategory: (data) => ipcRenderer.invoke("editCategory", data),
+
+  // Get Filter Search Categories
+  getFilterSearchCategories: (data) =>
+    ipcRenderer.invoke("get-filter-search-categories", data),
 
   // Get Filter Search Table Products
   getFilterSearchProducts: (data) =>

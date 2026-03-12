@@ -345,7 +345,7 @@ const Settings = () => {
               <DataTableSearch
                 data={dataUsers}
                 columns={columnsu}
-                page={"settings"}
+                page={"settingsUsers"}
                 actions={{
                   onEdit: (row) => {
                     setModal(
@@ -369,7 +369,7 @@ const Settings = () => {
             <DataTableSearch
               data={dataCategories}
               columns={columnscat}
-              page={"settings"}
+              page={"settingsCategories"}
               actions={{
                 onEdit: (row) => {
                   setModal(

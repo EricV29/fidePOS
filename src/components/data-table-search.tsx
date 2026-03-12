@@ -179,6 +179,14 @@ export function DataTableSearch<TData, TValue>({
         response = (await window.electronAPI.getFilterSearchCustomersPayments(
           data,
         )) as typeof response;
+      } else if (page === "settingsUsers") {
+        response = (await window.electronAPI.getFilterSearchUsers(
+          data,
+        )) as typeof response;
+      } else if (page === "settingsCategories") {
+        response = (await window.electronAPI.getFilterSearchCategories(
+          data,
+        )) as typeof response;
       }
 
       if (response.success && response.result) {

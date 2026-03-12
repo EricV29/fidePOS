@@ -238,10 +238,71 @@ async function changePassword(data) {
   }
 }
 
+// Get Filter Search Table Users
+async function getFilterSearchUsers(data) {
+  const db = await getDB();
+
+  try {
+    const { column, text } = data;
+    const allowedColumns = [
+      "name",
+      "last_name",
+      "email",
+      "phone",
+      "role",
+      "status",
+      "created_at",
+      "deleted_at",
+    ];
+
+    let targetColumn = allowedColumns.includes(column) ? column : "name";
+
+    if (targetColumn === "status") targetColumn = "s.description";
+    else if (targetColumn === "role") targetColumn = "r.description";
+    else targetColumn = `u.${targetColumn}`;
+
+    const sql = `
+      SELECT 
+        u.id, 
+        u.name, 
+        u.last_name,
+        u.email, 
+        u.phone, 
+        u.img, 
+        r.description AS role,
+        s.description AS status, 
+        u.created_at, 
+        u.deleted_at
+      FROM user u
+      INNER JOIN role AS r ON u.role_id = r.id 
+      INNER JOIN status AS s ON u.status_id = s.id
+      WHERE ${targetColumn} LIKE ? 
+      ORDER BY u.created_at ASC
+    `;
+
+    const searchTerm = `%${text}%`;
+
+    const stmt = db.prepare(sql);
+    stmt.bind([searchTerm]);
+
+    const rows = [];
+    while (stmt.step()) {
+      rows.push(stmt.getAsObject());
+    }
+    stmt.free();
+
+    return { success: true, result: rows };
+  } catch (error) {
+    console.error("Error getting filter search table users:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   addUser,
   getUsers,
   deleteUser,
   editUser,
   changePassword,
+  getFilterSearchUsers,
 };

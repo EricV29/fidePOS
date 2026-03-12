@@ -130,7 +130,7 @@ async function getProductsList(idCategory, limit, offset) {
   }
 }
 
-// Get Filter Search Table
+// Get Filter Search Table Products
 async function getFilterSearch(data) {
   try {
     const db = await getDB();

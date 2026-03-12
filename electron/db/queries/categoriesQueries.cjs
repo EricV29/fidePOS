@@ -61,7 +61,7 @@ async function getCategoriesSelect() {
   }
 }
 
-// Get Users
+// Get Categories
 async function getCategories(limit, offset) {
   const db = await getDB();
 
@@ -208,10 +208,63 @@ async function deteleCategory(id) {
   }
 }
 
+// Get Filter Search Table Categproes
+async function getFilterSearchCategories(data) {
+  const db = await getDB();
+
+  try {
+    const { column, text } = data;
+    const allowedColumns = [
+      "name",
+      "description",
+      "status",
+      "created_at",
+      "deleted_at",
+    ];
+
+    let targetColumn = allowedColumns.includes(column) ? column : "name";
+
+    if (targetColumn === "status") targetColumn = "s.description";
+    else targetColumn = `c.${targetColumn}`;
+
+    const sql = `
+      SELECT 
+        c.id,
+        c.name,
+        c.description, 
+        c.color,
+        s.description AS status,
+        c.created_at,
+        c.deleted_at 
+      FROM category c
+      INNER JOIN status s ON c.status_id = s.id 
+      WHERE ${targetColumn} LIKE ? 
+      ORDER BY c.created_at DESC;
+    `;
+
+    const searchTerm = `%${text}%`;
+
+    const stmt = db.prepare(sql);
+    stmt.bind([searchTerm]);
+
+    const rows = [];
+    while (stmt.step()) {
+      rows.push(stmt.getAsObject());
+    }
+    stmt.free();
+
+    return { success: true, result: rows };
+  } catch (error) {
+    console.error("Error getting filter search table categories:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = {
   addCategory,
   getCategoriesSelect,
   getCategories,
   editCategory,
   deteleCategory,
+  getFilterSearchCategories,
 };
