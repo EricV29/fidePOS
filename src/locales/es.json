@@ -107,7 +107,8 @@
     "input4": "Soporte",
     "description4": "Reporta problemas de la app con los desarrolladores.",
     "input4_btn": "Contactar",
-    "table1": "Tabla de Usuarios"
+    "table1": "Tabla de Usuarios",
+    "table2": "Tabla de Categorias"
   },
   "buttons": {
     "btn_ok": "ACEPTAR",
@@ -234,7 +235,8 @@
     "text_complete_new_sale": "¿Estás seguro de completar la venta?",
     "text_delete_product": "¿Estás seguro de que quieres eliminar este producto?.",
     "text_delete_customer": "¿Estás seguro de que quieres eliminar a este cliente?",
-    "text_active_customer": "¿Estás seguro de que quieres activar a este cliente?"
+    "text_active_customer": "¿Estás seguro de que quieres activar a este cliente?",
+    "text_delete_category": "¿Estás seguro de que quieres eliminar esta categoría?"
   },
   "modalSuccessAlert": {
     "title": "¡Exito!",
@@ -253,7 +255,9 @@
     "text_edit_product": "Producto editado correctamente.",
     "text_edit_customer": "Cliente editado correctamente.",
     "text_delete_customer": "Cliente eliminado correctamente.",
-    "text_restore_customer": "Cliente activado correctamente."
+    "text_restore_customer": "Cliente activado correctamente.",
+    "text_edit_category": "Categoría editada correctamnete.",
+    "text_restore_category": "Categoría eliminada correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
@@ -288,7 +292,11 @@
     "text_inactive_customer": "Cliente inactivo.",
     "text_debt_customer": "Cliente con deudas por pagar.",
     "text_not_selected_customer": "Primero necesitas seleccionar un cliente.",
-    "text_active_customer": "Este cliente ya se encuentra activo."
+    "text_active_customer": "Este cliente ya se encuentra activo.",
+    "text_category_not_found": "Categoría no encontrada.",
+    "text_inactive_category": "Categoría inactiva.",
+    "text_category_name_used": "Nombre de categoría ya utilizado.",
+    "text_category_have_products": "Esta categoría tiene productos relacionados."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",

@@ -62,7 +62,7 @@ declare global {
       }>;
 
       // GET USERS
-      getUsers: () => Promise<{
+      getUsers: (data) => Promise<{
         success: boolean;
         result?: Users[];
         error?: string;
@@ -82,7 +82,14 @@ declare global {
         error?: string;
       }>;
 
-      // EDIT USER
+      // GET FILTER SEARCH USERS
+      getFilterSearchUsers: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // CHANGE PASSWORD
       changePassword: (data) => Promise<{
         success: boolean;
         result?: string;
@@ -198,6 +205,27 @@ declare global {
 
       // ADD CATEGORY
       addCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // EDIT CATEGORY
+      editCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CATEGORIES
+      getFilterSearchCategories: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // DELETE CATEGORY
+      deleteCategory: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;
@@ -387,6 +415,13 @@ declare global {
 
       // GET DEBTS AND PAYMENTS CUSTOMER SELECTED BY DATE
       getSelectedCustomerDataDate: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET SETTINGS PAGE
+      getSettingsData: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;

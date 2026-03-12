@@ -6,8 +6,14 @@ import AddCategoryForm from "@forms/form-addCategory";
 import { useTranslation } from "react-i18next";
 import { useLoading } from "@context/LoadingContext";
 import { type AddCategoryFormValues } from "@forms/schemas/category.schema";
+import type { Categories } from "@typesm/categories";
 
-export function ModalAddCategory() {
+interface ModalEditCategoryProps {
+  data?: Categories;
+  onSuccess: () => void;
+}
+
+const ModalAddCategory = ({ data, onSuccess }: ModalEditCategoryProps) => {
   const { setModal } = useModal();
   const { t } = useTranslation();
   const close = () => setModal(null);
@@ -15,15 +21,38 @@ export function ModalAddCategory() {
   const { triggerResponseAlert } = useModal();
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
-  const handleAddCategory = async (values: AddCategoryFormValues) => {
-    setLoading(true);
-    const response = await window.electronAPI.addCategory(values);
+  const editCategory = async (finalValues: AddCategoryFormValues) => {
+    const response = await window.electronAPI.editCategory(finalValues);
     if (response.success) {
+      onSuccess();
       setLoading(false);
       triggerResponseAlert(response.result);
     } else {
       setLoading(false);
       triggerResponseAlert(response.error);
+    }
+    return;
+  };
+
+  const handleAddCategory = async (
+    values: AddCategoryFormValues,
+    editActive: boolean,
+  ) => {
+    setLoading(true);
+
+    // Edit Category
+    if (!editActive) {
+      const response = await window.electronAPI.addCategory(values);
+      if (response.success) {
+        onSuccess();
+        setLoading(false);
+        triggerResponseAlert(response.result);
+      } else {
+        setLoading(false);
+        triggerResponseAlert(response.error);
+      }
+    } else {
+      editCategory(values);
     }
   };
 
@@ -40,9 +69,15 @@ export function ModalAddCategory() {
           <div className="flex gap-5">
             <CategoryIcon size={40} color="#F57C00" />
             <div className="flex flex-col">
-              <h2>{t("modalAddCategory.title")}</h2>
+              <h2>
+                {data
+                  ? t("modalAddCategory.title_edit")
+                  : t("modalAddCategory.title")}
+              </h2>
               <p className="font-extralight">
-                {t("modalAddCategory.description")}
+                {data
+                  ? t("modalAddCategory.description_edit")
+                  : t("modalAddCategory.description")}
               </p>
             </div>
           </div>
@@ -51,12 +86,18 @@ export function ModalAddCategory() {
           </button>
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
-        <p className="dark:text-white">{t("modalAddCategory.subtitle")}</p>
+        <p className="dark:text-white">
+          {data
+            ? t("modalAddCategory.subtitle_edit")
+            : t("modalAddCategory.subtitle")}
+        </p>
         <div className="w-full flex flex-col gap-3 rounded-[10px] border border-[#b3b3b3] p-4 dark:text-[#b3b3b3]">
-          <AddCategoryForm onSuccess={handleAddCategory} />
+          <AddCategoryForm onSuccess={handleAddCategory} data={data} />
         </div>
       </div>
     </div>,
     modalRoot,
   );
-}
+};
+
+export default ModalAddCategory;

@@ -33,6 +33,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Edit user
   editUser: (data) => ipcRenderer.invoke("editUser", data),
 
+  // Get Filter Search Users
+  getFilterSearchUsers: (data) =>
+    ipcRenderer.invoke("get-filter-search-users", data),
+
   // Change password
   changePassword: (data) => ipcRenderer.invoke("changePassword", data),
 
@@ -87,6 +91,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Add Category
   addCategory: (data) => ipcRenderer.invoke("addCategory", data),
+
+  // Delete Category
+  deleteCategory: (data) => ipcRenderer.invoke("deleteCategory", data),
+
+  // Edit Category
+  editCategory: (data) => ipcRenderer.invoke("editCategory", data),
+
+  // Get Filter Search Categories
+  getFilterSearchCategories: (data) =>
+    ipcRenderer.invoke("get-filter-search-categories", data),
 
   // Get Filter Search Table Products
   getFilterSearchProducts: (data) =>
@@ -182,4 +196,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Debts and Payments Customer Selected by Date
   getSelectedCustomerDataDate: (data) =>
     ipcRenderer.invoke("get-debts-payments-customer-date", data),
+
+  //* Get Settings Page
+  getSettingsData: (data) => ipcRenderer.invoke("get-settings-data", data),
 });

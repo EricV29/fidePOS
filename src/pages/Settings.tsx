@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import ImgIcon from "@icons/ImgIcon";
 import CustomSelect from "@components/Select";
@@ -7,7 +7,9 @@ import ShieldIcon from "@icons/ShieldIcon";
 import UserPlusIcon from "@icons/UserPlusIcon";
 import { DataTableSearch } from "@components/data-table-search";
 import { columnsU } from "@columns/columnsU";
+import { columnsCAT } from "@columns/columnsCAT";
 import type { Users, UserSession } from "@typesm/users";
+import type { Categories } from "@typesm/categories";
 import { useModal } from "@context/ModalContext";
 import ModalAddUser from "@modals/ModalAddUser";
 import ModalChangePassword from "@modals/ModalChangePassword";
@@ -15,19 +17,19 @@ import { ModalContact } from "@modals/ModalContact";
 import { useTranslation } from "react-i18next";
 import { getAvatar } from "@utility/getAvatar";
 import { useLoading } from "@context/LoadingContext";
-import ModalEditUser from "@/components/modals/ModalEditUser";
+import ModalEditUser from "@components/modals/ModalEditUser";
 import AUTH_CODES from "../../constants/authCodes.json";
+import ModalAddCategory from "@/components/modals/ModalAddCategory";
 
-interface SettingsProps {}
-
-interface MyContext {
+interface Context {
   session: UserSession;
   installDate: string;
 }
 
-const Settings: React.FC<SettingsProps> = ({}) => {
-  const { session } = useOutletContext<MyContext>();
+const Settings = () => {
+  const { session } = useOutletContext<Context>();
   const [dataUsers, setUsers] = useState<Users[]>([]);
+  const [dataCategories, setCategories] = useState<Categories[]>([]);
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();
   const [fallbackAvatar] = useState(getAvatar);
@@ -37,6 +39,18 @@ const Settings: React.FC<SettingsProps> = ({}) => {
   const { triggerWarningAlert, triggerResponseAlert } = useModal();
   const { setLoading } = useLoading();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [paginationUsers, setPaginationUsers] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [totalRowsUsers, setTotalRowsUsers] = useState(0);
+  const [paginationCategories, setPaginationCategories] = useState({
+    pageIndex: 0,
+    pageSize: 10,
+  });
+  const [totalRowsCategories, setTotalRowsCategories] = useState(0);
+  const columnsu = columnsU(t, i18n.language);
+  const columnscat = columnsCAT(t, i18n.language);
 
   const getInitialTheme = () => {
     const savedTheme = localStorage.getItem("theme");
@@ -48,20 +62,46 @@ const Settings: React.FC<SettingsProps> = ({}) => {
       ? "dark"
       : "light";
   };
-
   const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
 
-  const getUsers = async () => {
-    const response = await window.electronAPI.getUsers();
-    if (response) {
-      setUsers(response.result ?? []);
+  const loadSettings = useCallback(async () => {
+    const limitUsers = paginationUsers.pageSize;
+    const offsetUsers = paginationUsers.pageIndex * paginationUsers.pageSize;
+    const limitCategories = paginationCategories.pageSize;
+    const offsetCategories =
+      paginationCategories.pageIndex * paginationCategories.pageSize;
+
+    const data = {
+      limitUsers,
+      offsetUsers,
+      limitCategories,
+      offsetCategories,
+    };
+
+    const response = await window.electronAPI.getSettingsData(data);
+
+    const settingsData =
+      typeof response.result === "string"
+        ? JSON.parse(response.result)
+        : response.result;
+
+    if (session?.role_id !== 2) {
+      if (settingsData?.users) {
+        const usersTableData = settingsData.users.result;
+        setUsers(usersTableData);
+        setTotalRowsUsers(settingsData.users.totalCount);
+      }
     }
-  };
+
+    if (settingsData?.users) {
+      const categoriesTableData = settingsData.categories.result;
+      setCategories(categoriesTableData);
+      setTotalRowsCategories(settingsData.categories.totalCount);
+    }
+  }, [paginationCategories, paginationUsers, session]);
 
   useEffect(() => {
-    if (session?.role_id !== 2) {
-      getUsers();
-    }
+    loadSettings();
 
     const html = document.documentElement;
     if (theme === "dark") {
@@ -71,15 +111,12 @@ const Settings: React.FC<SettingsProps> = ({}) => {
     }
 
     localStorage.setItem("theme", theme);
-  }, [theme, session?.role_id]);
-
-  const columnsu = columnsU(t, i18n.language);
+  }, [theme, session?.role_id, loadSettings]);
 
   const optionsLanguage = [
     { label: t("settings.input1_option1"), value: "en" },
     { label: t("settings.input1_option2"), value: "es" },
   ];
-
   const optionsTheme = [
     { label: t("settings.input2_option1"), value: "light" },
     { label: t("settings.input2_option2"), value: "dark" },
@@ -92,7 +129,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
 
   const deleteUser = async (id: number) => {
     if (id === 1) {
-      triggerResponseAlert("UNAUTHORIZED");
+      triggerResponseAlert(AUTH_CODES.UNAUTHORIZED);
       return;
     }
 
@@ -102,7 +139,7 @@ const Settings: React.FC<SettingsProps> = ({}) => {
         const response = await window.electronAPI.deleteUser(id);
 
         if (response.success) {
-          getUsers();
+          loadSettings();
           setLoading(false);
           triggerResponseAlert(response.result);
         } else {
@@ -113,6 +150,29 @@ const Settings: React.FC<SettingsProps> = ({}) => {
         console.error("Comunication Error:", err);
       }
     });
+  };
+
+  const deleteCategory = async (id: number) => {
+    triggerWarningAlert(
+      t("modalWarningAlert.text_delete_category"),
+      async () => {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.deleteCategory(id);
+
+          if (response.success) {
+            loadSettings();
+            setLoading(false);
+            triggerResponseAlert(response.result);
+          } else {
+            setLoading(false);
+            triggerResponseAlert(response.error);
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      },
+    );
   };
 
   const handleChangeTheme = (value: string) => {
@@ -168,7 +228,9 @@ const Settings: React.FC<SettingsProps> = ({}) => {
             <div className="flex gap-2">
               <button
                 className="bnormal"
-                onClick={() => setModal(<ModalAddUser onSuccess={getUsers} />)}
+                onClick={() =>
+                  setModal(<ModalAddUser onSuccess={loadSettings} />)
+                }
               >
                 <UserPlusIcon />
                 <p>{t("buttons.btn_add_user")}</p>
@@ -283,17 +345,46 @@ const Settings: React.FC<SettingsProps> = ({}) => {
               <DataTableSearch
                 data={dataUsers}
                 columns={columnsu}
+                page={"settingsUsers"}
                 actions={{
                   onEdit: (row) => {
-                    setModal(<ModalEditUser data={row} onSuccess={getUsers} />);
+                    setModal(
+                      <ModalEditUser data={row} onSuccess={loadSettings} />,
+                    );
                   },
                   onDelete: (row) => {
                     deleteUser(row.id);
                   },
                 }}
+                pagination={paginationUsers}
+                setPagination={setPaginationUsers}
+                totalRows={totalRowsUsers}
               />
             </div>
           )}
+          <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
+            <p className="font-semibold dark:text-white">
+              {t("settings.table2")}
+            </p>
+            <DataTableSearch
+              data={dataCategories}
+              columns={columnscat}
+              page={"settingsCategories"}
+              actions={{
+                onEdit: (row) => {
+                  setModal(
+                    <ModalAddCategory data={row} onSuccess={loadSettings} />,
+                  );
+                },
+                onDelete: (row) => {
+                  deleteCategory(row.id);
+                },
+              }}
+              pagination={paginationCategories}
+              setPagination={setPaginationCategories}
+              totalRows={totalRowsCategories}
+            />
+          </div>
         </div>
       </div>
     </>
