@@ -6,22 +6,23 @@ const AUTH_CODES = require("../../../constants/authCodes.json");
 async function addUser(data) {
   try {
     const db = await getDB();
-    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const { name, last_name, email, password, phone } = data;
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Search Users
+    // Search Users (Validate)
     const query = db.exec(
       "SELECT email, phone FROM user WHERE (email = ? OR phone = ?) AND deleted_at IS NULL",
-      [data.email, data.phone],
+      [email, phone],
     );
 
     const usersFound = mapResultToObjects(query);
 
     if (usersFound.length > 0) {
       for (const user of usersFound) {
-        if (user.email === data.email) {
+        if (user.email === email) {
           return { success: false, error: AUTH_CODES.EMAIL_USED };
         }
-        if (user.phone === data.phone) {
+        if (user.phone === phone) {
           return { success: false, error: AUTH_CODES.PHONE_USED };
         }
       }
@@ -29,22 +30,13 @@ async function addUser(data) {
 
     db.run(
       "INSERT INTO user(name, last_name, email, phone, password, img, role_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        data.name,
-        data.last_name,
-        data.email,
-        data.phone,
-        hashedPassword,
-        null,
-        2,
-        1,
-      ],
+      [name, last_name, email, phone, hashedPassword, null, 2, 1],
     );
 
     saveDB(db);
     return { success: true, result: AUTH_CODES.ADD_USER };
   } catch (error) {
-    console.error("Error inserting user:", error);
+    console.error("❌ Error inserting user:", error);
     return { success: false, error: error.message };
   }
 }

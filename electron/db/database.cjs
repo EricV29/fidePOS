@@ -445,7 +445,7 @@ async function createSchema(db) {
 
   //? v_discounts_amount
   db.run(`
-    CREATE VIEW v_discounts_amount AS
+    CREATE VIEW IF NOT EXISTS v_discounts_amount AS
     SELECT SUM(discount) AS discountsAmount
     FROM sale;
   `);
