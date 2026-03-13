@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, protocol } = require("electron");
+const { app, BrowserWindow, ipcMain, protocol, net } = require("electron");
 const path = require("path");
 const { getDB, saveDB, createSchema } = require("./db/database.cjs");
 const {
@@ -101,7 +101,6 @@ const { contactDevs } = require("./utility/contactDevs.cjs");
 const { generatePassword } = require("./utility/generatePassword.cjs");
 require("dotenv").config();
 const { uploadUserImage } = require("./utility/uploadUserImage.cjs");
-
 const isDev = !app.isPackaged;
 
 function getPageUrl(route = "") {
@@ -122,8 +121,6 @@ const {
   registerInstallDate,
   getInstallDate,
 } = require("./utility/installDateManager.cjs");
-const { log } = require("console");
-const { success } = require("zod");
 
 let welcomeWindow = null;
 let mainWindow = null;
@@ -1817,10 +1814,10 @@ app.whenReady().then(async () => {
   if (isInitializing) return;
   isInitializing = true;
 
-  protocol.registerFileProtocol("fide-pos", (request, callback) => {
+  protocol.handle("fide-pos", (request) => {
     const url = request.url.replace("fide-pos://", "");
     const filePath = path.join(app.getPath("userData"), "profile_images", url);
-    callback({ path: filePath });
+    return net.fetch(`file:///${filePath}`);
   });
 
   try {
