@@ -96,7 +96,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t("placeholders.lastname")}
+                    placeholder={t("placeholders.last_name")}
                     {...field}
                     className={cn(
                       "bg-white",

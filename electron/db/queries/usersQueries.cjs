@@ -1,21 +1,25 @@
-const { getDB, saveDB, mapResultToObjects } = require("../database.cjs");
+const {
+  getDB,
+  saveDB,
+  mapResultToObjects,
+  queryAll,
+  queryOne,
+  runQuery,
+} = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 
 // Add User
 async function addUser(data) {
   try {
-    const db = await getDB();
     const { name, last_name, email, password, phone } = data;
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // Search Users (Validate)
-    const query = db.exec(
+    const usersFound = await queryAll(
       "SELECT email, phone FROM user WHERE (email = ? OR phone = ?) AND deleted_at IS NULL",
       [email, phone],
     );
-
-    const usersFound = mapResultToObjects(query);
 
     if (usersFound.length > 0) {
       for (const user of usersFound) {
@@ -28,12 +32,11 @@ async function addUser(data) {
       }
     }
 
-    db.run(
+    await runQuery(
       "INSERT INTO user(name, last_name, email, phone, password, img, role_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
       [name, last_name, email, phone, hashedPassword, null, 2, 1],
     );
 
-    saveDB(db);
     return { success: true, result: AUTH_CODES.ADD_USER };
   } catch (error) {
     console.error("❌ Error inserting user:", error);
@@ -43,11 +46,9 @@ async function addUser(data) {
 
 // Get Users
 async function getUsers(limit, offset) {
-  const db = await getDB();
-
   try {
-    const params = [limit, offset];
-    const sql = `
+    const users = await queryAll(
+      `
       SELECT 
         u.id, 
         u.name, 
@@ -64,104 +65,88 @@ async function getUsers(limit, offset) {
       INNER JOIN status AS s ON u.status_id = s.id
       ORDER BY u.created_at ASC
       LIMIT ? OFFSET ?;
-    `;
+    `,
+      [limit, offset],
+    );
 
-    const sqlCount = `SELECT COUNT(*) as total FROM user;`;
+    const totalRows = await queryOne(`SELECT COUNT(*) as total FROM user;`);
 
-    const query = db.exec(sql, params);
-    const queryCount = db.exec(sqlCount);
-
-    const totalCount = queryCount.length > 0 ? queryCount[0].values[0][0] : 0;
-
-    if (query.length === 0) {
+    if (users.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data, totalCount: totalCount };
+    return { success: true, result: users, totalCount: totalRows };
   } catch (error) {
-    console.error("Error getting users:", error);
+    console.error("❌ Error getting users:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Delete User
-async function deleteUser(data) {
+async function deleteUser(id) {
   try {
-    const db = await getDB();
-
     // Search User
-    const query = db.exec(
+    const users = await queryOne(
       "SELECT id, role_id, status_id FROM user WHERE id = ?",
-      [data],
+      [id],
     );
 
-    const users = mapResultToObjects(query);
-    const userFound = users[0];
-
     // User?
-    if (!userFound) {
+    if (!users) {
       return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Role?
-    if (userFound.role_id === 1) {
+    if (users.role_id === 1) {
       return { success: false, error: AUTH_CODES.UNAUTHORIZED };
     }
 
     // Status?
-    if (userFound.status_id === 0) {
+    if (users.status_id === 0) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
-    db.run(
+    await runQuery(
       "UPDATE user SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
-      [data],
+      [id],
     );
 
-    saveDB(db);
     return { success: true, result: AUTH_CODES.DELETE_USER };
   } catch (error) {
-    console.error("Error deleting user:", error);
+    console.error("❌ Error deleting user:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Edit User
 async function editUser(data) {
-  const db = await getDB();
-
   try {
-    const [id, name, last_name, email, phone] = data;
+    const { id, name, last_name, email, phone } = data;
+
     // Search User
-    const query = db.exec(
+    const user = await queryOne(
       "SELECT id, email, role_id, status_id FROM user WHERE id = ?",
       [id],
     );
 
-    const user = mapResultToObjects(query);
-    const userFound = user[0];
-
     // User?
-    if (!userFound) {
+    if (!user) {
       return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Status?
-    if (userFound.status_id === 0) {
+    if (user.status_id === 0) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
     // Search Users
-    const users = db.exec(
-      "SELECT email, phone FROM user WHERE (email = ? OR phone = ?) AND deleted_at IS NULL AND id != ?",
+    const users = await queryAll(
+      "SELECT email, phone FROM user WHERE (LOWER(email) = LOWER(?) OR phone = ?) AND deleted_at IS NULL AND id != ?",
       [email, phone, id],
     );
 
-    const usersFound = mapResultToObjects(users);
-
-    if (usersFound.length > 0) {
-      for (const user of usersFound) {
+    if (users.length > 0) {
+      for (const user of users) {
         if (user.email === email) {
           return { success: false, error: AUTH_CODES.EMAIL_USED };
         }
@@ -171,15 +156,14 @@ async function editUser(data) {
       }
     }
 
-    db.run(
+    await runQuery(
       "UPDATE user SET name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?",
       [name, last_name, email, phone, id],
     );
 
-    await saveDB(db);
     return { success: true, result: AUTH_CODES.EDIT_USER };
   } catch (error) {
-    console.error("Error editing user:", error);
+    console.error("❌ Error editing user:", error);
     return { success: false, error: error.message };
   }
 }
@@ -187,53 +171,47 @@ async function editUser(data) {
 // Change Password
 async function changePassword(data) {
   try {
-    const db = await getDB();
-    const hashedPassword = await bcrypt.hash(data.newPass, 10);
+    const { id, currentPass, newPass } = data;
+    const hashedPassword = await bcrypt.hash(newPass, 10);
 
     // Search User
-    const query = db.exec(
+    const user = await queryOne(
       "SELECT id, password, role_id, status_id FROM user WHERE id = ?",
-      [data.id],
+      [id],
     );
 
-    const user = mapResultToObjects(query);
-    const userFound = user[0];
-
     // User?
-    if (!userFound) {
+    if (!user) {
       return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Status?
-    if (userFound.status_id === 0) {
+    if (user.status_id === 0) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
     // Password Valid
-    const isValid = await bcrypt.compare(data.currentPass, userFound.password);
+    const isValid = await bcrypt.compare(currentPass, user.password);
 
     if (!isValid) {
       return { success: false, error: AUTH_CODES.INCORRECT_PASSWORD };
     }
 
     // Update Password
-    db.run("UPDATE user SET password = ? WHERE id = ?", [
+    await runQuery("UPDATE user SET password = ? WHERE id = ?", [
       hashedPassword,
-      data.id,
+      id,
     ]);
 
-    saveDB(db);
     return { success: true, result: AUTH_CODES.CHANGE_PASS };
   } catch (error) {
-    console.error("Error change password user:", error);
+    console.error("❌ Error change password user:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Filter Search Table Users
 async function getFilterSearchUsers(data) {
-  const db = await getDB();
-
   try {
     const { column, text } = data;
     const allowedColumns = [
@@ -274,18 +252,11 @@ async function getFilterSearchUsers(data) {
 
     const searchTerm = `%${text}%`;
 
-    const stmt = db.prepare(sql);
-    stmt.bind([searchTerm]);
-
-    const rows = [];
-    while (stmt.step()) {
-      rows.push(stmt.getAsObject());
-    }
-    stmt.free();
+    const rows = await queryAll(sql, [searchTerm]);
 
     return { success: true, result: rows };
   } catch (error) {
-    console.error("Error getting filter search table users:", error);
+    console.error("❌ Error getting filter search table users:", error);
     return { success: false, error: error.message };
   }
 }

@@ -92,6 +92,42 @@ function mapResultToObjects(result) {
   });
 }
 
+//* Helper >1 rows return
+async function queryAll(sql, params = []) {
+  const db = await getDB();
+  const stmt = db.prepare(sql);
+  const rows = [];
+  try {
+    stmt.bind(params);
+    while (stmt.step()) {
+      rows.push(stmt.getAsObject());
+    }
+  } finally {
+    stmt.free();
+  }
+  return rows;
+}
+
+//* Helper 1 row return
+async function queryOne(sql, params = []) {
+  const db = await getDB();
+  const stmt = db.prepare(sql);
+  try {
+    stmt.bind(params);
+    return stmt.step() ? stmt.getAsObject() : null;
+  } finally {
+    stmt.free();
+  }
+}
+
+//* Helper run query
+async function runQuery(sql, params = []) {
+  const db = await getDB();
+  db.run(sql, params);
+  await saveDB(db);
+  return { success: true };
+}
+
 //* CREATE SCHEMA DB
 async function createSchema(db) {
   // DATABASE FILE
@@ -562,4 +598,12 @@ async function createSchema(db) {
   }
 }
 
-module.exports = { getDB, saveDB, createSchema, mapResultToObjects };
+module.exports = {
+  getDB,
+  saveDB,
+  createSchema,
+  mapResultToObjects,
+  queryAll,
+  queryOne,
+  runQuery,
+};
