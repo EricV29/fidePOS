@@ -1,5 +1,6 @@
 export type Sales = {
   id: string;
+  sale_num: number;
   name: string | null;
   last_name: string | null;
   num_sale: string;
@@ -7,7 +8,9 @@ export type Sales = {
   total_amount: number;
   paid_amount: number;
   pending_amount: number;
+  discount: number;
   status: string;
+  user_id: number;
   created_at: string;
 };
 
@@ -62,3 +65,5 @@ export type SaleView = {
   paid_amount: number;
   products: ProductSaleView[];
 };
+
+export type dataExportSales = string | number | boolean | null | undefined;

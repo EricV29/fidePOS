@@ -17,12 +17,27 @@ import {
 } from "./schemas/product.schema";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { useEffect, useMemo, useState } from "react";
+import type { CategoriesSelect } from "@typesm/categories";
+import { useModal } from "@/context/ModalContext";
+import AUTH_CODES from "../../../constants/authCodes.json";
+import type { Products } from "@typesm/products";
+
 interface ProductFormProps {
-  onSuccess?: () => void;
+  data?: Products;
+  onSuccess?: (values: AddProductFormValues, editActive: boolean) => void;
 }
 
-export default function AddProductForm({ onSuccess }: ProductFormProps) {
+export default function AddProductForm({ data, onSuccess }: ProductFormProps) {
   const { t } = useTranslation();
+  const [optionsCategory, setoptionsCategory] = useState<CategoriesSelect[]>(
+    [],
+  );
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    string | undefined
+  >();
+  const { triggerResponseAlert } = useModal();
+  const [editActive, setEditActive] = useState(false);
 
   const form = useForm<AddProductFormValues>({
     resolver: zodResolver(getAddProductSchema(t)),
@@ -37,19 +52,68 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
   });
 
   function onSubmit(values: AddProductFormValues) {
-    console.log("Form submitted:", values);
-    if (onSuccess) onSuccess();
+    if (!selectedCategoryId) {
+      triggerResponseAlert(AUTH_CODES.NOT_CATEGORY_SELECT);
+      return;
+    }
+
+    const datav = { ...values, category: selectedCategoryId, id: data?.id };
+    onSuccess?.(datav, editActive);
   }
 
-  const optionsCategory = [
-    { label: "Toys", value: "toys" },
-    { label: "Maquillaje", value: "maquillaje" },
-  ];
+  const loadSelect = async () => {
+    const response = await window.electronAPI.getCategoriesSelect();
+    if (response.success && response.result) {
+      setoptionsCategory(response.result);
+    }
+  };
+
+  const optionsCategories = useMemo(() => {
+    return optionsCategory.map((c) => ({
+      label: `${c.name}`,
+      value: c.id?.toString(),
+    }));
+  }, [optionsCategory]);
+
+  useEffect(() => {
+    loadSelect();
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      setEditActive(true);
+      form.setValue("code_sku", data.code_sku);
+      form.setValue("product", data.product);
+      form.setValue("description", data.description);
+      if (optionsCategories.length > 0) {
+        const categoryFound = optionsCategories.find(
+          (opt) =>
+            opt.value === String(data.category) ||
+            opt.label.toLowerCase() === data.category?.toLowerCase(),
+        );
+
+        if (categoryFound) {
+          setSelectedCategoryId(categoryFound.value);
+        }
+      }
+      form.setValue("stock", String(data.stock));
+      form.setValue("cost_price", String(data.cost_price));
+      form.setValue("unit_price", String(data.unit_price));
+    }
+  }, [data, form, optionsCategories]);
+
+  const handleChangeCategory = (value: string) => {
+    if (!value || value === selectedCategoryId) {
+      setSelectedCategoryId(undefined);
+    } else {
+      setSelectedCategoryId(value);
+    }
+  };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
-        <div className="w-full flex justify-between">
+        <div className="w-full flex justify-between items-end">
           <FormField
             control={form.control}
             name="code_sku"
@@ -58,20 +122,26 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
-                  {t("formAddProduct.input1")}
+                  <div className="w-55">
+                    <p>{t("formAddProduct.input1")}</p>
+                    <p className="text-[13px] font-light">
+                      {t("placeholders.code_sku")}
+                    </p>
+                  </div>
                 </FormLabel>
                 <FormControl>
                   <Input
                     type="number"
-                    placeholder="00000"
+                    placeholder="0000"
+                    disabled={!!data}
                     {...field}
                     className={cn(
                       "bg-white",
                       fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                     )}
                   />
                 </FormControl>
@@ -87,7 +157,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
                   {t("formAddProduct.input2")}
@@ -99,7 +169,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                     className={cn(
                       "bg-white",
                       fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                     )}
                   />
                 </FormControl>
@@ -116,7 +186,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
               <FormLabel
                 className={cn(
                   "font-semibold",
-                  fieldState.error && "text-red-600 dark:text-red-400"
+                  fieldState.error && "text-red-600 dark:text-red-400",
                 )}
               >
                 {t("formAddProduct.input3")}
@@ -128,7 +198,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                   className={cn(
                     "bg-white",
                     fieldState.error &&
-                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                      "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                   )}
                 />
               </FormControl>
@@ -140,9 +210,11 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
           <div className="flex flex-col gap-1">
             <p className="font-semibold">{t("formAddProduct.input4")}</p>
             <CustomSelect
-              options={optionsCategory}
+              options={optionsCategories}
               color="#F57C00"
               placeholder={t("placeholders.select")}
+              value={selectedCategoryId}
+              onChange={handleChangeCategory}
             />
           </div>
           <FormField
@@ -153,7 +225,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
                   {t("formAddProduct.input5")}
@@ -166,7 +238,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                     className={cn(
                       "bg-white",
                       fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                     )}
                   />
                 </FormControl>
@@ -184,7 +256,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
                   {t("formAddProduct.input6")}
@@ -196,7 +268,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                     className={cn(
                       "bg-white",
                       fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                     )}
                   />
                 </FormControl>
@@ -212,7 +284,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                 <FormLabel
                   className={cn(
                     "font-semibold",
-                    fieldState.error && "text-red-600 dark:text-red-400"
+                    fieldState.error && "text-red-600 dark:text-red-400",
                   )}
                 >
                   {t("formAddProduct.input7")}
@@ -224,7 +296,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
                     className={cn(
                       "bg-white",
                       fieldState.error &&
-                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400"
+                        "border-red-600 focus-visible:ring-red-600 dark:border-red-400",
                     )}
                   />
                 </FormControl>
@@ -234,7 +306,7 @@ export default function AddProductForm({ onSuccess }: ProductFormProps) {
           />{" "}
         </div>
         <button type="submit" className="borange">
-          {t("formAddProduct.btn")}
+          {data ? t("formAddProduct.btn_edit") : t("formAddProduct.btn")}
         </button>
       </form>
     </Form>

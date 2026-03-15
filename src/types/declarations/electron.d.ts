@@ -62,7 +62,7 @@ declare global {
       }>;
 
       // GET USERS
-      getUsers: () => Promise<{
+      getUsers: (data) => Promise<{
         success: boolean;
         result?: Users[];
         error?: string;
@@ -82,7 +82,14 @@ declare global {
         error?: string;
       }>;
 
-      // EDIT USER
+      // GET FILTER SEARCH USERS
+      getFilterSearchUsers: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // CHANGE PASSWORD
       changePassword: (data) => Promise<{
         success: boolean;
         result?: string;
@@ -188,6 +195,237 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      //* GET PRODUCTS DATA PAGE
+      getProductsData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // ADD CATEGORY
+      addCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // EDIT CATEGORY
+      editCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CATEGORIES
+      getFilterSearchCategories: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // DELETE CATEGORY
+      deleteCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH PRODUCTS
+      getFilterSearchProducts: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // DELETE PRODUCT
+      deleteProduct: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET CATEGORIES
+      getCategoriesSelect: () => Promise<{
+        success: boolean;
+        result?: CategoriesSelect[];
+        error?: string;
+      }>;
+
+      // ADD PRODUCT
+      addProduct: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // EDIT PRODUCT
+      editProduct: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // ADD PRODUCTS IMPORT
+      addProductsImport: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET ALL PRODUCTS
+      getAllProducts: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET HISTORY DATA PAGE
+      getHistoryData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH HISTORY SALES
+      getFilterSearchHistorySales: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // GET ALL HISTORY SALES
+      getAllHistorySales: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET CUSTOMERS GENERAL DATA PAGE
+      getCustomersGeneralData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CUSTOMERS
+      getFilterSearchCustomers: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // EDIT CUSTOMER
+      editCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // DELETE CUSTOMER
+      deleteCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET CUSTOMERS PAYMENTS DATA PAGE
+      getCustomersPaymentsData: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET SELECTED CUSTOMER DATA
+      getSelectedCustomerData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CUSTOMERS DEBTS (PAYMENTS)
+      getFilterSearchCustomersDebts: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // GET FILTER SEARCH CUSTOMERS PAYMENTS (PAYMENTS)
+      getFilterSearchCustomersPayments: (data) => Promise<{
+        success: boolean;
+        result?: TData[];
+        error?: string;
+      }>;
+
+      // GET ALL CUSTOMERS
+      getAllCustomers: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET ALL DEBTS AND PAYMENTS BY CUSTOMER
+      getAllDebtsPayments: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // ACTIVE CUSTOMER
+      activeCustomer: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET REPORTS GENERAL PAGE
+      getReportsGeneralData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET REPORTS SALES PAGE
+      getReportsSalesData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET REPORTS PRODUCTS PAGE
+      getReportsProductsData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET REPORTS CUSTOMERS PAGE
+      getReportsCustomersData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET DEBTS OVER TIME
+      getDebtsOverTime: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // GET DEBTS AND PAYMENTS CUSTOMER SELECTED BY DATE
+      getSelectedCustomerDataDate: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      //* GET SETTINGS PAGE
+      getSettingsData: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
     };
   }
 }
@@ -199,10 +437,10 @@ declare module "@tanstack/react-table" {
       onEdit?: (row: TData) => void;
       onDelete?: (row: TData) => void;
       onAdd?: (row: TData) => void;
+      onActive?: (row: TData) => void;
     };
 
     updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
-
     addProduct?: (product: TData) => void;
     deleteProduct?: (id: string) => void;
   }

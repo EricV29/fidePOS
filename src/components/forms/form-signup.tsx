@@ -76,7 +76,7 @@ export default function ProfileForm({ onSuccess }: ProfileFormProps) {
                 </FormLabel>
                 <FormControl>
                   <Input
-                    placeholder={t("placeholders.lastname")}
+                    placeholder={t("placeholders.last_name")}
                     {...field}
                     className="bg-white"
                   />

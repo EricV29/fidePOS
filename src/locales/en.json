@@ -10,7 +10,8 @@
     "status_debt": "DEBT",
     "role_admin": "ADMIN",
     "role_user": "USER",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "yes": "YES"
   },
   "sidebar": {
     "dashboard": "Dashboard",
@@ -70,16 +71,16 @@
       "customers": "Customers"
     },
     "chart1": "Sales by Category",
-    "chart2": "Sales by Products",
+    "chart2": "Top Selling Products",
     "table1": "Accounts Receivable",
     "table2": "Sales",
     "chart3": "Products by Category",
-    "chart4": "Top Selling Products",
     "table3": "Products",
     "chart5": "Debt Distribution by Customer",
     "chart6": "Total Debt Over Time",
     "table4": "Customers",
     "input1": "Select your customer",
+    "input2": "Select a year",
     "table5": "Debts Table",
     "table6": "Payments Table"
   },
@@ -100,7 +101,8 @@
     "input4": "Support",
     "description4": "Report problems with the app developer.",
     "input4_btn": "Contact",
-    "table1": "Users Table"
+    "table1": "Users Table",
+    "table2": "Category Table"
   },
   "buttons": {
     "btn_ok": "ACCEPT",
@@ -121,7 +123,9 @@
     "actions": "Actions",
     "total_amount": "Amount",
     "customer": "Customer",
+    "customers": "Customers",
     "code": "Code SKU",
+    "sale_total": "Sale amount",
     "debt_amount": "Debt amount",
     "debt_paid": "Debt paid",
     "debt_pending": "Debt pending",
@@ -134,15 +138,26 @@
     "status": "Status",
     "name": "Name",
     "phone": "Phone",
-    "debts": "Debts",
+    "debts_number": "No. Debts",
     "note": "Note",
     "paid_amount": "Paid Amount",
     "email": "Email",
     "password": "Password",
-    "sale": "Sale"
+    "sale": "Sale",
+    "sale_num": "No. Sale",
+    "discount": "Discount",
+    "last_name": "Last Name",
+    "pending_amount": "Pending Amount",
+    "user_id": "User ID",
+    "debt_num": "No. Debts",
+    "code_sku": "No. Code",
+    "debts": "Debts",
+    "month": "Months",
+    "sale_amount": "Total Amount Sales",
+    "total_payment_amount": "Payment Amount"
   },
   "charts": {
-    "chart_tcs": "Sales",
+    "chart_sales": "Sales",
     "chart_apc": "Products",
     "totals": "Totals",
     "chart_cs": "Sales"
@@ -154,7 +169,6 @@
     "stock_title": "Products",
     "customers_title": "Customers",
     "customers_debt_title": "Customers in Debt",
-    "owed_title": "Total Owed",
     "payment_title": "Last Payment",
     "debts_title": "Debts",
     "paids_title": "Paids",
@@ -163,7 +177,7 @@
     "sales_title": "Sales",
     "products_status_title": "Products (active/inactive)",
     "options": "Options",
-    "pending_title": "Pending sales",
+    "pending_title": "Total receivable",
     "discounts_title": "Discounts",
     "salesvs_title": "Paid vs Pending"
   },
@@ -191,6 +205,7 @@
       "fri": "Fri",
       "sat": "Sat"
     },
+    "onlyToday": "Only today?",
     "btn1": "Cancel",
     "btn2": "Apply"
   },
@@ -208,9 +223,13 @@
     "title": "¡Warning!",
     "text_forgot_password": "A password recovery email will be sent to you. Please ensure you are connected to the internet.",
     "text_write_email": "Make sure to write your email.",
-    "text_delete_user": "Delete this user? This action cannot be undone.",
+    "text_delete_user": "Delete this user?",
     "text_debt_payment": "Add new payment? This action cannot be undone.",
-    "text_complete_new_sale": "Are you sure you want to complete the sale?"
+    "text_complete_new_sale": "Are you sure you want to complete the sale?",
+    "text_delete_product": "Delete this product? This action cannot be undone.",
+    "text_delete_customer": "Delete this customer? This action cannot be undonde.",
+    "text_active_customer": "Make sure to active this customer?",
+    "text_delete_category": "Delete this category?"
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
@@ -222,7 +241,16 @@
     "text_img_upload": "Image upload successfully.",
     "text_debt_payment_success": "Debt payment added successfully.",
     "text_add_customer": "Customer added successfully.",
-    "text_create_new_sale": "Create new sale successfully."
+    "text_create_new_sale": "Create new sale successfully.",
+    "text_add_category": "Category added successfully.",
+    "text_delete_product": "Product deleted successfully.",
+    "text_add_product": "Product added successfully.",
+    "text_edit_product": "Product edited successfully.",
+    "text_edit_customer": "Customer edited successfully.",
+    "text_delete_customer": "Customer deleted successfully.",
+    "text_restore_customer": "Customer active successfully.",
+    "text_edit_category": "Category edited successfully.",
+    "text_delete_category": "Category deleted successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
@@ -239,7 +267,47 @@
     "text_insufficient_amount": "Insufficient amount.",
     "text_not_credit_sale": "This is not a valid credit amount.",
     "text_insufficient_stock": "Insufficient stock for this product: {{product}}.",
-    "text_not_customer_select": "Please select a customer to proceed with a credit sale."
+    "text_not_customer_select": "Please select a customer to proceed with a credit sale.",
+    "text_category_used": "Category already exists in the system.",
+    "text_product_inactive": "This product is currently inactive.",
+    "text_not_category_select": "Please select a category to proceed whit a add new product.",
+    "text_code_sku_used": "Code SKU is already in use. Try a different one.",
+    "text_product_not_found": "Product not found.",
+    "text_used_product": "This product has transaction history and cannot be deleted as a creation error.",
+    "text_empty_file": "This file is empty.",
+    "text_missing_columns": "The following required columns are missing: {{columns}}",
+    "text_empty_products": "No product to insert into the system.",
+    "text_code_sku_used_import": "Code SKU: {{codesku}} is already in use.",
+    "text_not_selected_format": "Format not selected.",
+    "text_not_selected_statistics": "Statistics not selected.",
+    "text_not_changes": "No changes to save.",
+    "text_customer_not_found": "Customer not found.",
+    "text_inactive_customer": "Customer inactive.",
+    "text_debt_customer": "Customer with outstanding debt.",
+    "text_not_selected_customer": "You must first select a customer.",
+    "text_active_customer": "This customer is already active.",
+    "text_category_not_found": "Category not found.",
+    "text_inactive_category": "Category inactive.",
+    "text_category_name_used": "Category name is already in use.",
+    "text_category_have_products": "This category still has products."
+  },
+  "modalQuestionAlert": {
+    "title": "¡Warning!",
+    "change_stock": "Why is the stock changing?",
+    "error_correction": "Error correction.",
+    "new_entry": "New entry",
+    "error_quantity": "I made a mistake entering the initial quantity.",
+    "text_new_entry": "Adding new stock to inventory.",
+    "delete_product": "Why is the product delete?",
+    "error_creation": "Error creation.",
+    "error_creation_product": "Error creation product.",
+    "loss_stock": "Wastage / Damage / Loss",
+    "text_loss_stock": "Stock removed due to physical damage, expiration or loss.",
+    "export_page": "Do you want to export the current page or all data?",
+    "current_view": "Current View",
+    "total_data": "All Records",
+    "text_current_view": "Only data visible on this page.",
+    "text_total_data": "All available data in the system."
   },
   "modalAddUser": {
     "title": "Add new user",
@@ -291,19 +359,26 @@
   },
   "modalAddCustomer": {
     "title": "Add new customer",
+    "title_edit": "Edit customer",
     "description": "Add individual clients to your customer list.",
-    "subtitle": "Enter the main information of your new customer"
+    "description_edit": "Edit individual clients to your customer list.",
+    "subtitle": "Enter the main information of your new customer",
+    "subtitle_edit": "Enter the new information of your customer"
   },
   "formAddCustomer": {
     "input1": "First Name",
     "input2": "Lastname",
     "input3": "Phone",
-    "btn": "Add customer"
+    "btn": "Add customer",
+    "btn_edit": "Edit customer"
   },
   "modalAddProduct": {
     "title": "Add new product",
+    "title_edit": "Edit product",
     "description": "Add individual products to your product list.",
-    "subtitle": "Enter the main information of your new product."
+    "description_edit": "Edit the fields as needed.",
+    "subtitle": "Enter the main information of your new product.",
+    "subtitle_edit": "Edit the main information of your product."
   },
   "formAddProduct": {
     "input1": "Code SKU",
@@ -313,17 +388,22 @@
     "input5": "Stock",
     "input6": "Cost Price",
     "input7": "Unit Price",
-    "btn": "Add product"
+    "btn": "Add product",
+    "btn_edit": "Edit product"
   },
   "modalAddCategory": {
     "title": "Add new category",
+    "title_edit": "Edit category",
     "description": "Add news categories to your products.",
-    "subtitle": "Enter the main information of your new category."
+    "description_edit": "Edit categories to your system.",
+    "subtitle": "Enter the main information of your new category.",
+    "subtitle_edit": "Edit the main information of your category."
   },
   "formAddCategory": {
     "input1": "Name Category",
     "input3": "Description",
-    "btn": "Add category"
+    "btn": "Add category",
+    "btn_edit": "Edit category"
   },
   "modalNewPayment": {
     "title": "New payment",
@@ -374,14 +454,24 @@
     "title": "Export statistics",
     "description": "Data will be exported in a <bold>.csv</bold>, <bold>.xlsx</bold> and <bold>.pdf</bold> file.",
     "subtitle": "Choose yout favorite configuration.",
-    "form_title": "File format",
-    "form_description": "Choose a file format",
+    "text_statistics": "Statistics",
+    "text_statistics_description": "Do you want to include statistics in the file?",
+    "text_format": "File format",
+    "text_format_description": "Choose a file format",
     "form_btn": "Export"
   },
   "modalImport": {
     "title": "Import your products",
     "description": "Data will be exported in a <bold>.csv</bold> or <bold>.xlsx</bold> file.",
-    "subtitle": "Your file must include the following columns."
+    "subtitle": "Your file must include the following columns.",
+    "optional": "(Optional)",
+    "categories": "(Categories must match the categories in the system)",
+    "row": "Row",
+    "text_null_product": "Name product required.",
+    "text_null_category": "Name category required.",
+    "text_not_match_catergoy_one": "The category",
+    "text_not_match_catergoy_two": "no exist into the system.",
+    "text_number_columns": "Prices or Stock values must be valid numbers."
   },
   "errors": {
     "pass_requirements": "Password does not meet the requirements",
@@ -404,10 +494,107 @@
     "product": "product...",
     "select": "select",
     "category": "category...",
-    "debt": "Debt",
+    "debt": "Debts",
     "language": "Language",
     "theme": "Theme",
     "support_img": "Support images .jpg, .jpeg or .web",
-    "format": "format"
+    "format": "format",
+    "code_sku": "Scan barcode or leave empty to autogenerate."
+  },
+  "exportReport": {
+    "products_page": {
+      "title": "PRODUCTS REPORT PAGE",
+      "investment": "Investment",
+      "inventory_value": "Inventory Value",
+      "total_products": "Total Products",
+      "stock_products": "Stock Products",
+      "out_stock_products": "Out of Stock Products",
+      "detail_products": "DETAIL PRODUCTS"
+    },
+    "history_page": {
+      "title": "HISTORY SALES REPORT PAGE",
+      "sales": "Sales Number",
+      "pending_sales_amount": "Pending Sales Amount",
+      "discounts": "Dsicounts",
+      "total_paid_vs_pending": "Paid VS Pending Total",
+      "paid_sales": "Paid Sales",
+      "pending_sales": "Pending Sales",
+      "detail_sales": "DETAIL HISTORY SALES"
+    },
+    "customer_general": {
+      "title": "CUSTOMERS REPORT PAGE",
+      "customers_number": "Customers Number",
+      "customers_debts_number": "Customers Debts Number",
+      "total_debt_amount": "Total Debts Amount",
+      "last_customer_name_paid": "Last Customer Name Paid",
+      "last_customer_name_paid_date": "Last Date Paid",
+      "detail_customers": "DETAIL CUSTOMERS"
+    },
+    "customer_payments": {
+      "title": "PAYMENTS REPORT PAGE",
+      "customer_name": "Customer",
+      "debts_number": "Customers Debts Number",
+      "payments_numbers": "Customer Payments Number",
+      "total_debts_amount": "Total Debts Amount",
+      "total_payments_amount": "Total Payments Amount",
+      "detail_debts": "DETAIL DEBTS",
+      "detail_payments": "DETAIL PAYMENTS"
+    },
+    "reports_general": {
+      "title": "GENERAL REPORT",
+      "investment": "Investment",
+      "revenue": "Revenue",
+      "inventory_value": "Inventory Value",
+      "sale_num": "No. Sales",
+      "sale_amount": "Total Amount Sales",
+      "total_receivable": "Total Receivable Amount",
+      "customer_total_num": "Customers Number",
+      "customer_active": "Active Customers",
+      "customer_in_debt": "Customers In Debt",
+      "products_total_num": "Total Products Number",
+      "products_active": "Active Products",
+      "products_inactive": "Inactive Products",
+      "sales_by_category": "CATEGORY SALES",
+      "top_selling_product": "TOP SELLING PRODUCTS",
+      "accounts_receivable_table": "ACCOUNTS RECEIVABLE DETAIL"
+    },
+    "reports_sales": {
+      "title": "SALES REPORT SALES",
+      "inventory_value": "Inventory Value",
+      "sale_num": "No. Sale",
+      "sale_amount": "Total Amount Sales",
+      "sales_by_category": "CATEGORY SALES",
+      "top_selling_product": "TOP SELLING PRODUCTS",
+      "detail_sales": "SALES DETAIL"
+    },
+    "reports_products": {
+      "title": "PRODUCTS REPORTS",
+      "investment": "Investment",
+      "revenue": "Revenue",
+      "inventory_value": "Inventory Value",
+      "products_total_num": "Total Products Number",
+      "products_active": "Active Products",
+      "products_inactive": "Inactive Products",
+      "products_by_category": "PRODUCTS BY CATEGORY",
+      "top_selling_product": "TOP SELLING PRODUCTS",
+      "detail_sales": "DETAIL PRODUCTS"
+    },
+    "reports_customers": {
+      "title": "CUSTOMER REPORT",
+      "total_receivable": "Total Receivable Amount",
+      "sale_num": "No. Sales",
+      "sale_amount": "Total Amount Sales",
+      "customer_total_num": "Total Customers Number",
+      "customer_active": "Active Customers",
+      "customer_inactive": "Inactive Customers",
+      "debt_distribution_customer": "DEBTS DISTRIBUTION BY CUSTOMER",
+      "total_debt_over_time": "TOTAL DEBTS OVER TIME",
+      "year": "Year",
+      "detail_customers": "DETAIL CUSTOMERS",
+      "detail_customer": "DETAIL CUSTOMER",
+      "customer": "Customer",
+      "detail_debts": "DETAIL DEBTS",
+      "detail_payments": "DETAIL PAYMENTS"
+    }
   }
 }

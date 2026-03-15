@@ -194,14 +194,14 @@ export function DataTableSale<TData, TValue>({
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
         >
-          <p>{t("tableSearch.btn_previous")}</p>
+          <span>{t("tableSearch.btn_previous")}</span>
         </button>
         <button
           className="borange max-w-[100px]"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
         >
-          <p>{t("tableSearch.btn_next")}</p>
+          <span>{t("tableSearch.btn_next")}</span>
         </button>
       </div>
     </div>

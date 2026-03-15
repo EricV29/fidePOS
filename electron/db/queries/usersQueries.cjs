@@ -1,113 +1,119 @@
-const { getDB, saveDB, mapResultToObjects } = require("../database.cjs");
+const {
+  getDB,
+  saveDB,
+  mapResultToObjects,
+  queryAll,
+  queryOne,
+  runQuery,
+} = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 
 // Add User
 async function addUser(data) {
   try {
-    const db = await getDB();
-    const hashedPassword = await bcrypt.hash(data.password, 10);
+    const { name, last_name, email, password, phone } = data;
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Search Users
-    const query = db.exec(
+    // Search Users (Validate)
+    const usersFound = await queryAll(
       "SELECT email, phone FROM user WHERE (email = ? OR phone = ?) AND deleted_at IS NULL",
-      [data.email, data.phone],
+      [email, phone],
     );
-
-    const usersFound = mapResultToObjects(query);
 
     if (usersFound.length > 0) {
       for (const user of usersFound) {
-        if (user.email === data.email) {
+        if (user.email === email) {
           return { success: false, error: AUTH_CODES.EMAIL_USED };
         }
-        if (user.phone === data.phone) {
+        if (user.phone === phone) {
           return { success: false, error: AUTH_CODES.PHONE_USED };
         }
       }
     }
 
-    db.run(
+    await runQuery(
       "INSERT INTO user(name, last_name, email, phone, password, img, role_id, status_id) VALUES(?, ?, ?, ?, ?, ?, ?, ?)",
-      [
-        data.name,
-        data.last_name,
-        data.email,
-        data.phone,
-        hashedPassword,
-        null,
-        2,
-        1,
-      ],
+      [name, last_name, email, phone, hashedPassword, null, 2, 1],
     );
 
-    saveDB(db);
     return { success: true, result: AUTH_CODES.ADD_USER };
   } catch (error) {
-    console.error("Error inserting user:", error);
+    console.error("❌ Error inserting user:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Users
-async function getUsers() {
+async function getUsers(limit, offset) {
   try {
-    const db = await getDB();
-    const query = db.exec(
-      "SELECT u.id, u.name, u.last_name, u.email, u.phone, u.img, r.description AS role, s.description AS status, u.created_at, u.deleted_at FROM user AS u INNER JOIN role AS r ON u.role_id = r.id INNER JOIN status AS s ON u.status_id = s.id;",
+    const users = await queryAll(
+      `
+      SELECT 
+        u.id, 
+        u.name, 
+        u.last_name,
+        u.email, 
+        u.phone, 
+        u.img, 
+        r.description AS role,
+        s.description AS status, 
+        u.created_at, 
+        u.deleted_at
+      FROM user u
+      INNER JOIN role AS r ON u.role_id = r.id 
+      INNER JOIN status AS s ON u.status_id = s.id
+      ORDER BY u.created_at ASC
+      LIMIT ? OFFSET ?;
+    `,
+      [limit, offset],
     );
 
-    if (query.length === 0) {
+    const totalRows = await queryOne(`SELECT COUNT(*) as total FROM user;`);
+
+    if (users.length === 0) {
       return { success: true, result: [] };
     }
 
-    const users = mapResultToObjects(query);
-
-    return { success: true, result: users };
+    return { success: true, result: users, totalCount: totalRows };
   } catch (error) {
-    console.error("Error getting users:", error);
+    console.error("❌ Error getting users:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Delete User
-async function deleteUser(data) {
+async function deleteUser(id) {
   try {
-    const db = await getDB();
-
     // Search User
-    const query = db.exec(
+    const users = await queryOne(
       "SELECT id, role_id, status_id FROM user WHERE id = ?",
-      [data],
+      [id],
     );
 
-    const users = mapResultToObjects(query);
-    const userFound = users[0];
-
     // User?
-    if (!userFound) {
+    if (!users) {
       return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Role?
-    if (userFound.role_id === 1) {
+    if (users.role_id === 1) {
       return { success: false, error: AUTH_CODES.UNAUTHORIZED };
     }
 
     // Status?
-    if (userFound.status_id === 0) {
+    if (users.status_id === 0) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
-    db.run(
+    await runQuery(
       "UPDATE user SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
-      [data],
+      [id],
     );
 
-    saveDB(db);
     return { success: true, result: AUTH_CODES.DELETE_USER };
   } catch (error) {
-    console.error("Error deleting user:", error);
+    console.error("❌ Error deleting user:", error);
     return { success: false, error: error.message };
   }
 }
@@ -115,55 +121,49 @@ async function deleteUser(data) {
 // Edit User
 async function editUser(data) {
   try {
-    const db = await getDB();
+    const { id, name, last_name, email, phone } = data;
 
     // Search User
-    const query = db.exec(
+    const user = await queryOne(
       "SELECT id, email, role_id, status_id FROM user WHERE id = ?",
-      [data.id],
+      [id],
     );
 
-    const user = mapResultToObjects(query);
-    const userFound = user[0];
-
     // User?
-    if (!userFound) {
+    if (!user) {
       return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Status?
-    if (userFound.status_id === 0) {
+    if (user.status_id === 0) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
     // Search Users
-    const users = db.exec(
-      "SELECT email, phone FROM user WHERE (email = ? OR phone = ?) AND deleted_at IS NULL AND id != ?",
-      [data.email, data.phone, data.id],
+    const users = await queryAll(
+      "SELECT email, phone FROM user WHERE (LOWER(email) = LOWER(?) OR phone = ?) AND deleted_at IS NULL AND id != ?",
+      [email, phone, id],
     );
 
-    const usersFound = mapResultToObjects(users);
-
-    if (usersFound.length > 0) {
-      for (const user of usersFound) {
-        if (user.email === data.email) {
+    if (users.length > 0) {
+      for (const user of users) {
+        if (user.email === email) {
           return { success: false, error: AUTH_CODES.EMAIL_USED };
         }
-        if (user.phone === data.phone) {
+        if (user.phone === phone) {
           return { success: false, error: AUTH_CODES.PHONE_USED };
         }
       }
     }
 
-    db.run(
+    await runQuery(
       "UPDATE user SET name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?",
-      [data.name, data.last_name, data.email, data.phone, data.id],
+      [name, last_name, email, phone, id],
     );
 
-    saveDB(db);
     return { success: true, result: AUTH_CODES.EDIT_USER };
   } catch (error) {
-    console.error("Error editing user:", error);
+    console.error("❌ Error editing user:", error);
     return { success: false, error: error.message };
   }
 }
@@ -171,45 +171,92 @@ async function editUser(data) {
 // Change Password
 async function changePassword(data) {
   try {
-    const db = await getDB();
-    const hashedPassword = await bcrypt.hash(data.newPass, 10);
+    const { id, currentPass, newPass } = data;
+    const hashedPassword = await bcrypt.hash(newPass, 10);
 
     // Search User
-    const query = db.exec(
+    const user = await queryOne(
       "SELECT id, password, role_id, status_id FROM user WHERE id = ?",
-      [data.id],
+      [id],
     );
 
-    const user = mapResultToObjects(query);
-    const userFound = user[0];
-
     // User?
-    if (!userFound) {
+    if (!user) {
       return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
     }
 
     // Status?
-    if (userFound.status_id === 0) {
+    if (user.status_id === 0) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
     // Password Valid
-    const isValid = await bcrypt.compare(data.currentPass, userFound.password);
+    const isValid = await bcrypt.compare(currentPass, user.password);
 
     if (!isValid) {
       return { success: false, error: AUTH_CODES.INCORRECT_PASSWORD };
     }
 
     // Update Password
-    db.run("UPDATE user SET password = ? WHERE id = ?", [
+    await runQuery("UPDATE user SET password = ? WHERE id = ?", [
       hashedPassword,
-      data.id,
+      id,
     ]);
 
-    saveDB(db);
     return { success: true, result: AUTH_CODES.CHANGE_PASS };
   } catch (error) {
-    console.error("Error change password user:", error);
+    console.error("❌ Error change password user:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Filter Search Table Users
+async function getFilterSearchUsers(data) {
+  try {
+    const { column, text } = data;
+    const allowedColumns = [
+      "name",
+      "last_name",
+      "email",
+      "phone",
+      "role",
+      "status",
+      "created_at",
+      "deleted_at",
+    ];
+
+    let targetColumn = allowedColumns.includes(column) ? column : "name";
+
+    if (targetColumn === "status") targetColumn = "s.description";
+    else if (targetColumn === "role") targetColumn = "r.description";
+    else targetColumn = `u.${targetColumn}`;
+
+    const sql = `
+      SELECT 
+        u.id, 
+        u.name, 
+        u.last_name,
+        u.email, 
+        u.phone, 
+        u.img, 
+        r.description AS role,
+        s.description AS status, 
+        u.created_at, 
+        u.deleted_at
+      FROM user u
+      INNER JOIN role AS r ON u.role_id = r.id 
+      INNER JOIN status AS s ON u.status_id = s.id
+      WHERE ${targetColumn} LIKE ? 
+      ORDER BY u.created_at ASC
+    `;
+
+    const searchTerm = `%${text}%`;
+
+    const rows = await queryAll(sql, [searchTerm]);
+
+    return { success: true, result: rows };
+  } catch (error) {
+    console.error("❌ Error getting filter search table users:", error);
     return { success: false, error: error.message };
   }
 }
@@ -220,4 +267,5 @@ module.exports = {
   deleteUser,
   editUser,
   changePassword,
+  getFilterSearchUsers,
 };

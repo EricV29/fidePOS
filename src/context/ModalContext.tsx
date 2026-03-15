@@ -5,6 +5,8 @@ import { useTranslation } from "react-i18next";
 import AUTH_CODES from "../../constants/authCodes.json";
 import ReactDOM from "react-dom";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
+import ModalQuestionAlert from "@modals/ModalQuestionAlert";
+import type { Option } from "@typesm/products";
 
 interface ModalContextType {
   modal: React.ReactNode | null;
@@ -16,6 +18,11 @@ interface ModalContextType {
   triggerWarningAlert: (
     text: string,
     onConfirm: () => Promise<void> | void,
+  ) => void;
+  triggerQuestionAlert: (
+    mainText: string,
+    motivos: Option[],
+    onConfirm: (selectedId: string) => void,
   ) => void;
 }
 
@@ -151,6 +158,130 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_not_customer_select",
       },
+      [AUTH_CODES.CATEGORY_USED]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_category_used",
+      },
+      [AUTH_CODES.ADD_CATEGORY]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_add_category",
+      },
+      [AUTH_CODES.PRODUCT_INACTIVE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_product_inactive",
+      },
+      [AUTH_CODES.DELETE_PRODUCT]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_delete_product",
+      },
+      [AUTH_CODES.NOT_CATEGORY_SELECT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_category_select",
+      },
+      [AUTH_CODES.CODE_SKU_USED]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_code_sku_used",
+      },
+      [AUTH_CODES.ADD_PRODUCT]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_add_product",
+      },
+      [AUTH_CODES.PRODUCT_NOT_FOUND]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_product_not_found",
+      },
+      [AUTH_CODES.EDIT_PRODUCT]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_edit_product",
+      },
+      [AUTH_CODES.USED_PRODUCT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_used_product",
+      },
+      [AUTH_CODES.EMPTY_FILE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_empty_file",
+      },
+      [AUTH_CODES.MISSING_COLUMNS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_missing_columns",
+      },
+      [AUTH_CODES.EMPTY_PRODUCTS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_empty_products",
+      },
+      [AUTH_CODES.CODE_SKU_USED_IMPORT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_code_sku_used_import",
+      },
+      [AUTH_CODES.NOT_SELECTED_FORMAT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_selected_format",
+      },
+      [AUTH_CODES.NOT_SELECTED_STATISTICS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_selected_statistics",
+      },
+      [AUTH_CODES.NOT_CHANGES]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_changes",
+      },
+      [AUTH_CODES.CUSTOMER_NOT_FOUND]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_customer_not_found",
+      },
+      [AUTH_CODES.INACTIVE_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_inactive_customer",
+      },
+      [AUTH_CODES.EDIT_CUSTOMER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_edit_customer",
+      },
+      [AUTH_CODES.DEBT_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_debt_customer",
+      },
+      [AUTH_CODES.DELETE_CUSTOMER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_delete_customer",
+      },
+      [AUTH_CODES.NOT_SELECTED_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_selected_customer",
+      },
+      [AUTH_CODES.ACTIVE_CUSTOMER]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_active_customer",
+      },
+      [AUTH_CODES.RESTORE_CUSTOMER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_restore_customer",
+      },
+      [AUTH_CODES.CATEGORY_NOT_FOUND]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_category_not_found",
+      },
+      [AUTH_CODES.INACTIVE_CATEGORY]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_inactive_category",
+      },
+      [AUTH_CODES.CATEGORY_NAME_USED]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_category_name_used",
+      },
+      [AUTH_CODES.EDIT_CATEGORY]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_edit_category",
+      },
+      [AUTH_CODES.CATEGORY_HAVE_PRODUCTS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_category_have_products",
+      },
+      [AUTH_CODES.DELETE_CATEGORY]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_deleted_category",
+      },
     };
 
     const config = alertConfig[code];
@@ -167,9 +298,33 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const triggerQuestionAlert = (
+    mainText: string,
+    options: Option[],
+    onConfirm: (selectedId: string) => void,
+  ) => {
+    setAlert(
+      <ModalQuestionAlert
+        mainText={mainText}
+        options={options}
+        onConfirm={(id) => {
+          onConfirm(id);
+          setAlert(null);
+        }}
+        onClose={() => setAlert(null)}
+      />,
+    );
+  };
+
   return (
     <ModalContext.Provider
-      value={{ modal, setModal, triggerResponseAlert, triggerWarningAlert }}
+      value={{
+        modal,
+        setModal,
+        triggerResponseAlert,
+        triggerWarningAlert,
+        triggerQuestionAlert,
+      }}
     >
       {children}
       {alert &&

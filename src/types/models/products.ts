@@ -10,6 +10,7 @@ export type Products = {
   stock: number;
   status: string;
   created_at: string;
+  deleted_at: string;
   actions?: {
     view?: boolean;
     delete?: boolean;
@@ -38,3 +39,24 @@ export type ProductsSale = {
     add?: boolean;
   };
 };
+
+export type Option = {
+  id: string;
+  label: string;
+  description: string;
+};
+
+type ExcelCellValue = string | number | boolean | null | undefined;
+export type ExcelRow = ExcelCellValue[];
+
+export interface ExcelProductRow {
+  product: string;
+  category: string;
+  cost_price: number | string;
+  unit_price: number | string;
+  stock?: number | string;
+  code_sku?: number | string;
+  [key: string]: ExcelCellValue;
+}
+
+export type dataExportProducts = string | number | boolean | null | undefined;
