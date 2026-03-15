@@ -1,13 +1,8 @@
-const {
-  getDB,
-  saveDB,
-  mapResultToObjects,
-  queryAll,
-  queryOne,
-  runQuery,
-} = require("../database.cjs");
+const { queryAll, queryOne, runQuery } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
+
+//* CREATE ----------
 
 // Add User
 async function addUser(data) {
@@ -43,6 +38,8 @@ async function addUser(data) {
     return { success: false, error: error.message };
   }
 }
+
+//* READ ----------
 
 // Get Users
 async function getUsers(limit, offset) {
@@ -82,41 +79,58 @@ async function getUsers(limit, offset) {
   }
 }
 
-// Delete User
-async function deleteUser(id) {
+// Get Filter Search Table Users
+async function getFilterSearchUsers(data) {
   try {
-    // Search User
-    const users = await queryOne(
-      "SELECT id, role_id, status_id FROM user WHERE id = ?",
-      [id],
-    );
+    const { column, text } = data;
+    const allowedColumns = [
+      "name",
+      "last_name",
+      "email",
+      "phone",
+      "role",
+      "status",
+      "created_at",
+      "deleted_at",
+    ];
 
-    // User?
-    if (!users) {
-      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
-    }
+    let targetColumn = allowedColumns.includes(column) ? column : "name";
 
-    // Role?
-    if (users.role_id === 1) {
-      return { success: false, error: AUTH_CODES.UNAUTHORIZED };
-    }
+    if (targetColumn === "status") targetColumn = "s.description";
+    else if (targetColumn === "role") targetColumn = "r.description";
+    else targetColumn = `u.${targetColumn}`;
 
-    // Status?
-    if (users.status_id === 0) {
-      return { success: false, error: AUTH_CODES.INACTIVE_USER };
-    }
+    const sql = `
+      SELECT 
+        u.id, 
+        u.name, 
+        u.last_name,
+        u.email, 
+        u.phone, 
+        u.img, 
+        r.description AS role,
+        s.description AS status, 
+        u.created_at, 
+        u.deleted_at
+      FROM user u
+      INNER JOIN role AS r ON u.role_id = r.id 
+      INNER JOIN status AS s ON u.status_id = s.id
+      WHERE ${targetColumn} LIKE ? 
+      ORDER BY u.created_at ASC
+    `;
 
-    await runQuery(
-      "UPDATE user SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
-      [id],
-    );
+    const searchTerm = `%${text}%`;
 
-    return { success: true, result: AUTH_CODES.DELETE_USER };
+    const rows = await queryAll(sql, [searchTerm]);
+
+    return { success: true, result: rows };
   } catch (error) {
-    console.error("❌ Error deleting user:", error);
+    console.error("❌ Error getting filter search table users:", error);
     return { success: false, error: error.message };
   }
 }
+
+//* UPDATE ----------
 
 // Edit User
 async function editUser(data) {
@@ -210,53 +224,40 @@ async function changePassword(data) {
   }
 }
 
-// Get Filter Search Table Users
-async function getFilterSearchUsers(data) {
+//* DELETE ----------
+
+// Delete User
+async function deleteUser(id) {
   try {
-    const { column, text } = data;
-    const allowedColumns = [
-      "name",
-      "last_name",
-      "email",
-      "phone",
-      "role",
-      "status",
-      "created_at",
-      "deleted_at",
-    ];
+    // Search User
+    const users = await queryOne(
+      "SELECT id, role_id, status_id FROM user WHERE id = ?",
+      [id],
+    );
 
-    let targetColumn = allowedColumns.includes(column) ? column : "name";
+    // User?
+    if (!users) {
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
+    }
 
-    if (targetColumn === "status") targetColumn = "s.description";
-    else if (targetColumn === "role") targetColumn = "r.description";
-    else targetColumn = `u.${targetColumn}`;
+    // Role?
+    if (users.role_id === 1) {
+      return { success: false, error: AUTH_CODES.UNAUTHORIZED };
+    }
 
-    const sql = `
-      SELECT 
-        u.id, 
-        u.name, 
-        u.last_name,
-        u.email, 
-        u.phone, 
-        u.img, 
-        r.description AS role,
-        s.description AS status, 
-        u.created_at, 
-        u.deleted_at
-      FROM user u
-      INNER JOIN role AS r ON u.role_id = r.id 
-      INNER JOIN status AS s ON u.status_id = s.id
-      WHERE ${targetColumn} LIKE ? 
-      ORDER BY u.created_at ASC
-    `;
+    // Status?
+    if (users.status_id === 0) {
+      return { success: false, error: AUTH_CODES.INACTIVE_USER };
+    }
 
-    const searchTerm = `%${text}%`;
+    await runQuery(
+      "UPDATE user SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
+      [id],
+    );
 
-    const rows = await queryAll(sql, [searchTerm]);
-
-    return { success: true, result: rows };
+    return { success: true, result: AUTH_CODES.DELETE_USER };
   } catch (error) {
-    console.error("❌ Error getting filter search table users:", error);
+    console.error("❌ Error deleting user:", error);
     return { success: false, error: error.message };
   }
 }

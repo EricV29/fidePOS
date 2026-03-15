@@ -1,41 +1,50 @@
-const { getDB, saveDB, mapResultToObjects } = require("../database.cjs");
-const bcrypt = require("bcrypt");
+const {
+  getDB,
+  saveDB,
+  mapResultToObjects,
+  queryAll,
+  queryOne,
+  runQuery,
+} = require("../database.cjs");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 const { success } = require("zod");
-const { CircleStop } = require("lucide-react");
+
+//* CREATE ----------
+//* READ ----------
 
 // Get Top 5 Sales by Category
-async function getTopSalesCategory(startDate, endDate) {
+async function getTopSalesCategory(filters) {
   try {
-    const db = await getDB();
-    endDate = endDate.trim() !== "" ? endDate : startDate;
-    const dateCondition = "date(s.created_at) BETWEEN ? AND ?";
-    const params = [startDate, endDate];
-    const sql = `
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+
+    const topSales = await queryAll(
+      `
         SELECT c.name AS category, sum(sd.quantity) AS sales 
         FROM category c
         INNER JOIN product p ON p.category_id = c.id
         INNER JOIN sale_detail sd ON p.id = sd.product_id
         INNER JOIN sale s ON sd.sale_id = s.id 
-        WHERE sd.status_id = 4 AND ${dateCondition}
+        WHERE sd.status_id = 4 AND date(s.created_at) BETWEEN ? AND ?
         GROUP BY c.name
         ORDER BY sales DESC
-        LIMIT 5;
-    `;
+        LIMIT 5;`,
+      [start, end],
+    );
 
-    const query = db.exec(sql, params);
-
-    if (query.length === 0) {
+    if (topSales.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: topSales };
   } catch (error) {
-    console.error("Error getting top 5 sales category:", error);
+    console.error("❌ Error getting top 5 sales category:", error);
     return { success: false, error: error.message };
   }
 }
+
+//* UPDATE ----------
+//* DELETE ----------
 
 // Get Revenue
 async function getRevenue(filters) {
