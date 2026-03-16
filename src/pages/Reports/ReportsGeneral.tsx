@@ -104,8 +104,8 @@ const ReportsGeneral = () => {
       if (reportsGeneralData?.salesNumberAmount) {
         const salesNumberAmountData =
           reportsGeneralData.salesNumberAmount.result;
-        setSalesNumberCard(salesNumberAmountData.dataNumber[0].salesNumber);
-        setSalesAmountCard(salesNumberAmountData.dataAmount[0].salesAmount);
+        setSalesNumberCard(salesNumberAmountData.salesNumber[0].salesNumber);
+        setSalesAmountCard(salesNumberAmountData.salesAmount[0].salesAmount);
       }
 
       if (reportsGeneralData?.salesPendingAmount) {
