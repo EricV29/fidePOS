@@ -62,8 +62,8 @@ export default function History() {
 
     if (historyData.salesNumber) {
       const salesNumber = historyData.salesNumber.result;
-      setSalesNumber(salesNumber.dataNumber[0].salesNumber);
-      setSalesAmount(salesNumber.dataAmount[0].salesAmount);
+      setSalesNumber(salesNumber.salesNumber[0].salesNumber);
+      setSalesAmount(salesNumber.salesAmount[0].salesAmount);
     }
 
     if (historyData.pendingSalesAmount) {
@@ -83,6 +83,7 @@ export default function History() {
 
     if (historyData?.historySales) {
       const historySalesData = historyData.historySales.result;
+
       setHistorySales(historySalesData);
       setTotalRows(historyData.historySales.totalCount);
     }
