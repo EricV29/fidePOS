@@ -6,7 +6,7 @@ import CustomSelect from "@components/Select";
 import { useTranslation, Trans } from "react-i18next";
 import { useState } from "react";
 import AUTH_CODES from "../../../constants/authCodes.json";
-import { exportReportFile } from "@/utility/exportReportFile";
+import { exportReportFile } from "@utility/exportReportFile";
 import type { dataExportProducts } from "@typesm/products";
 
 interface Data {
@@ -33,7 +33,7 @@ export function ModalExport({ page, data }: Data) {
       return;
     }
 
-    exportReportFile(selectedFormatId, data, page, isTrue);
+    await exportReportFile(selectedFormatId, data, page, isTrue);
   };
 
   const optionsExport = [
