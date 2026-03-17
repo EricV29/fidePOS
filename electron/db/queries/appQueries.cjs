@@ -51,7 +51,7 @@ async function addAdmin(data) {
       ],
     );
 
-    saveDB(db);
+    await saveDB(db);
     return { success: true };
   } catch (error) {
     console.error("Error inserting admin:", error);
@@ -141,7 +141,7 @@ async function insertNewPassword(email, newPass) {
     const rowsModified = db.getRowsModified();
 
     if (rowsModified > 0) {
-      saveDB(db);
+      await saveDB(db);
       return { success: true };
     } else {
       return { success: false, error: "Database could not be updated" };
