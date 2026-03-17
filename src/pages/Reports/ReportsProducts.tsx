@@ -95,6 +95,8 @@ const ReportsProducts = () => {
       if (reportsProductsData?.productsByCategory) {
         const productsByCategoryChartData =
           reportsProductsData.productsByCategory.result;
+        console.log();
+
         setProductsByCategoryChart(addRandomFill(productsByCategoryChartData));
       }
 

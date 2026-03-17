@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ExportIcon from "@icons/ExportIcon";
 import UserPlusIcon from "@icons/UserPlusIcon";
@@ -12,13 +12,13 @@ import { ModalNewPayment } from "@modals/ModalNewPayment";
 import { useTranslation } from "react-i18next";
 import type { dataExportCustomers } from "@typesm/customers";
 
-interface CustomersProps {}
-
 interface ExportableChild {
   createReport: (selectedId: string) => Promise<dataExportCustomers[][]>;
+  loadCustomerGeneral: () => Promise<void>;
+  loadCustomersPayments: () => Promise<void>;
 }
 
-const Customers: React.FC<CustomersProps> = ({}) => {
+const Customers = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -85,14 +85,32 @@ const Customers: React.FC<CustomersProps> = ({}) => {
             <button
               className="bnormal"
               onClick={() =>
-                setModal(<ModalAddCustomer onSuccess={() => {}} />)
+                setModal(
+                  <ModalAddCustomer
+                    onSuccess={async () => {
+                      if (childRef.current) {
+                        await childRef.current.loadCustomerGeneral();
+                      }
+                    }}
+                  />,
+                )
               }
             >
               <UserPlusIcon /> <p>{t("buttons.btn_add_customer")}</p>
             </button>
             <button
               className="bnormal"
-              onClick={() => setModal(<ModalNewPayment onSuccess={() => {}} />)}
+              onClick={() =>
+                setModal(
+                  <ModalNewPayment
+                    onSuccess={async () => {
+                      if (childRef.current) {
+                        await childRef.current.loadCustomersPayments();
+                      }
+                    }}
+                  />,
+                )
+              }
             >
               <PayIcon /> <p>{t("buttons.btn_add_payment")}</p>
             </button>

@@ -7,13 +7,13 @@ import { Outlet } from "react-router-dom";
 import { useModal } from "@context/ModalContext";
 import { ModalExport } from "@modals/ModalExport";
 import { useTranslation } from "react-i18next";
-import type { dataExportReport } from "@typesm/global";
+import type { ExportReportValue } from "@typesm/global";
 interface MyContext {
   installDate: string;
 }
 
 interface ExportableChild {
-  createReport: () => Promise<dataExportReport[][]>;
+  createReport: () => Promise<ExportReportValue[][]>;
 }
 
 const Reports = () => {

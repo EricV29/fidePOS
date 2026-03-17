@@ -15,32 +15,6 @@ type Props = {
   idSale: number;
 };
 
-//* Example data sale
-const dataSaleDB = [
-  {
-    sale: 1,
-    products: [
-      {
-        product: "Carrito",
-        unit_price: 100,
-        quantity: 3,
-        code_sku: "1294",
-        subtotal: 300,
-      },
-      {
-        product: "Pistola",
-        unit_price: 50,
-        quantity: 2,
-        code_sku: "6341",
-        subtotal: 100,
-      },
-    ],
-    customer: "Eric",
-    subtotal: 400,
-    discount: 40,
-  },
-];
-
 export function ModalSales({ idSale }: Props) {
   const { setModal } = useModal();
   const { t, i18n } = useTranslation();

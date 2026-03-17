@@ -37,7 +37,6 @@ export default function History() {
       description: t("modalQuestionAlert.text_total_data"),
     },
   ];
-  const [salesCardNumber, setSalesCardNumber] = useState(0);
   const [pendingSalesCardAmount, setPendingSalesCardAmount] = useState(0);
   const [salesNumber, setSalesNumber] = useState(Number);
   const [salesAmount, setSalesAmount] = useState(Number);
@@ -62,8 +61,8 @@ export default function History() {
 
     if (historyData.salesNumber) {
       const salesNumber = historyData.salesNumber.result;
-      setSalesNumber(salesNumber.dataNumber[0].salesNumber);
-      setSalesAmount(salesNumber.dataAmount[0].salesAmount);
+      setSalesNumber(salesNumber.salesNumber[0].salesNumber);
+      setSalesAmount(salesNumber.salesAmount[0].salesAmount);
     }
 
     if (historyData.pendingSalesAmount) {
@@ -83,6 +82,7 @@ export default function History() {
 
     if (historyData?.historySales) {
       const historySalesData = historyData.historySales.result;
+
       setHistorySales(historySalesData);
       setTotalRows(historyData.historySales.totalCount);
     }
@@ -124,7 +124,7 @@ export default function History() {
       // Create Data Cards
       const statsData = [
         [t("exportReport.history_page.title")],
-        [t("exportReport.history_page.sales"), salesCardNumber],
+        [t("exportReport.history_page.sales"), salesNumber],
         [
           t("exportReport.history_page.pending_sales_amount"),
           pendingSalesCardAmount,
@@ -188,7 +188,7 @@ export default function History() {
       historySales,
       paidVSPendingNumberCard,
       pendingSalesCardAmount,
-      salesCardNumber,
+      salesNumber,
       setLoading,
       t,
     ],

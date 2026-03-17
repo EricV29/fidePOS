@@ -1,167 +1,12 @@
-const { getDB, saveDB, mapResultToObjects } = require("../database.cjs");
-const bcrypt = require("bcrypt");
+const { getDB, saveDB, queryAll, queryOne } = require("../database.cjs");
 const AUTH_CODES = require("../../../constants/authCodes.json");
-const { success } = require("zod");
-const { CircleStop } = require("lucide-react");
 
-// Get Top 5 Sales by Category
-async function getTopSalesCategory(startDate, endDate) {
-  try {
-    const db = await getDB();
-    endDate = endDate.trim() !== "" ? endDate : startDate;
-    const dateCondition = "date(s.created_at) BETWEEN ? AND ?";
-    const params = [startDate, endDate];
-    const sql = `
-        SELECT c.name AS category, sum(sd.quantity) AS sales 
-        FROM category c
-        INNER JOIN product p ON p.category_id = c.id
-        INNER JOIN sale_detail sd ON p.id = sd.product_id
-        INNER JOIN sale s ON sd.sale_id = s.id 
-        WHERE sd.status_id = 4 AND ${dateCondition}
-        GROUP BY c.name
-        ORDER BY sales DESC
-        LIMIT 5;
-    `;
-
-    const query = db.exec(sql, params);
-
-    if (query.length === 0) {
-      return { success: true, result: [] };
-    }
-
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
-  } catch (error) {
-    console.error("Error getting top 5 sales category:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Get Revenue
-async function getRevenue(filters) {
-  const db = await getDB();
-
-  try {
-    const start = filters?.startDate || "";
-    const end = filters?.endDate || "";
-    let sql = "";
-    let whereClause = "";
-
-    if (filters) {
-      whereClause = `WHERE sd.status_id = 4 AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
-
-      sql = `
-      SELECT 
-        SUM((sd.subt_price - sd.cost_price) * sd.quantity) AS revenue
-      FROM sale_detail sd
-      INNER JOIN sale s ON sd.sale_id = s.id 
-      ${whereClause};
-      `;
-    } else {
-      sql = `SELECT * FROM v_revenue`;
-    }
-
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
-      return { success: true, result: [] };
-    }
-
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
-  } catch (error) {
-    console.error("Error getting revenue:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Get Recent Sales
-async function getRecentSales() {
-  try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_recent_sales_products`;
-
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
-      return { success: true, result: [] };
-    }
-
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
-  } catch (error) {
-    console.error("Error getting recent sales:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Get Sale Data
-async function getSaleData(idSale) {
-  try {
-    const db = await getDB();
-    const params = [idSale];
-    const sqlSaleGeneral = `
-      SELECT s.id, s.sale_num, st.description AS status, s.created_at, c.name AS customer, s.total_amount, s.discount, s.paid_amount   
-      FROM sale s
-      INNER JOIN status st ON s.status_id = st.id
-      LEFT JOIN customer c ON s.customer_id = c.id 
-      WHERE s.id = ?;
-    `;
-
-    const querySaleGeneral = db.exec(sqlSaleGeneral, params);
-
-    if (querySaleGeneral.length === 0) {
-      return { success: true, result: [] };
-    }
-
-    const sqlSaleDetail = `
-      SELECT sd.id, p.name, sd.quantity, p.code_sku, sd.cost_price AS unit_price, (sd.quantity * sd.cost_price) AS subtotal     
-      FROM sale_detail sd 
-      INNER JOIN product p ON sd.product_id = p.id 
-      WHERE sd.sale_id = ?;
-    `;
-
-    const querySaleDetail = db.exec(sqlSaleDetail, params);
-
-    if (querySaleDetail.length === 0) {
-      return { success: true, result: [] };
-    }
-
-    const dataSaleGeneral = mapResultToObjects(querySaleGeneral);
-    const dataSaleDetail = mapResultToObjects(querySaleDetail);
-    const data = { ...dataSaleGeneral[0], products: dataSaleDetail };
-
-    return { success: true, result: data };
-  } catch (error) {
-    console.error("Error getting data sale:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Get Next Number Sale
-async function getNextNumberSale() {
-  try {
-    const db = await getDB();
-    const sql = `SELECT COALESCE(MAX(sale_num), 0) + 1 AS next_sale FROM sale;`;
-
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
-      return { success: true, result: [] };
-    }
-
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
-  } catch (error) {
-    console.error("Error getting next number sale:", error);
-    return { success: false, error: error.message };
-  }
-}
+//* CREATE ----------
 
 // Create New Sale
 async function createNewSale(data) {
-  const db = await getDB();
   try {
+    const db = await getDB();
     const {
       nextNumberSale,
       customerId,
@@ -226,7 +71,7 @@ async function createNewSale(data) {
       const subtPrice = product.quantity * product.unit_price;
       const statusProduct = product.credit ? 5 : 4;
 
-      const querySaleDeatil = db.exec(
+      db.exec(
         "INSERT INTO sale_detail (sale_id, product_id, quantity, cost_price, subt_price, status_id) VALUES (?, ?, ?, ?, ?, ?);",
         [
           lastId,
@@ -239,10 +84,10 @@ async function createNewSale(data) {
       );
 
       // Update stock of product
-      const queryUpdateStock = db.exec(
-        "UPDATE product SET stock = stock - ? WHERE id = ?;",
-        [product.quantity, product.id],
-      );
+      db.exec("UPDATE product SET stock = stock - ? WHERE id = ?;", [
+        product.quantity,
+        product.id,
+      ]);
 
       //! Update status of product
       // const queryUpdateStatusProduct = db.exec(
@@ -253,16 +98,14 @@ async function createNewSale(data) {
 
     if (credit) {
       // Update status customer
-      const queryUpdateCustomer = db.exec(
-        "UPDATE customer SET status_id = 3 WHERE id = ?;",
-        [idCustomer],
-      );
+      db.exec("UPDATE customer SET status_id = 3 WHERE id = ?;", [idCustomer]);
 
       // Insert pauyment
-      const queryPayment = db.exec(
-        "INSERT INTO payment(amount, note, sale_id) VALUES(?, ?, ?);",
-        [paidAmount, "", lastId],
-      );
+      db.exec("INSERT INTO payment(amount, note, sale_id) VALUES(?, ?, ?);", [
+        paidAmount,
+        "",
+        lastId,
+      ]);
     }
 
     db.exec("COMMIT;");
@@ -275,60 +118,87 @@ async function createNewSale(data) {
   }
 }
 
-// Get Sales Number
-async function getSalesNumberAmount(filters) {
-  const db = await getDB();
-
+// Add Payment Debt
+async function addPaymentDebt(data) {
   try {
-    const start = filters?.startDate || "";
-    const end = filters?.endDate || "";
-    let sqlNumber = "";
-    let sqlAmount = "";
-    let whereClauseNumber = "";
-    let whereClauseAmount = "";
+    const db = await getDB();
+    const { idSale, payment_amount, note } = data;
 
-    if (filters) {
-      whereClauseNumber = `WHERE status_id = 4 AND created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
-      whereClauseAmount = `WHERE sd.status_id = 4 AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+    // Search Debt Sale
+    const debtFound = await queryAll(
+      "SELECT total_amount, paid_amount FROM sale WHERE id = ? AND status_id = 5;",
+      [idSale],
+    );
 
-      sqlNumber = `
-      SELECT 
-        COUNT(id) AS salesNumber
-      FROM sale
-      ${whereClauseNumber};`;
-
-      sqlAmount = `
-      SELECT 
-        SUM(sd.subt_price) salesAmount
-      FROM sale_detail sd
-      INNER JOIN sale s ON sd.sale_id = s.id
-      ${whereClauseAmount};`;
-    } else {
-      sqlNumber = `SELECT * FROM v_sales_number;`;
-      sqlAmount = `SELECT * FROM v_sales_amount;`;
+    if (debtFound.length === 0) {
+      return { success: false, error: AUTH_CODES.DEBT_NOT_FOUND };
     }
 
-    const queryNumber = db.exec(sqlNumber);
-    const queryAmount = db.exec(sqlAmount);
+    db.run("BEGIN TRANSACTION;");
 
-    if (queryNumber.length === 0 || queryAmount.length === 0) {
-      return { success: true, result: [] };
+    try {
+      // Insert New Payment
+      db.run("INSERT INTO payment(amount, note, sale_id) VALUES(?, ?, ?);", [
+        payment_amount,
+        note,
+        idSale,
+      ]);
+
+      // Update Debt Sale Amount and Status
+      db.run(
+        "UPDATE sale SET paid_amount = paid_amount + ?, status_id = CASE WHEN (paid_amount + ?) >= total_amount THEN 4 ELSE 5 END WHERE id = ?;",
+        [payment_amount, payment_amount, idSale],
+      );
+
+      db.run("COMMIT;");
+    } catch (dbError) {
+      db.run("ROLLBACK;");
+      throw dbError;
     }
 
-    const dataNumber = mapResultToObjects(queryNumber);
-    const dataAmount = mapResultToObjects(queryAmount);
-
-    return { success: true, result: { dataNumber, dataAmount } };
+    await saveDB(db);
+    return { success: true, result: AUTH_CODES.DEBT_PAYMENT_SUCCESS };
   } catch (error) {
-    console.error("Error getting sales number:", error);
+    console.error("❌ Error inserting payment debt:", error);
     return { success: false, error: error.message };
   }
 }
 
-// Get Pending Sales Amount
-async function getPendingSalesAmount(filters) {
-  const db = await getDB();
+//* READ ----------
 
+// Get Top 5 Sales by Category
+async function getTopSalesCategory(filters) {
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+
+    const topSales = await queryAll(
+      `
+        SELECT c.name AS category, sum(sd.quantity) AS sales 
+        FROM category c
+        INNER JOIN product p ON p.category_id = c.id
+        INNER JOIN sale_detail sd ON p.id = sd.product_id
+        INNER JOIN sale s ON sd.sale_id = s.id 
+        WHERE sd.status_id = 4 AND date(s.created_at) BETWEEN ? AND ?
+        GROUP BY c.name
+        ORDER BY sales DESC
+        LIMIT 5;`,
+      [start, end],
+    );
+
+    if (topSales.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    return { success: true, result: topSales };
+  } catch (error) {
+    console.error("❌ Error getting top 5 sales category:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Revenue
+async function getRevenue(filters) {
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
@@ -336,26 +206,179 @@ async function getPendingSalesAmount(filters) {
     let whereClause = "";
 
     if (filters) {
-      whereClause = `WHERE status_id = 5 AND created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+      whereClause = `WHERE sd.status_id = 4 AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
       sql = `
+      SELECT 
+        SUM((sd.subt_price - sd.cost_price) * sd.quantity) AS revenue
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id 
+      ${whereClause};
+      `;
+    } else {
+      sql = `SELECT * FROM v_revenue`;
+    }
+
+    const revenue = await queryAll(sql);
+
+    if (revenue.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    return { success: true, result: revenue };
+  } catch (error) {
+    console.error("❌ Error getting revenue:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Recent Sales
+async function getRecentSales() {
+  try {
+    const sql = `SELECT * FROM v_recent_sales_products`;
+
+    const recentSalesProducts = await queryAll(sql);
+
+    if (recentSalesProducts.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    return { success: true, result: recentSalesProducts };
+  } catch (error) {
+    console.error("Error getting recent sales:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Sale Data
+async function getSaleData(idSale) {
+  try {
+    const querySaleGeneral = await queryAll(
+      `
+      SELECT s.id, s.sale_num, st.description AS status, s.created_at, c.name AS customer, s.total_amount, s.discount, s.paid_amount   
+      FROM sale s
+      INNER JOIN status st ON s.status_id = st.id
+      LEFT JOIN customer c ON s.customer_id = c.id 
+      WHERE s.id = ?;
+    `,
+      [idSale],
+    );
+
+    if (querySaleGeneral.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const sqlSaleDetail = await queryAll(
+      `
+      SELECT sd.id, p.name, sd.quantity, p.code_sku, sd.cost_price AS unit_price, (sd.quantity * sd.cost_price) AS subtotal     
+      FROM sale_detail sd 
+      INNER JOIN product p ON sd.product_id = p.id 
+      WHERE sd.sale_id = ?;
+    `,
+      [idSale],
+    );
+
+    if (sqlSaleDetail.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    const data = { ...querySaleGeneral[0], products: sqlSaleDetail };
+
+    return { success: true, result: data };
+  } catch (error) {
+    console.error("❌ Error getting data sale:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Next Number Sale
+async function getNextNumberSale() {
+  try {
+    const nextSale = await queryOne(
+      `SELECT COALESCE(MAX(sale_num), 0) + 1 AS next_sale FROM sale;`,
+    );
+
+    if (nextSale.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    return { success: true, result: nextSale };
+  } catch (error) {
+    console.error("❌ Error getting next number sale:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Sales Number
+async function getSalesNumberAmount(filters) {
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let salesNumber = "";
+    let salesAmount = "";
+    let whereClauseNumber = "";
+    let whereClauseAmount = "";
+
+    if (filters) {
+      whereClauseNumber = `WHERE status_id = 4 AND created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+      whereClauseAmount = `WHERE sd.status_id = 4 AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      salesNumber = await queryAll(`
+      SELECT 
+        COUNT(id) AS salesNumber
+      FROM sale
+      ${whereClauseNumber};`);
+
+      salesAmount = await queryAll(`
+      SELECT 
+        SUM(sd.subt_price) salesAmount
+      FROM sale_detail sd
+      INNER JOIN sale s ON sd.sale_id = s.id
+      ${whereClauseAmount};`);
+    } else {
+      salesNumber = await queryAll(`SELECT * FROM v_sales_number;`);
+      salesAmount = await queryAll(`SELECT * FROM v_sales_amount;`);
+    }
+
+    if (salesNumber.length === 0 || salesAmount.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    return { success: true, result: { salesNumber, salesAmount } };
+  } catch (error) {
+    console.error("❌ Error getting sales number:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Get Pending Sales Amount
+async function getPendingSalesAmount(filters) {
+  try {
+    const start = filters?.startDate || "";
+    const end = filters?.endDate || "";
+    let pendingSalesAmount = "";
+    let whereClause = "";
+
+    if (filters) {
+      whereClause = `WHERE status_id = 5 AND created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
+
+      pendingSalesAmount = await queryAll(`
       SELECT 
         SUM(total_amount - paid_amount) AS pendingSalesAmount
       FROM sale
       ${whereClause};
-      `;
+      `);
     } else {
-      sql = `SELECT * FROM v_pending_sales_amount`;
+      pendingSalesAmount = await queryAll(
+        `SELECT * FROM v_pending_sales_amount`,
+      );
     }
 
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
+    if (pendingSalesAmount.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: pendingSalesAmount };
   } catch (error) {
     console.error("Error getting pending sales amount:", error);
     return { success: false, error: error.message };
@@ -365,19 +388,15 @@ async function getPendingSalesAmount(filters) {
 // Get Discounts Amount
 async function getDiscountsAmount() {
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_discounts_amount`;
+    const discountsAmount = await queryAll(`SELECT * FROM v_discounts_amount`);
 
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
+    if (discountsAmount.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: discountsAmount };
   } catch (error) {
-    console.error("Error getting discounts amount:", error);
+    console.error("❌ Error getting discounts amount:", error);
     return { success: false, error: error.message };
   }
 }
@@ -385,19 +404,17 @@ async function getDiscountsAmount() {
 // Get Paid VS Pending Number
 async function getPaidVSPendingNumber() {
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_paid_vs_pending_number`;
+    const paidVSPendingAmount = await queryAll(
+      `SELECT * FROM v_paid_vs_pending_number`,
+    );
 
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
+    if (paidVSPendingAmount.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: paidVSPendingAmount };
   } catch (error) {
-    console.error("Error getting paid vs pending number:", error);
+    console.error("❌ Error getting paid vs pending number:", error);
     return { success: false, error: error.message };
   }
 }
@@ -405,9 +422,8 @@ async function getPaidVSPendingNumber() {
 // Get History Sales Table
 async function getHistorySales(limit, offset) {
   try {
-    const db = await getDB();
-    const params = [limit, offset];
-    const sql = `
+    const historySales = await queryAll(
+      `
       SELECT 
 	      s.id,
 	      s.sale_num,
@@ -430,23 +446,19 @@ async function getHistorySales(limit, offset) {
       GROUP BY s.id
       ORDER BY s.created_at DESC
       LIMIT ? OFFSET ?;
-    `;
+    `,
+      [limit, offset],
+    );
 
-    const sqlCount = `SELECT COUNT(*) as total FROM sale;`;
+    const totalCount = await queryOne(`SELECT COUNT(*) as total FROM sale;`);
 
-    const query = db.exec(sql, params);
-    const queryCount = db.exec(sqlCount);
-
-    const totalCount = queryCount.length > 0 ? queryCount[0].values[0][0] : 0;
-
-    if (query.length === 0) {
+    if (historySales.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data, totalCount: totalCount };
+    return { success: true, result: historySales, totalCount: totalCount };
   } catch (error) {
-    console.error("Error getting histoty sales:", error);
+    console.error("❌ Error getting histoty sales:", error);
     return { success: false, error: error.message };
   }
 }
@@ -454,7 +466,6 @@ async function getHistorySales(limit, offset) {
 // Get Filter Search Table History Sales
 async function getFilterSearchHistorySales(data) {
   try {
-    const db = await getDB();
     const { column, text } = data;
     const allowedColumns = [
       "customer",
@@ -516,36 +527,27 @@ async function getFilterSearchHistorySales(data) {
     `;
 
     const searchTerm = `%${text}%`;
-
-    const stmt = db.prepare(sql);
-    stmt.bind([searchTerm]);
-
-    const rows = [];
-    while (stmt.step()) {
-      rows.push(stmt.getAsObject());
-    }
-    stmt.free();
+    const rows = await queryAll(sql, [searchTerm]);
 
     return { success: true, result: rows };
   } catch (error) {
-    console.error("Error getting filter search table history sales:", error);
+    console.error("❌ Error getting filter search table history sales:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get All History Sales
 async function getAllHistorySales(filters) {
-  const db = await getDB();
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
-    let sql = "";
+    let historySales = "";
     let whereClause = "";
 
     if (filters) {
       whereClause = `WHERE s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
-      sql = `
+      historySales = await queryAll(`
         SELECT 
           s.id,
           s.sale_num,
@@ -568,34 +570,29 @@ async function getAllHistorySales(filters) {
         ${whereClause}
         GROUP BY s.id
         ORDER BY s.created_at DESC;
-      `;
+      `);
     } else {
-      sql = `SELECT * FROM v_all_history_sales`;
+      historySales = await queryAll(`SELECT * FROM v_all_history_sales`);
     }
 
-    const query = await db.exec(sql);
-
-    if (query.length === 0) {
+    if (historySales.length === 0) {
       return { success: true, result: [] };
     }
 
-    const products = mapResultToObjects(query);
-    return { success: true, result: products };
+    return { success: true, result: historySales };
   } catch (error) {
-    console.error("Error getting all history sales:", error);
+    console.error("❌ Error getting all history sales:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Sales by Category
 async function getSalesByCategory(filters) {
-  const db = await getDB();
-
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
-    const params = [start, end];
-    const sql = `
+    const salesByCategory = await queryAll(
+      `
       SELECT 
         c.name AS category,
         IFNULL(SUM(sd.quantity), 0) AS sales 
@@ -608,30 +605,28 @@ async function getSalesByCategory(filters) {
         AND s.deleted_at IS NULL
       GROUP BY c.name
       ORDER BY sales DESC;
-      `;
+      `,
+      [start, end],
+    );
 
-    const query = db.exec(sql, params);
-
-    if (query.length === 0) {
+    if (salesByCategory.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: salesByCategory };
   } catch (error) {
-    console.error("Error getting sales by category:", error);
+    console.error("❌ Error getting sales by category:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Top Selling Products
 async function getTopSellingProducts(filters) {
-  const db = await getDB();
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
-    const params = [start, end];
-    const sql = `
+    const topSellingProducts = await queryAll(
+      `
       SELECT 
         p.name AS product,
         SUM(sd.quantity) AS sales
@@ -642,27 +637,26 @@ async function getTopSellingProducts(filters) {
       GROUP BY sd.product_id
       ORDER BY sales DESC
       LIMIT 5;
-    `;
+    `,
+      [start, end],
+    );
 
-    const query = db.exec(sql, params);
-
-    if (query.length === 0) {
+    if (topSellingProducts.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: topSellingProducts };
   } catch (error) {
-    console.error("Error getting top 5 selling products:", error);
+    console.error("❌ Error getting top 5 selling products:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Total Debts Over Time
 async function getTotalDebtsOverTime(year) {
-  const db = await getDB();
   try {
-    const sql = `
+    const totalDebtsOverTime = await queryAll(
+      `
       WITH RECURSIVE all_months(month_num) AS (
           SELECT 1
           UNION ALL
@@ -682,21 +676,42 @@ async function getTotalDebtsOverTime(year) {
           AND s.status_id = 5
       GROUP BY m.month_num
       ORDER BY m.month_num ASC;
-    `;
+    `,
+      [year],
+    );
 
-    const query = db.exec(sql, [year]);
-
-    if (query.length === 0) {
+    if (totalDebtsOverTime.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: totalDebtsOverTime };
   } catch (error) {
-    console.error("Error getting total debts over time:", error);
+    console.error("❌ Error getting total debts over time:", error);
     return { success: false, error: error.message };
   }
 }
+
+// Get Payments by Debt
+async function getPaymentsDebt(idSale) {
+  try {
+    const paymentsDebt = await queryAll(
+      `SELECT id, created_at, amount, note FROM payment WHERE sale_id = ? ORDER BY created_at DESC;`,
+      [idSale],
+    );
+
+    if (paymentsDebt.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    return { success: true, result: paymentsDebt };
+  } catch (error) {
+    console.error("❌ Error getting payments debt:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+//* UPDATE ----------
+//* DELETE ----------
 
 module.exports = {
   getTopSalesCategory,
@@ -715,4 +730,6 @@ module.exports = {
   getSalesByCategory,
   getTopSellingProducts,
   getTotalDebtsOverTime,
+  getPaymentsDebt,
+  addPaymentDebt,
 };

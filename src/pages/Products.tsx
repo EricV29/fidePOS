@@ -83,6 +83,7 @@ export default function Products() {
 
     if (productsData?.inventoryValue) {
       const inventoryValueData = productsData.inventoryValue.result;
+
       setInventoryValueCard(inventoryValueData[0].inventory_value);
     }
 

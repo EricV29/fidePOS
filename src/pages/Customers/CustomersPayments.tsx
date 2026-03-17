@@ -20,13 +20,11 @@ import { useLoading } from "@context/LoadingContext";
 import { useOutletContext } from "react-router-dom";
 import AUTH_CODES from "../../../constants/authCodes.json";
 
-interface CustomersPaymentsProps {}
-
 interface ExportableChild {
   createReport: (view: string) => Promise<dataExportCustomers[][]>;
 }
 
-const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
+const CustomersPayments = () => {
   const { t, i18n } = useTranslation();
   const { triggerResponseAlert } = useModal();
   const { setLoading } = useLoading();
@@ -98,23 +96,22 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
 
       if (customerData.customerDebtsNumber) {
         const customerDebtsNumber = customerData.customerDebtsNumber.result;
-        setCustomerDebtsNumberCard(customerDebtsNumber[0].customerDebtsNumber);
+        setCustomerDebtsNumberCard(customerDebtsNumber.customerDebtsNumber);
       }
 
       if (customerData.customerPaymentsNumber) {
         const customerPaymentsNumber =
           customerData.customerPaymentsNumber.result;
         setCustomerPaymentsNumberCard(
-          customerPaymentsNumber[0].customerPaymentsNumber,
+          customerPaymentsNumber.customerPaymentsNumber,
         );
       }
 
       if (customerData.customerTotalDebtAmount) {
         const customerTotalDebtAmount =
           customerData.customerTotalDebtAmount.result;
-
         setCustomerTotalDebtAmountCard(
-          customerTotalDebtAmount[0].customerTotalDebtAmount,
+          customerTotalDebtAmount.customerTotalDebtAmount,
         );
       }
 
@@ -123,7 +120,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
           customerData.customerTotalPaymentAmount.result;
 
         setCustomerTotalPaymentAmount(
-          customerTotalPaymentAmount[0].customerTotalPaymentAmount,
+          customerTotalPaymentAmount.customerTotalPaymentAmount,
         );
       }
 
@@ -281,6 +278,10 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
       ];
 
       return finalData;
+    },
+
+    loadCustomersPayments: async () => {
+      await loadCustomersPayments();
     },
   }));
 
