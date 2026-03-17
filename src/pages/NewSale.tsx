@@ -85,7 +85,7 @@ const NewSale: React.FC<NewSaleProps> = ({}) => {
 
     if (newSaleData?.nextNumberSale) {
       const nextNumberSaleData = newSaleData.nextNumberSale.result;
-      setNextNumberSale(nextNumberSaleData[0].next_sale);
+      setNextNumberSale(nextNumberSaleData.next_sale);
     }
   }, [activeCategory, pagination]);
 
