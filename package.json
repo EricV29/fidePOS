@@ -9,12 +9,12 @@
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "concurrently -k \"vite\" \"wait-on http://localhost:6969/login && electron .\"",
-    "build": "tsc -b && vite build",
-    "dist": "npm run build && electron-builder",
-    "lint": "eslint .",
     "preview": "vite preview",
+    "build": "tsc -b && vite build",
+    "dist": "electron-builder",
+    "lint": "eslint .",
     "clean": "rimraf dist releases",
-    "package": "npm run clean && npm run build && npm run dist"
+    "package": "npm run clean && npm run build && electron-builder"
   },
   "build": {
     "appId": "electron-react-vite",
