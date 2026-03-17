@@ -20,13 +20,11 @@ import { useLoading } from "@context/LoadingContext";
 import { useOutletContext } from "react-router-dom";
 import AUTH_CODES from "../../../constants/authCodes.json";
 
-interface CustomersPaymentsProps {}
-
 interface ExportableChild {
   createReport: (view: string) => Promise<dataExportCustomers[][]>;
 }
 
-const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
+const CustomersPayments = () => {
   const { t, i18n } = useTranslation();
   const { triggerResponseAlert } = useModal();
   const { setLoading } = useLoading();
@@ -280,6 +278,10 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
       ];
 
       return finalData;
+    },
+
+    loadCustomersPayments: async () => {
+      await loadCustomersPayments();
     },
   }));
 

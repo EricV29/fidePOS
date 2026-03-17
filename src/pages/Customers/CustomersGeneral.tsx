@@ -19,13 +19,11 @@ import AUTH_CODES from "../../../constants/authCodes.json";
 import { useLoading } from "@context/LoadingContext";
 import { useOutletContext } from "react-router-dom";
 
-interface CustomersGeneralProps {}
-
 interface ExportableChild {
   createReport: (view: string) => Promise<dataExportCustomers[][]>;
 }
 
-const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
+const CustomersGeneral = () => {
   const { t, i18n } = useTranslation();
   const { setModal, triggerResponseAlert, triggerWarningAlert } = useModal();
   const [customersNumberCard, setCustomersNumberCard] = useState(0);
@@ -237,6 +235,10 @@ const CustomersGeneral: React.FC<CustomersGeneralProps> = () => {
       ];
 
       return finalData;
+    },
+
+    loadCustomerGeneral: async () => {
+      await loadCustomerGeneral();
     },
   }));
 
