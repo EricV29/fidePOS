@@ -1,9 +1,6 @@
-import * as XLSX from "xlsx";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 import type { dataExportProducts } from "@typesm/products";
 
-export const exportReportFile = (
+export const exportReportFile = async (
   format: string,
   data: dataExportProducts[][],
   page: string,
@@ -20,6 +17,9 @@ export const exportReportFile = (
   }
 
   if (format === "csv" || format === "xlsx") {
+    // DYNAMIC IMPORT
+    const XLSX = await import("xlsx");
+
     // Create Book Excel
     const worksheet = XLSX.utils.aoa_to_sheet(finalContent);
     const workbook = XLSX.utils.book_new();
@@ -32,6 +32,10 @@ export const exportReportFile = (
       XLSX.writeFile(workbook, `REPORT_${page}.csv`, { bookType: "csv" });
     }
   } else if (format === "pdf") {
+    // DYNAMIC IMPORT
+    const { default: jsPDF } = await import("jspdf");
+    const { default: autoTable } = await import("jspdf-autotable");
+
     // Statistics?
     const tableStartIndex = data.findIndex((row) => row.includes("ID"));
 
