@@ -12,6 +12,7 @@ export type Sales = {
   status: string;
   user_id: number;
   created_at: string;
+  deleted_at: string;
 };
 
 export type RecentSalesPaid = {

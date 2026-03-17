@@ -19,14 +19,12 @@ import { useLoading } from "@context/LoadingContext";
 import type { UserSession } from "@typesm/users";
 import { useOutletContext } from "react-router-dom";
 
-interface NewSaleProps {}
-
 interface MyContext {
   session: UserSession;
   installDate: string;
 }
 
-const NewSale: React.FC<NewSaleProps> = ({}) => {
+const NewSale = () => {
   const [categories, setCategories] = useState<Categories[]>();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [dataProducts, setDataProducts] = useState<ProductsSale[]>([]);

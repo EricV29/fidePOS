@@ -16,7 +16,6 @@ import { ModalSales } from "@modals/ModalSales";
 import { useModal } from "@context/ModalContext";
 import { ModalNewPayment } from "@modals/ModalNewPayment";
 import { useOutletContext } from "react-router-dom";
-import { useLoading } from "@/context/LoadingContext";
 
 interface BarChartItem {
   [key: string]: string | number;
@@ -41,7 +40,6 @@ export default function Dashboard() {
   const [dataTableRSP, setDataTableRSP] = useState<RecentSalesPaid[]>([]);
   const [dataTableAR, setDataTableAR] = useState<AccountsReceivable[]>([]);
   const { setModal } = useModal();
-  const { setLoading } = useLoading();
   const today = new Date().toISOString().split("T")[0];
   const [filters, setFilters] = useState({
     startDate: installDate
@@ -52,7 +50,6 @@ export default function Dashboard() {
 
   const loadDashboard = useCallback(
     async (currentFilters = filters) => {
-      //setLoading(true);
       const response =
         await window.electronAPI.getDashboardData(currentFilters);
       const dashboardData =
@@ -88,7 +85,6 @@ export default function Dashboard() {
       if (dashboardData?.accountsReceivable) {
         const accountsReceivableData = dashboardData.accountsReceivable.result;
         setDataTableAR(accountsReceivableData);
-        //setLoading(false);
       }
     },
     [filters],

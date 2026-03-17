@@ -37,7 +37,6 @@ export default function History() {
       description: t("modalQuestionAlert.text_total_data"),
     },
   ];
-  const [salesCardNumber, setSalesCardNumber] = useState(0);
   const [pendingSalesCardAmount, setPendingSalesCardAmount] = useState(0);
   const [salesNumber, setSalesNumber] = useState(Number);
   const [salesAmount, setSalesAmount] = useState(Number);
@@ -125,7 +124,7 @@ export default function History() {
       // Create Data Cards
       const statsData = [
         [t("exportReport.history_page.title")],
-        [t("exportReport.history_page.sales"), salesCardNumber],
+        [t("exportReport.history_page.sales"), salesNumber],
         [
           t("exportReport.history_page.pending_sales_amount"),
           pendingSalesCardAmount,
@@ -189,7 +188,7 @@ export default function History() {
       historySales,
       paidVSPendingNumberCard,
       pendingSalesCardAmount,
-      salesCardNumber,
+      salesNumber,
       setLoading,
       t,
     ],
