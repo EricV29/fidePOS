@@ -1,20 +1,59 @@
-const { getDB, saveDB, mapResultToObjects } = require("../database.cjs");
-const bcrypt = require("bcrypt");
+const {
+  getDB,
+  saveDB,
+  queryAll,
+  runQuery,
+  queryOne,
+} = require("../database.cjs");
 const AUTH_CODES = require("../../../constants/authCodes.json");
+
+//* CREATE ----------
+
+// Add Customer
+async function addCustomer(data) {
+  try {
+    const { name, last_name, phone } = data;
+
+    // Search Customer
+    const customersFound = await queryAll(
+      "SELECT phone FROM customer WHERE phone = ? AND deleted_at IS NULL;",
+      [phone],
+    );
+
+    if (customersFound.length > 0) {
+      for (const customer of customersFound) {
+        if (customer.phone === phone) {
+          return { success: false, error: AUTH_CODES.PHONE_USED };
+        }
+      }
+    }
+
+    runQuery(
+      "INSERT INTO customer(name, last_name, phone, status_id) VALUES(?, ?, ?, 1)",
+      [name, last_name, phone],
+    );
+
+    return { success: true, result: AUTH_CODES.ADD_CUSTOMER };
+  } catch (error) {
+    console.error("❌ Error inserting customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+//* READ ----------
 
 // Get Accounts Receivable
 async function getAccountsReceivable(filters) {
-  const db = await getDB();
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
-    let sql = "";
+    let accountsReceivable = "";
     let whereClause = "";
 
     if (filters) {
       whereClause = `AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
-      sql = `
+      accountsReceivable = await queryAll(`
         SELECT 
           s.id AS idSale,
           cu.id AS idCustomer,
@@ -44,21 +83,20 @@ async function getAccountsReceivable(filters) {
         GROUP BY s.id
         HAVING debt_pending > 0
         ORDER BY s.created_at DESC;
-      `;
+      `);
     } else {
-      sql = `SELECT * FROM v_accounts_receivable`;
+      accountsReceivable = await queryAll(
+        `SELECT * FROM v_accounts_receivable`,
+      );
     }
 
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
+    if (accountsReceivable.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: accountsReceivable };
   } catch (error) {
-    console.error("Error getting accounts receivable:", error);
+    console.error("❌ Error getting accounts receivable:", error);
     return { success: false, error: error.message };
   }
 }
@@ -66,19 +104,17 @@ async function getAccountsReceivable(filters) {
 // Get Indebted Customers
 async function getIndebtedCustomers() {
   try {
-    const db = await getDB();
-    const sql = `SELECT id, name, last_name FROM customer WHERE status_id = 3;`;
+    const indebtedCustomers = await queryAll(
+      `SELECT id, name, last_name FROM customer WHERE status_id = 3;`,
+    );
 
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
+    if (indebtedCustomers.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: indebtedCustomers };
   } catch (error) {
-    console.error("Error getting indebted customers:", error);
+    console.error("❌ Error getting indebted customers:", error);
     return { success: false, error: error.message };
   }
 }
@@ -86,9 +122,8 @@ async function getIndebtedCustomers() {
 // Get Customer Debts
 async function getCustomerDebts(idCustomer) {
   try {
-    const db = await getDB();
-    const params = [idCustomer];
-    const sql = `
+    const customerDebts = await queryAll(
+      `
       SELECT 
         s.id,
         GROUP_CONCAT('(' || sd.quantity || ') ' || p.name, ' | ') || ' = $' || (s.total_amount - s.paid_amount) AS customer_debt
@@ -97,18 +132,17 @@ async function getCustomerDebts(idCustomer) {
       INNER JOIN product p ON sd.product_id = p.id 
       WHERE s.customer_id = ? AND sd.status_id = 5
       GROUP BY s.id;
-    ;`;
+    ;`,
+      [idCustomer],
+    );
 
-    const query = db.exec(sql, params);
-
-    if (query.length === 0) {
+    if (customerDebts.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: customerDebts };
   } catch (error) {
-    console.error("Error getting customer debts:", error);
+    console.error("❌ Error getting customer debts:", error);
     return { success: false, error: error.message };
   }
 }
@@ -116,55 +150,17 @@ async function getCustomerDebts(idCustomer) {
 // Get Customers
 async function getCustomersList() {
   try {
-    const db = await getDB();
-    const query = db.exec(
+    const customers = await queryAll(
       "SELECT id, name, last_name, phone, status_id, created_at FROM customer WHERE status_id IN (1, 3);",
     );
 
-    if (query.length === 0) {
+    if (customers.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-
-    return { success: true, result: data };
+    return { success: true, result: customers };
   } catch (error) {
-    console.error("Error getting customers:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Add Customer
-async function addCustomer(data) {
-  try {
-    const db = await getDB();
-    const { name, last_name, phone } = data;
-
-    // Search Customer
-    const query = db.exec(
-      "SELECT phone FROM customer WHERE phone = ? AND deleted_at IS NULL;",
-      [phone],
-    );
-
-    const customersFound = mapResultToObjects(query);
-
-    if (customersFound.length > 0) {
-      for (const customer of customersFound) {
-        if (customer.phone === phone) {
-          return { success: false, error: AUTH_CODES.PHONE_USED };
-        }
-      }
-    }
-
-    db.run(
-      "INSERT INTO customer(name, last_name, phone, status_id) VALUES(?, ?, ?, 1)",
-      [name, last_name, phone],
-    );
-
-    saveDB(db);
-    return { success: true, result: AUTH_CODES.ADD_CUSTOMER };
-  } catch (error) {
-    console.error("Error inserting customer:", error);
+    console.error("❌ Error getting customers:", error);
     return { success: false, error: error.message };
   }
 }
@@ -172,19 +168,15 @@ async function addCustomer(data) {
 // Get Customers Number
 async function getCustomersNumber() {
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_customers_number;`;
+    const customersNumber = await queryAll(`SELECT * FROM v_customers_number;`);
 
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
+    if (customersNumber.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: customersNumber };
   } catch (error) {
-    console.error("Error getting customers number:", error);
+    console.error("❌ Error getting customers number:", error);
     return { success: false, error: error.message };
   }
 }
@@ -192,19 +184,17 @@ async function getCustomersNumber() {
 // Get Customers In Debt Number
 async function getCustomersInDebtNumber() {
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_customers_in_debt_number;`;
+    const customersInDebtNumber = await queryAll(
+      `SELECT * FROM v_customers_in_debt_number;`,
+    );
 
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
+    if (customersInDebtNumber.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: customersInDebtNumber };
   } catch (error) {
-    console.error("Error getting customers in debt number:", error);
+    console.error("❌ Error getting customers in debt number:", error);
     return { success: false, error: error.message };
   }
 }
@@ -212,19 +202,17 @@ async function getCustomersInDebtNumber() {
 // Get Last Customer Name Paid
 async function getLastCustomerNamePaid() {
   try {
-    const db = await getDB();
-    const sql = `SELECT * FROM v_last_customer_name_paid;`;
+    const lastCustomerPaid = await queryAll(
+      `SELECT * FROM v_last_customer_name_paid;`,
+    );
 
-    const query = db.exec(sql);
-
-    if (query.length === 0) {
+    if (lastCustomerPaid.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: lastCustomerPaid };
   } catch (error) {
-    console.error("Error getting last customer name paid:", error);
+    console.error("❌ Error getting last customer name paid:", error);
     return { success: false, error: error.message };
   }
 }
@@ -232,9 +220,8 @@ async function getLastCustomerNamePaid() {
 // Get Customers Table
 async function getCustomersTable(limit, offset) {
   try {
-    const db = await getDB();
-    const params = [limit, offset];
-    const sql = `
+    const customers = await queryAll(
+      `
       SELECT 
         c.id,
         c.name,
@@ -252,23 +239,21 @@ async function getCustomersTable(limit, offset) {
       GROUP BY c.id
       ORDER BY c.created_at DESC
       LIMIT ? OFFSET ?;
-      `;
+      `,
+      [limit, offset],
+    );
 
-    const sqlCount = `SELECT COUNT(*) as total FROM customer;`;
+    const totalCount = await queryOne(
+      `SELECT COUNT(*) as total FROM customer;`,
+    );
 
-    const query = db.exec(sql, params);
-    const queryCount = db.exec(sqlCount);
-
-    const totalCount = queryCount.length > 0 ? queryCount[0].values[0][0] : 0;
-
-    if (query.length === 0) {
+    if (customers.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data, totalCount: totalCount };
+    return { success: true, result: customers, totalCount: totalCount };
   } catch (error) {
-    console.error("Error getting customers table:", error);
+    console.error("❌ Error getting customers table:", error);
     return { success: false, error: error.message };
   }
 }
@@ -276,7 +261,6 @@ async function getCustomersTable(limit, offset) {
 // Get Filter Search Table Customers
 async function getFilterSearchCustomers(data) {
   try {
-    const db = await getDB();
     const { column, text } = data;
     const allowedColumns = [
       "customer",
@@ -331,242 +315,100 @@ async function getFilterSearchCustomers(data) {
 
     const searchTerm = `%${text}%`;
 
-    const stmt = db.prepare(sql);
-    stmt.bind([searchTerm]);
-
-    const rows = [];
-    while (stmt.step()) {
-      rows.push(stmt.getAsObject());
-    }
-    stmt.free();
+    const rows = await queryAll(sql, [searchTerm]);
 
     return { success: true, result: rows };
   } catch (error) {
-    console.error("Error getting filter search table customers:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Edit Customer
-async function editCustomer(data) {
-  const db = await getDB();
-  const { id, name, last_name, phone } = data;
-
-  try {
-    // Search Customer
-    const query = db.exec(
-      "SELECT id, phone, status_id FROM customer WHERE id = ?;",
-      [id],
-    );
-
-    const result = mapResultToObjects(query);
-    const customerFound = result[0];
-
-    // Customer?
-    if (!customerFound) {
-      return { success: false, error: AUTH_CODES.CUSTOMER_NOT_FOUND };
-    }
-
-    // Status?
-    if (customerFound.status_id === 0) {
-      return { success: false, error: AUTH_CODES.INACTIVE_CUSTOMER };
-    }
-
-    // Search Phone
-    const queryPhone = db.exec("SELECT id FROM customer WHERE phone = ?;", [
-      phone,
-    ]);
-
-    const resultPhone = mapResultToObjects(queryPhone);
-    const phoneFound = resultPhone[0];
-
-    // Phone?
-    if (phoneFound) {
-      return { success: false, error: AUTH_CODES.PHONE_USED };
-    }
-
-    db.exec("BEGIN TRANSACTION;");
-
-    db.run(
-      "UPDATE customer SET name = ?, last_name = ?, phone = ? WHERE id = ?;",
-      [name, last_name, phone, id],
-    );
-
-    db.exec("COMMIT;");
-    await saveDB(db);
-    return { success: true, result: AUTH_CODES.EDIT_CUSTOMER };
-  } catch (error) {
-    if (db) db.exec("ROLLBACK;");
-    console.error("Error editing customer:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Delete Customer
-async function deleteCustomer(data) {
-  const db = await getDB();
-  try {
-    // Search Customer
-    const query = db.exec("SELECT id, status_id FROM customer WHERE id = ?", [
-      data,
-    ]);
-
-    const customers = mapResultToObjects(query);
-    const customerFound = customers[0];
-
-    // Customer?
-    if (!customerFound) {
-      return { success: false, error: AUTH_CODES.CUSTOMER_NOT_FOUND };
-    }
-
-    // Status?
-    if (customerFound.status_id === 0 || customerFound.status_id === 3) {
-      return { success: false, error: AUTH_CODES.INACTIVE_CUSTOMER };
-    }
-
-    db.run(
-      "UPDATE customer SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
-      [data],
-    );
-
-    saveDB(db);
-    return { success: true, result: AUTH_CODES.DELETE_CUSTOMER };
-  } catch (error) {
-    console.error("Error deleting customer:", error);
-    return { success: false, error: error.message };
-  }
-}
-
-// Active Customer
-async function activeCustomer(data) {
-  const db = await getDB();
-  try {
-    // Search Customer
-    const query = db.exec("SELECT id, status_id FROM customer WHERE id = ?", [
-      data,
-    ]);
-
-    const customers = mapResultToObjects(query);
-    const customerFound = customers[0];
-
-    // Customer?
-    if (!customerFound) {
-      return { success: false, error: AUTH_CODES.CUSTOMER_NOT_FOUND };
-    }
-
-    // Status?
-    if (!customerFound.status_id === 0) {
-      return { success: false, error: AUTH_CODES.ACTIVE_CUSTOMER };
-    }
-
-    db.run(
-      "UPDATE customer SET deleted_at = null, status_id = 1 WHERE id = ?",
-      [data],
-    );
-
-    await saveDB(db);
-    return { success: true, result: AUTH_CODES.RESTORE_CUSTOMER };
-  } catch (error) {
-    console.error("Error active customer:", error);
+    console.error("❌ Error getting filter search table customers:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Customers Select
 async function getCustomersSelect(filters) {
-  const db = await getDB();
-
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
-    let sql = "";
+    let customers = "";
     let whereClause = "";
 
     if (filters) {
       whereClause = `WHERE created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
-      sql = `
+      customers = await queryAll(`
         SELECT id, name, last_name
           FROM customer
           ${whereClause};
-      `;
+      `);
     } else {
-      sql = `SELECT * FROM v_customers_select`;
+      customers = await queryAll(`SELECT * FROM v_customers_select`);
     }
 
-    const query = await db.exec(sql);
-
-    if (query.length === 0) {
+    if (customers.length === 0) {
       return { success: true, result: [] };
     }
 
-    const categories = mapResultToObjects(query);
-    return { success: true, result: categories };
+    return { success: true, result: customers };
   } catch (error) {
-    console.error("Error getting customers select:", error);
+    console.error("❌ Error getting customers select:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Customer Debts Number
 async function getCustomerDebtsNumber(id) {
-  const db = await getDB();
-
   try {
-    const sql = `
+    const customerDebtsNumber = await queryOne(
+      `
         SELECT
           COUNT(id) AS customerDebtsNumber
         FROM sale
         WHERE status_id = 5 AND customer_id = ?;
-      `;
-    const query = db.exec(sql, [id]);
+      `,
+      [id],
+    );
 
-    if (query.length === 0) {
+    if (customerDebtsNumber.length === 0) {
       return { success: true, result: [] };
     }
 
-    const customerDebtsNumber = mapResultToObjects(query);
-
     return { success: true, result: customerDebtsNumber };
   } catch (error) {
-    console.error("Error getting customer debts number:", error);
+    console.error("❌ Error getting customer debts number:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Customer Payments Number
 async function getCustomerPaymentsNumber(id) {
-  const db = await getDB();
-
   try {
-    const sql = `
+    const customerPaymentsNumber = await queryOne(
+      `
       SELECT 
         COUNT(p.id) AS customerPaymentsNumber
       FROM payment p
       INNER JOIN sale s ON p.sale_id = s.id
       WHERE s.customer_id = ?;
-      `;
-    const query = db.exec(sql, [id]);
+      `,
+      [id],
+    );
 
-    if (query.length === 0) {
+    if (customerPaymentsNumber.length === 0) {
       return { success: true, result: [] };
     }
 
-    const customerDebtsNumber = mapResultToObjects(query);
-
-    return { success: true, result: customerDebtsNumber };
+    return { success: true, result: customerPaymentsNumber };
   } catch (error) {
-    console.error("Error getting customer payments number:", error);
+    console.error("❌ Error getting customer payments number:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Customer Total Debt Amount
 async function getCustomerTotalDebtAmount(id) {
-  const db = await getDB();
-
   try {
-    const sql = `
+    const customerTotalDebtAmount = await queryOne(
+      `
       SELECT SUM(customerDebtsAmountSale) AS customerTotalDebtAmount
       FROM (
           SELECT (s.total_amount - s.paid_amount) AS customerDebtsAmountSale
@@ -575,62 +417,55 @@ async function getCustomerTotalDebtAmount(id) {
           WHERE s.status_id = 5 AND s.customer_id = ?
           GROUP BY s.id
       ) AS customerDebtsAmountSale;
-      `;
-    const query = db.exec(sql, [id]);
+      `,
+      [id],
+    );
 
-    if (query.length === 0) {
+    if (customerTotalDebtAmount.length === 0) {
       return { success: true, result: [] };
     }
 
-    const customerTotalDebtAmount = mapResultToObjects(query);
-
     return { success: true, result: customerTotalDebtAmount };
   } catch (error) {
-    console.error("Error getting customer total debt amount:", error);
+    console.error("❌ Error getting customer total debt amount:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Customer Total Payment Amount
 async function getCustomerTotalPaymentAmount(id) {
-  const db = await getDB();
-
   try {
-    const sql = `
+    const customerTotalPaymentAmount = await queryOne(
+      `
       SELECT 
         SUM(p.amount) AS customerTotalPaymentAmount
       FROM payment p
       INNER JOIN sale s ON p.sale_id  = s.id
       WHERE s.status_id = 5 AND s.customer_id = ?;
-      `;
-    const query = db.exec(sql, [id]);
+      `,
+      [id],
+    );
 
-    if (query.length === 0) {
+    if (customerTotalPaymentAmount.length === 0) {
       return { success: true, result: [] };
     }
 
-    const customerTotalPaymentAmount = mapResultToObjects(query);
-
     return { success: true, result: customerTotalPaymentAmount };
   } catch (error) {
-    console.error("Error getting customer total payment amount:", error);
+    console.error("❌ Error getting customer total payment amount:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Customer Debts Table
 async function getCustomerDebtsTable(id, limit, offset, filters) {
-  const db = await getDB();
-
   try {
-    let params = [id];
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
 
     if (!filters) {
-      params = [id, limit, offset];
-
-      const sql = `
+      const customerDebts = await queryAll(
+        `
       SELECT
         s.id, 
         s.sale_num,
@@ -648,9 +483,12 @@ async function getCustomerDebtsTable(id, limit, offset, filters) {
       GROUP BY s.id
       ORDER BY s.created_at DESC
       LIMIT ? OFFSET ?;
-      `;
+      `,
+        [id, limit, offset],
+      );
 
-      const sqlCount = `
+      const totalCount = await queryOne(
+        `
       SELECT 
         COUNT(*) as total 
           FROM (
@@ -659,25 +497,20 @@ async function getCustomerDebtsTable(id, limit, offset, filters) {
           INNER JOIN sale s ON sd.sale_id = s.id
           WHERE sd.status_id = 5 AND s.customer_id = ?
           GROUP BY s.id);
-    `;
+    `,
+        [id],
+      );
 
-      const query = db.exec(sql, params);
-      const queryCount = db.exec(sqlCount, [id]);
-
-      const totalData = mapResultToObjects(queryCount);
-      const totalCount = totalData.length > 0 ? totalData[0].total : 0;
-
-      if (query.length === 0) {
+      if (customerDebts.length === 0) {
         return { success: true, result: [] };
       }
 
-      const data = mapResultToObjects(query);
-      return { success: true, result: data, totalCount: totalCount };
+      return { success: true, result: customerDebts, totalCount: totalCount };
     } else {
-      params = [id, start, end];
       whereClause = `WHERE sd.status_id = 5 AND s.customer_id = ${id} AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
-      const sql = `
+      const customerDebts = await queryAll(
+        `
         SELECT
           s.id, 
           s.sale_num,
@@ -694,27 +527,24 @@ async function getCustomerDebtsTable(id, limit, offset, filters) {
         ${whereClause}
         GROUP BY s.id
         ORDER BY s.created_at DESC;
-      `;
+      `,
+      );
 
-      const query = await db.exec(sql);
-
-      if (query.length === 0) {
+      if (customerDebts.length === 0) {
         return { success: true, result: [] };
       }
 
-      const data = mapResultToObjects(query);
-      return { success: true, result: data };
+      return { success: true, result: customerDebts };
     }
   } catch (error) {
-    console.error("Error getting customer debts table:", error);
+    console.error("❌ Error getting customer debts table:", error);
     return { success: false, error: error.message };
   }
 }
 
-// Get Filter Search Table Customers Debts (Payments)
+// Get Filter Search Table Customers Debts (Customers -> Payments)
 async function getFilterSearchCustomersDebts(data) {
   try {
-    const db = await getDB();
     const { column, text } = data;
     const allowedColumns = [
       "sale_num",
@@ -774,33 +604,27 @@ async function getFilterSearchCustomersDebts(data) {
 
     const searchTerm = `%${text}%`;
 
-    const stmt = db.prepare(sql);
-    stmt.bind([searchTerm]);
-
-    const rows = [];
-    while (stmt.step()) {
-      rows.push(stmt.getAsObject());
-    }
-    stmt.free();
+    const rows = await queryAll(sql, [searchTerm]);
 
     return { success: true, result: rows };
   } catch (error) {
-    console.error("Error getting filter search table customers debts:", error);
+    console.error(
+      "❌ Error getting filter search table customers debts:",
+      error,
+    );
     return { success: false, error: error.message };
   }
 }
 
 // Get Customer Payments Table
 async function getCustomerPaymentsTable(id, limit, offset, filters) {
-  const db = await getDB();
-
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
 
     if (!filters) {
-      const params = [id, limit, offset];
-      const sql = `
+      const customerPayments = await queryAll(
+        `
       SELECT 
 	      p.id, 
         p.created_at, 
@@ -812,9 +636,12 @@ async function getCustomerPaymentsTable(id, limit, offset, filters) {
       WHERE s.customer_id = ?
       ORDER BY p.created_at DESC
       LIMIT ? OFFSET ?;
-      `;
+      `,
+        [id, limit, offset],
+      );
 
-      const sqlCount = `
+      const totalCount = await queryOne(
+        `
       SELECT 
 	      COUNT(*) as total 
 	        FROM (
@@ -827,24 +654,23 @@ async function getCustomerPaymentsTable(id, limit, offset, filters) {
           FROM payment p
           INNER JOIN sale s ON p.sale_id = s.id
           WHERE s.customer_id = ?);
-    `;
+    `,
+        [id],
+      );
 
-      const query = db.exec(sql, params);
-      const queryCount = db.exec(sqlCount, [id]);
-
-      const totalData = mapResultToObjects(queryCount);
-      const totalCount = totalData.length > 0 ? totalData[0].total : 0;
-
-      if (query.length === 0) {
+      if (customerPayments.length === 0) {
         return { success: true, result: [] };
       }
 
-      const data = mapResultToObjects(query);
-      return { success: true, result: data, totalCount: totalCount };
+      return {
+        success: true,
+        result: customerPayments,
+        totalCount: totalCount,
+      };
     } else {
       whereClause = `WHERE s.customer_id = ${id} AND s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
-      const sql = `
+      const customerPayments = await queryAll(`
       SELECT 
 	      p.id, 
         p.created_at, 
@@ -855,27 +681,22 @@ async function getCustomerPaymentsTable(id, limit, offset, filters) {
       INNER JOIN sale s ON p.sale_id = s.id
       ${whereClause}
       ORDER BY p.created_at DESC;
-      `;
+      `);
 
-      const query = db.exec(sql);
-
-      if (query.length === 0) {
+      if (customerPayments.length === 0) {
         return { success: true, result: [] };
       }
 
-      const data = mapResultToObjects(query);
-      return { success: true, result: data };
+      return { success: true, result: customerPayments };
     }
   } catch (error) {
-    console.error("Error getting customer payments table:", error);
+    console.error("❌ Error getting customer payments table:", error);
     return { success: false, error: error.message };
   }
 }
 
-// Get Filter Search Table Customers Payments (Payments)
+// Get Filter Search Table Customers Payments (Customers -> Payments)
 async function getFilterSearchCustomersPayments(data) {
-  const db = await getDB();
-
   try {
     const { column, text } = data;
     const allowedColumns = ["created_at", "sale_num", "amount", "note"];
@@ -904,19 +725,12 @@ async function getFilterSearchCustomersPayments(data) {
 
     const searchTerm = `%${text}%`;
 
-    const stmt = db.prepare(sql);
-    stmt.bind([searchTerm]);
-
-    const rows = [];
-    while (stmt.step()) {
-      rows.push(stmt.getAsObject());
-    }
-    stmt.free();
+    const rows = await queryAll(sql, [searchTerm]);
 
     return { success: true, result: rows };
   } catch (error) {
     console.error(
-      "Error getting filter search table customers payments:",
+      "❌ Error getting filter search table customers payments:",
       error,
     );
     return { success: false, error: error.message };
@@ -925,18 +739,16 @@ async function getFilterSearchCustomersPayments(data) {
 
 // Get All Customers
 async function getAllCustomers(filters) {
-  const db = await getDB();
-
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
-    let sql = "";
+    let customers = "";
     let whereClause = "";
 
     if (filters) {
       whereClause = `WHERE c.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
-      sql = `
+      customers = await queryAll(`
         SELECT 
           c.id,
           c.name,
@@ -954,31 +766,27 @@ async function getAllCustomers(filters) {
         ${whereClause}
         GROUP BY c.id
         ORDER BY c.created_at DESC;
-      `;
+      `);
     } else {
-      sql = `SELECT * FROM v_all_customers`;
+      customers = await queryAll(`SELECT * FROM v_all_customers`);
     }
 
-    const query = await db.exec(sql);
-
-    if (query.length === 0) {
+    if (customers.length === 0) {
       return { success: true, result: [] };
     }
 
-    const customers = mapResultToObjects(query);
     return { success: true, result: customers };
   } catch (error) {
-    console.error("Error getting all customers:", error);
+    console.error("❌ Error getting all customers:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get All Debts by Customer
 async function getAllDebtsCustomer(id) {
-  const db = await getDB();
-
   try {
-    const sql = `
+    const allDebtsCustomer = await queryAll(
+      `
       SELECT
         s.id, 
         s.sale_num,
@@ -995,27 +803,26 @@ async function getAllDebtsCustomer(id) {
       WHERE sd.status_id = 5 AND s.customer_id = ?
       GROUP BY s.id
       ORDER BY s.created_at DESC;
-      `;
+      `,
+      [id],
+    );
 
-    const query = db.exec(sql, [id]);
-    if (query.length === 0) {
+    if (allDebtsCustomer.length === 0) {
       return { success: true, result: [] };
     }
 
-    const allDebtsCustomer = mapResultToObjects(query);
     return { success: true, result: allDebtsCustomer };
   } catch (error) {
-    console.error("Error getting all debts by customer:", error);
+    console.error("❌ Error getting all debts by customer:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get All Payments by Customer
 async function getAllPaymentsCustomer(id) {
-  const db = await getDB();
-
   try {
-    const sql = `
+    const allPaymentsCustomer = await queryAll(
+      `
       SELECT 
 	      p.id, 
         p.created_at, 
@@ -1026,29 +833,27 @@ async function getAllPaymentsCustomer(id) {
       INNER JOIN sale s ON p.sale_id = s.id
       WHERE s.customer_id = ?
       ORDER BY p.created_at DESC;
-      `;
+      `,
+      [id],
+    );
 
-    const query = db.exec(sql, [id]);
-    if (query.length === 0) {
+    if (allPaymentsCustomer.length === 0) {
       return { success: true, result: [] };
     }
 
-    const allPaymentsCustomer = mapResultToObjects(query);
     return { success: true, result: allPaymentsCustomer };
   } catch (error) {
-    console.error("Error getting all pauyments by customer:", error);
+    console.error("❌ Error getting all pauyments by customer:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Customers Status
 async function getCustomersStatus(filters) {
-  const db = await getDB();
-
   try {
     const end = filters?.endDate || "";
-    const params = [end, end, end, end];
-    const sql = `
+    const customersStatus = await queryAll(
+      `
       SELECT 
         SUM(CASE WHEN (IFNULL(total_deuda, 0) <= IFNULL(total_pagado, 0)) THEN 1 ELSE 0 END) AS Active,
         SUM(CASE WHEN (total_deuda > total_pagado) THEN 1 ELSE 0 END) AS 'In Debt'
@@ -1069,26 +874,23 @@ async function getCustomersStatus(filters) {
         ) finanzas ON c.id = finanzas.customer_id
       WHERE c.created_at <= ?
       AND (c.deleted_at IS NULL OR c.deleted_at > ?);
-      `;
+      `,
+      [end, end, end, end],
+    );
 
-    const query = db.exec(sql, params);
-
-    if (query.length === 0) {
+    if (customersStatus.length === 0) {
       return { success: true, result: [] };
     }
 
-    const data = mapResultToObjects(query);
-    return { success: true, result: data };
+    return { success: true, result: customersStatus };
   } catch (error) {
-    console.error("Error getting customers status:", error);
+    console.error("❌ Error getting customers status:", error);
     return { success: false, error: error.message };
   }
 }
 
 // Get Debts by Customer
 async function getDebtsByCustomers(filters) {
-  const db = await getDB();
-
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
@@ -1096,7 +898,7 @@ async function getDebtsByCustomers(filters) {
 
     whereClause = `WHERE s.created_at BETWEEN '${start} 00:00:00' AND '${end} 23:59:59'`;
 
-    const sql = `
+    const debtsCustomers = await queryAll(`
       SELECT 
         c.name AS customer,
         COUNT(CASE WHEN s.status_id = 5 THEN 1 END) AS debts
@@ -1105,17 +907,131 @@ async function getDebtsByCustomers(filters) {
      ${whereClause}
       GROUP BY c.name
       ORDER BY debts DESC;
-    `;
+    `);
 
-    const query = db.exec(sql);
-    if (query.length === 0) {
+    if (debtsCustomers.length === 0) {
       return { success: true, result: [] };
     }
 
-    const allDebtsCustomer = mapResultToObjects(query);
-    return { success: true, result: allDebtsCustomer };
+    return { success: true, result: debtsCustomers };
   } catch (error) {
-    console.error("Error getting debts by customer:", error);
+    console.error("❌ Error getting debts by customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+//* UPDATE ----------
+
+// Edit Customer
+async function editCustomer(data) {
+  try {
+    const db = await getDB();
+    const { id, name, last_name, phone } = data;
+
+    // Search Customer
+    const customerFound = await queryAll(
+      "SELECT id, phone, status_id FROM customer WHERE id = ?;",
+      [id],
+    );
+
+    // Customer?
+    if (!customerFound) {
+      return { success: false, error: AUTH_CODES.CUSTOMER_NOT_FOUND };
+    }
+
+    // Status?
+    if (customerFound.status_id === 0) {
+      return { success: false, error: AUTH_CODES.INACTIVE_CUSTOMER };
+    }
+
+    // Search Phone
+    const phoneFound = await queryAll(
+      "SELECT id FROM customer WHERE phone = ? AND id != ?;",
+      [phone, id],
+    );
+
+    // Phone?
+    if (phoneFound.length > 0) {
+      return { success: false, error: AUTH_CODES.PHONE_USED };
+    }
+
+    db.exec("BEGIN TRANSACTION;");
+
+    db.run(
+      "UPDATE customer SET name = ?, last_name = ?, phone = ? WHERE id = ?;",
+      [name, last_name, phone, id],
+    );
+
+    db.exec("COMMIT;");
+    await saveDB(db);
+    return { success: true, result: AUTH_CODES.EDIT_CUSTOMER };
+  } catch (error) {
+    if (db) db.exec("ROLLBACK;");
+    console.error("❌ Error editing customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Active Customer
+async function activeCustomer(id) {
+  try {
+    // Search Customer
+    const customerFound = await queryAll(
+      "SELECT id, status_id FROM customer WHERE id = ?",
+      [id],
+    );
+
+    // Customer?
+    if (!customerFound) {
+      return { success: false, error: AUTH_CODES.CUSTOMER_NOT_FOUND };
+    }
+
+    // Status?
+    if (!customerFound.status_id === 0) {
+      return { success: false, error: AUTH_CODES.ACTIVE_CUSTOMER };
+    }
+
+    runQuery(
+      "UPDATE customer SET deleted_at = null, status_id = 1 WHERE id = ?",
+      [id],
+    );
+
+    return { success: true, result: AUTH_CODES.RESTORE_CUSTOMER };
+  } catch (error) {
+    console.error("❌ Error active customer:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+//* DELETE ----------
+
+// Delete Customer
+async function deleteCustomer(id) {
+  try {
+    // Search Customer
+    const customerFound = await queryAll(
+      "SELECT id, status_id FROM customer WHERE id = ?",
+      [id],
+    );
+
+    // Customer?
+    if (!customerFound) {
+      return { success: false, error: AUTH_CODES.CUSTOMER_NOT_FOUND };
+    }
+
+    // Status?
+    if (customerFound.status_id === 0 || customerFound.status_id === 3) {
+      return { success: false, error: AUTH_CODES.INACTIVE_CUSTOMER };
+    }
+
+    runQuery(
+      "UPDATE customer SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
+      [id],
+    );
+
+    return { success: true, result: AUTH_CODES.DELETE_CUSTOMER };
+  } catch (error) {
+    console.error("❌ Error deleting customer:", error);
     return { success: false, error: error.message };
   }
 }

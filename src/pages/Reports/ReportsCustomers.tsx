@@ -107,8 +107,8 @@ const ReportsCustomers = () => {
       if (reportsCustomersData?.salesNumberAmount) {
         const salesNumberAmountData =
           reportsCustomersData.salesNumberAmount.result;
-        setSalesNumberCard(salesNumberAmountData.dataNumber[0].salesNumber);
-        setSalesAmountCard(salesNumberAmountData.dataAmount[0].salesAmount);
+        setSalesNumberCard(salesNumberAmountData.salesNumber.salesNumber);
+        setSalesAmountCard(salesNumberAmountData.salesAmount[0].salesAmount);
       }
 
       if (reportsCustomersData?.customersStatus) {

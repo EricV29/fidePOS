@@ -98,23 +98,22 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
 
       if (customerData.customerDebtsNumber) {
         const customerDebtsNumber = customerData.customerDebtsNumber.result;
-        setCustomerDebtsNumberCard(customerDebtsNumber[0].customerDebtsNumber);
+        setCustomerDebtsNumberCard(customerDebtsNumber.customerDebtsNumber);
       }
 
       if (customerData.customerPaymentsNumber) {
         const customerPaymentsNumber =
           customerData.customerPaymentsNumber.result;
         setCustomerPaymentsNumberCard(
-          customerPaymentsNumber[0].customerPaymentsNumber,
+          customerPaymentsNumber.customerPaymentsNumber,
         );
       }
 
       if (customerData.customerTotalDebtAmount) {
         const customerTotalDebtAmount =
           customerData.customerTotalDebtAmount.result;
-
         setCustomerTotalDebtAmountCard(
-          customerTotalDebtAmount[0].customerTotalDebtAmount,
+          customerTotalDebtAmount.customerTotalDebtAmount,
         );
       }
 
@@ -123,7 +122,7 @@ const CustomersPayments: React.FC<CustomersPaymentsProps> = ({}) => {
           customerData.customerTotalPaymentAmount.result;
 
         setCustomerTotalPaymentAmount(
-          customerTotalPaymentAmount[0].customerTotalPaymentAmount,
+          customerTotalPaymentAmount.customerTotalPaymentAmount,
         );
       }
 

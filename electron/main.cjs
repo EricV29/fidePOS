@@ -953,75 +953,7 @@ ipcMain.handle("get-all-products", async (event) => {
   }
 });
 
-//* ----------
-
-//* Get Settings Data Page
-ipcMain.handle("get-settings-data", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const { limitUsers, offsetUsers, limitCategories, offsetCategories } =
-        data;
-
-      const [users, categories] = await Promise.all([
-        getUsers(limitUsers, offsetUsers),
-        getCategories(limitCategories, offsetCategories),
-      ]);
-
-      return {
-        success: true,
-        result: {
-          users,
-          categories,
-        },
-      };
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-//* Get Dashboard Data Page
-ipcMain.handle("get-dashboard-data", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const [
-        topSalesCategory,
-        activeProductsCategory,
-        investment,
-        revenue,
-        recentSales,
-        accountsReceivable,
-      ] = await Promise.all([
-        getTopSalesCategory(data),
-        getActiveProductsCategory(),
-        getInvestment(),
-        getRevenue(),
-        getRecentSales(),
-        getAccountsReceivable(),
-      ]);
-
-      return {
-        success: true,
-        result: {
-          topSalesCategory,
-          activeProductsCategory,
-          investment,
-          revenue,
-          recentSales,
-          accountsReceivable,
-        },
-      };
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
+//* CUSTOMERS LISTENERS ----------
 
 // Get Customer Debts Data
 ipcMain.handle("get-customer-debts-data", async (event, data) => {
@@ -1048,275 +980,11 @@ ipcMain.handle("get-customer-debts-data", async (event, data) => {
   }
 });
 
-// Get Debt Detail Data
-ipcMain.handle("get-debt-detail-data", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const [detailDebt, paymentsDebt] = await Promise.all([
-        getDetailDebt(data),
-        getPaymentsDebt(data),
-      ]);
-      return {
-        success: true,
-        result: {
-          detailDebt,
-          paymentsDebt,
-        },
-      };
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Add Payment Debt
-ipcMain.handle("addPaymentDebt", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const response = await addPaymentDebt(data);
-      if (response.success) {
-        return {
-          success: true,
-          result: response.result,
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error,
-        };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
 // Add Customer
 ipcMain.handle("addCustomer", async (event, data, lan) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await addCustomer(data);
-      if (response.success) {
-        return {
-          success: true,
-          result: response.result,
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error,
-        };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Get Search CodeSKU Table
-ipcMain.handle("get-search-codesku-table", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const response = await getSearchCodeSKU(data);
-      if (response.success) {
-        return {
-          success: true,
-          result: response.result,
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error,
-        };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Add Category
-ipcMain.handle("addCategory", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const response = await addCategory(data);
-      if (response.success) {
-        return {
-          success: true,
-          result: response.result,
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error,
-        };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Edit Category
-ipcMain.handle("editCategory", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const response = await editCategory(data);
-
-      if (response.success) {
-        return {
-          success: true,
-          result: response.result,
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error,
-        };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Delete Category
-ipcMain.handle("deleteCategory", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const response = await deteleCategory(data);
-
-      if (response.success) {
-        return {
-          success: true,
-          result: response.result,
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error,
-        };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Get Filter Search Categories
-ipcMain.handle("get-filter-search-categories", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const response = await getFilterSearchCategories(data);
-      if (response.success) {
-        return {
-          success: true,
-          result: response.result,
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error,
-        };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Get Categories Select
-ipcMain.handle("get-categories-select", async (event) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const response = await getCategoriesSelect();
-      if (response.success) {
-        return {
-          success: true,
-          result: response.result,
-        };
-      } else {
-        return {
-          success: false,
-          error: response.error,
-        };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-//* Get History Data Page
-ipcMain.handle("get-history-data", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const { limit, offset } = data;
-
-      const [
-        salesNumber,
-        pendingSalesAmount,
-        discountsAmount,
-        paidVSPendingNumber,
-        historySales,
-      ] = await Promise.all([
-        getSalesNumberAmount(),
-        getPendingSalesAmount(),
-        getDiscountsAmount(),
-        getPaidVSPendingNumber(),
-        getHistorySales(limit, offset),
-      ]);
-
-      return {
-        success: true,
-        result: {
-          salesNumber,
-          pendingSalesAmount,
-          discountsAmount,
-          paidVSPendingNumber,
-          historySales,
-        },
-      };
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-  }
-});
-
-// Get Filter Search History Sales
-ipcMain.handle("get-filter-search-history-sales", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const response = await getFilterSearchHistorySales(data);
       if (response.success) {
         return {
           success: true,
@@ -1634,6 +1302,379 @@ ipcMain.handle("get-all-debts-payments", async (event, data) => {
   }
 });
 
+//* Get Reports Customers Data Page
+ipcMain.handle("get-reports-customers-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [
+        salesPendingAmount,
+        salesNumberAmount,
+        customersStatus,
+        debtsByCustomers,
+        customers,
+        customersSelect,
+      ] = await Promise.all([
+        getPendingSalesAmount(data),
+        getSalesNumberAmount(data),
+        getCustomersStatus(data),
+        getDebtsByCustomers(data),
+        getAllCustomers(data),
+        getCustomersSelect(data),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          salesPendingAmount,
+          salesNumberAmount,
+          customersStatus,
+          debtsByCustomers,
+          customers,
+          customersSelect,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+//* ----------
+
+//* Get Settings Data Page
+ipcMain.handle("get-settings-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { limitUsers, offsetUsers, limitCategories, offsetCategories } =
+        data;
+
+      const [users, categories] = await Promise.all([
+        getUsers(limitUsers, offsetUsers),
+        getCategories(limitCategories, offsetCategories),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          users,
+          categories,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+//* Get Dashboard Data Page
+ipcMain.handle("get-dashboard-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [
+        topSalesCategory,
+        activeProductsCategory,
+        investment,
+        revenue,
+        recentSales,
+        accountsReceivable,
+      ] = await Promise.all([
+        getTopSalesCategory(data),
+        getActiveProductsCategory(),
+        getInvestment(),
+        getRevenue(),
+        getRecentSales(),
+        getAccountsReceivable(),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          topSalesCategory,
+          activeProductsCategory,
+          investment,
+          revenue,
+          recentSales,
+          accountsReceivable,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Debt Detail Data
+ipcMain.handle("get-debt-detail-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const [detailDebt, paymentsDebt] = await Promise.all([
+        getDetailDebt(data),
+        getPaymentsDebt(data),
+      ]);
+      return {
+        success: true,
+        result: {
+          detailDebt,
+          paymentsDebt,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Add Payment Debt
+ipcMain.handle("addPaymentDebt", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await addPaymentDebt(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Search CodeSKU Table
+ipcMain.handle("get-search-codesku-table", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getSearchCodeSKU(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Add Category
+ipcMain.handle("addCategory", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await addCategory(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Edit Category
+ipcMain.handle("editCategory", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await editCategory(data);
+
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Delete Category
+ipcMain.handle("deleteCategory", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await deteleCategory(data);
+
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Filter Search Categories
+ipcMain.handle("get-filter-search-categories", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchCategories(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Categories Select
+ipcMain.handle("get-categories-select", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getCategoriesSelect();
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+//* Get History Data Page
+ipcMain.handle("get-history-data", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const { limit, offset } = data;
+
+      const [
+        salesNumber,
+        pendingSalesAmount,
+        discountsAmount,
+        paidVSPendingNumber,
+        historySales,
+      ] = await Promise.all([
+        getSalesNumberAmount(),
+        getPendingSalesAmount(),
+        getDiscountsAmount(),
+        getPaidVSPendingNumber(),
+        getHistorySales(limit, offset),
+      ]);
+
+      return {
+        success: true,
+        result: {
+          salesNumber,
+          pendingSalesAmount,
+          discountsAmount,
+          paidVSPendingNumber,
+          historySales,
+        },
+      };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+  }
+});
+
+// Get Filter Search History Sales
+ipcMain.handle("get-filter-search-history-sales", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getFilterSearchHistorySales(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
 //* Get Reports General Data Page
 ipcMain.handle("get-reports-general-data", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
@@ -1717,45 +1758,6 @@ ipcMain.handle("get-reports-products-data", async (event, data) => {
           topSellingProducts,
           productsStatus,
           products,
-        },
-      };
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-  }
-});
-
-//* Get Reports Customers Data Page
-ipcMain.handle("get-reports-customers-data", async (event, data) => {
-  if (event.sender === mainWindow.webContents) {
-    try {
-      const [
-        salesPendingAmount,
-        salesNumberAmount,
-        customersStatus,
-        debtsByCustomers,
-        customers,
-        customersSelect,
-      ] = await Promise.all([
-        getPendingSalesAmount(data),
-        getSalesNumberAmount(data),
-        getCustomersStatus(data),
-        getDebtsByCustomers(data),
-        getAllCustomers(data),
-        getCustomersSelect(data),
-      ]);
-
-      return {
-        success: true,
-        result: {
-          salesPendingAmount,
-          salesNumberAmount,
-          customersStatus,
-          debtsByCustomers,
-          customers,
-          customersSelect,
         },
       };
     } catch (error) {
