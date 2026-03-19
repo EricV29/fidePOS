@@ -1,6 +1,12 @@
 const { app, BrowserWindow, ipcMain, protocol, net } = require("electron");
 const path = require("path");
-const { getDB, createSchema } = require("./db/database.cjs");
+const {
+  assingKeysDB,
+  checkDBExists,
+  loadSecureKeys,
+  verifyAndSaveKeys,
+  newDB,
+} = require("./db/database.cjs");
 const {
   firstRun,
   addAdmin,
@@ -14,6 +20,7 @@ const {
   editUser,
   changePassword,
   getFilterSearchUsers,
+  getAdmin,
 } = require("./db/queries/usersQueries.cjs");
 const {
   getTopSalesCategory,
@@ -123,6 +130,7 @@ const {
 let welcomeWindow = null;
 let mainWindow = null;
 let loginWindow = null;
+let keysWindow = null;
 let signupWindow = null;
 
 //* CREATE WINDOWS --------------------
@@ -157,7 +165,7 @@ function createWelcomeWindow() {
 }
 
 // Signup Window
-function createSignupWindow() {
+function createSignupWindow(keys) {
   signupWindow = new BrowserWindow({
     width: 600,
     height: 650,
@@ -178,6 +186,7 @@ function createSignupWindow() {
   signupWindow.loadURL(url);
 
   signupWindow.webContents.on("did-finish-load", () => {
+    signupWindow.webContents.send("getKeys", keys);
     signupWindow.show();
   });
 }
@@ -208,6 +217,32 @@ function createLoginWindow() {
   });
 }
 
+// Keys Window
+function createKeysWindow() {
+  keysWindow = new BrowserWindow({
+    width: 600,
+    height: 600,
+    resizable: false,
+    frame: false,
+    titleBarStyle: "hidden",
+    titleBarOverlay: false,
+    autoHideMenuBar: true,
+    icon: path.join(__dirname, "../public/fidelogo.ico"),
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+    },
+    show: false,
+  });
+
+  const url = getPageUrl("keys");
+  keysWindow.loadURL(url);
+
+  keysWindow.webContents.on("did-finish-load", () => {
+    keysWindow.show();
+  });
+}
+
 // Main Window
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -235,8 +270,32 @@ function createMainWindow() {
 
 //* START APP --------------------
 async function startApp() {
-  const db = await getDB();
-  await createSchema(db);
+  const existsDB = await checkDBExists();
+  const keys = await loadSecureKeys();
+
+  if (existsDB) {
+    if (keys) {
+      await assingKeysDB(keys);
+      try {
+        const response = await getAdmin();
+        if (response) {
+          createLoginWindow();
+        } else {
+          createSignupWindow();
+        }
+      } catch (error) {
+        console.error("❌ ERROR: ", error);
+      }
+      welcomeWindow.close();
+    } else {
+      welcomeWindow.close();
+      createKeysWindow();
+    }
+  } else {
+    const keys = await newDB(false);
+    welcomeWindow.close();
+    createSignupWindow(keys);
+  }
 }
 
 //* FUNCTIONS --------------------
@@ -304,6 +363,77 @@ ipcMain.handle("login", async (event, data) => {
           error: response.error,
         };
       }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Assing Keys
+ipcMain.handle("assingKeys", async (event, data) => {
+  if (event.sender === keysWindow.webContents) {
+    try {
+      const response = await verifyAndSaveKeys(data);
+      if (response) {
+        await assingKeysDB(data);
+        return { success: true, result: response.result };
+      } else {
+        return { success: false };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Start App By DB and Keys
+ipcMain.on("successAppKeys", async (event) => {
+  if (event.sender === keysWindow.webContents) {
+    try {
+      const response = await getAdmin();
+      keysWindow.close();
+
+      if (response) {
+        createLoginWindow();
+      } else {
+        createSignupWindow();
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// New DB
+ipcMain.handle("newDB", async (event) => {
+  if (event.sender === keysWindow.webContents) {
+    try {
+      const keys = await newDB(true);
+      return { result: keys };
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Start App
+ipcMain.on("startApp", async (event) => {
+  if (event.sender === keysWindow.webContents) {
+    try {
+      keysWindow.close();
+      createSignupWindow();
     } catch (error) {
       console.error("❌ ERROR: ", error);
     }
@@ -1850,30 +1980,13 @@ app.whenReady().then(async () => {
 
   try {
     await createWelcomeWindow();
-    await startApp();
-    console.log("🚀 APP AND DB READY TO START");
+    startApp();
+    // console.log("🚀 APP AND DB READY TO START");
   } catch (err) {
     console.error("Initialization error:", err);
   } finally {
     isInitializing = false;
   }
-
-  await new Promise((r) => setTimeout(r, 3000));
-  const isFirstRun = await firstRun();
-  if (isFirstRun) {
-    console.log(`✅ Is First Run: ${isFirstRun}`);
-    registerInstallDate();
-    welcomeWindow.close();
-    createSignupWindow();
-  } else {
-    console.log(`❌ Is First Run: ${isFirstRun}`);
-    welcomeWindow.close();
-    createLoginWindow();
-  }
-
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createSignupWindow();
-  });
 });
 
 app.on("window-all-closed", () => {

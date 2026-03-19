@@ -41,6 +41,22 @@ async function addUser(data) {
 
 //* READ ----------
 
+// Get Admin
+async function getAdmin() {
+  try {
+    const admin = await queryOne(`SELECT id FROM user WHERE role_id = 1;`);
+
+    if (!admin) {
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("❌ Error getting admin:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 // Get Users
 async function getUsers(limit, offset) {
   try {
@@ -264,6 +280,7 @@ async function deleteUser(id) {
 
 module.exports = {
   addUser,
+  getAdmin,
   getUsers,
   deleteUser,
   editUser,

@@ -25,11 +25,24 @@
   },
   "signup": {
     "title": "Crear Cuenta",
-    "subtitle": "Bienvenido a FidePOS, tu punto de venta ideal para tu negocio."
+    "subtitle": "Bienvenido a FidePOS, tu punto de venta ideal para tu negocio.",
+    "keys": "Copia tus credenciales, tal vez despues las necesites."
   },
   "login": {
     "title": "Iniciar Sesión",
     "subtitle": "Hola, ingresa tus datos para acceder."
+  },
+  "keys": {
+    "title": "¡Hola!",
+    "subtitle1": "Detectamos una base de datos en este equipo, pero faltan las credenciales de acceso. ¿Cuentas con ellas?",
+    "text1": "No tengo credenciales. Crear una nueva base de datos",
+    "text2": "La base de datos anterior se movera a tu carpeta de Descargas.",
+    "text3": "Credenciales para tu nueva base de datos:",
+    "text_pass_db": "Contraseña de DB:",
+    "salt_db": "Sal de cifrado:",
+    "text_save_keys": "Guarda estas credenciales en un lugar seguro; las necesitarás si mueves tu base de datos.",
+    "copy_all": "Copiar credenciales (Contraseña y Sal)",
+    "btn2": "Continuar"
   },
   "dashboard": {
     "title": "Panel",
@@ -296,7 +309,8 @@
     "text_category_not_found": "Categoría no encontrada.",
     "text_inactive_category": "Categoría inactiva.",
     "text_category_name_used": "Nombre de categoría ya utilizado.",
-    "text_category_have_products": "Esta categoría tiene productos relacionados."
+    "text_category_have_products": "Esta categoría tiene productos relacionados.",
+    "text_incorrect_keys": "Las credenciales de la base de datos son incorrectas."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
@@ -434,6 +448,11 @@
     "input3": "Correo electrónico",
     "input4": "Teléfono",
     "btn": "Editar usuario"
+  },
+  "formKeys": {
+    "input1": "CONTRASEÑA DB",
+    "input2": "SAL DE CIFRADO DB",
+    "btn": "Enviar"
   },
   "modalSale": {
     "title": "Venta",

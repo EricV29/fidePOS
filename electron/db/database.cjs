@@ -1,21 +1,213 @@
 const initSqlJs = require("sql.js");
 const fs = require("fs");
 const path = require("path");
-const { app } = require("electron");
+const { app, safeStorage } = require("electron");
 const crypto = require("crypto");
+const { generateDBSecurity } = require("../utility/generateDBKeys.cjs");
 require("dotenv").config();
 
-const PASSWORD = process.env.DB_PASSWORD;
-const SALT = process.env.DB_SALT;
+const configPath = path.join(app.getPath("userData"), "config.json");
+let PASSWORD, SALT, ENCRYPTION_KEY, ALGORITHM, dbPath;
 let dbInstance = null;
 
-const ENCRYPTION_KEY = crypto.scryptSync(PASSWORD, SALT, 32);
-const ALGORITHM = "aes-256-cbc";
+//* SEARCH APP.DB
+function checkDBExists() {
+  const dbPath = path.join(app.getPath("appData"), "fidepos", "app.db");
 
-if (process.env.NODE_ENV === "development") {
-  app.setPath("userData", path.join(app.getPath("appData"), "fidepos"));
+  const exists = fs.existsSync(dbPath);
+
+  if (exists) {
+    console.log(`🔍 Database found at: ${dbPath}`);
+  } else {
+    console.log("Empty system: Database file not found.");
+  }
+
+  return exists;
 }
-const dbPath = path.join(app.getPath("userData"), "app.db");
+
+//* SEARCH KEY ON SAFESTORAGE
+async function loadSecureKeys() {
+  const configPath = path.join(app.getPath("userData"), "config.bin");
+
+  try {
+    if (fs.existsSync(configPath)) {
+      const encryptedBuffer = fs.readFileSync(configPath);
+
+      if (!safeStorage.isEncryptionAvailable()) {
+        throw new Error("Encryption is not available on this system.");
+      }
+
+      const decryptedData = safeStorage.decryptString(encryptedBuffer);
+      return JSON.parse(decryptedData);
+    }
+
+    return null;
+  } catch (err) {
+    console.error("❌ Error descifrando las llaves del sistema:", err);
+    return null;
+  }
+}
+
+//* LOAD KEYS
+async function saveSecureKeys(inputKeys) {
+  try {
+    const userDataPath = app.getPath("userData");
+    const configPath = path.join(userDataPath, "config.bin");
+
+    // 1. Asegurar que el directorio existe
+    const dir = path.dirname(configPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+
+    // 2. Cifrar el objeto keys (db_password y db_salt)
+    const keysString = JSON.stringify(inputKeys);
+    const secureBuffer = safeStorage.encryptString(keysString);
+
+    // 3. Escribir el archivo binario
+    fs.writeFileSync(configPath, secureBuffer);
+
+    console.log("💾 Llaves guardadas exitosamente en config.bin");
+    return true;
+  } catch (err) {
+    console.error("❌ Error crítico al guardar las llaves:", err);
+    return false;
+  }
+}
+
+//* NEW DB
+async function newDB(move) {
+  try {
+    // 1. Ruta de ORIGEN (donde está la DB actualmente)
+    const userDataPath = app.getPath("userData");
+    const sourcePath = path.join(userDataPath, "app.db");
+
+    // 2. Ruta de DESTINO LOCAL (C:\Users\TuUsuario\Downloads)
+    const localDownloads = path.join(process.env.USERPROFILE, "downloads");
+    const timestamp = new Date()
+      .toISOString()
+      .replace(/[:.]/g, "-")
+      .slice(0, 19);
+    const destinationPath = path.join(
+      localDownloads,
+      `fidepos_moved_${timestamp}.db`,
+    );
+
+    if (move) {
+      // 3. Verificar que el archivo de origen existe
+      if (!fs.existsSync(sourcePath)) {
+        console.error("❌ No existe el archivo en la ruta original.");
+        return { success: false, message: "Archivo original no encontrado" };
+      }
+
+      // 4. Asegurar que la carpeta de destino existe
+      if (!fs.existsSync(localDownloads)) {
+        fs.mkdirSync(localDownloads, { recursive: true });
+      }
+
+      // 5. MOVER EL ARCHIVO (Copia y luego Borra)
+      // Usamos renameSync si es en el mismo disco, o copy+unlink si hay dudas de particiones
+      fs.copyFileSync(sourcePath, destinationPath); // Copia al destino
+      fs.unlinkSync(sourcePath); // BORRA DEL ORIGEN (AppData)
+
+      console.log("✅ Archivo MOVIDO exitosamente a:", destinationPath);
+    }
+
+    const keys = await generateDBSecurity();
+    await assingKeysDB(keys);
+    await saveSecureKeys(keys);
+    await createSchema();
+
+    return { success: true, path: destinationPath, keys: keys };
+  } catch (err) {
+    console.error("❌ Error al mover el archivo:", err);
+    return { success: false, error: err.message };
+  }
+}
+
+//* ASSING KEYS FOR DB
+async function assingKeysDB(keys) {
+  if (!app.isPackaged) {
+    PASSWORD = keys.db_password;
+    SALT = keys.db_salt;
+  }
+
+  if (!PASSWORD || !SALT) {
+    throw new Error("Security credentials missing (Password or Salt)");
+  }
+
+  ENCRYPTION_KEY = crypto.scryptSync(PASSWORD, SALT, 32);
+  ALGORITHM = "aes-256-cbc";
+
+  if (true) {
+    const devPath = path.join(app.getPath("appData"), "fidepos");
+    app.setPath("userData", devPath);
+  }
+
+  dbPath = path.join(app.getPath("userData"), "app.db");
+}
+
+//* VERIFY KEYS FOR DB
+async function verifyAndSaveKeys(inputKeys) {
+  const { db_password, db_salt } = inputKeys;
+
+  const userDataPath = app.getPath("userData");
+  const dbPath = path.join(userDataPath, "app.db");
+  const configPath = path.join(userDataPath, "config.bin");
+
+  try {
+    // 1. Verificar si la base de datos existe físicamente
+    if (!fs.existsSync(dbPath)) {
+      console.error("❌ No se encontró app.db para validar.");
+      return false;
+    }
+
+    // 2. Intentar derivar la llave y probar el descifrado
+    // Generamos la llave de 32 bytes igual que en el resto de la app
+    const testKey = crypto.scryptSync(db_password, db_salt, 32);
+    const encryptedBuffer = fs.readFileSync(dbPath);
+
+    try {
+      // Intentamos leer el IV (primeros 16 bytes) y los datos
+      const iv = encryptedBuffer.subarray(0, 16);
+      const data = encryptedBuffer.subarray(16);
+      const decipher = crypto.createDecipheriv("aes-256-cbc", testKey, iv);
+
+      // Si esto no lanza error, significa que la llave es candidata correcta
+      decipher.update(data);
+      decipher.final();
+
+      console.log("✅ Validación exitosa: Las llaves abren la base de datos.");
+    } catch (decryptError) {
+      console.error(
+        "❌ Error de validación: Las llaves no coinciden con el cifrado de la DB.",
+      );
+      return false;
+    }
+
+    // 3. Si la validación pasó, guardamos las llaves de forma segura
+    try {
+      const keysString = JSON.stringify(inputKeys);
+      const secureBuffer = safeStorage.encryptString(keysString);
+
+      fs.writeFileSync(configPath, secureBuffer);
+      console.log("💾 config.bin actualizado con las nuevas llaves.");
+
+      return true;
+    } catch (saveError) {
+      console.error(
+        "❌ Error al escribir el archivo de configuración:",
+        saveError,
+      );
+      return false;
+    }
+  } catch (err) {
+    console.error("❌ Error crítico en verifyAndSaveKeys:", err);
+    return false;
+  }
+}
+
+//*----------------
 
 //* GET INSTANCE
 async function getDB() {
@@ -27,18 +219,14 @@ async function getDB() {
     const encryptedBuffer = fs.readFileSync(dbPath);
 
     try {
-      // 1. Extraer el IV (primeros 16 bytes)
       const iv = encryptedBuffer.subarray(0, 16);
-      // 2. Extraer los datos cifrados (el resto)
       const data = encryptedBuffer.subarray(16);
-      // 3. Crear el descifrador
       const decipher = crypto.createDecipheriv(ALGORITHM, ENCRYPTION_KEY, iv);
       const decrypted = Buffer.concat([
         decipher.update(data),
         decipher.final(),
       ]);
 
-      // 4. Cargar en sql.js
       dbInstance = new SQL.Database(decrypted);
       console.log("📦 DB cargada y descifrada con éxito.");
     } catch (err) {
@@ -56,23 +244,26 @@ async function getDB() {
 //* SAVE DATA BASE
 async function saveDB(db) {
   try {
-    const dbBuffer = Buffer.from(db.export());
-    // 1. Generar un IV aleatorio para esta sesión de guardado
+    const dir = path.dirname(dbPath);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    const binaryData = db.export();
+    const dbBuffer = Buffer.from(binaryData);
+
     const iv = crypto.randomBytes(16);
-    // 2. Crear el cifrador
     const cipher = crypto.createCipheriv(ALGORITHM, ENCRYPTION_KEY, iv);
-    // 3. Cifrar y concatenar (IV + Datos Cifrados)
+
     const encrypted = Buffer.concat([
       iv,
       cipher.update(dbBuffer),
       cipher.final(),
     ]);
 
-    // 4. Escribir al disco
     fs.writeFileSync(dbPath, encrypted);
-    console.log("💾 DB cifrada y guardada.");
+    console.log("💾 DB cifrada y guardada en:", dbPath);
   } catch (err) {
-    console.error("❌ Error saved DB/cifrar DB:", err);
+    console.error("❌ Error al guardar/cifrar la DB:", err);
   }
 }
 
@@ -129,9 +320,11 @@ async function runQuery(sql, params = []) {
 }
 
 //* CREATE SCHEMA DB
-async function createSchema(db) {
+async function createSchema() {
   // DATABASE FILE
   // C:\Users\user\AppData\Roaming\fidepos
+
+  const db = await getDB();
   let shouldSave = false;
 
   // CREATE ROLE TABLE
@@ -606,4 +799,9 @@ module.exports = {
   queryAll,
   queryOne,
   runQuery,
+  checkDBExists,
+  loadSecureKeys,
+  newDB,
+  assingKeysDB,
+  verifyAndSaveKeys,
 };
