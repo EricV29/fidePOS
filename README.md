@@ -8,7 +8,7 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 
 ---
 
-<h2 align="center">Development technologies 🧑‍💻</h2>
+<h2 align="center">Stack Tecnológico 🧑‍💻</h2>
 
 <p align="center">
   <a href="https://skillicons.dev">
@@ -16,32 +16,28 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
   </a>
 </p>
 
-<h2 align="center">Features 🛠️</h2>
+## Features 🛠️
 
-<li>...</li>
-<li>...</li>
-<li>...</li>
+- 📦 **Gestión de Inventario:** Control total sobre productos, categorías y stock.
+- 👥 **Administración de Clientes:** Seguimiento de deudas, historial de pagos y perfiles.
+- 📊 **Dashboard Interactivo:** Visualización de métricas clave y estadísticas de venta mediante gráficas.
+- 📄 **Reportes Profesionales:** Generación y exportación de datos en formatos **PDF, Excel y CSV**.
+- 🖥️ **Arquitectura de Escritorio:** Ejecución local segura y rápida (vía Electron).
+- 🌐 **Soporte Multi-idioma:** Inglés y Español con i18n.
 
 <br/>
 
-> [!IMPORTANT]
-> ...
-
-> [!WARNING]
-> ...
-
 > [!NOTE]
-> ...
-
-> [!TIP]
-> ...
-
-> [!CAUTION]
-> ...
+> El sistema acutalmente se puede utilizar en modo desarrollo, faltan configuraciones para crear el .exe e instalar la aplicación
 
 <h2 align="center">Project Setup 🚀</h2>
 
-## 📁 Clone Repository
+### 📄 Requisitos previos
+
+- Node.js
+- npm
+
+### 📁 Clonar Repositorio
 
 To use this project locally, run the following commands in your terminal:
 
@@ -55,7 +51,7 @@ npm install
 
 ### 🔧 Development
 
-Run the app in development mode (starts Vite and launches Electron):
+Ejecutar modo desarrollo (Vite y Electron):
 
 ```bash
 npm run dev
@@ -63,56 +59,62 @@ npm run dev
 
 ### 🏗️ Build
 
-Create a production package with electron-builder:
+Generar Build de producción:
 
 ```bash
 npm run build
 ```
 
-### 📦 Distribution
+### 📦 Distribución
 
-Create a production package with electron-builder:
+Genera un paquete de producción utilizando electron-builder:
 
 ```bash
 npm run dist
 ```
 
-### 🧹 Clean
+### 🧹 Limpieza
 
-Remove all output folders (`dist` and `releases`):
+Elimina todas las carpetas de salida (`dist` y `releases`):
 
 ```bash
 npm run clean
 ```
 
-### 🧩 Full Package
+### 🧩 Empaquetado completo
 
-Clean, build, and package everything in one command:
+Limpia, construye y empaqueta todo el proyecto con un solo comando:
 
 ```bash
 npm run package
 ```
 
-### 📁 Directory Structure
+### 📁 Estructura del proyecto
 
 ```
 📁 project/
-┣ 📂 electron/ -> Electron backend
+┣ 📂 constants/
+┣ 📂 electron/
 ┃ ┣ 📜 main.cjs
 ┃ ┣ 📜 preload.js
-┃ ┣ 📜 intallDateManager.cjs
 ┃ ┗ 📂 db/
 ┃   ┣ 📜 database.js
-┃   ┗ 📜 queries.js
+┃   ┗ 📂 queries/
+┃
+┃ ┗ 📂 utility/
+┃
+┣ 📂 public/
 ┃
 ┣ 📂 src/ → React frontend
 ┃ ┣ 📜 App.tsx
+┃ ┣ 📜 i18n.tsx
 ┃ ┣ 📜 main.tsx
 ┃ ┣ 📜 index.css
 ┃ ┣ 📂 assets/
 ┃ ┣ 📂 components/
-┃ ┣ 📂 hooks/
+┃ ┣ 📂 constext/
 ┃ ┣ 📂 lib/
+┃ ┣ 📂 locales/
 ┃ ┣ 📂 pages/
 ┃ ┗ 📂 types/
 ┃ ┗ 📂 utility/
@@ -124,3 +126,16 @@ npm run package
 ┣ ⚙️ tailwind.config.js
 ┗ ⚙️ vite.config.ts
 ```
+
+## 📸 Sistema
+
+| Vista del Sistema                                   | Descripción                                                                                                                              |
+| :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
+| ![Dashboard](./public/screenshots/dashboard.png)    | **Panel Principal:** Visualización de métricas de ventas diarias, ganancias y estado general del negocio mediante gráficas interactivas. |
+| ![Inventory](./public/screenshots/nuevaVenta.png)   | **Ventas:** Interfaz ágil para registrar nuevas ventas, aplicar descuentos y procesar diferentes métodos de pago.                        |
+| ![Customers](./public/screenshots/inventario.png)   | **Inventario:** Control total de stock, categorías y precios.                                                                            |
+| ![Export](./public/screenshots/historial.png)       | **Historial de Ventas:** Registro cronológico detallado de todas las transacciones realizadas.                                           |
+| ![Export](./public/screenshots/clientesGeneral.png) | **Clientes:** Directorio centralizado para gestionar la información de contacto y perfiles de compradores frecuentes.                    |
+| ![Export](./public/screenshots/clientesPagos.png)   | **Deudas y Pagos de Clientes:** Seguimiento especializado de créditos, saldos pendientes y registro histórico de abonos de clientes.     |
+| ![Export](./public/screenshots/reportes.png)        | **Reportes:** Interfaz Herramienta para exportar métricas de rendimiento y cierres de caja en formatos profesionales como PDF y Excel.   |
+| ![Export](./public/screenshots/configuracion.png)   | **Configuración:** Personalización del sistema, gestión de usuarios y gestion de categorías.                                             |

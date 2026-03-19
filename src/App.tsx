@@ -1,6 +1,7 @@
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import Welcome from "./pages/Welcome";
 import Login from "./pages/login/Login";
+import Keys from "./pages/login/Keys";
 import Signup from "./pages/signup/Signup";
 import Main from "./pages/MainPage";
 import Dashboard from "./pages/Dashboard";
@@ -29,6 +30,7 @@ function App() {
             <Route path="/Welcome" element={<Welcome />} />
             <Route path="/Signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/keys" element={<Keys />} />
 
             <Route path="/main" element={<Main />}>
               <Route index element={<Navigate to="dashboard" />} />

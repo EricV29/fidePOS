@@ -5,11 +5,27 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Install Date
   getInstallDate: () => ipcRenderer.invoke("getInstallDate"),
 
+  // Send Keys to Signup
+  getKeys: (callback) =>
+    ipcRenderer.on("getKeys", (_event, value) => callback(value)),
+
   // Singup bridge
   signup: (data, lan) => ipcRenderer.invoke("signup", data, lan),
 
   // Login
   login: (data) => ipcRenderer.invoke("login", data),
+
+  // Assing Keys
+  assingKeys: (data) => ipcRenderer.invoke("assingKeys", data),
+
+  // Start App By DB and Keys
+  successAppKeys: () => ipcRenderer.send("successAppKeys"),
+
+  // New DB
+  newDB: () => ipcRenderer.invoke("newDB"),
+
+  // Start App
+  startApp: () => ipcRenderer.send("startApp"),
 
   // Get session
   getSession: (data) => ipcRenderer.invoke("get-session", data),

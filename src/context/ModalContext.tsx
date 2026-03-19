@@ -282,6 +282,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_deleted_category",
       },
+      [AUTH_CODES.INCORRECT_KEYS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_incorrect_keys",
+      },
     };
 
     const config = alertConfig[code];

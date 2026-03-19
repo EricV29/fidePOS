@@ -15,6 +15,8 @@ interface UserSession {
 declare global {
   interface Window {
     electronAPI: {
+      getKeys(arg0: (datos: any) => void): unknown;
+
       // INSTALL DATE APLICATION
       getInstallDate: () => Promise<string>;
 
@@ -30,6 +32,34 @@ declare global {
 
       // LOGIN
       login: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // ASSING KEYS
+      assingKeys: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // START APP BY DB AND KEYS
+      successAppKeys: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // NEW DB
+      newDB: () => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // START APP
+      startApp: () => Promise<{
         success: boolean;
         result?: string;
         error?: string;
