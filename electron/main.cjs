@@ -243,6 +243,32 @@ function createKeysWindow() {
   });
 }
 
+// Email Credentiasl
+function createEmailWindow() {
+  emailWindow = new BrowserWindow({
+    width: 600,
+    height: 600,
+    resizable: false,
+    frame: false,
+    titleBarStyle: "hidden",
+    titleBarOverlay: false,
+    autoHideMenuBar: true,
+    icon: path.join(__dirname, "../public/fidelogo.ico"),
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js"),
+      contextIsolation: true,
+    },
+    show: false,
+  });
+
+  const url = getPageUrl("email");
+  emailWindow.loadURL(url);
+
+  emailWindow.webContents.on("did-finish-load", () => {
+    emailWindow.show();
+  });
+}
+
 // Main Window
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -1979,9 +2005,9 @@ app.whenReady().then(async () => {
   });
 
   try {
-    await createWelcomeWindow();
-    startApp();
-    // console.log("🚀 APP AND DB READY TO START");
+    createEmailWindow();
+    // await createWelcomeWindow();
+    // startApp();
   } catch (err) {
     console.error("Initialization error:", err);
   } finally {
