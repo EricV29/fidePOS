@@ -127,10 +127,8 @@ async function newDB(move) {
 
 //* ASSING KEYS FOR DB
 async function assingKeysDB(keys) {
-  if (!app.isPackaged) {
-    PASSWORD = keys.db_password;
-    SALT = keys.db_salt;
-  }
+  PASSWORD = keys.db_password;
+  SALT = keys.db_salt;
 
   if (!PASSWORD || !SALT) {
     throw new Error("Security credentials missing (Password or Salt)");
@@ -139,12 +137,11 @@ async function assingKeysDB(keys) {
   ENCRYPTION_KEY = crypto.scryptSync(PASSWORD, SALT, 32);
   ALGORITHM = "aes-256-cbc";
 
-  if (true) {
-    const devPath = path.join(app.getPath("appData"), "fidepos");
-    app.setPath("userData", devPath);
-  }
+  const devPath = path.join(app.getPath("appData"), "fidepos");
+  app.setPath("userData", devPath);
 
   dbPath = path.join(app.getPath("userData"), "app.db");
+  console.log("🚀 APP AND DB READY TO START");
 }
 
 //* VERIFY KEYS FOR DB

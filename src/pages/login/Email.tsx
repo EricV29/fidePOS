@@ -13,7 +13,7 @@ interface DatabaseKeys {
   db_salt: string;
 }
 
-const Keys: React.FC = () => {
+const Email: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
@@ -82,9 +82,13 @@ const Keys: React.FC = () => {
         </div>
         <div className="w-full flex flex-col justify-center items-center">
           <img src={fidelogoc} alt="" className="w-20" />
-          <h1>{t("keys.title")}</h1>
+          <h1>Email</h1>
           <p className="font-extralight w-[460px] text-center">
-            {t("keys.subtitle1")}
+            Para utilizar este sistema tienes 2 opciones: 1. Agregar
+            credenciales de un correo electronico(Necesitas internet para las
+            dos funciones) que tengas para poder utilizar las siguientes
+            funciones: - Recuperar contraseña. - Bienvenida a nuevos usuarios.
+            2. Utilizar sin correo electronico.
           </p>
         </div>
 
@@ -94,40 +98,12 @@ const Keys: React.FC = () => {
 
         <div className="w-[450px] flex flex-col justify-center items-center">
           <button className="bgreen" onClick={handleNewDB} disabled={!!keys}>
-            <p className="font-extralight">{t("keys.text1")}</p>
+            <p className="font-extralight">No utilizar correo electronico</p>
           </button>
-          <p className="w-[460px] text-center font-extralight ">
-            {t("keys.text2")}
-          </p>
-          {keys && (
-            <div className="mt-4 p-4 flex flex-col justify-center gap-2 bg-[#f57c0020] border border-orange-200 rounded-lg">
-              <p className="font-bold mb-2">{t("keys.text3")}</p>
-              <p className="text-xs font-bold text-[#D32F2F] italic">
-                * {t("keys.text_save_keys")}
-              </p>
-
-              <div className="space-y-2 text-sm font-mono bg-white p-3 rounded border">
-                <p>
-                  <strong>{t("keys.text_pass_db")}</strong> {keys.db_password}
-                </p>
-                <p>
-                  <strong>{t("keys.salt_db")}</strong> {keys.db_salt}
-                </p>
-              </div>
-
-              <button
-                className="bgreen"
-                onClick={handleStartApp}
-                disabled={!keys}
-              >
-                <p className="font-extralight">{t("keys.btn2")}</p>
-              </button>
-            </div>
-          )}
         </div>
       </div>
     </>
   );
 };
 
-export default Keys;
+export default Email;
