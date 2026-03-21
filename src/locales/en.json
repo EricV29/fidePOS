@@ -23,6 +23,17 @@
     "settings": "Settings",
     "logout": "Logout"
   },
+  "start": {
+    "option1": "First run",
+    "description1": "Data Base: Create a new Data Base.",
+    "description2": "Email: You can use your Gmail account to enable password recovery and send welcome emails to new users. Please note: Without this configuration, you will need to contact the developers directly to recover your password.",
+    "btn_tutorial": "Link Tutorial."
+  },
+  "formEmailCredentials": {
+    "input1": "Email (gmail)",
+    "input2": "Google App Password",
+    "btn": "ACCESS"
+  },
   "signup": {
     "title": "Create Account",
     "subtitle": "Welcome to FidePOS, your ideal point of view for you bussiness.",
