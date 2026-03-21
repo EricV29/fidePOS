@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import back from "@img/backgroundfidepos.png";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
 import EmailForm from "@forms/form-email";
+import KeysForm from "@forms/form-keys";
 import CustomSelect from "@components/Select";
+import DBFileInput from "@components/inputDB";
 
 const Welcome: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -11,6 +13,7 @@ const Welcome: React.FC = () => {
     { label: t("settings.input1_option1"), value: "en" },
     { label: t("settings.input1_option2"), value: "es" },
   ];
+  const [dbPath, setDbPath] = useState<string | null>(null);
 
   const handleLanguageChange = (value: string) => {
     i18n.changeLanguage(value);
@@ -19,6 +22,15 @@ const Welcome: React.FC = () => {
 
   const handleEmail = () => {
     console.log("Email");
+  };
+
+  const handleFileSelection = (file: File | null) => {
+    if (file) {
+      // En HTML normal no podemos obtener la ruta completa C:/...,
+      // pero podemos mostrar el nombre del archivo.
+      // setSelectedPath(file.name);
+      console.log("Archivo listo para procesar:", file);
+    }
   };
 
   return (
@@ -79,20 +91,26 @@ const Welcome: React.FC = () => {
             </div>
           </div>
           <div
-            className="w-1/2 rounded-2xl p-5 bg-white flex flex-col justify-start items-center"
+            className="w-1/2 rounded-2xl p-5 bg-white flex flex-col justify-start items-center gap-3"
             style={{
               filter: "drop-shadow(-3px 5px 4px rgba(0,0,0,0.5))",
             }}
           >
             <h2 className="text-center font-bold flex items-center gap-2">
-              Tengo una Base de Datos
+              {t("start.option2")}
             </h2>
-
-            <p className="text-sm">Selecciona tu archivo .db:</p>
-
-            <p className="text-sm">
-              Ingresa tus credenciales de tu base de datos:
-            </p>
+            <div className="w-full flex flex-col gap-2">
+              <p>{t("start.description3")}</p>
+              <DBFileInput
+                path={dbPath}
+                onSelect={handleFileSelection}
+                error={
+                  !dbPath ? "Debes seleccionar un archivo para continuar" : ""
+                }
+              />
+              <p>{t("start.description4")}</p>
+              <KeysForm />
+            </div>
           </div>
         </div>
       </div>

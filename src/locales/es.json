@@ -27,11 +27,22 @@
     "option1": "Primera vez",
     "description1": "Base de datos: Se creara una nueva base de datos.",
     "description2": "Correo electrónico: Puedes configurar tu cuenta de Gmail para permitir la recuperación de contraseñas y el envío automático de correos de bienvenida. Nota: Si no configuras esta opción, deberás contactar directamente con el soporte técnico para recuperar el acceso a tu cuenta.",
-    "btn_tutorial": "Enlace Tutorial."
+    "btn_tutorial": "Enlace Tutorial.",
+    "option2": "Tengo una base de datos",
+    "description3": "Selecciona tu archivo (.db):",
+    "description4": "Ingresa tus credenciales de tu base de datos:"
   },
   "formEmailCredentials": {
     "input1": "Correo electrónico (gmail)",
     "input2": "Contraseña de Aplicación de Google",
+    "btn": "ACCEDER"
+  },
+  "formDBCredentials": {
+    "input1": "Selecciona tu archivo (.db):",
+    "btn1.1": "Buscar",
+    "btn1.2": "Cambiar",
+    "input2": "Contraseña de Base de Datos",
+    "input3": "Sal de Cifrado de Base de Datos",
     "btn": "ACCEDER"
   },
   "signup": {

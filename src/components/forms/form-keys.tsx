@@ -41,7 +41,7 @@ export default function KeysForm({ onSuccess }: KeysFormProps) {
           render={({ field }) => (
             <FormItem>
               <FormLabel className="font-semibold">
-                CORREO ELECTRONICO
+                {t("formDBCredentials.input2")}
               </FormLabel>
               <FormControl>
                 <Input
@@ -60,7 +60,9 @@ export default function KeysForm({ onSuccess }: KeysFormProps) {
             name="db_salt"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="font-semibold">EMAIL PASS</FormLabel>
+                <FormLabel className="font-semibold">
+                  {t("formDBCredentials.input3")}
+                </FormLabel>
                 <FormControl>
                   <div className="relative">
                     <Input
@@ -78,7 +80,7 @@ export default function KeysForm({ onSuccess }: KeysFormProps) {
         </div>
         <div>
           <button type="submit" className="borange">
-            ACCEDER CON CORREO ELECTRONICO
+            {t("formDBCredentials.btn")}
           </button>
         </div>
       </form>

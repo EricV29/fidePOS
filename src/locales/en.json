@@ -27,11 +27,22 @@
     "option1": "First run",
     "description1": "Data Base: Create a new Data Base.",
     "description2": "Email: You can use your Gmail account to enable password recovery and send welcome emails to new users. Please note: Without this configuration, you will need to contact the developers directly to recover your password.",
-    "btn_tutorial": "Link Tutorial."
+    "btn_tutorial": "Link Tutorial.",
+    "option2": "I have data base",
+    "description3": "Select your file of data base (.db):",
+    "description4": "Write your credentials of data base:"
   },
   "formEmailCredentials": {
     "input1": "Email (gmail)",
     "input2": "Google App Password",
+    "btn": "ACCESS"
+  },
+  "formDBCredentials": {
+    "input1": "Select your file of data base (.db):",
+    "btn1.1": "Search",
+    "btn1.2": "Change",
+    "input2": "Password of data base",
+    "input3": "Salt of data base",
     "btn": "ACCESS"
   },
   "signup": {
