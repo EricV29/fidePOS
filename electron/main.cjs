@@ -139,6 +139,34 @@ let signupWindow = null;
 function createWelcomeWindow() {
   return new Promise((resolve) => {
     welcomeWindow = new BrowserWindow({
+      width: 1200,
+      height: 700,
+      resizable: false,
+      frame: false,
+      titleBarStyle: "hidden",
+      titleBarOverlay: false,
+      autoHideMenuBar: true,
+      show: false,
+      icon: path.join(__dirname, "../public/fidelogo.ico"),
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+      },
+    });
+
+    const url = getPageUrl("welcome");
+    welcomeWindow.loadURL(url);
+
+    welcomeWindow.webContents.once("did-finish-load", () => {
+      welcomeWindow.show();
+      resolve();
+    });
+  });
+}
+
+function createLoadingWindow() {
+  return new Promise((resolve) => {
+    welcomeWindow = new BrowserWindow({
       width: 600,
       height: 450,
       resizable: false,
@@ -2005,7 +2033,8 @@ app.whenReady().then(async () => {
   });
 
   try {
-    createEmailWindow();
+    createWelcomeWindow();
+    // createEmailWindow();
     // await createWelcomeWindow();
     // startApp();
   } catch (err) {

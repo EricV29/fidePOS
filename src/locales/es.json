@@ -23,6 +23,17 @@
     "settings": "Ajustes",
     "logout": "Cerrar Sesión"
   },
+  "start": {
+    "option1": "Primera vez",
+    "description1": "Base de datos: Se creara una nueva base de datos.",
+    "description2": "Correo electrónico: Puedes configurar tu cuenta de Gmail para permitir la recuperación de contraseñas y el envío automático de correos de bienvenida. Nota: Si no configuras esta opción, deberás contactar directamente con el soporte técnico para recuperar el acceso a tu cuenta.",
+    "btn_tutorial": "Enlace Tutorial."
+  },
+  "formEmailCredentials": {
+    "input1": "Correo electrónico (gmail)",
+    "input2": "Contraseña de Aplicación de Google",
+    "btn": "ACCEDER"
+  },
   "signup": {
     "title": "Crear Cuenta",
     "subtitle": "Bienvenido a FidePOS, tu punto de venta ideal para tu negocio.",
