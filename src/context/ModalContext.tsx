@@ -286,6 +286,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_incorrect_keys",
       },
+      [AUTH_CODES.NOT_SELECTED_FILE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_selected_file",
+      },
     };
 
     const config = alertConfig[code];

@@ -325,7 +325,8 @@
     "text_inactive_category": "Category inactive.",
     "text_category_name_used": "Category name is already in use.",
     "text_category_have_products": "This category still has products.",
-    "text_incorrect_keys": "Incorrect credentials for the database."
+    "text_incorrect_keys": "Incorrect credentials for the database.",
+    "text_not_selected_file": "No selected file yet."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",
@@ -527,7 +528,9 @@
     "max300_characters": "Max 300 characters",
     "max200_characters": "Max 200 characters",
     "number10_digits": "Number of 10 digits",
-    "required": "Required"
+    "required": "Required",
+    "invalid_email": "Invalid email",
+    "invalid_app_pass": "Invalid app password"
   },
   "placeholders": {
     "name": "name",

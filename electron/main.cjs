@@ -107,6 +107,7 @@ const { generatePassword } = require("./utility/generatePassword.cjs");
 const { uploadUserImage } = require("./utility/uploadUserImage.cjs");
 const isDev = !app.isPackaged;
 require("dotenv").config();
+const fs = require("fs");
 
 function getPageUrl(route = "") {
   if (isDev) {
@@ -166,7 +167,7 @@ function createWelcomeWindow() {
 
 function createLoadingWindow() {
   return new Promise((resolve) => {
-    welcomeWindow = new BrowserWindow({
+    loadWindow = new BrowserWindow({
       width: 600,
       height: 450,
       resizable: false,
@@ -182,11 +183,11 @@ function createLoadingWindow() {
       },
     });
 
-    const url = getPageUrl("welcome");
-    welcomeWindow.loadURL(url);
+    const url = getPageUrl("loading");
+    loadWindow.loadURL(url);
 
-    welcomeWindow.webContents.once("did-finish-load", () => {
-      welcomeWindow.show();
+    loadWindow.webContents.once("did-finish-load", () => {
+      loadWindow.show();
       resolve();
     });
   });
@@ -323,33 +324,45 @@ function createMainWindow() {
 }
 
 //* START APP --------------------
-async function startApp() {
-  const existsDB = await checkDBExists();
-  const keys = await loadSecureKeys();
+function startApp() {
+  //? Verify App State
+  const userDataPath = app.getPath("userData");
+  const configPath = path.join(userDataPath, "config.bin");
 
-  if (existsDB) {
-    if (keys) {
-      await assingKeysDB(keys);
-      try {
-        const response = await getAdmin();
-        if (response) {
-          createLoginWindow();
-        } else {
-          createSignupWindow();
-        }
-      } catch (error) {
-        console.error("❌ ERROR: ", error);
-      }
-      welcomeWindow.close();
-    } else {
-      welcomeWindow.close();
-      createKeysWindow();
-    }
+  console.log(configPath);
+
+  if (!fs.existsSync(configPath)) {
+    //First run
+    createWelcomeWindow();
   } else {
-    const keys = await newDB(false);
-    welcomeWindow.close();
-    createSignupWindow(keys);
+    console.log("Install App");
   }
+  // const existsDB = await checkDBExists();
+  // const keys = await loadSecureKeys();
+
+  // if (existsDB) {
+  //   if (keys) {
+  //     await assingKeysDB(keys);
+  //     try {
+  //       const response = await getAdmin();
+  //       if (response) {
+  //         createLoginWindow();
+  //       } else {
+  //         createSignupWindow();
+  //       }
+  //     } catch (error) {
+  //       console.error("❌ ERROR: ", error);
+  //     }
+  //     welcomeWindow.close();
+  //   } else {
+  //     welcomeWindow.close();
+  //     createKeysWindow();
+  //   }
+  // } else {
+  //   const keys = await newDB(false);
+  //   welcomeWindow.close();
+  //   createSignupWindow(keys);
+  // }
 }
 
 //* FUNCTIONS --------------------
@@ -2033,10 +2046,14 @@ app.whenReady().then(async () => {
   });
 
   try {
-    createWelcomeWindow();
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    // createWelcomeWindow();
     // createEmailWindow();
     // await createWelcomeWindow();
-    // startApp();
+    await createLoadingWindow();
+    await wait(3000);
+    loadWindow.close();
+    await startApp();
   } catch (err) {
     console.error("Initialization error:", err);
   } finally {
