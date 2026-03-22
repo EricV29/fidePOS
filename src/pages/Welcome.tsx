@@ -1,35 +1,51 @@
 import React, { useState } from "react";
-import back from "@img/backgroundfidepos.png";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
 import EmailForm from "@forms/form-email";
 import KeysForm from "@forms/form-keys";
 import CustomSelect from "@components/Select";
 import DBFileInput from "@components/inputDB";
+import { type EmailFormValues } from "@forms/schemas/email.schema";
+import { type KeysFormValues } from "@forms/schemas/keys.schema";
+import AUTH_CODES from "../../constants/authCodes.json";
+import { useModal } from "@context/ModalContext";
 
 const Welcome: React.FC = () => {
   const { t, i18n } = useTranslation();
+
+  const { triggerResponseAlert } = useModal();
+
   const optionsLanguage = [
     { label: t("settings.input1_option1"), value: "en" },
     { label: t("settings.input1_option2"), value: "es" },
   ];
-  const [dbPath, setDbPath] = useState<string | null>(null);
+  const [file, setSelectedFile] = useState<File | null>(null);
 
   const handleLanguageChange = (value: string) => {
     i18n.changeLanguage(value);
     localStorage.setItem("lang", value);
   };
 
-  const handleEmail = () => {
-    console.log("Email");
+  // Start App Email
+  const handleEmail = (values: EmailFormValues) => {
+    console.log(values);
+    window.electronAPI.startAppFileEmail(values);
+  };
+
+  // Start App File DB
+  const handleSetDataBase = (values: KeysFormValues) => {
+    if (!file) {
+      triggerResponseAlert(AUTH_CODES.NOT_SELECTED_FILE);
+    } else {
+      window.electronAPI.startAppFileDB({ file, values });
+    }
   };
 
   const handleFileSelection = (file: File | null) => {
     if (file) {
-      // En HTML normal no podemos obtener la ruta completa C:/...,
-      // pero podemos mostrar el nombre del archivo.
-      // setSelectedPath(file.name);
-      console.log("Archivo listo para procesar:", file);
+      setSelectedFile(file);
+    } else {
+      setSelectedFile(null);
     }
   };
 
@@ -76,7 +92,7 @@ const Welcome: React.FC = () => {
                 <span>
                   {t("start.description2")}
                   <a
-                    href="https://www.google.com"
+                    href="https://youtu.be/V6Ga9_xrv3o"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-1 px-3 py-1 bg-[#f57c00]/15 text-[#f57c00] text-xs font-bold rounded-full hover:bg-[#f57c00]/30 transition-colors border border-[#f57c00]"
@@ -101,15 +117,9 @@ const Welcome: React.FC = () => {
             </h2>
             <div className="w-full flex flex-col gap-2">
               <p>{t("start.description3")}</p>
-              <DBFileInput
-                path={dbPath}
-                onSelect={handleFileSelection}
-                error={
-                  !dbPath ? "Debes seleccionar un archivo para continuar" : ""
-                }
-              />
+              <DBFileInput path={file} onSelect={handleFileSelection} />
               <p>{t("start.description4")}</p>
-              <KeysForm />
+              <KeysForm onSuccess={handleSetDataBase} />
             </div>
           </div>
         </div>

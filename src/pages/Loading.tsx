@@ -3,7 +3,7 @@ import back from "@img/backgroundfidepos.png";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
 
-const Welcome: React.FC = () => {
+const Loading: React.FC = () => {
   const { t } = useTranslation();
 
   return (
@@ -35,4 +35,4 @@ const Welcome: React.FC = () => {
   );
 };
 
-export default Welcome;
+export default Loading;

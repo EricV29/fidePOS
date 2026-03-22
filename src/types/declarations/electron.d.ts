@@ -20,6 +20,20 @@ declare global {
       // INSTALL DATE APLICATION
       getInstallDate: () => Promise<string>;
 
+      // START APP FILE DB
+      startAppFileDB: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // START APP EMAIL
+      startAppFileEmail: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
       // SIGNUP
       signup: (
         data,

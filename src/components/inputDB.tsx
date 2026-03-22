@@ -3,12 +3,12 @@ import { FolderOpen } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 interface DBFileInputProps {
-  path: string | null;
+  // Ahora path es el objeto File completo
+  path: File | null;
   onSelect: (file: File | null) => void;
-  error?: string;
 }
 
-const DBFileInput: React.FC<DBFileInputProps> = ({ path, onSelect, error }) => {
+const DBFileInput: React.FC<DBFileInputProps> = ({ path, onSelect }) => {
   const hiddenFileInput = useRef<HTMLInputElement>(null);
   const { t } = useTranslation();
 
@@ -19,6 +19,10 @@ const DBFileInput: React.FC<DBFileInputProps> = ({ path, onSelect, error }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const fileUploaded = event.target.files?.[0] || null;
     onSelect(fileUploaded);
+
+    if (event.target) {
+      event.target.value = "";
+    }
   };
 
   return (
@@ -31,16 +35,11 @@ const DBFileInput: React.FC<DBFileInputProps> = ({ path, onSelect, error }) => {
         style={{ display: "none" }}
       />
 
-      <div
-        className={`
-          group flex items-center gap-2 p-1 pl-3 bg-white border rounded-xl transition-all duration-200
-          ${error ? "border-[#F57C00] ring-1 ring-[#F57C00]/50" : "border-gray-200 focus-within:border-[#F57C00] focus-within:ring-2 focus-within:ring-orange-50"}
-        `}
-      >
+      <div className="group flex items-center gap-2 p-1 pl-3 bg-white border rounded-xl transition-all duration-200 border-gray-200 focus-within:border-[#F57C00] focus-within:ring-2 focus-within:ring-orange-50">
         <span
           className={`flex-1 text-xs truncate ${path ? "text-gray-700 font-medium" : "text-gray-400 italic"}`}
         >
-          {path || t("formDBCredentials.input1")}
+          {path ? path.name : t("formDBCredentials.input1")}
         </span>
 
         <button
@@ -56,12 +55,6 @@ const DBFileInput: React.FC<DBFileInputProps> = ({ path, onSelect, error }) => {
           </span>
         </button>
       </div>
-
-      {error && (
-        <p className="text-[11px] text-[#F57C00] ml-1 font-medium italic">
-          {error}
-        </p>
-      )}
     </div>
   );
 };

@@ -332,7 +332,8 @@
     "text_inactive_category": "Categoría inactiva.",
     "text_category_name_used": "Nombre de categoría ya utilizado.",
     "text_category_have_products": "Esta categoría tiene productos relacionados.",
-    "text_incorrect_keys": "Las credenciales de la base de datos son incorrectas."
+    "text_incorrect_keys": "Las credenciales de la base de datos son incorrectas.",
+    "text_not_selected_file": "Aún no seleccionas el archivo de base de datos."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
@@ -528,7 +529,9 @@
     "max300_characters": "Max 300 caracteres",
     "max200_characters": "Max 200 caracteres",
     "number10_digits": "Numéro de 10 digitos",
-    "required": "Required"
+    "required": "Required",
+    "invalid_email": "Correo electrónico invalido",
+    "invalid_app_pass": "Contraseña invalida"
   },
   "placeholders": {
     "name": "nombre",

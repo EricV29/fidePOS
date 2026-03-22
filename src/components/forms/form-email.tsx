@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { type EmailFormValues, getEmailSchema } from "./schemas/email.schema";
-
 import {
   Form,
   FormControl,
@@ -61,7 +60,7 @@ export default function EmailForm({ onSuccess }: EmailFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="font-semibold">
-                  {t("formEmailCredentials.input2")}S
+                  {t("formEmailCredentials.input2")}
                 </FormLabel>
                 <FormControl>
                   <div className="relative">
