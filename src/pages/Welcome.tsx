@@ -27,9 +27,13 @@ const Welcome: React.FC = () => {
   };
 
   // Start App Email
-  const handleEmail = (values: EmailFormValues) => {
+  const handleEmail = async (values: EmailFormValues) => {
     console.log(values);
-    window.electronAPI.startAppFileEmail(values);
+    const response = await window.electronAPI.startAppFirst(values);
+
+    if (!response.success) {
+      triggerResponseAlert(response.error);
+    }
   };
 
   // Start App File DB

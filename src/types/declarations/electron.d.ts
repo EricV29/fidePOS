@@ -15,10 +15,12 @@ interface UserSession {
 declare global {
   interface Window {
     electronAPI: {
-      getKeys(arg0: (datos: any) => void): unknown;
-
-      // INSTALL DATE APLICATION
-      getInstallDate: () => Promise<string>;
+      // START APP FIRST
+      startAppFirst: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
 
       // START APP FILE DB
       startAppFileDB: (data) => Promise<{
@@ -27,11 +29,9 @@ declare global {
         error?: string;
       }>;
 
-      // START APP EMAIL
-      startAppFileEmail: (data) => Promise<{
-        success: boolean;
-        result?: string;
-        error?: string;
+      // GET KEYS
+      getKeys: () => Promise<{
+        keys: { db_password: string; db_salt: string };
       }>;
 
       // SIGNUP
@@ -43,6 +43,14 @@ declare global {
         result?: string;
         error?: string;
       }>;
+
+      // VERIFY EMAIL KEYS
+      verifyEmailKeys: () => Promise<{ success: boolean }>;
+
+      //------------------------
+
+      // INSTALL DATE APLICATION
+      getInstallDate: () => Promise<string>;
 
       // LOGIN
       login: (data) => Promise<{

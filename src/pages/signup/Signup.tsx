@@ -34,10 +34,21 @@ const Signup: React.FC = () => {
     navigator.clipboard.writeText(textToCopy);
     // Opcional: alert("Copiado!");
   };
+
   useEffect(() => {
-    window.electronAPI.getKeys((datos) => {
-      setKeys(datos.keys);
-    });
+    const fetchKeys = async () => {
+      try {
+        const response = await window.electronAPI.getKeys();
+
+        if (response && response.keys) {
+          setKeys(response.keys);
+        }
+      } catch (error) {
+        console.error("❌ Error get keys:", error);
+      }
+    };
+
+    fetchKeys();
   }, []);
 
   return (

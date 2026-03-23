@@ -61,10 +61,10 @@ async function sendRecoveryEmail(to, tempPassword, lan) {
     } else if (lan === "es") {
       info = await transporter.sendMail(mailOptionsEs);
     }
-    console.log("Email send: " + info.response);
+    console.log("📩 Email send: " + info.response);
     return { success: true, result: AUTH_CODES.EMAIL_SENT };
   } catch (error) {
-    console.error("Error send to email:", error);
+    console.error("❌ Error send to email recovery password:", error);
     return { success: false, error: error.message };
   }
 }

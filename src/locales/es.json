@@ -333,7 +333,9 @@
     "text_category_name_used": "Nombre de categoría ya utilizado.",
     "text_category_have_products": "Esta categoría tiene productos relacionados.",
     "text_incorrect_keys": "Las credenciales de la base de datos son incorrectas.",
-    "text_not_selected_file": "Aún no seleccionas el archivo de base de datos."
+    "text_not_selected_file": "Aún no seleccionas el archivo de base de datos.",
+    "text_invalid_keys_email": "Credenciales para correo electrónico invalidas.",
+    "text_not_email_keys": "No configuraste las credenciales para correos electrónicos."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
@@ -531,7 +533,8 @@
     "number10_digits": "Numéro de 10 digitos",
     "required": "Required",
     "invalid_email": "Correo electrónico invalido",
-    "invalid_app_pass": "Contraseña invalida"
+    "invalid_app_pass": "Contraseña invalida",
+    "both_fields_required": "Ambos campos requeridos."
   },
   "placeholders": {
     "name": "nombre",

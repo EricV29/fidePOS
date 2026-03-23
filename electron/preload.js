@@ -2,15 +2,22 @@
 const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
+  // Start App First
+  startAppFirst: (data) => ipcRenderer.invoke("startAppFirst", data),
+
+  // Get Keys
+  getKeys: () => ipcRenderer.invoke("getKeys"),
+
+  // Singup
+  signup: (data, lan) => ipcRenderer.invoke("signup", data, lan),
+
+  // Get Keys
+  verifyEmailKeys: () => ipcRenderer.invoke("verifyEmailKeys"),
+
+  //---------------------
+
   // Install Date
   getInstallDate: () => ipcRenderer.invoke("getInstallDate"),
-
-  // Send Keys to Signup
-  getKeys: (callback) =>
-    ipcRenderer.on("getKeys", (_event, value) => callback(value)),
-
-  // Singup bridge
-  signup: (data, lan) => ipcRenderer.invoke("signup", data, lan),
 
   // Login
   login: (data) => ipcRenderer.invoke("login", data),

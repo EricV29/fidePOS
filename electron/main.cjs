@@ -6,6 +6,7 @@ const {
   loadSecureKeys,
   verifyAndSaveKeys,
   newDB,
+  loadSecurityConfigs,
 } = require("./db/database.cjs");
 const {
   firstRun,
@@ -100,6 +101,7 @@ const {
   getFilterSearchCategories,
 } = require("./db/queries/categoriesQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
+const { haveEmailKeys } = require("./utility/haveEmailKeys.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
 const { contactDevs } = require("./utility/contactDevs.cjs");
@@ -133,6 +135,8 @@ let mainWindow = null;
 let loginWindow = null;
 let keysWindow = null;
 let signupWindow = null;
+let keysGlobal = null;
+let loadWindow = null;
 
 //* CREATE WINDOWS --------------------
 
@@ -165,6 +169,7 @@ function createWelcomeWindow() {
   });
 }
 
+// Loading Window
 function createLoadingWindow() {
   return new Promise((resolve) => {
     loadWindow = new BrowserWindow({
@@ -194,29 +199,31 @@ function createLoadingWindow() {
 }
 
 // Signup Window
-function createSignupWindow(keys) {
-  signupWindow = new BrowserWindow({
-    width: 600,
-    height: 650,
-    resizable: false,
-    frame: false,
-    titleBarStyle: "hidden",
-    titleBarOverlay: false,
-    autoHideMenuBar: true,
-    icon: path.join(__dirname, "../public/fidelogo.ico"),
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true,
-    },
-    show: false,
-  });
+function createSignupWindow() {
+  return new Promise((resolve) => {
+    signupWindow = new BrowserWindow({
+      width: 600,
+      height: 650,
+      resizable: false,
+      frame: false,
+      titleBarStyle: "hidden",
+      titleBarOverlay: false,
+      autoHideMenuBar: true,
+      icon: path.join(__dirname, "../public/fidelogo.ico"),
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+      },
+      show: false,
+    });
 
-  const url = getPageUrl("signup");
-  signupWindow.loadURL(url);
+    const url = getPageUrl("signup");
+    signupWindow.loadURL(url);
 
-  signupWindow.webContents.on("did-finish-load", () => {
-    signupWindow.webContents.send("getKeys", keys);
-    signupWindow.show();
+    signupWindow.webContents.on("did-finish-load", () => {
+      signupWindow.show();
+      resolve();
+    });
   });
 }
 
@@ -324,18 +331,26 @@ function createMainWindow() {
 }
 
 //* START APP --------------------
-function startApp() {
+async function startApp() {
   //? Verify App State
   const userDataPath = app.getPath("userData");
   const configPath = path.join(userDataPath, "config.bin");
+  const dbPath = path.join(userDataPath, "app.db");
 
-  console.log(configPath);
-
-  if (!fs.existsSync(configPath)) {
+  if (!fs.existsSync(configPath) && !fs.existsSync(dbPath)) {
     //First run
+    loadWindow.close();
     createWelcomeWindow();
   } else {
-    console.log("Install App");
+    await loadSecurityConfigs();
+    const response = await getAdmin();
+    if (response) {
+      loadWindow.close();
+      createLoginWindow();
+    } else {
+      loadWindow.close();
+      createSignupWindow();
+    }
   }
   // const existsDB = await checkDBExists();
   // const keys = await loadSecureKeys();
@@ -372,16 +387,45 @@ let sessionUser = null;
 function saveLogin(userData) {
   sessionUser = userData;
   console.log(
-    `✅ Session started for: ${sessionUser.name} ${sessionUser.last_name}`,
+    `🔓 Session started for: ${sessionUser.name} ${sessionUser.last_name}`,
   );
 }
 
 //* LISTENERS --------------------
 
 //* APP LISTENERS ----------
-// Get Install Date
-ipcMain.handle("getInstallDate", () => {
-  return getInstallDate();
+// Start App First
+ipcMain.handle("startAppFirst", async (event, data) => {
+  if (event.sender === welcomeWindow.webContents) {
+    try {
+      const response = await newDB(data);
+      if (response.success) {
+        welcomeWindow.close();
+        keysGlobal = response.result;
+        createSignupWindow();
+      } else {
+        return { success: false, error: response.error };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Keys
+ipcMain.handle("getKeys", async () => {
+  if (keysGlobal) {
+    return {
+      success: true,
+      keys: {
+        db_password: keysGlobal.db_password,
+        db_salt: keysGlobal.db_salt,
+      },
+    };
+  }
 });
 
 // User Signup
@@ -409,6 +453,36 @@ ipcMain.handle("signup", async (event, data, lan) => {
     console.warn("❌ ERROR: NOT ALLOWED");
     return { success: false, error: "Not allowed" };
   }
+});
+
+// Verify Email Keys
+ipcMain.handle("verifyEmailKeys", async (event) => {
+  if (event.sender === loginWindow.webContents) {
+    try {
+      const response = await haveEmailKeys();
+      if (response.success) {
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: false,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+//--------------
+
+// Get Install Date
+ipcMain.handle("getInstallDate", () => {
+  return getInstallDate();
 });
 
 // User Login
@@ -2047,12 +2121,8 @@ app.whenReady().then(async () => {
 
   try {
     const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-    // createWelcomeWindow();
-    // createEmailWindow();
-    // await createWelcomeWindow();
     await createLoadingWindow();
     await wait(3000);
-    loadWindow.close();
     await startApp();
   } catch (err) {
     console.error("Initialization error:", err);
