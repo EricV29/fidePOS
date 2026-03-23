@@ -290,6 +290,14 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_not_selected_file",
       },
+      [AUTH_CODES.INVALID_KEYS_EMAIL]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_invalid_keys_email",
+      },
+      [AUTH_CODES.NOT_EMAIL_KEYS]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_not_email_keys",
+      },
     };
 
     const config = alertConfig[code];

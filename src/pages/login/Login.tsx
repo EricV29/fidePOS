@@ -6,6 +6,7 @@ import CustomSelect from "@components/Select";
 import type { LoginFormValues } from "@forms/schemas/user.schema";
 import { useModal } from "@context/ModalContext";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
+import AUTH_CODES from "../../../constants/authCodes.json";
 
 const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -43,16 +44,23 @@ const Login: React.FC = () => {
       async () => {
         try {
           setIsLoading(true);
-          const response = await window.electronAPI.forgotPassword(
-            email,
-            i18n.language,
-          );
-          if (response.success) {
-            setIsLoading(false);
-            triggerResponseAlert(response.result);
+          const reponseEmail = await window.electronAPI.verifyEmailKeys();
+
+          if (!reponseEmail.success) {
+            triggerResponseAlert(AUTH_CODES.NOT_EMAIL_KEYS);
+            return;
           } else {
-            setIsLoading(false);
-            triggerResponseAlert(response.error);
+            const response = await window.electronAPI.forgotPassword(
+              email,
+              i18n.language,
+            );
+            if (response.success) {
+              setIsLoading(false);
+              triggerResponseAlert(response.result);
+            } else {
+              setIsLoading(false);
+              triggerResponseAlert(response.error);
+            }
           }
         } catch (err) {
           console.error("Comunication Error:", err);

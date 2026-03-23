@@ -1,16 +1,22 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
-
-// Configuration
-const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const { haveEmailKeys } = require("./haveEmailKeys.cjs");
 
 async function welcomeEmail(data, lan) {
+  const credentials = haveEmailKeys();
+
+  if (!credentials || !credentials.email_user || !credentials.email_pass) {
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: credentials.email_user,
+      pass: credentials.email_pass,
+    },
+  });
+
   const mailOptionsEn = {
     from: '"Fide POS Support" <typira.oficial@gmail.com>',
     to: data.email,
@@ -60,10 +66,13 @@ async function welcomeEmail(data, lan) {
     } else if (lan === "es") {
       info = await transporter.sendMail(mailOptionsEs);
     }
-    console.log("Email send: " + info.response);
+
+    // El console.log debe estar fuera del if para que funcione con ambos idiomas
+    if (info) console.log("📩 Email send: " + info.response);
+
     return { success: true };
   } catch (error) {
-    console.error("Error send to email:", error);
+    console.error("❌ Error send to email:", error);
     return { success: false, error: error.message };
   }
 }
