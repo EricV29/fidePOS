@@ -29,6 +29,9 @@ declare global {
         error?: string;
       }>;
 
+      // GET FILE PATH
+      getFilePath: (file: File) => string;
+
       // GET KEYS
       getKeys: () => Promise<{
         keys: { db_password: string; db_salt: string };
@@ -47,41 +50,11 @@ declare global {
       // VERIFY EMAIL KEYS
       verifyEmailKeys: () => Promise<{ success: boolean }>;
 
-      //------------------------
-
       // INSTALL DATE APLICATION
       getInstallDate: () => Promise<string>;
 
       // LOGIN
       login: (data) => Promise<{
-        success: boolean;
-        result?: string;
-        error?: string;
-      }>;
-
-      // ASSING KEYS
-      assingKeys: (data) => Promise<{
-        success: boolean;
-        result?: string;
-        error?: string;
-      }>;
-
-      // START APP BY DB AND KEYS
-      successAppKeys: () => Promise<{
-        success: boolean;
-        result?: string;
-        error?: string;
-      }>;
-
-      // NEW DB
-      newDB: () => Promise<{
-        success: boolean;
-        result?: string;
-        error?: string;
-      }>;
-
-      // START APP
-      startApp: () => Promise<{
         success: boolean;
         result?: string;
         error?: string;

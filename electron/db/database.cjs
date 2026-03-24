@@ -147,106 +147,38 @@ async function loadSecurityConfigs() {
   return false;
 }
 
-//---------------------
-
-//55
-//* SEARCH APP.DB
-function checkDBExists() {
-  const dbPath = path.join(app.getPath("appData"), "fidepos", "app.db");
-
-  const exists = fs.existsSync(dbPath);
-
-  if (exists) {
-    console.log(`🔍 Database found at: ${dbPath}`);
-  } else {
-    console.log("Empty system: Database file not found.");
-  }
-
-  return exists;
-}
-
-//55
-
-//* SEARCH KEY ON SAFESTORAGE
-async function loadSecureKeys() {
-  const configPath = path.join(app.getPath("userData"), "config.bin");
-
+//* VERIFY DATABASE ACCESS
+async function verifyDatabaseAccess(dbPath, data) {
   try {
-    if (fs.existsSync(configPath)) {
-      const encryptedBuffer = fs.readFileSync(configPath);
+    const { db_password, db_salt } = data;
 
-      if (!safeStorage.isEncryptionAvailable()) {
-        throw new Error("Encryption is not available on this system.");
-      }
+    const KEY = crypto.scryptSync(String(db_password), String(db_salt), 32);
 
-      const decryptedData = safeStorage.decryptString(encryptedBuffer);
-      return JSON.parse(decryptedData);
-    }
+    const buffer = fs.readFileSync(dbPath);
 
-    return null;
-  } catch (err) {
-    console.error("❌ Error descifrando las llaves del sistema:", err);
-    return null;
-  }
-}
+    const IV_LENGTH = 16;
+    const iv = buffer.subarray(0, IV_LENGTH);
+    const encryptedData = buffer.subarray(IV_LENGTH);
 
-//* VERIFY KEYS FOR DB
-async function verifyAndSaveKeys(inputKeys) {
-  const { db_password, db_salt } = inputKeys;
+    const decipher = crypto.createDecipheriv("aes-256-cbc", KEY, iv);
+    const decryptedBuffer = Buffer.concat([
+      decipher.update(encryptedData),
+      decipher.final(),
+    ]);
 
-  const userDataPath = app.getPath("userData");
-  const dbPath = path.join(userDataPath, "app.db");
-  const configPath = path.join(userDataPath, "config.bin");
+    const SQL = await initSqlJs();
 
-  try {
-    // 1. Verificar si la base de datos existe físicamente
-    if (!fs.existsSync(dbPath)) {
-      console.error("❌ No se encontró app.db para validar.");
-      return false;
-    }
+    const db = new SQL.Database(new Uint8Array(decryptedBuffer));
 
-    // 2. Intentar derivar la llave y probar el descifrado
-    // Generamos la llave de 32 bytes igual que en el resto de la app
-    const testKey = crypto.scryptSync(db_password, db_salt, 32);
-    const encryptedBuffer = fs.readFileSync(dbPath);
+    db.exec("SELECT name FROM sqlite_master WHERE type='table' LIMIT 1");
 
-    try {
-      // Intentamos leer el IV (primeros 16 bytes) y los datos
-      const iv = encryptedBuffer.subarray(0, 16);
-      const data = encryptedBuffer.subarray(16);
-      const decipher = crypto.createDecipheriv("aes-256-cbc", testKey, iv);
+    db.close();
 
-      // Si esto no lanza error, significa que la llave es candidata correcta
-      decipher.update(data);
-      decipher.final();
-
-      console.log("✅ Validación exitosa: Las llaves abren la base de datos.");
-    } catch (decryptError) {
-      console.error(
-        "❌ Error de validación: Las llaves no coinciden con el cifrado de la DB.",
-      );
-      return false;
-    }
-
-    // 3. Si la validación pasó, guardamos las llaves de forma segura
-    try {
-      const keysString = JSON.stringify(inputKeys);
-      const secureBuffer = safeStorage.encryptString(keysString);
-
-      fs.writeFileSync(configPath, secureBuffer);
-      console.log("💾 config.bin actualizado con las nuevas llaves.");
-
-      return true;
-    } catch (saveError) {
-      console.error(
-        "❌ Error al escribir el archivo de configuración:",
-        saveError,
-      );
-      return false;
-    }
-  } catch (err) {
-    console.error("❌ Error crítico en verifyAndSaveKeys:", err);
-    return false;
+    console.log("✅ ACCESS DB SUCCESSFULLY");
+    return { success: true };
+  } catch (error) {
+    console.error("❌ ERROR ACCESS DB WITH FILES:", error.message);
+    return { success: false, error: AUTH_CODES.FILES_DB_INCORRECT };
   }
 }
 
@@ -846,9 +778,7 @@ module.exports = {
   queryAll,
   queryOne,
   runQuery,
-  checkDBExists,
-  loadSecureKeys,
   newDB,
-  verifyAndSaveKeys,
   loadSecurityConfigs,
+  verifyDatabaseAccess,
 };
