@@ -1,16 +1,10 @@
-const {
-  app,
-  BrowserWindow,
-  ipcMain,
-  protocol,
-  net,
-  webUtils,
-} = require("electron");
+const { app, BrowserWindow, ipcMain, protocol, net } = require("electron");
 const path = require("path");
 const {
   newDB,
   loadSecurityConfigs,
   verifyDatabaseAccess,
+  prepareFileKeysDB,
 } = require("./db/database.cjs");
 const {
   getInstallDate,
@@ -115,11 +109,11 @@ require("dotenv").config();
 const fs = require("fs");
 const isDev = !app.isPackaged;
 
-// if (!app.isPackaged) {
-//   app.setName("FidePOS-Dev");
-// } else {
-//   app.setName("FidePOS");
-// }
+if (!app.isPackaged) {
+  app.setName("FidePOS-DEV");
+} else {
+  app.setName("FidePOS");
+}
 
 function getPageUrl(route = "") {
   if (isDev) {
@@ -138,7 +132,6 @@ function getPageUrl(route = "") {
 let welcomeWindow = null;
 let mainWindow = null;
 let loginWindow = null;
-let keysWindow = null;
 let signupWindow = null;
 let keysGlobal = null;
 let loadWindow = null;
@@ -301,9 +294,11 @@ async function startApp() {
     if (response) {
       loadWindow.close();
       createLoginWindow();
+      console.log("🚀 START APP READY");
     } else {
       loadWindow.close();
       createSignupWindow();
+      console.log("🚀 START APP READY");
     }
   }
 }
@@ -330,6 +325,7 @@ ipcMain.handle("startAppFirst", async (event, data) => {
         welcomeWindow.close();
         keysGlobal = response.result;
         createSignupWindow();
+        console.log("🚀 START APP READY");
       } else {
         return { success: false, error: response.error };
       }
@@ -349,9 +345,23 @@ ipcMain.handle("startAppFileDB", async (event, data) => {
       const { dbPath, values } = data;
       const response = await verifyDatabaseAccess(dbPath, values);
       if (response.success) {
-        console.log("Si");
+        let prepare = false;
+        prepare = await prepareFileKeysDB(dbPath, values);
+        if (!prepare) return;
 
-        /// SIGUIENTE
+        prepare = await loadSecurityConfigs();
+        if (!prepare) return;
+
+        prepare = await getAdmin();
+        if (prepare) {
+          welcomeWindow.close();
+          createLoginWindow();
+          console.log("🚀 START APP READY");
+        } else {
+          welcomeWindow.close();
+          createSignupWindow();
+          console.log("🚀 START APP READY");
+        }
       } else {
         return { success: false, error: response.error };
       }
@@ -2019,7 +2029,7 @@ app.whenReady().then(async () => {
     await wait(3000);
     await startApp();
   } catch (err) {
-    console.error("Initialization error:", err);
+    console.error("❌ Initialization error:", err);
   } finally {
     isInitializing = false;
   }

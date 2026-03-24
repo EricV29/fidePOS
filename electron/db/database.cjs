@@ -5,11 +5,10 @@ const { app, safeStorage } = require("electron");
 const crypto = require("crypto");
 const { generateDBSecurity } = require("../utility/generateDBKeys.cjs");
 const nodemailer = require("nodemailer");
-require("dotenv").config();
 const AUTH_CODES = require("../../constants/authCodes.json");
 
 // PATH FILES
-// C:\Users\user\AppData\Roaming\fidepos
+// C:\Users\user\AppData\Roaming\FidePOS or FidePOS-DEV
 
 let PASSWORD, SALT, ENCRYPTION_KEY, ALGORITHM, dbPath, configPath;
 let dbInstance = null;
@@ -179,6 +178,37 @@ async function verifyDatabaseAccess(dbPath, data) {
   } catch (error) {
     console.error("❌ ERROR ACCESS DB WITH FILES:", error.message);
     return { success: false, error: AUTH_CODES.FILES_DB_INCORRECT };
+  }
+}
+
+//* PREPARE FILE AND KEYS DB
+async function prepareFileKeysDB(dbPath, keys) {
+  try {
+    const userDataPath = app.getPath("userData");
+    const finalDbPath = path.join(userDataPath, "app.db");
+
+    fs.copyFileSync(dbPath, finalDbPath);
+
+    const configData = {
+      db_password: keys.db_password,
+      db_salt: keys.db_salt,
+      email_user: "",
+      email_pass: "",
+    };
+
+    const encryptedConfig = safeStorage.encryptString(
+      JSON.stringify(configData),
+    );
+    const configPath = path.join(userDataPath, "config.bin");
+
+    fs.writeFileSync(configPath, encryptedConfig);
+
+    console.log("📦 IMPORT DB SUCCESSFULLY:", finalDbPath);
+
+    return true;
+  } catch (err) {
+    console.error("❌ Error load import config security:", err);
+    return false;
   }
 }
 
@@ -781,4 +811,5 @@ module.exports = {
   newDB,
   loadSecurityConfigs,
   verifyDatabaseAccess,
+  prepareFileKeysDB,
 };

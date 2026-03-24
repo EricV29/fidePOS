@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const { app, safeStorage } = require("electron");
-const { success } = require("zod");
 
 function haveEmailKeys() {
   try {

@@ -1,17 +1,21 @@
 const nodemailer = require("nodemailer");
-require("dotenv").config();
 const AUTH_CODES = require("../../constants/authCodes.json");
 
-// Configuration
-const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
-
 async function sendRecoveryEmail(to, tempPassword, lan) {
+  const credentials = haveEmailKeys();
+
+  if (!credentials || !credentials.email_user || !credentials.email_pass) {
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: credentials.email_user,
+      pass: credentials.email_pass,
+    },
+  });
+
   const mailOptionsEn = {
     from: '"Fide POS Support" <typira.oficial@gmail.com>',
     to: to,
