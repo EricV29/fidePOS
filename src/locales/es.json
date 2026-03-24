@@ -23,13 +23,48 @@
     "settings": "Ajustes",
     "logout": "Cerrar Sesión"
   },
+  "start": {
+    "option1": "Primera vez",
+    "description1": "Base de datos: Se creara una nueva base de datos.",
+    "description2": "Correo electrónico: Puedes configurar tu cuenta de Gmail para permitir la recuperación de contraseñas y el envío automático de correos de bienvenida. Nota: Si no configuras esta opción, deberás contactar directamente con el soporte técnico para recuperar el acceso a tu cuenta.",
+    "btn_tutorial": "Enlace Tutorial.",
+    "option2": "Tengo una base de datos",
+    "description3": "Selecciona tu archivo (.db):",
+    "description4": "Ingresa tus credenciales de tu base de datos:"
+  },
+  "formEmailCredentials": {
+    "input1": "Correo electrónico (gmail)",
+    "input2": "Contraseña de Aplicación de Google",
+    "btn": "ACCEDER"
+  },
+  "formDBCredentials": {
+    "input1": "Selecciona tu archivo (.db):",
+    "btn1.1": "Buscar",
+    "btn1.2": "Cambiar",
+    "input2": "Contraseña de Base de Datos",
+    "input3": "Sal de Cifrado de Base de Datos",
+    "btn": "ACCEDER"
+  },
   "signup": {
     "title": "Crear Cuenta",
-    "subtitle": "Bienvenido a FidePOS, tu punto de venta ideal para tu negocio."
+    "subtitle": "Bienvenido a FidePOS, tu punto de venta ideal para tu negocio.",
+    "keys": "Copia tus credenciales, tal vez despues las necesites."
   },
   "login": {
     "title": "Iniciar Sesión",
     "subtitle": "Hola, ingresa tus datos para acceder."
+  },
+  "keys": {
+    "title": "¡Hola!",
+    "subtitle1": "Detectamos una base de datos en este equipo, pero faltan las credenciales de acceso. ¿Cuentas con ellas?",
+    "text1": "No tengo credenciales. Crear una nueva base de datos",
+    "text2": "La base de datos anterior se movera a tu carpeta de Descargas.",
+    "text3": "Credenciales para tu nueva base de datos:",
+    "text_pass_db": "Contraseña de DB:",
+    "salt_db": "Sal de cifrado:",
+    "text_save_keys": "Guarda estas credenciales en un lugar seguro; las necesitarás si mueves tu base de datos.",
+    "copy_all": "Copiar credenciales (Contraseña y Sal)",
+    "btn2": "Continuar"
   },
   "dashboard": {
     "title": "Panel",
@@ -296,7 +331,11 @@
     "text_category_not_found": "Categoría no encontrada.",
     "text_inactive_category": "Categoría inactiva.",
     "text_category_name_used": "Nombre de categoría ya utilizado.",
-    "text_category_have_products": "Esta categoría tiene productos relacionados."
+    "text_category_have_products": "Esta categoría tiene productos relacionados.",
+    "text_incorrect_keys": "Las credenciales o archivo de la base de datos son incorrectas.",
+    "text_not_selected_file": "Aún no seleccionas el archivo de base de datos.",
+    "text_invalid_keys_email": "Credenciales para correo electrónico invalidas.",
+    "text_not_email_keys": "No configuraste las credenciales para correos electrónicos."
   },
   "modalQuestionAlert": {
     "title": "¡Cuidado!",
@@ -435,6 +474,11 @@
     "input4": "Teléfono",
     "btn": "Editar usuario"
   },
+  "formKeys": {
+    "input1": "CONTRASEÑA DB",
+    "input2": "SAL DE CIFRADO DB",
+    "btn": "Enviar"
+  },
   "modalSale": {
     "title": "Venta",
     "description": "Estatus de venta:",
@@ -487,7 +531,10 @@
     "max300_characters": "Max 300 caracteres",
     "max200_characters": "Max 200 caracteres",
     "number10_digits": "Numéro de 10 digitos",
-    "required": "Required"
+    "required": "Required",
+    "invalid_email": "Correo electrónico invalido",
+    "invalid_app_pass": "Contraseña invalida",
+    "both_fields_required": "Ambos campos requeridos."
   },
   "placeholders": {
     "name": "nombre",

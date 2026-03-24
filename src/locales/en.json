@@ -23,13 +23,48 @@
     "settings": "Settings",
     "logout": "Logout"
   },
+  "start": {
+    "option1": "First run",
+    "description1": "Data Base: Create a new Data Base.",
+    "description2": "Email: You can use your Gmail account to enable password recovery and send welcome emails to new users. Please note: Without this configuration, you will need to contact the developers directly to recover your password.",
+    "btn_tutorial": "Link Tutorial.",
+    "option2": "I have data base",
+    "description3": "Select your file of data base (.db):",
+    "description4": "Write your credentials of data base:"
+  },
+  "formEmailCredentials": {
+    "input1": "Email (gmail)",
+    "input2": "Google App Password",
+    "btn": "ACCESS"
+  },
+  "formDBCredentials": {
+    "input1": "Select your file of data base (.db):",
+    "btn1.1": "Search",
+    "btn1.2": "Change",
+    "input2": "Password of data base",
+    "input3": "Salt of data base",
+    "btn": "ACCESS"
+  },
   "signup": {
     "title": "Create Account",
-    "subtitle": "Welcome to FidePOS, your ideal point of view for you bussiness."
+    "subtitle": "Welcome to FidePOS, your ideal point of view for you bussiness.",
+    "keys": "Copy your keys, maybe after need."
   },
   "login": {
     "title": "Login",
     "subtitle": "Hello, enter your information to access."
+  },
+  "keys": {
+    "title": "Welcome",
+    "subtitle1": "A database was found on this computer, but access credentials are required. Do you have them?",
+    "text1": "I don't have credentials. Create a new database",
+    "text2": "The previous database has been moved to your Downloads folder.",
+    "text3": "Credentials for your new database:",
+    "text_pass_db": "DB Password:",
+    "salt_db": "Encryption Salt:",
+    "text_save_keys": "Save your credentials in a safe place; you will need them if you move your database.",
+    "copy_all": "Copy credentials (Password & Salt)",
+    "btn2": "Continue"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -289,7 +324,11 @@
     "text_category_not_found": "Category not found.",
     "text_inactive_category": "Category inactive.",
     "text_category_name_used": "Category name is already in use.",
-    "text_category_have_products": "This category still has products."
+    "text_category_have_products": "This category still has products.",
+    "text_incorrect_keys": "Incorrect credentials or file for the database.",
+    "text_not_selected_file": "No selected file yet.",
+    "text_invalid_keys_email": "Email credentials invalid.",
+    "text_not_email_keys": "You no configured email keys."
   },
   "modalQuestionAlert": {
     "title": "¡Warning!",
@@ -432,6 +471,13 @@
     "input4": "Phone",
     "btn": "Edit user"
   },
+  "formKeys": {
+    "input1": "DB PASSWORD",
+    "input2": "DB SALT",
+    "btn": "Send",
+    "pass_too_short": "Pass to short",
+    "salt_invalid": "Salt invalid"
+  },
   "modalSale": {
     "title": "Sale",
     "description": "Sale status:",
@@ -484,7 +530,10 @@
     "max300_characters": "Max 300 characters",
     "max200_characters": "Max 200 characters",
     "number10_digits": "Number of 10 digits",
-    "required": "Required"
+    "required": "Required",
+    "invalid_email": "Invalid email",
+    "invalid_app_pass": "Invalid app password",
+    "both_fields_required": "Both fields requiered."
   },
   "placeholders": {
     "name": "name",

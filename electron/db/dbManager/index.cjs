@@ -2,6 +2,12 @@ const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
+/*
+ Usage:
+  node index.cjs encrypt <file> 'password' 'salt'
+  node index.cjs decrypt <file> 'password' 'salt'
+*/
+
 // --- CONFIGURATION ---
 const ALGORITHM = "aes-256-cbc";
 const IV_LENGTH = 16;

@@ -27,8 +27,12 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 
 <br/>
 
-> [!NOTE]
-> El sistema acutalmente se puede utilizar en modo desarrollo, faltan configuraciones para crear el .exe e instalar la aplicación
+> [!IMPORTANT]
+> ⚠️ Configuración de Credenciales de Correo (Opción: Importar Archivo)
+>
+> Actualmente, el sistema presenta una limitación técnica al utilizar la Opción 2 (Importar base de datos existente).
+>
+> Al importar un archivo .db, el flujo de inicio omite la configuración de las credenciales de email. Esta configuración solo se completa de forma automática cuando se genera una base de datos nueva desde cero.
 
 <h2 align="center">Project Setup 🚀</h2>
 
@@ -129,13 +133,14 @@ npm run package
 
 ## 📸 Sistema
 
-| Vista del Sistema                                   | Descripción                                                                                                                              |
-| :-------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------- |
-| ![Dashboard](./public/screenshots/dashboard.png)    | **Panel Principal:** Visualización de métricas de ventas diarias, ganancias y estado general del negocio mediante gráficas interactivas. |
-| ![Inventory](./public/screenshots/nuevaVenta.png)   | **Ventas:** Interfaz ágil para registrar nuevas ventas, aplicar descuentos y procesar diferentes métodos de pago.                        |
-| ![Customers](./public/screenshots/inventario.png)   | **Inventario:** Control total de stock, categorías y precios.                                                                            |
-| ![Export](./public/screenshots/historial.png)       | **Historial de Ventas:** Registro cronológico detallado de todas las transacciones realizadas.                                           |
-| ![Export](./public/screenshots/clientesGeneral.png) | **Clientes:** Directorio centralizado para gestionar la información de contacto y perfiles de compradores frecuentes.                    |
-| ![Export](./public/screenshots/clientesPagos.png)   | **Deudas y Pagos de Clientes:** Seguimiento especializado de créditos, saldos pendientes y registro histórico de abonos de clientes.     |
-| ![Export](./public/screenshots/reportes.png)        | **Reportes:** Interfaz Herramienta para exportar métricas de rendimiento y cierres de caja en formatos profesionales como PDF y Excel.   |
-| ![Export](./public/screenshots/configuracion.png)   | **Configuración:** Personalización del sistema, gestión de usuarios y gestion de categorías.                                             |
+| Vista del Sistema                                   | Descripción                                                                                                                                                                                              |
+| :-------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| ![Dashboard](./public/screenshots/welcome.png)      | **Panel Principal:** Dos opciones de arranque: 1. Base de Datos nueva con o sin credenciales para correos electrónicos. 2. Si ya tienes una Base de Datos de FidePOS agregala y coloca tus credenciales. |
+| ![Dashboard](./public/screenshots/dashboard.png)    | **Panel Principal:** Visualización de métricas de ventas diarias, ganancias y estado general del negocio mediante gráficas interactivas.                                                                 |
+| ![Inventory](./public/screenshots/nuevaVenta.png)   | **Ventas:** Interfaz ágil para registrar nuevas ventas, aplicar descuentos y procesar diferentes métodos de pago.                                                                                        |
+| ![Customers](./public/screenshots/inventario.png)   | **Inventario:** Control total de stock, categorías y precios.                                                                                                                                            |
+| ![Export](./public/screenshots/historial.png)       | **Historial de Ventas:** Registro cronológico detallado de todas las transacciones realizadas.                                                                                                           |
+| ![Export](./public/screenshots/clientesGeneral.png) | **Clientes:** Directorio centralizado para gestionar la información de contacto y perfiles de compradores frecuentes.                                                                                    |
+| ![Export](./public/screenshots/clientesPagos.png)   | **Deudas y Pagos de Clientes:** Seguimiento especializado de créditos, saldos pendientes y registro histórico de abonos de clientes.                                                                     |
+| ![Export](./public/screenshots/reportes.png)        | **Reportes:** Interfaz Herramienta para exportar métricas de rendimiento y cierres de caja en formatos profesionales como PDF y Excel.                                                                   |
+| ![Export](./public/screenshots/configuracion.png)   | **Configuración:** Personalización del sistema, gestión de usuarios y gestion de categorías.                                                                                                             |
