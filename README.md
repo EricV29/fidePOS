@@ -28,7 +28,14 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 <br/>
 
 > [!NOTE]
-> El sistema acutalmente se puede utilizar en modo desarrollo, faltan configuraciones para crear el .exe e instalar la aplicación
+> El sistema acutalmente se puede utilizar en modo desarrollo, faltan configuraciones para crear el .exe e instalar la aplicación.
+
+> [!IMPORTANT]
+> ⚠️ Configuración de Credenciales de Correo (Opción: Importar Archivo)
+>
+> Actualmente, el sistema presenta una limitación técnica al utilizar la Opción 2 (Importar base de datos existente).
+>
+> Al importar un archivo .db, el flujo de inicio omite la configuración de las credenciales de email. Esta configuración solo se completa de forma automática cuando se genera una base de datos nueva desde cero.
 
 <h2 align="center">Project Setup 🚀</h2>
 

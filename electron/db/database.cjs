@@ -5,11 +5,10 @@ const { app, safeStorage } = require("electron");
 const crypto = require("crypto");
 const { generateDBSecurity } = require("../utility/generateDBKeys.cjs");
 const nodemailer = require("nodemailer");
-require("dotenv").config();
 const AUTH_CODES = require("../../constants/authCodes.json");
 
 // PATH FILES
-// C:\Users\user\AppData\Roaming\fidepos
+// C:\Users\user\AppData\Roaming\FidePOS or FidePOS-DEV
 
 let PASSWORD, SALT, ENCRYPTION_KEY, ALGORITHM, dbPath, configPath;
 let dbInstance = null;
@@ -147,105 +146,68 @@ async function loadSecurityConfigs() {
   return false;
 }
 
-//---------------------
-
-//55
-//* SEARCH APP.DB
-function checkDBExists() {
-  const dbPath = path.join(app.getPath("appData"), "fidepos", "app.db");
-
-  const exists = fs.existsSync(dbPath);
-
-  if (exists) {
-    console.log(`🔍 Database found at: ${dbPath}`);
-  } else {
-    console.log("Empty system: Database file not found.");
-  }
-
-  return exists;
-}
-
-//55
-
-//* SEARCH KEY ON SAFESTORAGE
-async function loadSecureKeys() {
-  const configPath = path.join(app.getPath("userData"), "config.bin");
-
+//* VERIFY DATABASE ACCESS
+async function verifyDatabaseAccess(dbPath, data) {
   try {
-    if (fs.existsSync(configPath)) {
-      const encryptedBuffer = fs.readFileSync(configPath);
+    const { db_password, db_salt } = data;
 
-      if (!safeStorage.isEncryptionAvailable()) {
-        throw new Error("Encryption is not available on this system.");
-      }
+    const KEY = crypto.scryptSync(String(db_password), String(db_salt), 32);
 
-      const decryptedData = safeStorage.decryptString(encryptedBuffer);
-      return JSON.parse(decryptedData);
-    }
+    const buffer = fs.readFileSync(dbPath);
 
-    return null;
-  } catch (err) {
-    console.error("❌ Error descifrando las llaves del sistema:", err);
-    return null;
+    const IV_LENGTH = 16;
+    const iv = buffer.subarray(0, IV_LENGTH);
+    const encryptedData = buffer.subarray(IV_LENGTH);
+
+    const decipher = crypto.createDecipheriv("aes-256-cbc", KEY, iv);
+    const decryptedBuffer = Buffer.concat([
+      decipher.update(encryptedData),
+      decipher.final(),
+    ]);
+
+    const SQL = await initSqlJs();
+
+    const db = new SQL.Database(new Uint8Array(decryptedBuffer));
+
+    db.exec("SELECT name FROM sqlite_master WHERE type='table' LIMIT 1");
+
+    db.close();
+
+    console.log("✅ ACCESS DB SUCCESSFULLY");
+    return { success: true };
+  } catch (error) {
+    console.error("❌ ERROR ACCESS DB WITH FILES:", error.message);
+    return { success: false, error: AUTH_CODES.FILES_DB_INCORRECT };
   }
 }
 
-//* VERIFY KEYS FOR DB
-async function verifyAndSaveKeys(inputKeys) {
-  const { db_password, db_salt } = inputKeys;
-
-  const userDataPath = app.getPath("userData");
-  const dbPath = path.join(userDataPath, "app.db");
-  const configPath = path.join(userDataPath, "config.bin");
-
+//* PREPARE FILE AND KEYS DB
+async function prepareFileKeysDB(dbPath, keys) {
   try {
-    // 1. Verificar si la base de datos existe físicamente
-    if (!fs.existsSync(dbPath)) {
-      console.error("❌ No se encontró app.db para validar.");
-      return false;
-    }
+    const userDataPath = app.getPath("userData");
+    const finalDbPath = path.join(userDataPath, "app.db");
 
-    // 2. Intentar derivar la llave y probar el descifrado
-    // Generamos la llave de 32 bytes igual que en el resto de la app
-    const testKey = crypto.scryptSync(db_password, db_salt, 32);
-    const encryptedBuffer = fs.readFileSync(dbPath);
+    fs.copyFileSync(dbPath, finalDbPath);
 
-    try {
-      // Intentamos leer el IV (primeros 16 bytes) y los datos
-      const iv = encryptedBuffer.subarray(0, 16);
-      const data = encryptedBuffer.subarray(16);
-      const decipher = crypto.createDecipheriv("aes-256-cbc", testKey, iv);
+    const configData = {
+      db_password: keys.db_password,
+      db_salt: keys.db_salt,
+      email_user: "",
+      email_pass: "",
+    };
 
-      // Si esto no lanza error, significa que la llave es candidata correcta
-      decipher.update(data);
-      decipher.final();
+    const encryptedConfig = safeStorage.encryptString(
+      JSON.stringify(configData),
+    );
+    const configPath = path.join(userDataPath, "config.bin");
 
-      console.log("✅ Validación exitosa: Las llaves abren la base de datos.");
-    } catch (decryptError) {
-      console.error(
-        "❌ Error de validación: Las llaves no coinciden con el cifrado de la DB.",
-      );
-      return false;
-    }
+    fs.writeFileSync(configPath, encryptedConfig);
 
-    // 3. Si la validación pasó, guardamos las llaves de forma segura
-    try {
-      const keysString = JSON.stringify(inputKeys);
-      const secureBuffer = safeStorage.encryptString(keysString);
+    console.log("📦 IMPORT DB SUCCESSFULLY:", finalDbPath);
 
-      fs.writeFileSync(configPath, secureBuffer);
-      console.log("💾 config.bin actualizado con las nuevas llaves.");
-
-      return true;
-    } catch (saveError) {
-      console.error(
-        "❌ Error al escribir el archivo de configuración:",
-        saveError,
-      );
-      return false;
-    }
+    return true;
   } catch (err) {
-    console.error("❌ Error crítico en verifyAndSaveKeys:", err);
+    console.error("❌ Error load import config security:", err);
     return false;
   }
 }
@@ -846,9 +808,8 @@ module.exports = {
   queryAll,
   queryOne,
   runQuery,
-  checkDBExists,
-  loadSecureKeys,
   newDB,
-  verifyAndSaveKeys,
   loadSecurityConfigs,
+  verifyDatabaseAccess,
+  prepareFileKeysDB,
 };

@@ -282,10 +282,6 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_deleted_category",
       },
-      [AUTH_CODES.INCORRECT_KEYS]: {
-        Component: ModalDangerAlert,
-        textKey: "modalDangerAlert.text_incorrect_keys",
-      },
       [AUTH_CODES.NOT_SELECTED_FILE]: {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_not_selected_file",
@@ -297,6 +293,10 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
       [AUTH_CODES.NOT_EMAIL_KEYS]: {
         Component: ModalDangerAlert,
         textKey: "modalDangerAlert.text_not_email_keys",
+      },
+      [AUTH_CODES.FILES_DB_INCORRECT]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_incorrect_keys",
       },
     };
 

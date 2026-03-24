@@ -1,9 +1,17 @@
 // preload.js (CommonJS)
-const { contextBridge, ipcRenderer } = require("electron");
+const { contextBridge, ipcRenderer, webUtils } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
   // Start App First
   startAppFirst: (data) => ipcRenderer.invoke("startAppFirst", data),
+
+  // Start App File DB
+  startAppFileDB: (data) => ipcRenderer.invoke("startAppFileDB", data),
+
+  getFilePath: (file) => {
+    if (!file) return null;
+    return webUtils.getPathForFile(file);
+  },
 
   // Get Keys
   getKeys: () => ipcRenderer.invoke("getKeys"),
@@ -14,25 +22,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Get Keys
   verifyEmailKeys: () => ipcRenderer.invoke("verifyEmailKeys"),
 
-  //---------------------
-
   // Install Date
   getInstallDate: () => ipcRenderer.invoke("getInstallDate"),
 
   // Login
   login: (data) => ipcRenderer.invoke("login", data),
-
-  // Assing Keys
-  assingKeys: (data) => ipcRenderer.invoke("assingKeys", data),
-
-  // Start App By DB and Keys
-  successAppKeys: () => ipcRenderer.send("successAppKeys"),
-
-  // New DB
-  newDB: () => ipcRenderer.invoke("newDB"),
-
-  // Start App
-  startApp: () => ipcRenderer.send("startApp"),
 
   // Get session
   getSession: (data) => ipcRenderer.invoke("get-session", data),

@@ -19,7 +19,7 @@ const Welcome: React.FC = () => {
     { label: t("settings.input1_option1"), value: "en" },
     { label: t("settings.input1_option2"), value: "es" },
   ];
-  const [file, setSelectedFile] = useState<File | null>(null);
+  const [file, setSelectedFile] = useState(String);
 
   const handleLanguageChange = (value: string) => {
     i18n.changeLanguage(value);
@@ -37,19 +37,25 @@ const Welcome: React.FC = () => {
   };
 
   // Start App File DB
-  const handleSetDataBase = (values: KeysFormValues) => {
+  const handleSetDataBase = async (values: KeysFormValues) => {
     if (!file) {
       triggerResponseAlert(AUTH_CODES.NOT_SELECTED_FILE);
     } else {
-      window.electronAPI.startAppFileDB({ file, values });
+      const response = await window.electronAPI.startAppFileDB({
+        dbPath: file,
+        values,
+      });
+      if (!response.success) {
+        triggerResponseAlert(response.error);
+      }
     }
   };
 
-  const handleFileSelection = (file: File | null) => {
+  const handleFileSelection = async (file: string) => {
     if (file) {
       setSelectedFile(file);
     } else {
-      setSelectedFile(null);
+      setSelectedFile("");
     }
   };
 

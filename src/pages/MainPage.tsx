@@ -23,7 +23,7 @@ export default function MainPage() {
         if (userData) setSession(userData);
         if (date) setInstallDate(date);
       } catch (error) {
-        console.error("Error init app:", error);
+        console.error("❌ Error init app:", error);
       } finally {
         setLoading(false);
       }
@@ -55,30 +55,7 @@ export default function MainPage() {
     setIsOpen((prev) => !prev);
   };
 
-  /*
-  const [msgReply, setMsgReply] = useState("");
-  const [msgReplyPrivate, setMsgReplyPrivate] = useState("");
-
-  useEffect(() => {
-    // GLOBAL LISTENER REPLY
-    window.electronAPI.onMessageReply((data) => {
-      setMsgReply(data);
-    });
-
-    // GLOBAL LISTENER PRIVATE
-    window.electronAPI.onMessageReplyPrivate((data) => {
-      setMsgReplyPrivate(data);
-    });
-  }, []);
-
-  const sendMessage = () => {
-    window.electronAPI.sendMessage("Hello from Main!");
-  };
-
-  const sendMessagePrivate = () => {
-    window.electronAPI.sendMessagePrivate("Hello from Main Private!");
-  };
-*/
+  console.log(installDate);
 
   return (
     <>

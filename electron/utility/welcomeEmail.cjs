@@ -1,5 +1,4 @@
 const nodemailer = require("nodemailer");
-require("dotenv").config();
 const { haveEmailKeys } = require("./haveEmailKeys.cjs");
 
 async function welcomeEmail(data, lan) {

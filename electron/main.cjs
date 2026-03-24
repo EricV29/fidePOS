@@ -1,15 +1,13 @@
 const { app, BrowserWindow, ipcMain, protocol, net } = require("electron");
 const path = require("path");
 const {
-  assingKeysDB,
-  checkDBExists,
-  loadSecureKeys,
-  verifyAndSaveKeys,
   newDB,
   loadSecurityConfigs,
+  verifyDatabaseAccess,
+  prepareFileKeysDB,
 } = require("./db/database.cjs");
 const {
-  firstRun,
+  getInstallDate,
   addAdmin,
   loginUser,
   insertNewPassword,
@@ -107,9 +105,15 @@ const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
 const { contactDevs } = require("./utility/contactDevs.cjs");
 const { generatePassword } = require("./utility/generatePassword.cjs");
 const { uploadUserImage } = require("./utility/uploadUserImage.cjs");
-const isDev = !app.isPackaged;
 require("dotenv").config();
 const fs = require("fs");
+const isDev = !app.isPackaged;
+
+if (!app.isPackaged) {
+  app.setName("FidePOS-DEV");
+} else {
+  app.setName("FidePOS");
+}
 
 function getPageUrl(route = "") {
   if (isDev) {
@@ -125,18 +129,13 @@ function getPageUrl(route = "") {
   }
 }
 
-const {
-  registerInstallDate,
-  getInstallDate,
-} = require("./utility/installDateManager.cjs");
-
 let welcomeWindow = null;
 let mainWindow = null;
 let loginWindow = null;
-let keysWindow = null;
 let signupWindow = null;
 let keysGlobal = null;
 let loadWindow = null;
+let sessionUser = null;
 
 //* CREATE WINDOWS --------------------
 
@@ -253,58 +252,6 @@ function createLoginWindow() {
   });
 }
 
-// Keys Window
-function createKeysWindow() {
-  keysWindow = new BrowserWindow({
-    width: 600,
-    height: 600,
-    resizable: false,
-    frame: false,
-    titleBarStyle: "hidden",
-    titleBarOverlay: false,
-    autoHideMenuBar: true,
-    icon: path.join(__dirname, "../public/fidelogo.ico"),
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true,
-    },
-    show: false,
-  });
-
-  const url = getPageUrl("keys");
-  keysWindow.loadURL(url);
-
-  keysWindow.webContents.on("did-finish-load", () => {
-    keysWindow.show();
-  });
-}
-
-// Email Credentiasl
-function createEmailWindow() {
-  emailWindow = new BrowserWindow({
-    width: 600,
-    height: 600,
-    resizable: false,
-    frame: false,
-    titleBarStyle: "hidden",
-    titleBarOverlay: false,
-    autoHideMenuBar: true,
-    icon: path.join(__dirname, "../public/fidelogo.ico"),
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true,
-    },
-    show: false,
-  });
-
-  const url = getPageUrl("email");
-  emailWindow.loadURL(url);
-
-  emailWindow.webContents.on("did-finish-load", () => {
-    emailWindow.show();
-  });
-}
-
 // Main Window
 function createMainWindow() {
   mainWindow = new BrowserWindow({
@@ -347,43 +294,18 @@ async function startApp() {
     if (response) {
       loadWindow.close();
       createLoginWindow();
+      console.log("🚀 START APP READY");
     } else {
       loadWindow.close();
       createSignupWindow();
+      console.log("🚀 START APP READY");
     }
   }
-  // const existsDB = await checkDBExists();
-  // const keys = await loadSecureKeys();
-
-  // if (existsDB) {
-  //   if (keys) {
-  //     await assingKeysDB(keys);
-  //     try {
-  //       const response = await getAdmin();
-  //       if (response) {
-  //         createLoginWindow();
-  //       } else {
-  //         createSignupWindow();
-  //       }
-  //     } catch (error) {
-  //       console.error("❌ ERROR: ", error);
-  //     }
-  //     welcomeWindow.close();
-  //   } else {
-  //     welcomeWindow.close();
-  //     createKeysWindow();
-  //   }
-  // } else {
-  //   const keys = await newDB(false);
-  //   welcomeWindow.close();
-  //   createSignupWindow(keys);
-  // }
 }
 
 //* FUNCTIONS --------------------
 
 // Save Login
-let sessionUser = null;
 function saveLogin(userData) {
   sessionUser = userData;
   console.log(
@@ -403,6 +325,43 @@ ipcMain.handle("startAppFirst", async (event, data) => {
         welcomeWindow.close();
         keysGlobal = response.result;
         createSignupWindow();
+        console.log("🚀 START APP READY");
+      } else {
+        return { success: false, error: response.error };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Start App File DB
+ipcMain.handle("startAppFileDB", async (event, data) => {
+  if (event.sender === welcomeWindow.webContents) {
+    try {
+      const { dbPath, values } = data;
+      const response = await verifyDatabaseAccess(dbPath, values);
+      if (response.success) {
+        let prepare = false;
+        prepare = await prepareFileKeysDB(dbPath, values);
+        if (!prepare) return;
+
+        prepare = await loadSecurityConfigs();
+        if (!prepare) return;
+
+        prepare = await getAdmin();
+        if (prepare) {
+          welcomeWindow.close();
+          createLoginWindow();
+          console.log("🚀 START APP READY");
+        } else {
+          welcomeWindow.close();
+          createSignupWindow();
+          console.log("🚀 START APP READY");
+        }
       } else {
         return { success: false, error: response.error };
       }
@@ -478,11 +437,27 @@ ipcMain.handle("verifyEmailKeys", async (event) => {
   }
 });
 
-//--------------
-
 // Get Install Date
-ipcMain.handle("getInstallDate", () => {
-  return getInstallDate();
+ipcMain.handle("getInstallDate", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getInstallDate();
+
+      if (response.success) {
+        return response.result.install_date;
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
 });
 
 // User Login
@@ -504,77 +479,6 @@ ipcMain.handle("login", async (event, data) => {
           error: response.error,
         };
       }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Assing Keys
-ipcMain.handle("assingKeys", async (event, data) => {
-  if (event.sender === keysWindow.webContents) {
-    try {
-      const response = await verifyAndSaveKeys(data);
-      if (response) {
-        await assingKeysDB(data);
-        return { success: true, result: response.result };
-      } else {
-        return { success: false };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Start App By DB and Keys
-ipcMain.on("successAppKeys", async (event) => {
-  if (event.sender === keysWindow.webContents) {
-    try {
-      const response = await getAdmin();
-      keysWindow.close();
-
-      if (response) {
-        createLoginWindow();
-      } else {
-        createSignupWindow();
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// New DB
-ipcMain.handle("newDB", async (event) => {
-  if (event.sender === keysWindow.webContents) {
-    try {
-      const keys = await newDB(true);
-      return { result: keys };
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Start App
-ipcMain.on("startApp", async (event) => {
-  if (event.sender === keysWindow.webContents) {
-    try {
-      keysWindow.close();
-      createSignupWindow();
     } catch (error) {
       console.error("❌ ERROR: ", error);
     }
@@ -2125,7 +2029,7 @@ app.whenReady().then(async () => {
     await wait(3000);
     await startApp();
   } catch (err) {
-    console.error("Initialization error:", err);
+    console.error("❌ Initialization error:", err);
   } finally {
     isInitializing = false;
   }

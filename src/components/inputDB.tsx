@@ -4,8 +4,8 @@ import { useTranslation } from "react-i18next";
 
 interface DBFileInputProps {
   // Ahora path es el objeto File completo
-  path: File | null;
-  onSelect: (file: File | null) => void;
+  path: string;
+  onSelect: (file: string) => void;
 }
 
 const DBFileInput: React.FC<DBFileInputProps> = ({ path, onSelect }) => {
@@ -17,9 +17,11 @@ const DBFileInput: React.FC<DBFileInputProps> = ({ path, onSelect }) => {
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const fileUploaded = event.target.files?.[0] || null;
-    onSelect(fileUploaded);
-
+    const fileUploaded = event.target.files?.[0];
+    if (fileUploaded) {
+      const realPath = window.electronAPI.getFilePath(fileUploaded);
+      onSelect(realPath);
+    }
     if (event.target) {
       event.target.value = "";
     }
@@ -39,7 +41,7 @@ const DBFileInput: React.FC<DBFileInputProps> = ({ path, onSelect }) => {
         <span
           className={`flex-1 text-xs truncate ${path ? "text-gray-700 font-medium" : "text-gray-400 italic"}`}
         >
-          {path ? path.name : t("formDBCredentials.input1")}
+          {path ? path : t("formDBCredentials.input1")}
         </span>
 
         <button
