@@ -27,9 +27,6 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 
 <br/>
 
-> [!NOTE]
-> El sistema acutalmente se puede utilizar en modo desarrollo, faltan configuraciones para crear el .exe e instalar la aplicación.
-
 > [!IMPORTANT]
 > ⚠️ Configuración de Credenciales de Correo (Opción: Importar Archivo)
 >
