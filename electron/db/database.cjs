@@ -6,8 +6,6 @@ const crypto = require("crypto");
 const { generateDBSecurity } = require("../utility/generateDBKeys.cjs");
 const nodemailer = require("nodemailer");
 const AUTH_CODES = require("../../constants/authCodes.json");
-
-// PATH FILES
 // C:\Users\user\AppData\Roaming\FidePOS or FidePOS-DEV
 
 let PASSWORD, SALT, ENCRYPTION_KEY, ALGORITHM, dbPath, configPath;

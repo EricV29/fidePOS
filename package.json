@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas, inventario, ingresos y pérdidas con reportes claros y en tiempo real, ayudando a mejorar la eficiencia y el control financiero del negocio.",
-  "author": "Eric Jared Villeda Reyes y Edwin Yair Sandoval Muciño",
+  "author": "Eric Jared Villeda Reyes",
   "license": "MIT",
   "type": "module",
   "main": "electron/main.cjs",
@@ -28,7 +28,8 @@
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "package.json"
+      "package.json",
+      "constants/**/*.json"
     ],
     "nsis": {
       "installerIcon": "dist/fidelogo.ico",
