@@ -1,0 +1,63 @@
+import React from "react";
+import type { IconProps } from "@typesm/icons";
+
+interface CardInfoNumberProps {
+  icon: React.ComponentType<IconProps> | null;
+  title: string;
+  icond: React.ComponentType<IconProps> | null;
+  number: number;
+  format: boolean;
+  color: string;
+}
+
+const CardInfoNumber: React.FC<CardInfoNumberProps> = ({
+  icon: Icon,
+  title,
+  icond: Icond,
+  number,
+  format,
+  color,
+}) => {
+  const formatNumber = (value: number) => {
+    return new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(value);
+  };
+
+  return (
+    <>
+      <div
+        className="min-w-[200] min-h-[100px] max-h-full w-full flex flex-col justify-center items-center px-6 py-4 rounded-xl border-[3px] bg-white dark:bg-[#353935] dark:text-white transition-all"
+        style={{ borderColor: color }}
+      >
+        <div className="flex gap-2 items-center">
+          {Icon && <Icon size={40} color={color} />}
+          <p className="font-bold text-[clamp(14px,2vw,20px)]">{title}</p>
+        </div>
+
+        <div className="flex items-center gap-1">
+          {Icond ? (
+            <Icond size={40} color={color} />
+          ) : (
+            <p className="text-[clamp(20px,4vw,35px)]" style={{ color }}>
+              $
+            </p>
+          )}
+
+          {number ? (
+            <p className="text-[clamp(20px,3vw,35px)]" style={{ color }}>
+              {format ? formatNumber(number) : number}
+            </p>
+          ) : (
+            <p className="text-[clamp(20px,3vw,35px)]" style={{ color }}>
+              ---
+            </p>
+          )}
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default CardInfoNumber;

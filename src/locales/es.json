@@ -1,0 +1,650 @@
+{
+  "global": {
+    "welcome": "Bienvenido a",
+    "forgot_password": "Olvide mi contraseña",
+    "no_data": "Aún no hay datos.",
+    "status_active": "ACTIVO",
+    "status_inactive": "INACTIVO",
+    "status_paid": "PAGADO",
+    "status_unpaid": "NO PAGADO",
+    "status_debt": "EN DEUDA",
+    "role_admin": "ADMINISTRADOR",
+    "role_user": "USUARIO",
+    "loading": "Cargando...",
+    "yes": "SI"
+  },
+  "sidebar": {
+    "dashboard": "Panel",
+    "newSale": "Venta",
+    "products": "Productos",
+    "history": "Historial",
+    "customers": "Clientes",
+    "reports": "Reportes",
+    "settings": "Ajustes",
+    "logout": "Cerrar Sesión"
+  },
+  "start": {
+    "option1": "Primera vez",
+    "description1": "Base de datos: Se creara una nueva base de datos.",
+    "description2": "Correo electrónico: Puedes configurar tu cuenta de Gmail para permitir la recuperación de contraseñas y el envío automático de correos de bienvenida. Nota: Si no configuras esta opción, deberás contactar directamente con el soporte técnico para recuperar el acceso a tu cuenta.",
+    "btn_tutorial": "Enlace Tutorial.",
+    "option2": "Tengo una base de datos",
+    "description3": "Selecciona tu archivo (.db):",
+    "description4": "Ingresa tus credenciales de tu base de datos:"
+  },
+  "formEmailCredentials": {
+    "input1": "Correo electrónico (gmail)",
+    "input2": "Contraseña de Aplicación de Google",
+    "btn": "ACCEDER"
+  },
+  "formDBCredentials": {
+    "input1": "Selecciona tu archivo (.db):",
+    "btn1.1": "Buscar",
+    "btn1.2": "Cambiar",
+    "input2": "Contraseña de Base de Datos",
+    "input3": "Sal de Cifrado de Base de Datos",
+    "btn": "ACCEDER"
+  },
+  "signup": {
+    "title": "Crear Cuenta",
+    "subtitle": "Bienvenido a FidePOS, tu punto de venta ideal para tu negocio.",
+    "keys": "Copia tus credenciales, tal vez despues las necesites."
+  },
+  "login": {
+    "title": "Iniciar Sesión",
+    "subtitle": "Hola, ingresa tus datos para acceder."
+  },
+  "keys": {
+    "title": "¡Hola!",
+    "subtitle1": "Detectamos una base de datos en este equipo, pero faltan las credenciales de acceso. ¿Cuentas con ellas?",
+    "text1": "No tengo credenciales. Crear una nueva base de datos",
+    "text2": "La base de datos anterior se movera a tu carpeta de Descargas.",
+    "text3": "Credenciales para tu nueva base de datos:",
+    "text_pass_db": "Contraseña de DB:",
+    "salt_db": "Sal de cifrado:",
+    "text_save_keys": "Guarda estas credenciales en un lugar seguro; las necesitarás si mueves tu base de datos.",
+    "copy_all": "Copiar credenciales (Contraseña y Sal)",
+    "btn2": "Continuar"
+  },
+  "dashboard": {
+    "title": "Panel",
+    "chart1": "Top 5 - Ventas por categoría",
+    "chart2": "Productos Activos por Categoría",
+    "table1": "Ventas Recientes",
+    "table2": "Cuentas por Cobrar"
+  },
+  "newSale": {
+    "title": "Productos",
+    "input_code": "Buscar por codigo SKU...",
+    "num_sale": "Venta",
+    "btn_add_customer": "Cliente",
+    "discount": "Descuento",
+    "btn_sale": "Completar venta",
+    "input_select": "Elige un cliente"
+  },
+  "products": {
+    "title": "Inventario de Productos",
+    "table1": "Tabla de inventario"
+  },
+  "history": {
+    "title": "Historial de ventas",
+    "table1": "Tabla de historial"
+  },
+  "customers": {
+    "title": "Clientes",
+    "btn_export": "Exportar",
+    "btn_add_customer": "Cliente",
+    "btn_add_payment": "Pago",
+    "switch_option2": "Pagos",
+    "table1": "Tabla de Clientes",
+    "table2": "Tabla de Deudas",
+    "table3": "Tabla de Pagos",
+    "input1": "Selecciona tu cliente"
+  },
+  "reports": {
+    "title": "Reportes",
+    "btn_export": "Exportar",
+    "switch": {
+      "general": "General",
+      "sales": "Ventas",
+      "products": "Productos",
+      "customers": "Clientes"
+    },
+    "chart1": "Ventas por Categoría",
+    "chart2": "Top Productos Vendidos",
+    "table1": "Cuentas por Cobrar",
+    "table2": "Ventas",
+    "chart3": "Productos por Categoría",
+    "table3": "Productos",
+    "chart5": "Deudas por Cliente",
+    "chart6": "Total de Deudas Durante el Tiempo",
+    "table4": "Clientes",
+    "input1": "Selecciona tu cliente",
+    "input2": "Selecciona un año",
+    "table5": "Tabla de Deudas",
+    "table6": "Tabla de Pagos"
+  },
+  "settings": {
+    "title": "Configuración de Cuenta",
+    "btn_add_user": "Usuario",
+    "btn_change_img": "Cambiar imagen",
+    "input1": "Idioma",
+    "description1": "Personaliza el idioma de tu preferencia.",
+    "input1_option1": "Inglés",
+    "input1_option2": "Español",
+    "input2": "Apariencia",
+    "description2": "Peronaliza el aspecto de la aplicación.",
+    "input2_option1": "Claro",
+    "input2_option2": "Oscuro",
+    "input3": "Contraseña",
+    "description3": "Cambia tu contraseña.",
+    "input3_btn": "Cambiar",
+    "input4": "Soporte",
+    "description4": "Reporta problemas de la app con los desarrolladores.",
+    "input4_btn": "Contactar",
+    "table1": "Tabla de Usuarios",
+    "table2": "Tabla de Categorias"
+  },
+  "buttons": {
+    "btn_ok": "ACEPTAR",
+    "btn_cancel": "CANCELAR",
+    "btn_confirm": "CONFIRMAR",
+    "btn_add_customer": "Cliente",
+    "btn_export": "Exportar",
+    "btn_import": "Importar",
+    "btn_add_product": "Producto",
+    "btn_add_category": "Categoría",
+    "btn_add_payment": "Pago",
+    "btn_add_user": "Usuario"
+  },
+  "columns": {
+    "created_at": "Fecha creación",
+    "deleted_at": "Fecha eliminación",
+    "category": "Categoría",
+    "actions": "Acciones",
+    "total_amount": "Monto",
+    "customer": "Cliente",
+    "customers": "Clientes",
+    "code": "Código SKU",
+    "sale_total": "Monto de venta",
+    "debt_amount": "Monto adeudado",
+    "debt_paid": "Monto pagado",
+    "debt_pending": "Monto pendiente",
+    "product": "Producto",
+    "products": "Productos",
+    "description": "Descripción",
+    "unit_price": "Precio unidad",
+    "quantity": "Cantidad",
+    "cost_price": "Precio compra",
+    "status": "Estado",
+    "name": "Nombre",
+    "phone": "Teléfono",
+    "debts_number": "No. Deudas",
+    "note": "Nota",
+    "paid_amount": "Monto Pagado",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "sale": "Venta",
+    "sale_num": "No. Venta",
+    "discount": "Descuento",
+    "last_name": "Apellido",
+    "pending_amount": "Monto Pendiente",
+    "user_id": "ID Usuario",
+    "debt_num": "No. Deudas",
+    "code_sku": "No. Código",
+    "debts": "Deudas",
+    "month": "Meses",
+    "sale_amount": "Monto total de ventas",
+    "total_payment_amount": "Monto de pago"
+  },
+  "charts": {
+    "chart_sales": "Ventas",
+    "chart_apc": "Productos",
+    "totals": "Totales",
+    "chart_cs": "Ventas"
+  },
+  "cards": {
+    "revenue_title": "Ganancias",
+    "investment_title": "Inversión",
+    "inventory_value_title": "Valor de Inventario",
+    "stock_title": "Productos",
+    "customers_title": "Clientes",
+    "customers_debt_title": "Clientes con Deuda",
+    "owed_title": "Deuda Total",
+    "payment_title": "Ultimo pago",
+    "debts_title": "Deudas",
+    "paids_title": "Pagos",
+    "unpaid_title": "Deuda Total",
+    "paid_title": "Total Pagado",
+    "sales_title": "Ventas",
+    "products_status_title": "Productos (activo/inactivo)",
+    "options": "Opciones",
+    "pending_title": "Saldo pendiente",
+    "discounts_title": "Descuentos",
+    "salesvs_title": "Pagado vs Pendiente"
+  },
+  "datePicker": {
+    "months": {
+      "january": "Enero",
+      "february": "Febrero",
+      "march": "Marzo",
+      "april": "Abril",
+      "may": "Mayo",
+      "june": "Junio",
+      "july": "Julio",
+      "august": "Agosto",
+      "september": "Septiembre",
+      "october": "Octubre",
+      "november": "Noviembre",
+      "december": "Diciembre"
+    },
+    "days": {
+      "sun": "Dom",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb"
+    },
+    "onlyToday": "¿Sólo hoy?",
+    "btn1": "Cancelar",
+    "btn2": "Aplicar"
+  },
+  "dropZone": {
+    "text1": "Arrastra tus archivos .csv o .xlsx aquí",
+    "text2": "o selecciona en tus archivos"
+  },
+  "tableSearch": {
+    "input_search": "Busca un registro...",
+    "input_select": "Elige una columna",
+    "btn_previous": "Anterior",
+    "btn_next": "Siguiente"
+  },
+  "modalWarningAlert": {
+    "title": "¡Advertencia!",
+    "text_forgot_password": "Se enviará un correo electrónico con tu contraseña. Asegúrate de tener conexión a internet.",
+    "text_write_email": "Asegurate de escribir tu correo electrónico.",
+    "text_delete_user": "¿Estás seguro de que quieres eliminar a este usuario?",
+    "text_debt_payment": "¿Estás seguro de que agregar un nuevo pago?",
+    "text_complete_new_sale": "¿Estás seguro de completar la venta?",
+    "text_delete_product": "¿Estás seguro de que quieres eliminar este producto?.",
+    "text_delete_customer": "¿Estás seguro de que quieres eliminar a este cliente?",
+    "text_active_customer": "¿Estás seguro de que quieres activar a este cliente?",
+    "text_delete_category": "¿Estás seguro de que quieres eliminar esta categoría?"
+  },
+  "modalSuccessAlert": {
+    "title": "¡Exito!",
+    "text_email_send": "Correo enviado.",
+    "text_add_user": "Usuario agregado correctamente.",
+    "text_delete_user": "Usuario eliminado correctamente.",
+    "text_edit_user": "Usuario editado correctamente.",
+    "text_change_pass_user": "Contraseña actualizada correctamente.",
+    "text_img_upload": "Imagen cargada correctamente.",
+    "text_debt_payment_success": "Pago de deuda agregado correctamente",
+    "text_add_customer": "Cliente agregado correctamente.",
+    "text_create_new_sale": "Nueva venta realizada correctamente.",
+    "text_add_category": "Categoría agregada correctamente.",
+    "text_delete_product": "Producto eliminado correctamente.",
+    "text_add_product": "Producto agregado correctamente.",
+    "text_edit_product": "Producto editado correctamente.",
+    "text_edit_customer": "Cliente editado correctamente.",
+    "text_delete_customer": "Cliente eliminado correctamente.",
+    "text_restore_customer": "Cliente activado correctamente.",
+    "text_edit_category": "Categoría editada correctamnete.",
+    "text_restore_category": "Categoría eliminada correctamente."
+  },
+  "modalDangerAlert": {
+    "title": "¡Cuidado!",
+    "text_user_not_found": "Usuario no encontrado.",
+    "text_user_inactive": "Usuario inactivo.",
+    "text_incorrect_password": "Contraseña incorrecta.",
+    "text_email_used": "Correo electrónico ya utilizado. Prueba con otro.",
+    "text_phone_used": "Número telefónico ya utilizado. Prueba con otro.",
+    "text_unauthorized": "Acción no permitida.",
+    "text_img_invalid": "Imagenes aceptadas: JPEG, JPG, PNG o WebP.",
+    "text_img_large": "Imagen demasiado pesada. Máximo 2MB.",
+    "text_not_internet": "Asegurate de tener una conexión a internet.",
+    "text_debt_not_found": "Deuda no encontrada.",
+    "text_insufficient_amount": "Monto insuficiente.",
+    "text_not_credit_sale": "Esto no es una cantidad valida para credito.",
+    "Insufficient stock for this product.": "Stock insuficiente para este producto: {{product}}.",
+    "text_not_customer_select": "Por favor selecciona o crea un cliente para realizar una venta a credito.",
+    "text_category_used": "Categoría ya existe en el sistema.",
+    "text_product_inactive": "Este producto está inactivo actualmente.",
+    "text_not_category_select": "Por favor selecciona una categoria para agregar el nuevo producto.",
+    "text_code_sku_used": "Código SKU ya utilizado. Prueba con otro.",
+    "text_product_not_found": "Producto no encontrado.",
+    "text_used_product": "Este producto tiene historial de movimientos y no se puede eliminar como un error de creación.",
+    "text_empty_file": "El archivo esta vacío.",
+    "text_missing_columns": "Faltan las siguientes columnas obligatorias: {{columns}}",
+    "text_empty_products": "No hay productos para agregar al sistema.",
+    "text_code_sku_used_import": "Código SKU: {{codesku}} ya utilizado.",
+    "text_not_selected_format": "Formato no seleccionado.",
+    "text_not_selected_statistics": "Estadísticas no seleccionadas.",
+    "text_not_changes": "No cambios por modificar.",
+    "text_customer_not_found": "Cliente no encontrado.",
+    "text_inactive_customer": "Cliente inactivo.",
+    "text_debt_customer": "Cliente con deudas por pagar.",
+    "text_not_selected_customer": "Primero necesitas seleccionar un cliente.",
+    "text_active_customer": "Este cliente ya se encuentra activo.",
+    "text_category_not_found": "Categoría no encontrada.",
+    "text_inactive_category": "Categoría inactiva.",
+    "text_category_name_used": "Nombre de categoría ya utilizado.",
+    "text_category_have_products": "Esta categoría tiene productos relacionados.",
+    "text_incorrect_keys": "Las credenciales o archivo de la base de datos son incorrectas.",
+    "text_not_selected_file": "Aún no seleccionas el archivo de base de datos.",
+    "text_invalid_keys_email": "Credenciales para correo electrónico invalidas.",
+    "text_not_email_keys": "No configuraste las credenciales para correos electrónicos."
+  },
+  "modalQuestionAlert": {
+    "title": "¡Cuidado!",
+    "change_stock": "¿Cuál es el motivo del cambio de stock?",
+    "error_correction": "Corrección de error",
+    "new_entry": "Nueva entrada",
+    "error_quantity": "Tuve un error al colocar la cantidad inicial.",
+    "text_new_entry": "Agregar nueva cantidad al inventario.",
+    "delete_product": "¿Cuál es el motivo de eliminación del producto?",
+    "error_creation": "Error de creación.",
+    "error_creation_product": "Error al crear el producto.",
+    "loss_stock": "Merma / Daño / Perdida",
+    "text_loss_stock": "Stock eliminado por daño, expiración o perdida.",
+    "export_page": "¿Quieres exportar la información actual o toda la información?",
+    "current_view": "Vista Actual",
+    "total_data": "Información Completa",
+    "text_current_view": "Solo la información visible en esta página.",
+    "text_total_data": "Toda la información disponible en el sistema."
+  },
+  "modalAddUser": {
+    "title": "Agregar usuario",
+    "description": "Agrega usuarios a tu aplicación.",
+    "subtitle": "Ingresa la información correcta del nuevo usuario."
+  },
+  "formAddUser": {
+    "input1": "Nombre",
+    "input2": "Apellidos",
+    "input3": "Correo electrónico",
+    "input4": "Teléfono",
+    "input5": "Contrseña",
+    "input6": "Confirmar contraseña",
+    "btn": "Agregar usuario",
+    "btn2": "Crear",
+    "btn3": "Acceder",
+    "password_rules": [
+      "Al menos 5 caracteres",
+      "Un número",
+      "Una letra mayúscula",
+      "Un carácter especial"
+    ]
+  },
+  "modalChangePassword": {
+    "title": "Cambiar contraseña",
+    "description": "Cambia tu actual contraseña.",
+    "subtitle": "Ingresa tu actual y nueva contraseña."
+  },
+  "formChangePassword": {
+    "input1": "Contraseña actual",
+    "input2": "Nueva Contraseña",
+    "input3": "Confirma la Nueva Contraseña",
+    "btn": "Cambiar contraseña",
+    "password_rules": [
+      "Al menos 5 caracteres",
+      "Un número",
+      "Una letra mayúscula",
+      "Un carácter especial"
+    ]
+  },
+  "modalContact": {
+    "title": "Contacta a soporte",
+    "description": "Envia un mensaje describiendo error, problema o sugerencia.",
+    "subtitle": "Escribe tu mensaje y nuestro equipo lo revisará lo antes posible."
+  },
+  "formContact": {
+    "input1": "Texto",
+    "btn": "Enviar"
+  },
+  "modalAddCustomer": {
+    "title": "Agregar nuevo cliente",
+    "title_edit": "Editar usuario",
+    "description": "Agrega un nuevo cliente a tu lista.",
+    "description_edit": "Edita el cliente de tu lista.",
+    "subtitle": "Ingresa la información principal del nuevo cliente.",
+    "subtitle_edit": "Ingresa la nueva información del cliente."
+  },
+  "formAddCustomer": {
+    "input1": "Nombres",
+    "input2": "Apellidos",
+    "input3": "Teléfono",
+    "btn": "Agregar cliente",
+    "btn_edit": "Editar cliente"
+  },
+  "modalAddProduct": {
+    "title": "Agrega un producto",
+    "title_edit": "Editar producto",
+    "description": "Agrega nuevos productos a tu inventario.",
+    "description_edit": "Edita los campos que necesites.",
+    "subtitle": "Ingresa la información de tu nuevo producto.",
+    "subtitle_edit": "Edita la información de tu producto."
+  },
+  "formAddProduct": {
+    "input1": "Código SKU",
+    "input2": "Nombre Producto",
+    "input3": "Descripción",
+    "input4": "Categoría",
+    "input5": "Stock",
+    "input6": "Precio compra",
+    "input7": "Precio unidad",
+    "btn": "Agregar producto",
+    "btn_edit": "Editar producto"
+  },
+  "modalAddCategory": {
+    "title": "Agrega una categoría",
+    "description": "Agrega nuevas categorías para tus productos.",
+    "subtitle": "Ingresa la información de tu nueva categoría."
+  },
+  "formAddCategory": {
+    "input1": "Nombre Categoría",
+    "input3": "Descripción",
+    "btn": "Agregar categoría"
+  },
+  "modalNewPayment": {
+    "title": "Nuevo pago",
+    "description": "Registra un nuevo pago de tu cliente.",
+    "subtitle": "Asegúrese de que todos los campos estén correctamente llenados.",
+    "input1": "Cliente",
+    "input2": "Deuda de Cliente",
+    "total_debt": "Deuda total",
+    "total_payment": "Total pagado",
+    "total_debt_pending": "Deuda pendiente"
+  },
+  "formNewPayment": {
+    "input1": "Monto de pago",
+    "input2": "Nota",
+    "btn": "Agregar pago"
+  },
+  "modalEditUser": {
+    "title": "Editar usuario",
+    "description": "Acutaliza individualmente usuarios en tu app.",
+    "subtitle": "Remplaza la nueva información para tu usuario."
+  },
+  "formEditUser": {
+    "input1": "Nombre",
+    "input2": "Apellido",
+    "input3": "Correo electrónico",
+    "input4": "Teléfono",
+    "btn": "Editar usuario"
+  },
+  "formKeys": {
+    "input1": "CONTRASEÑA DB",
+    "input2": "SAL DE CIFRADO DB",
+    "btn": "Enviar"
+  },
+  "modalSale": {
+    "title": "Venta",
+    "description": "Estatus de venta:",
+    "subtitle": "Información de venta.",
+    "customer": "Cliente:",
+    "discount": "Descuento"
+  },
+  "modalNewPaid": {
+    "title": "Nueva Venta",
+    "subtitle": "Selección de productos a crédito.",
+    "debt": "Deuda:",
+    "customer": "Cliente:",
+    "discount": "Descuento",
+    "change_due": "Cambio a regresar",
+    "input_paid_amount": "Cantidad que pagará",
+    "input__cash_received": "Candidad con la que paga",
+    "btn": "Completar venta"
+  },
+  "modalExport": {
+    "title": "Exportar estadísticas",
+    "description": "La información puede ser exportada como archivos <bold>.csv</bold>, <bold>.xlsx</bold> y <bold>.pdf</bold>.",
+    "subtitle": "Elige tu configuración favorita.",
+    "text_statistics": "Estadísticas",
+    "text_statistics_description": "¿Quieres incluir las estadísticas en el documento?",
+    "text_format": "Formato de archivo",
+    "text_format_description": "Elige tu formato de archivo",
+    "form_btn": "Exportar"
+  },
+  "modalImport": {
+    "title": "Importa tus productos",
+    "description": "Los datos pueden ser importados como archivos <bold>.csv</bold> o <bold>.xlsx</bold>.",
+    "subtitle": "Las columnas de tu archivo debe de incluir los siguientes nombres:",
+    "optional": "(Opcional)",
+    "categories": "(Las categorías deben coincidir con las categorías del sistema)",
+    "row": "Fila",
+    "text_null_product": "Nombre del producto obligatorio.",
+    "text_null_category": "Nombre de la categoría obligatorio.",
+    "text_not_match_catergoy_one": "La categoría",
+    "text_not_match_catergoy_two": "no existe en el sistema.",
+    "text_number_columns": "Los precios o stock no son numeros."
+  },
+  "errors": {
+    "pass_requirements": "Contraseña no cumple las reglas",
+    "pass_match": "Contraseñas no coinciden",
+    "only_numeric": "Solo caracteres numéricos",
+    "email_invalid": "Dirección de correo invalida",
+    "min2_characters": "Min 2 caracteres",
+    "min10_characters": "Min 10 caracteres",
+    "max50_characters": "Max 50 caracteres",
+    "max300_characters": "Max 300 caracteres",
+    "max200_characters": "Max 200 caracteres",
+    "number10_digits": "Numéro de 10 digitos",
+    "required": "Required",
+    "invalid_email": "Correo electrónico invalido",
+    "invalid_app_pass": "Contraseña invalida",
+    "both_fields_required": "Ambos campos requeridos."
+  },
+  "placeholders": {
+    "name": "nombre",
+    "last_name": "apellido",
+    "email": "correo@.com",
+    "text": "texto...",
+    "product": "producto...",
+    "select": "selecciona",
+    "category": "categoría...",
+    "debt": "Deudas",
+    "language": "Idioma",
+    "theme": "Tema",
+    "support_img": "Soporta imágenes .jpg, .jpeg o .web",
+    "format": "formato",
+    "code_sku": "Escanea el código o deja vacio para autogenerar."
+  },
+  "exportReports": {
+    "products": {
+      "title": "REPORTE DE PÁGINA PRODUCTOS",
+      "investment": "Inversión",
+      "inventory_value": "Valor de Inventario",
+      "total_stock": "Total en Productos",
+      "stock_products": "Productos en Stock",
+      "out_stock_products": "Productos Agotados",
+      "detail_products": "DETALLE DE PRODUCTOS"
+    },
+    "history_page": {
+      "title": "REPORTE DE PÁGINA HISTORIAL DE VENTAS",
+      "sales": "Número de Ventas",
+      "pending_sales_amount": "Monto de Ventas Pendientes",
+      "discounts": "Descuentos",
+      "total_paid_vs_pending": "Total de Ventas Pagadas VS Pendientes",
+      "paid_sales": "Número de Ventas Pagadas",
+      "pending_sales": "Número de Ventas Pendientes",
+      "detail_sales": "DETALLE DE HISTORIAL DE VENTAS"
+    },
+    "customer_general": {
+      "title": "REPORTE DE PÁGINA CLIENTES",
+      "customers_number": "Número de Clientes",
+      "customers_debts_number": "Clientes con Deuda",
+      "total_debt_amount": "Deuta Total",
+      "last_customer_name_paid": "Ultimo Pago",
+      "last_customer_name_paid_date": "Fecha de Ultimo Pago",
+      "detail_customers": "DETALLE DE CLIENTES"
+    },
+    "customer_payments": {
+      "title": "REPORTE DE PÁGINA PAGOS",
+      "customer_name": "Cliente",
+      "debts_number": "Número de Deudas",
+      "payments_numbers": "Número de Pagos",
+      "total_debts_amount": "Monto Total de Adeudo",
+      "total_payments_amount": "Monto Total de Pago",
+      "detail_debts": "DETALLE DE DEUDAS",
+      "detail_payments": "DETALLE DE PAGOS"
+    },
+    "reports_general": {
+      "title": "REPORTE GENERAL",
+      "investment": "Inversión",
+      "revenue": "Ganacias",
+      "inventory_value": "Valor de inventario",
+      "sale_num": "Número de ventas",
+      "sale_amount": "Monto total de ventas",
+      "total_receivable": "Monto de cuentas por cobrar",
+      "customer_total_num": "Número total de clientes",
+      "customer_active": "Clientes activos",
+      "customer_in_debt": "En deuda",
+      "products_total_num": "Número total de productos",
+      "products_active": "Productos activos",
+      "products_inactive": "Productos inactivos",
+      "sales_by_category": "VENTAS POR CATEGORÍA",
+      "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
+      "accounts_receivable_table": "DETALLE DE CUENTAS POR COBRAR"
+    },
+    "reports_sales": {
+      "title": "REPORTE VENTAS",
+      "inventory_value": "Valor de inventario",
+      "sale_num": "Número de ventas",
+      "sale_amount": "Monto total de ventas",
+      "sales_by_category": "VENTAS POR CATEGORÍA",
+      "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
+      "detail_sales": "DETALLE DE VENTAS"
+    },
+    "reports_products": {
+      "title": "REPORTE PRODUCTOS",
+      "investment": "Inversión",
+      "revenue": "Ganancia",
+      "inventory_value": "Valor de inventario",
+      "products_total_num": "Productos Totales",
+      "products_active": "Productos Activos",
+      "products_inactive": "Productos Inactivos",
+      "products_by_category": "PRODUCTOS POR CATEGORÍA",
+      "top_selling_product": "TOP PRODUCTOS MAS VENDIDOS",
+      "detail_sales": "DETALLE DE PRODUCTOS"
+    },
+    "reports_customers": {
+      "title": "REPORTE CLIENTES",
+      "total_receivable": "Monto de cuentas por cobrar",
+      "sale_num": "Número de ventas",
+      "sale_amount": "Monto total de ventas",
+      "customer_total_num": "Número total de clientes",
+      "customer_active": "Clientes activos",
+      "customer_inactive": "Clientes inactivos",
+      "debt_distribution_customer": "NÚMERO DE DEUDAS POR CLIENTE",
+      "total_debt_over_time": "DEUDAS DURANTE EL AÑO",
+      "year": "Año",
+      "detail_customers": "DETALLE DE CLIENTES",
+      "detail_customer": "DETALLE DE CLIENTE",
+      "customer": "Cliente",
+      "detail_debts": "DETALLE DE DEUDAS",
+      "detail_payments": "DETALLE DE PAGOS"
+    }
+  }
+}

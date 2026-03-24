@@ -1,5 +1,19 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@icons/*": ["./src/assets/icons/*"],
+      "@img/*": ["./src/assets/images/*"],
+      "@components/*": ["./src/components/*"],
+      "@utility/*": ["./src/utility/*"],
+      "@typesm/*": ["./src/types/models/*"],
+      "@hooks/*": ["./src/hooks/*"],
+      "@columns/*": ["./src/components/columns/*"],
+      "@modals/*": ["./src/components/modals/*"],
+      "@forms/*": ["./src/components/forms/*"],
+      "@context/*": ["./src/context/*"]
+    },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
     "useDefineForClassFields": true,
@@ -24,5 +38,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "electron/db"]
+  "include": ["src", "electron/db", "constants", "constanst/responseCodes.js"]
 }
