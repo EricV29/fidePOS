@@ -99,7 +99,7 @@ export default function Dashboard() {
 
   const chartConfigTCS = {
     sales: {
-      label: t("charts.chart_tcs"),
+      label: t("charts.chart_cs"),
       color: "#F57C00",
     },
   };
