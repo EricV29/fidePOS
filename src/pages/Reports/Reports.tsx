@@ -25,7 +25,7 @@ const Reports = () => {
   const today = new Date().toISOString().split("T")[0];
   const [filters, setFilters] = useState({
     startDate: installDate
-      ? new Date(installDate).toISOString().split("T")[0]
+      ? new Intl.DateTimeFormat("sv-SE").format(new Date(installDate))
       : today,
     endDate: today,
   });

@@ -55,8 +55,6 @@ export default function MainPage() {
     setIsOpen((prev) => !prev);
   };
 
-  console.log(installDate);
-
   return (
     <>
       <div className="w-screen h-screen overflow-hidden flex p-[13px] gap-[15px] dark:bg-[#353935]">
