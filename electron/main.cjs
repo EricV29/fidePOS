@@ -351,9 +351,6 @@ ipcMain.handle("startAppFileDB", async (event, data) => {
         prepare = await prepareFileKeysDB(dbPath, values);
         if (!prepare) return;
 
-        // prepare = await loadSecurityConfigs();
-        // if (!prepare) return;
-
         prepare = await getAdmin();
         if (prepare) {
           welcomeWindow.close();
