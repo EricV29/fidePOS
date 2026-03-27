@@ -180,12 +180,23 @@ async function verifyDatabaseAccess(dbPath, data) {
 }
 
 //* PREPARE FILE AND KEYS DB
-async function prepareFileKeysDB(dbPath, keys) {
+//* PREPARE FILE AND KEYS DB
+async function prepareFileKeysDB(originalDbPath, keys) {
   try {
-    const userDataPath = app.getPath("userData");
+    const userDataPath = path.join(app.getPath("appData"), "fidepos");
     const finalDbPath = path.join(userDataPath, "app.db");
 
-    fs.copyFileSync(dbPath, finalDbPath);
+    if (!fs.existsSync(userDataPath)) {
+      fs.mkdirSync(userDataPath, { recursive: true });
+    }
+
+    fs.copyFileSync(originalDbPath, finalDbPath);
+
+    dbPath = finalDbPath;
+    PASSWORD = keys.db_password;
+    SALT = keys.db_salt;
+    ENCRYPTION_KEY = crypto.scryptSync(PASSWORD, SALT, 32);
+    ALGORITHM = "aes-256-cbc";
 
     const configData = {
       db_password: keys.db_password,
@@ -198,11 +209,9 @@ async function prepareFileKeysDB(dbPath, keys) {
       JSON.stringify(configData),
     );
     const configPath = path.join(userDataPath, "config.bin");
-
     fs.writeFileSync(configPath, encryptedConfig);
 
     console.log("📦 IMPORT DB SUCCESSFULLY:", finalDbPath);
-
     return true;
   } catch (err) {
     console.error("❌ Error load import config security:", err);

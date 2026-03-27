@@ -40,6 +40,7 @@ interface ReportsContext {
 const ReportsProducts = () => {
   const { t, i18n } = useTranslation();
   const { filters, childRef } = useOutletContext<ReportsContext>();
+
   const columnsp = columnsP(t, i18n.language);
   const chartConfigCP = {
     items: {
@@ -95,7 +96,6 @@ const ReportsProducts = () => {
       if (reportsProductsData?.productsByCategory) {
         const productsByCategoryChartData =
           reportsProductsData.productsByCategory.result;
-        console.log();
 
         setProductsByCategoryChart(addRandomFill(productsByCategoryChartData));
       }
