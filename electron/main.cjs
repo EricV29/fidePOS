@@ -109,11 +109,13 @@ require("dotenv").config();
 const fs = require("fs");
 const isDev = !app.isPackaged;
 
-if (!app.isPackaged) {
-  app.setName("FidePOS-DEV");
-} else {
-  app.setName("FidePOS");
-}
+app.setName("FidePOS");
+
+// if (!app.isPackaged) {
+//   app.setName("FidePOS-DEV");
+// } else {
+//   app.setName("FidePOS");
+// }
 
 function getPageUrl(route = "") {
   if (isDev) {
@@ -349,18 +351,20 @@ ipcMain.handle("startAppFileDB", async (event, data) => {
         prepare = await prepareFileKeysDB(dbPath, values);
         if (!prepare) return;
 
-        prepare = await loadSecurityConfigs();
-        if (!prepare) return;
+        // prepare = await loadSecurityConfigs();
+        // if (!prepare) return;
 
         prepare = await getAdmin();
         if (prepare) {
           welcomeWindow.close();
           createLoginWindow();
           console.log("🚀 START APP READY");
+          return;
         } else {
           welcomeWindow.close();
           createSignupWindow();
           console.log("🚀 START APP READY");
+          return;
         }
       } else {
         return { success: false, error: response.error };
