@@ -189,7 +189,8 @@
     "debts": "Debts",
     "month": "Months",
     "sale_amount": "Total Amount Sales",
-    "total_payment_amount": "Payment Amount"
+    "total_payment_amount": "Payment Amount",
+    "profit": "Profit"
   },
   "charts": {
     "chart_sales": "Sales",

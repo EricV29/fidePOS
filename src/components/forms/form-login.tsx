@@ -20,12 +20,14 @@ interface LoginFormProps {
   onSuccess?: (values: LoginFormValues) => void;
   onForgotPassword?: (email: string) => void;
   loading: boolean;
+  emails: string[];
 }
 
 export default function LoginForm({
   onSuccess,
   onForgotPassword,
   loading,
+  emails,
 }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false);
   const { t } = useTranslation();
@@ -54,11 +56,20 @@ export default function LoginForm({
                 {t("formAddUser.input3")}
               </FormLabel>
               <FormControl>
-                <Input
-                  placeholder={t("placeholders.email")}
-                  {...field}
-                  className="bg-white"
-                />
+                <>
+                  <Input
+                    list="emails-list"
+                    placeholder={t("placeholders.email")}
+                    {...field}
+                    autoComplete="off"
+                    className="bg-white"
+                  />
+                  <datalist id="emails-list">
+                    {emails?.map((email) => (
+                      <option key={email} value={email} />
+                    ))}
+                  </datalist>
+                </>
               </FormControl>
               <FormMessage />
             </FormItem>

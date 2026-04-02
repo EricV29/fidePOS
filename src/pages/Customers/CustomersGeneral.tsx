@@ -85,7 +85,7 @@ const CustomersGeneral = () => {
     if (customersGeneralData?.customersTable) {
       const customersData = customersGeneralData.customersTable.result;
       setCustomerTable(customersData);
-      setTotalRows(customersGeneralData.customersTable.totalCount);
+      setTotalRows(customersGeneralData.customersTable.totalCount.total);
     }
   }, [pagination]);
 
