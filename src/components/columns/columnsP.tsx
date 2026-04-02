@@ -93,6 +93,16 @@ export const columnsP = (
     filterFn: partialNumberFilter,
   },
   {
+    accessorKey: "profit",
+    header: t("columns.profit"),
+    cell: ({ row }) => {
+      const formatted = currencyFormat(Number(row.getValue("profit")));
+
+      return <div className="font-semibold text-[#F57C00]">{formatted}</div>;
+    },
+    filterFn: partialNumberFilter,
+  },
+  {
     accessorKey: "status",
     header: t("columns.status"),
     cell: ({ row }) => {

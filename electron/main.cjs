@@ -20,6 +20,7 @@ const {
   changePassword,
   getFilterSearchUsers,
   getAdmin,
+  getEmails,
 } = require("./db/queries/usersQueries.cjs");
 const {
   getTopSalesCategory,
@@ -470,6 +471,31 @@ ipcMain.handle("login", async (event, data) => {
         saveLogin(response.result);
         loginWindow.close();
         createMainWindow();
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Emails
+ipcMain.handle("get-emails", async (event, data) => {
+  if (event.sender === loginWindow.webContents) {
+    try {
+      const response = await getEmails();
+      if (response.success) {
         return {
           success: true,
           result: response.result,

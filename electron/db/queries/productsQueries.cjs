@@ -423,6 +423,7 @@ async function getProducts(limit, offset) {
         p.cost_price,
         p.unit_price,
         p.stock,
+        ((p.unit_price - p.cost_price) * p.stock) AS profit,
         s.description AS status, 
         p.created_at,
         p.deleted_at 
@@ -489,6 +490,7 @@ async function getFilterSearchProducts(data) {
         p.cost_price,
         p.unit_price,
         p.stock,
+        ((p.unit_price - p.cost_price) * p.stock) AS profit,
         s.description AS status, 
         p.created_at,
         p.deleted_at 
@@ -533,6 +535,7 @@ async function getAllProducts(filters) {
           p.cost_price,
           p.unit_price,
           p.stock,
+          ((p.unit_price - p.cost_price) * p.stock) AS profit,
           s.description AS status, 
           p.created_at,
           p.deleted_at  

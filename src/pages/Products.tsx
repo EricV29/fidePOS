@@ -95,7 +95,7 @@ export default function Products() {
     if (productsData?.inventoryTable) {
       const inventoryTableData = productsData.inventoryTable.result;
       setProducts(inventoryTableData);
-      setTotalRows(productsData.inventoryTable.totalCount);
+      setTotalRows(productsData.inventoryTable.totalCount.total);
     }
   }, [pagination]);
 

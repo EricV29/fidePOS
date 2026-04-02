@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginForm from "@/components/forms/form-login";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
@@ -13,6 +13,26 @@ const Login: React.FC = () => {
   const { setModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
   const { triggerWarningAlert, triggerResponseAlert } = useModal();
+  const [emails, setEmails] = useState<string[]>([]);
+
+  const loadEmails = async () => {
+    try {
+      const response = await window.electronAPI.getEmails();
+
+      if (response.success && response.result) {
+        const emailStrings = response.result.map(
+          (obj: { email: string }) => obj.email,
+        );
+        setEmails(emailStrings);
+      }
+    } catch (err) {
+      console.error("Comunication Error:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadEmails();
+  }, []);
 
   const handleLogin = async (data: LoginFormValues) => {
     try {
@@ -101,6 +121,7 @@ const Login: React.FC = () => {
             onSuccess={handleLogin}
             onForgotPassword={handleForgotPassword}
             loading={isLoading}
+            emails={emails}
           />
         </div>
       </div>

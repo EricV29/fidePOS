@@ -195,7 +195,8 @@
     "debts": "Deudas",
     "month": "Meses",
     "sale_amount": "Monto total de ventas",
-    "total_payment_amount": "Monto de pago"
+    "total_payment_amount": "Monto de pago",
+    "profit": "Ganacia"
   },
   "charts": {
     "chart_sales": "Ventas",

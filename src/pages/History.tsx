@@ -84,7 +84,7 @@ export default function History() {
       const historySalesData = historyData.historySales.result;
 
       setHistorySales(historySalesData);
-      setTotalRows(historyData.historySales.totalCount);
+      setTotalRows(historyData.historySales.totalCount.total);
     }
   }, [pagination]);
 

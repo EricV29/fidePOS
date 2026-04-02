@@ -60,6 +60,13 @@ declare global {
         error?: string;
       }>;
 
+      // GET EMAILS
+      getEmails: () => Promise<{
+        success: boolean;
+        result?: [];
+        error?: string;
+      }>;
+
       // GET SESSION
       getSession: () => Promise<UserSession | null>;
 

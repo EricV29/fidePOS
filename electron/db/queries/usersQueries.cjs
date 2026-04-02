@@ -146,6 +146,30 @@ async function getFilterSearchUsers(data) {
   }
 }
 
+// Get Emails
+async function getEmails() {
+  try {
+    const emails = await queryAll(
+      `
+      SELECT 
+        u.email
+      FROM user u
+      WHERE u.status_id = 1
+      ORDER BY u.created_at ASC;
+    `,
+    );
+
+    if (emails.length === 0) {
+      return { success: true, result: [] };
+    }
+
+    return { success: true, result: emails };
+  } catch (error) {
+    console.error("❌ Error getting emails:", error);
+    return { success: false, error: error.message };
+  }
+}
+
 //* UPDATE ----------
 
 // Edit User
@@ -286,4 +310,5 @@ module.exports = {
   editUser,
   changePassword,
   getFilterSearchUsers,
+  getEmails,
 };

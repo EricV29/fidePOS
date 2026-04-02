@@ -89,14 +89,14 @@ const Settings = () => {
       if (settingsData?.users) {
         const usersTableData = settingsData.users.result;
         setUsers(usersTableData);
-        setTotalRowsUsers(settingsData.users.totalCount);
+        setTotalRowsUsers(settingsData.users.totalCount.total);
       }
     }
 
     if (settingsData?.users) {
       const categoriesTableData = settingsData.categories.result;
       setCategories(categoriesTableData);
-      setTotalRowsCategories(settingsData.categories.totalCount);
+      setTotalRowsCategories(settingsData.categories.totalCount.total);
     }
   }, [paginationCategories, paginationUsers, session]);
 
@@ -338,53 +338,58 @@ const Settings = () => {
             </button>
           </div>
           {session?.role_id !== 2 && (
-            <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
-              <p className="font-semibold dark:text-white">
-                {t("settings.table1")}
-              </p>
-              <DataTableSearch
-                data={dataUsers}
-                columns={columnsu}
-                page={"settingsUsers"}
-                actions={{
-                  onEdit: (row) => {
-                    setModal(
-                      <ModalEditUser data={row} onSuccess={loadSettings} />,
-                    );
-                  },
-                  onDelete: (row) => {
-                    deleteUser(row.id);
-                  },
-                }}
-                pagination={paginationUsers}
-                setPagination={setPaginationUsers}
-                totalRows={totalRowsUsers}
-              />
-            </div>
+            <>
+              <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
+                <p className="font-semibold dark:text-white">
+                  {t("settings.table1")}
+                </p>
+                <DataTableSearch
+                  data={dataUsers}
+                  columns={columnsu}
+                  page={"settingsUsers"}
+                  actions={{
+                    onEdit: (row) => {
+                      setModal(
+                        <ModalEditUser data={row} onSuccess={loadSettings} />,
+                      );
+                    },
+                    onDelete: (row) => {
+                      deleteUser(row.id);
+                    },
+                  }}
+                  pagination={paginationUsers}
+                  setPagination={setPaginationUsers}
+                  totalRows={totalRowsUsers}
+                />
+              </div>
+              <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
+                <p className="font-semibold dark:text-white">
+                  {t("settings.table2")}
+                </p>
+                <DataTableSearch
+                  data={dataCategories}
+                  columns={columnscat}
+                  page={"settingsCategories"}
+                  actions={{
+                    onEdit: (row) => {
+                      setModal(
+                        <ModalAddCategory
+                          data={row}
+                          onSuccess={loadSettings}
+                        />,
+                      );
+                    },
+                    onDelete: (row) => {
+                      deleteCategory(row.id);
+                    },
+                  }}
+                  pagination={paginationCategories}
+                  setPagination={setPaginationCategories}
+                  totalRows={totalRowsCategories}
+                />
+              </div>
+            </>
           )}
-          <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
-            <p className="font-semibold dark:text-white">
-              {t("settings.table2")}
-            </p>
-            <DataTableSearch
-              data={dataCategories}
-              columns={columnscat}
-              page={"settingsCategories"}
-              actions={{
-                onEdit: (row) => {
-                  setModal(
-                    <ModalAddCategory data={row} onSuccess={loadSettings} />,
-                  );
-                },
-                onDelete: (row) => {
-                  deleteCategory(row.id);
-                },
-              }}
-              pagination={paginationCategories}
-              setPagination={setPaginationCategories}
-              totalRows={totalRowsCategories}
-            />
-          </div>
         </div>
       </div>
     </>

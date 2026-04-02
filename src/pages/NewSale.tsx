@@ -73,7 +73,7 @@ const NewSale = () => {
     if (newSaleData?.productsList) {
       const productsData = newSaleData.productsList.result;
       setDataProducts(productsData);
-      setTotalRows(newSaleData.productsList.totalCount);
+      setTotalRows(newSaleData.productsList.totalCount.total);
     }
 
     if (newSaleData?.customersList) {

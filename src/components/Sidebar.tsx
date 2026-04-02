@@ -48,6 +48,53 @@ const Sidebar: React.FC<SidebarProps> = ({
   const nameUser =
     session?.name.split(" ")[0] + " " + session?.last_name.split(" ")[0];
 
+  const menuItems = [
+    {
+      icon: DashIcon,
+      label: t("sidebar.dashboard"),
+      path: "/main/dashboard",
+      roles: [1],
+    },
+    {
+      icon: ShopCarIcon,
+      label: t("sidebar.newSale"),
+      path: "/main/newsale",
+      roles: [1, 2],
+    },
+    {
+      icon: BoxIcon,
+      label: t("sidebar.products"),
+      path: "/main/products",
+      roles: [1],
+    },
+    {
+      icon: CheckListIcon,
+      label: t("sidebar.history"),
+      path: "/main/history",
+      roles: [1],
+    },
+    {
+      icon: CustIcon,
+      label: t("sidebar.customers"),
+      path: "/main/customers",
+      roles: [1],
+      isPartial: true,
+    },
+    {
+      icon: RepIcon,
+      label: t("sidebar.reports"),
+      path: "/main/reports",
+      roles: [1],
+      isPartial: true,
+    },
+    {
+      icon: SettIcon,
+      label: t("sidebar.settings"),
+      path: "/main/settings",
+      roles: [1, 2],
+    },
+  ];
+
   return (
     <>
       <aside
@@ -76,57 +123,22 @@ const Sidebar: React.FC<SidebarProps> = ({
             </button>
           </div>
           <div className="h-auto w-full flex flex-col justify-start items-center gap-2.5">
-            <Sidebaitem
-              icon={DashIcon}
-              label={t("sidebar.dashboard")}
-              active={location.pathname === "/main/dashboard"}
-              onClick={() => navigate("/main/dashboard")}
-              isOpen={isOpen}
-            />
-            <Sidebaitem
-              icon={ShopCarIcon}
-              label={t("sidebar.newSale")}
-              active={location.pathname === "/main/newsale"}
-              onClick={() => navigate("/main/newsale")}
-              isOpen={isOpen}
-            />
-            <Sidebaitem
-              icon={BoxIcon}
-              label={t("sidebar.products")}
-              active={location.pathname === "/main/products"}
-              onClick={() => navigate("/main/products")}
-              isOpen={isOpen}
-            />
-            <Sidebaitem
-              icon={CheckListIcon}
-              label={t("sidebar.history")}
-              active={location.pathname === "/main/history"}
-              onClick={() => navigate("/main/history")}
-              isOpen={isOpen}
-            />
-            <Sidebaitem
-              icon={CustIcon}
-              label={t("sidebar.customers")}
-              active={location.pathname.startsWith("/main/customers")}
-              onClick={() => navigate("/main/customers")}
-              isOpen={isOpen}
-            />
-            {session?.role_id !== 2 && (
-              <Sidebaitem
-                icon={RepIcon}
-                label={t("sidebar.reports")}
-                active={location.pathname.startsWith("/main/reports")}
-                onClick={() => navigate("/main/reports")}
-                isOpen={isOpen}
-              />
-            )}
-            <Sidebaitem
-              icon={SettIcon}
-              label={t("sidebar.settings")}
-              active={location.pathname === "/main/settings"}
-              onClick={() => navigate("/main/settings")}
-              isOpen={isOpen}
-            />
+            {menuItems
+              .filter((item) => item.roles.includes(session?.role_id ?? 0))
+              .map((item, index) => (
+                <Sidebaitem
+                  key={index}
+                  icon={item.icon}
+                  label={item.label}
+                  active={
+                    item.isPartial
+                      ? location.pathname.startsWith(item.path)
+                      : location.pathname === item.path
+                  }
+                  onClick={() => navigate(item.path)}
+                  isOpen={isOpen}
+                />
+              ))}
           </div>
         </div>
         <div className="h-auto w-auto flex flex-col justify-center items-center 2xl:gap-[50px] gap-5">

@@ -28,6 +28,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Login
   login: (data) => ipcRenderer.invoke("login", data),
 
+  // Get emails
+  getEmails: () => ipcRenderer.invoke("get-emails"),
+
   // Get session
   getSession: (data) => ipcRenderer.invoke("get-session", data),
 

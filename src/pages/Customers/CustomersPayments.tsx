@@ -127,13 +127,15 @@ const CustomersPayments = () => {
       if (customerData.customerDebts) {
         const customerDebts = customerData.customerDebts.result;
         setCustomerDebts(customerDebts);
-        setTotalRowsDebtsTable(customerData.customerDebts.totalCount);
+        setTotalRowsDebtsTable(customerData.customerDebts.totalCount.total);
       }
 
       if (customerData.customerPayments) {
         const customerDebts = customerData.customerPayments.result;
         setCustomerPayments(customerDebts);
-        setTotalRowsPaymentsTable(customerData.customerPayments.totalCount);
+        setTotalRowsPaymentsTable(
+          customerData.customerPayments.totalCount.total,
+        );
       }
     },
     [paginationDebtsTable, paginationPaymentsTable],
