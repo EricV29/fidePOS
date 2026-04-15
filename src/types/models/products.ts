@@ -8,6 +8,7 @@ export type Products = {
   cost_price: number;
   unit_price: number;
   stock: number;
+  profit: number;
   status: string;
   created_at: string;
   deleted_at: string;

@@ -48,10 +48,7 @@ interface ReportsContext {
 const ReportsCustomers = () => {
   const { t, i18n } = useTranslation();
   const { filters, childRef } = useOutletContext<ReportsContext>();
-  const optionsYears = [
-    { label: "2025", value: "2025" },
-    { label: "2026", value: "2026" },
-  ];
+
   const columnsc = columnsC(t, i18n.language);
   const columnsdc = columnsDC(t, i18n.language);
   const columnspc = columnsPC(t, i18n.language);
@@ -148,6 +145,18 @@ const ReportsCustomers = () => {
       value: c.id?.toString(),
     }));
   }, [customersSelect]);
+
+  const optionsYears = useMemo(() => {
+    const startYear = new Date(filters.startDate).getFullYear();
+    const endYear = new Date(filters.endDate).getFullYear();
+
+    const years = [];
+    for (let y = startYear; y <= endYear; y++) {
+      years.push({ label: `${y}`, value: `${y}` });
+    }
+
+    return years;
+  }, [filters.startDate, filters.endDate]);
 
   const loadSelectedCustomerData = useCallback(
     async (id: string, currentFilters = filters) => {

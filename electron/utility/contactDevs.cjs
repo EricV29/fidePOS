@@ -1,17 +1,23 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 const AUTH_CODES = require("../../constants/authCodes.json");
-
-// Configuration
-const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE,
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+const { haveEmailKeys } = require("./haveEmailKeys.cjs");
 
 async function contactDevs(data) {
+  const credentials = haveEmailKeys();
+
+  if (!credentials || !credentials.email_user || !credentials.email_pass) {
+    return;
+  }
+
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: credentials.email_user,
+      pass: credentials.email_pass,
+    },
+  });
+
   const mailOptions = {
     from: '"Fide POS Contact" <typira.oficial@gmail.com>',
     to: "typira.oficial@gmail.com",

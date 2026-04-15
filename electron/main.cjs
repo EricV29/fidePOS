@@ -1,8 +1,13 @@
 const { app, BrowserWindow, ipcMain, protocol, net } = require("electron");
 const path = require("path");
-const { getDB, createSchema } = require("./db/database.cjs");
 const {
-  firstRun,
+  newDB,
+  loadSecurityConfigs,
+  verifyDatabaseAccess,
+  prepareFileKeysDB,
+} = require("./db/database.cjs");
+const {
+  getInstallDate,
   addAdmin,
   loginUser,
   insertNewPassword,
@@ -14,6 +19,8 @@ const {
   editUser,
   changePassword,
   getFilterSearchUsers,
+  getAdmin,
+  getEmails,
 } = require("./db/queries/usersQueries.cjs");
 const {
   getTopSalesCategory,
@@ -93,13 +100,23 @@ const {
   getFilterSearchCategories,
 } = require("./db/queries/categoriesQueries.cjs");
 const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
+const { haveEmailKeys } = require("./utility/haveEmailKeys.cjs");
 const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
 const { contactDevs } = require("./utility/contactDevs.cjs");
 const { generatePassword } = require("./utility/generatePassword.cjs");
 const { uploadUserImage } = require("./utility/uploadUserImage.cjs");
-const isDev = !app.isPackaged;
 require("dotenv").config();
+const fs = require("fs");
+const isDev = !app.isPackaged;
+
+app.setName("FidePOS");
+
+// if (!app.isPackaged) {
+//   app.setName("FidePOS-DEV");
+// } else {
+//   app.setName("FidePOS");
+// }
 
 function getPageUrl(route = "") {
   if (isDev) {
@@ -115,15 +132,13 @@ function getPageUrl(route = "") {
   }
 }
 
-const {
-  registerInstallDate,
-  getInstallDate,
-} = require("./utility/installDateManager.cjs");
-
 let welcomeWindow = null;
 let mainWindow = null;
 let loginWindow = null;
 let signupWindow = null;
+let keysGlobal = null;
+let loadWindow = null;
+let sessionUser = null;
 
 //* CREATE WINDOWS --------------------
 
@@ -131,8 +146,8 @@ let signupWindow = null;
 function createWelcomeWindow() {
   return new Promise((resolve) => {
     welcomeWindow = new BrowserWindow({
-      width: 600,
-      height: 450,
+      width: 1200,
+      height: 700,
       resizable: false,
       frame: false,
       titleBarStyle: "hidden",
@@ -156,29 +171,61 @@ function createWelcomeWindow() {
   });
 }
 
+// Loading Window
+function createLoadingWindow() {
+  return new Promise((resolve) => {
+    loadWindow = new BrowserWindow({
+      width: 600,
+      height: 450,
+      resizable: false,
+      frame: false,
+      titleBarStyle: "hidden",
+      titleBarOverlay: false,
+      autoHideMenuBar: true,
+      show: false,
+      icon: path.join(__dirname, "../public/fidelogo.ico"),
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+      },
+    });
+
+    const url = getPageUrl("loading");
+    loadWindow.loadURL(url);
+
+    loadWindow.webContents.once("did-finish-load", () => {
+      loadWindow.show();
+      resolve();
+    });
+  });
+}
+
 // Signup Window
 function createSignupWindow() {
-  signupWindow = new BrowserWindow({
-    width: 600,
-    height: 650,
-    resizable: false,
-    frame: false,
-    titleBarStyle: "hidden",
-    titleBarOverlay: false,
-    autoHideMenuBar: true,
-    icon: path.join(__dirname, "../public/fidelogo.ico"),
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js"),
-      contextIsolation: true,
-    },
-    show: false,
-  });
+  return new Promise((resolve) => {
+    signupWindow = new BrowserWindow({
+      width: 600,
+      height: 650,
+      resizable: false,
+      frame: false,
+      titleBarStyle: "hidden",
+      titleBarOverlay: false,
+      autoHideMenuBar: true,
+      icon: path.join(__dirname, "../public/fidelogo.ico"),
+      webPreferences: {
+        preload: path.join(__dirname, "preload.js"),
+        contextIsolation: true,
+      },
+      show: false,
+    });
 
-  const url = getPageUrl("signup");
-  signupWindow.loadURL(url);
+    const url = getPageUrl("signup");
+    signupWindow.loadURL(url);
 
-  signupWindow.webContents.on("did-finish-load", () => {
-    signupWindow.show();
+    signupWindow.webContents.on("did-finish-load", () => {
+      signupWindow.show();
+      resolve();
+    });
   });
 }
 
@@ -235,27 +282,111 @@ function createMainWindow() {
 
 //* START APP --------------------
 async function startApp() {
-  const db = await getDB();
-  await createSchema(db);
+  //? Verify App State
+  const userDataPath = app.getPath("userData");
+  const configPath = path.join(userDataPath, "config.bin");
+  const dbPath = path.join(userDataPath, "app.db");
+
+  if (!fs.existsSync(configPath) && !fs.existsSync(dbPath)) {
+    //First run
+    loadWindow.close();
+    createWelcomeWindow();
+  } else {
+    await loadSecurityConfigs();
+    const response = await getAdmin();
+    if (response) {
+      loadWindow.close();
+      createLoginWindow();
+      console.log("🚀 START APP READY");
+    } else {
+      loadWindow.close();
+      createSignupWindow();
+      console.log("🚀 START APP READY");
+    }
+  }
 }
 
 //* FUNCTIONS --------------------
 
 // Save Login
-let sessionUser = null;
 function saveLogin(userData) {
   sessionUser = userData;
   console.log(
-    `✅ Session started for: ${sessionUser.name} ${sessionUser.last_name}`,
+    `🔓 Session started for: ${sessionUser.name} ${sessionUser.last_name}`,
   );
 }
 
 //* LISTENERS --------------------
 
 //* APP LISTENERS ----------
-// Get Install Date
-ipcMain.handle("getInstallDate", () => {
-  return getInstallDate();
+// Start App First
+ipcMain.handle("startAppFirst", async (event, data) => {
+  if (event.sender === welcomeWindow.webContents) {
+    try {
+      const response = await newDB(data);
+      if (response.success) {
+        welcomeWindow.close();
+        keysGlobal = response.result;
+        createSignupWindow();
+        console.log("🚀 START APP READY");
+      } else {
+        return { success: false, error: response.error };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Start App File DB
+ipcMain.handle("startAppFileDB", async (event, data) => {
+  if (event.sender === welcomeWindow.webContents) {
+    try {
+      const { dbPath, values } = data;
+      const response = await verifyDatabaseAccess(dbPath, values);
+      if (response.success) {
+        let prepare = false;
+        prepare = await prepareFileKeysDB(dbPath, values);
+        if (!prepare) return;
+
+        prepare = await getAdmin();
+        if (prepare) {
+          welcomeWindow.close();
+          createLoginWindow();
+          console.log("🚀 START APP READY");
+          return;
+        } else {
+          welcomeWindow.close();
+          createSignupWindow();
+          console.log("🚀 START APP READY");
+          return;
+        }
+      } else {
+        return { success: false, error: response.error };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Keys
+ipcMain.handle("getKeys", async () => {
+  if (keysGlobal) {
+    return {
+      success: true,
+      keys: {
+        db_password: keysGlobal.db_password,
+        db_salt: keysGlobal.db_salt,
+      },
+    };
+  }
 });
 
 // User Signup
@@ -285,6 +416,52 @@ ipcMain.handle("signup", async (event, data, lan) => {
   }
 });
 
+// Verify Email Keys
+ipcMain.handle("verifyEmailKeys", async (event) => {
+  if (event.sender === loginWindow.webContents) {
+    try {
+      const response = await haveEmailKeys();
+      if (response.success) {
+        return {
+          success: true,
+        };
+      } else {
+        return {
+          success: false,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Install Date
+ipcMain.handle("getInstallDate", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await getInstallDate();
+
+      if (response.success) {
+        return response.result.install_date;
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
 // User Login
 ipcMain.handle("login", async (event, data) => {
   if (event.sender === loginWindow.webContents) {
@@ -294,6 +471,31 @@ ipcMain.handle("login", async (event, data) => {
         saveLogin(response.result);
         loginWindow.close();
         createMainWindow();
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Emails
+ipcMain.handle("get-emails", async (event, data) => {
+  if (event.sender === loginWindow.webContents) {
+    try {
+      const response = await getEmails();
+      if (response.success) {
         return {
           success: true,
           result: response.result,
@@ -1849,31 +2051,15 @@ app.whenReady().then(async () => {
   });
 
   try {
-    await createWelcomeWindow();
+    const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    await createLoadingWindow();
+    await wait(3000);
     await startApp();
-    console.log("🚀 APP AND DB READY TO START");
   } catch (err) {
-    console.error("Initialization error:", err);
+    console.error("❌ Initialization error:", err);
   } finally {
     isInitializing = false;
   }
-
-  await new Promise((r) => setTimeout(r, 3000));
-  const isFirstRun = await firstRun();
-  if (isFirstRun) {
-    console.log(`✅ Is First Run: ${isFirstRun}`);
-    registerInstallDate();
-    welcomeWindow.close();
-    createSignupWindow();
-  } else {
-    console.log(`❌ Is First Run: ${isFirstRun}`);
-    welcomeWindow.close();
-    createLoginWindow();
-  }
-
-  app.on("activate", () => {
-    if (BrowserWindow.getAllWindows().length === 0) createSignupWindow();
-  });
 });
 
 app.on("window-all-closed", () => {

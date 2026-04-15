@@ -1,5 +1,6 @@
 import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import Welcome from "./pages/Welcome";
+import Loading from "./pages/Loading";
 import Login from "./pages/login/Login";
 import Signup from "./pages/signup/Signup";
 import Main from "./pages/MainPage";
@@ -26,6 +27,7 @@ function App() {
       <ModalProvider>
         <HashRouter>
           <Routes>
+            <Route path="/Loading" element={<Loading />} />
             <Route path="/Welcome" element={<Welcome />} />
             <Route path="/Signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />

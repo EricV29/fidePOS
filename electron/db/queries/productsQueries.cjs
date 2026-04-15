@@ -423,6 +423,7 @@ async function getProducts(limit, offset) {
         p.cost_price,
         p.unit_price,
         p.stock,
+        ((p.unit_price - p.cost_price) * p.stock) AS profit,
         s.description AS status, 
         p.created_at,
         p.deleted_at 
@@ -489,6 +490,7 @@ async function getFilterSearchProducts(data) {
         p.cost_price,
         p.unit_price,
         p.stock,
+        ((p.unit_price - p.cost_price) * p.stock) AS profit,
         s.description AS status, 
         p.created_at,
         p.deleted_at 
@@ -533,6 +535,7 @@ async function getAllProducts(filters) {
           p.cost_price,
           p.unit_price,
           p.stock,
+          ((p.unit_price - p.cost_price) * p.stock) AS profit,
           s.description AS status, 
           p.created_at,
           p.deleted_at  
@@ -589,19 +592,20 @@ async function getProductsByCategory(filters) {
   try {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
+
     const products = await queryAll(
       `
       SELECT 
         c.name AS category,
         COUNT(p.id) AS products
       FROM category c
-      LEFT JOIN product p ON c.id = p.category_id
-      LEFT JOIN sale_detail sd ON p.id = sd.product_id 
-      WHERE p.status_id = 1 AND p.created_at BETWEEN ? AND ?
+      LEFT JOIN product p ON c.id = p.category_id 
+        AND p.status_id = 1 
+        AND p.created_at BETWEEN ? AND ?
       GROUP BY c.id, c.name
       ORDER BY products DESC;
     `,
-      [start, end],
+      [`${start} 00:00:00`, `${end} 23:59:59`],
     );
 
     if (products.length === 0) {

@@ -172,25 +172,25 @@ async function getTopSalesCategory(filters) {
     const start = filters?.startDate || "";
     const end = filters?.endDate || "";
 
-    const topSales = await queryAll(
+    const topSalesCategory = await queryAll(
       `
         SELECT c.name AS category, sum(sd.quantity) AS sales 
         FROM category c
         INNER JOIN product p ON p.category_id = c.id
         INNER JOIN sale_detail sd ON p.id = sd.product_id
         INNER JOIN sale s ON sd.sale_id = s.id 
-        WHERE sd.status_id = 4 AND date(s.created_at) BETWEEN ? AND ?
+        WHERE sd.status_id = 4 AND s.created_at BETWEEN ? AND ?
         GROUP BY c.name
         ORDER BY sales DESC
         LIMIT 5;`,
-      [start, end],
+      [`${start} 00:00:00`, `${end} 23:59:59`],
     );
 
-    if (topSales.length === 0) {
+    if (topSalesCategory.length === 0) {
       return { success: true, result: [] };
     }
 
-    return { success: true, result: topSales };
+    return { success: true, result: topSalesCategory };
   } catch (error) {
     console.error("❌ Error getting top 5 sales category:", error);
     return { success: false, error: error.message };
@@ -606,7 +606,7 @@ async function getSalesByCategory(filters) {
       GROUP BY c.name
       ORDER BY sales DESC;
       `,
-      [start, end],
+      [`${start} 00:00:00`, `${end} 23:59:59`],
     );
 
     if (salesByCategory.length === 0) {
@@ -638,7 +638,7 @@ async function getTopSellingProducts(filters) {
       ORDER BY sales DESC
       LIMIT 5;
     `,
-      [start, end],
+      [`${start} 00:00:00`, `${end} 23:59:59`],
     );
 
     if (topSellingProducts.length === 0) {

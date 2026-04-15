@@ -53,12 +53,12 @@ const CustomersGeneral = () => {
         ? JSON.parse(response.result)
         : response.result;
 
-    if (customersGeneralData.customersNumber) {
+    if (customersGeneralData?.customersNumber) {
       const customersNumber = customersGeneralData.customersNumber.result;
       setCustomersNumberCard(customersNumber[0].customersNumber);
     }
 
-    if (customersGeneralData.customersInDebtNumber) {
+    if (customersGeneralData?.customersInDebtNumber) {
       const customersInDebtNumber =
         customersGeneralData.customersInDebtNumber.result;
       setCustomersInDebtNumberCard(
@@ -66,23 +66,26 @@ const CustomersGeneral = () => {
       );
     }
 
-    if (customersGeneralData.totalDebtAmount) {
+    if (customersGeneralData?.totalDebtAmount) {
       const totalDebtAmount = customersGeneralData.totalDebtAmount.result;
 
       setTotalDebtAmountCard(totalDebtAmount[0].pendingSalesAmount);
     }
 
-    if (customersGeneralData.lastCustomerNamePaid) {
+    if (customersGeneralData?.lastCustomerNamePaid) {
       const lastCustomerNamePaid =
         customersGeneralData.lastCustomerNamePaid.result;
-      setLastCustomerNamePaidCard(lastCustomerNamePaid[0].lastCustomerNamePaid);
-      setLastCustomerNamePaidCardDate(lastCustomerNamePaid[0].created_at);
+
+      setLastCustomerNamePaidCard(
+        lastCustomerNamePaid[0]?.lastCustomerNamePaid,
+      );
+      setLastCustomerNamePaidCardDate(lastCustomerNamePaid[0]?.created_at);
     }
 
     if (customersGeneralData?.customersTable) {
       const customersData = customersGeneralData.customersTable.result;
       setCustomerTable(customersData);
-      setTotalRows(customersGeneralData.customersTable.totalCount);
+      setTotalRows(customersGeneralData.customersTable.totalCount.total);
     }
   }, [pagination]);
 

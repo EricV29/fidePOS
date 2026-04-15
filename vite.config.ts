@@ -15,6 +15,7 @@ export default defineConfig({
   base: "./",
   server: {
     port: 6969,
+    strictPort: true,
   },
   resolve: {
     alias: {

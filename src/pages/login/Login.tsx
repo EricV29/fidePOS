@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import LoginForm from "@/components/forms/form-login";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
@@ -6,12 +6,33 @@ import CustomSelect from "@components/Select";
 import type { LoginFormValues } from "@forms/schemas/user.schema";
 import { useModal } from "@context/ModalContext";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
+import AUTH_CODES from "../../../constants/authCodes.json";
 
 const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { setModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
   const { triggerWarningAlert, triggerResponseAlert } = useModal();
+  const [emails, setEmails] = useState<string[]>([]);
+
+  const loadEmails = async () => {
+    try {
+      const response = await window.electronAPI.getEmails();
+
+      if (response.success && response.result) {
+        const emailStrings = response.result.map(
+          (obj: { email: string }) => obj.email,
+        );
+        setEmails(emailStrings);
+      }
+    } catch (err) {
+      console.error("Comunication Error:", err);
+    }
+  };
+
+  useEffect(() => {
+    loadEmails();
+  }, []);
 
   const handleLogin = async (data: LoginFormValues) => {
     try {
@@ -43,16 +64,23 @@ const Login: React.FC = () => {
       async () => {
         try {
           setIsLoading(true);
-          const response = await window.electronAPI.forgotPassword(
-            email,
-            i18n.language,
-          );
-          if (response.success) {
-            setIsLoading(false);
-            triggerResponseAlert(response.result);
+          const reponseEmail = await window.electronAPI.verifyEmailKeys();
+
+          if (!reponseEmail.success) {
+            triggerResponseAlert(AUTH_CODES.NOT_EMAIL_KEYS);
+            return;
           } else {
-            setIsLoading(false);
-            triggerResponseAlert(response.error);
+            const response = await window.electronAPI.forgotPassword(
+              email,
+              i18n.language,
+            );
+            if (response.success) {
+              setIsLoading(false);
+              triggerResponseAlert(response.result);
+            } else {
+              setIsLoading(false);
+              triggerResponseAlert(response.error);
+            }
           }
         } catch (err) {
           console.error("Comunication Error:", err);
@@ -93,6 +121,7 @@ const Login: React.FC = () => {
             onSuccess={handleLogin}
             onForgotPassword={handleForgotPassword}
             loading={isLoading}
+            emails={emails}
           />
         </div>
       </div>

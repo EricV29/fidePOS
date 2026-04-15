@@ -43,7 +43,7 @@ export default function Dashboard() {
   const today = new Date().toISOString().split("T")[0];
   const [filters, setFilters] = useState({
     startDate: installDate
-      ? new Date(installDate).toISOString().split("T")[0]
+      ? new Intl.DateTimeFormat("sv-SE").format(new Date(installDate))
       : today,
     endDate: today,
   });
@@ -99,7 +99,7 @@ export default function Dashboard() {
 
   const chartConfigTCS = {
     sales: {
-      label: t("charts.chart_tcs"),
+      label: t("charts.chart_cs"),
       color: "#F57C00",
     },
   };

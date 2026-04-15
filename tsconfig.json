@@ -18,6 +18,9 @@
       "@modals/*": ["./src/components/modals/*"],
       "@forms/*": ["./src/components/forms/*"],
       "@context/*": ["./src/context/*"]
-    }
+    },
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
   }
 }

@@ -3,18 +3,18 @@
   "private": true,
   "version": "1.0.0",
   "description": "Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas, inventario, ingresos y pérdidas con reportes claros y en tiempo real, ayudando a mejorar la eficiencia y el control financiero del negocio.",
-  "author": "Eric Jared Villeda Reyes y Edwin Yair Sandoval Muciño",
+  "author": "Eric Jared Villeda Reyes",
   "license": "MIT",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
-    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:6969/login && electron .\"",
-    "build": "tsc -b && vite build",
-    "dist": "npm run build && electron-builder",
-    "lint": "eslint .",
+    "dev": "concurrently -k \"vite\" \"wait-on http://localhost:6969 && electron .\"",
     "preview": "vite preview",
+    "build": "tsc -b && vite build",
+    "dist": "electron-builder",
+    "lint": "eslint .",
     "clean": "rimraf dist releases",
-    "package": "npm run clean && npm run build && npm run dist"
+    "package": "npm run clean && npm run build && electron-builder"
   },
   "build": {
     "appId": "electron-react-vite",
@@ -28,7 +28,8 @@
     "files": [
       "dist/**/*",
       "electron/**/*",
-      "package.json"
+      "package.json",
+      "constants/**/*.json"
     ],
     "nsis": {
       "installerIcon": "dist/fidelogo.ico",
