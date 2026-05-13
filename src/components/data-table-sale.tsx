@@ -1,13 +1,10 @@
 import {
   flexRender,
-  getCoreRowModel,
-  useReactTable,
+  useTable as useReactTable,
   type ColumnFiltersState,
-  getFilteredRowModel,
-  getPaginationRowModel,
   type PaginationState,
-} from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
+} from "@hooks/useTable";
+import type { ColumnDef } from "@hooks/useTable";
 import {
   Table,
   TableBody,
@@ -61,10 +58,8 @@ export function DataTableSale<TData, TValue>({
     data: products,
     columns,
     rowCount: totalRows,
-    getCoreRowModel: getCoreRowModel(),
     meta: { addProduct },
     onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
     manualFiltering: true,
     state: {
       columnFilters,
@@ -72,7 +67,6 @@ export function DataTableSale<TData, TValue>({
     },
     manualPagination: true,
     onPaginationChange: setPagination,
-    getPaginationRowModel: getPaginationRowModel(),
     initialState: {
       pagination: {
         pageSize: 10,

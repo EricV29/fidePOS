@@ -462,22 +462,4 @@ declare global {
   }
 }
 
-declare module "@tanstack/react-table" {
-  interface TableMeta<TData extends unknown> {
-    actions?: {
-      onView?: (row: TData) => void;
-      onEdit?: (row: TData) => void;
-      onDelete?: (row: TData) => void;
-      onAdd?: (row: TData) => void;
-      onActive?: (row: TData) => void;
-    };
 
-    updateData?: (rowIndex: number, columnId: string, value: unknown) => void;
-    addProduct?: (product: TData) => void;
-    deleteProduct?: (id: string) => void;
-  }
-
-  interface ColumnMeta<TData, TValue> {
-    headerClassName?: string;
-  }
-}
