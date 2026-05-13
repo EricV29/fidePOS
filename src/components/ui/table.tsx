@@ -1,5 +1,4 @@
 import * as React from "react";
-import "@tanstack/react-table";
 import { cn } from "@/lib/utils";
 
 function Table({ className, ...props }: React.ComponentProps<"table">) {

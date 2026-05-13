@@ -1,4 +1,4 @@
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@hooks/useTable";
 import { currencyFormat } from "@utility/currencyFormat";
 import { partialNumberFilter } from "@utility/table-filter";
 import type { AccountsReceivable } from "@typesm/accounts";

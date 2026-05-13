@@ -1,4 +1,4 @@
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@hooks/useTable";
 import type { Users } from "@typesm/users";
 import type { TFunction } from "i18next";
 import { formatDateColumns } from "@utility/dateFormats";
