@@ -1,7 +1,9 @@
-import type { Row } from "@tanstack/react-table";
+interface FilterRow {
+  getValue: (columnId: string) => any;
+}
 
-export const partialNumberFilter = <TData>(
-  row: Row<TData>,
+export const partialNumberFilter = (
+  row: FilterRow,
   columnId: string,
   filterValue: unknown
 ): boolean => {

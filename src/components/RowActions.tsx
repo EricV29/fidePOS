@@ -3,7 +3,7 @@ import PreviewIcon from "@icons/PreviewIcon";
 import EditIcon from "@icons/EditIcon";
 import DeleteIcon from "@icons/DeleteIcon";
 import ShieldPlusIcon from "@icons/ShieldPlusIcon";
-import type { TableMeta } from "@tanstack/react-table";
+import type { TableMeta } from "@hooks/useTable";
 
 interface Props<T> {
   row: T;
