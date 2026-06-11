@@ -1,9 +1,8 @@
 import {
   flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-import type { ColumnDef } from "@tanstack/react-table";
+  useTable as useReactTable,
+} from "@hooks/useTable";
+import type { ColumnDef } from "@hooks/useTable";
 import {
   Table,
   TableBody,
@@ -37,7 +36,6 @@ export function ShoppingCart<TData, TValue>({
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
     meta: {
       updateData,
       deleteProduct,

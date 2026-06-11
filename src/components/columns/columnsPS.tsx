@@ -1,4 +1,4 @@
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef } from "@hooks/useTable";
 import { Button } from "@components/ui/button";
 import PlusIcon from "@icons/PlusIcon";
 import { partialNumberFilter } from "@utility/table-filter";
