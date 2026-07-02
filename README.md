@@ -13,6 +13,7 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 <p align="center" >
   <a href="https://skillicons.dev">
     <img src="https://skillicons.dev/icons?i=vite,react,tailwind,ts,js,sqlite,pnpm" />
+    <img src="https://skills.syvixor.com/api/icons?i=i18next,zod" />
   </a>
   <br />
   <img src="https://img.shields.io/badge/React_19-61DAFB?logo=react&logoColor=000" />
