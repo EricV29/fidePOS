@@ -4,7 +4,7 @@ Electron + React desktop POS app (FidePOS). Renderer: React 19 / TS / Vite / Tai
 
 ## Commands
 
-Use **pnpm** (see `packageManager` field + `pnpm-lock.yaml`). The README says npm — that is stale.
+Use **pnpm** (see `packageManager` field + `pnpm-lock.yaml`).
 
 ```bash
 pnpm install
@@ -15,7 +15,7 @@ pnpm package    # clean + build + electron-builder (output to releases/)
 ```
 
 - There are **no tests** in this repo. Verification = `pnpm lint` + `pnpm build`.
-- Dev server port is **6969** (`strictPort: true`), not 5173 as the README claims.
+- Dev server port is **6969** (`strictPort: true`).
 - `.env` at repo root: `EMAIL_USER`, `EMAIL_PASS` (Gmail app password), `EMAIL_SERVICE`; loaded via `dotenv` inside `electron/main.cjs`.
 
 ## Architecture rules

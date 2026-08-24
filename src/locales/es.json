@@ -52,7 +52,9 @@
   },
   "login": {
     "title": "Iniciar Sesión",
-    "subtitle": "Hola, ingresa tus datos para acceder."
+    "subtitle": "Hola, ingresa tus datos para acceder.",
+    "reset_data": "Borrar datos de la aplicación",
+    "reset_warning": "Esto eliminará permanentemente la base de datos local y todas las configuraciones guardadas. Esta acción no se puede deshacer. ¿Deseas continuar?"
   },
   "keys": {
     "title": "¡Hola!",

@@ -83,6 +83,12 @@ declare global {
       // LOGOUT
       logout: () => void;
 
+      // FACTORY RESET (DELETE ALL APP DATA)
+      factoryReset: () => Promise<{
+        success: boolean;
+        error?: string;
+      }>;
+
       // ADD USER
       addUser: (
         data,

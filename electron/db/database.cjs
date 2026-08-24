@@ -219,6 +219,39 @@ async function prepareFileKeysDB(originalDbPath, keys) {
   }
 }
 
+//* DELETE ALL APP DATA (FACTORY RESET)
+async function resetAppData() {
+  try {
+    const userDataPath = app.getPath("userData");
+
+    dbInstance = null;
+    PASSWORD = undefined;
+    SALT = undefined;
+    ENCRYPTION_KEY = undefined;
+    ALGORITHM = undefined;
+    dbPath = undefined;
+    configPath = undefined;
+
+    const targets = [
+      path.join(userDataPath, "app.db"),
+      path.join(userDataPath, "config.bin"),
+      path.join(userDataPath, "profile_images"),
+    ];
+
+    for (const target of targets) {
+      if (fs.existsSync(target)) {
+        fs.rmSync(target, { recursive: true, force: true });
+      }
+    }
+
+    console.log("🧹 APP DATA DELETED SUCCESSFULLY");
+    return { success: true };
+  } catch (err) {
+    console.error("❌ Error deleting app data:", err);
+    return { success: false, error: err.message };
+  }
+}
+
 //* DATA BASE FUNCTIONS -----------------------
 
 //* GET INSTANCE
@@ -819,4 +852,5 @@ module.exports = {
   loadSecurityConfigs,
   verifyDatabaseAccess,
   prepareFileKeysDB,
+  resetAppData,
 };

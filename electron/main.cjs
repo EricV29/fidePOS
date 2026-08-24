@@ -5,6 +5,7 @@ const {
   loadSecurityConfigs,
   verifyDatabaseAccess,
   prepareFileKeysDB,
+  resetAppData,
 } = require("./db/database.cjs");
 const {
   getInstallDate,
@@ -569,6 +570,24 @@ ipcMain.on("logout", (event) => {
     createLoginWindow();
     sessionUser = null;
     console.info(`🔒 Logout session: ${userName}`);
+  }
+});
+
+// Factory Reset (delete all app data from Login)
+ipcMain.handle("factory-reset", async (event) => {
+  if (event.sender === loginWindow.webContents) {
+    const response = await resetAppData();
+    if (response.success) {
+      sessionUser = null;
+      keysGlobal = null;
+      loginWindow.close();
+      createWelcomeWindow();
+      console.log("🧹 FACTORY RESET DONE");
+    }
+    return response;
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
   }
 });
 

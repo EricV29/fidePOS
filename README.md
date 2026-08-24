@@ -78,14 +78,14 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 | Frontend        | React 19, TypeScript 5.9, Vite 7 |
 | Backend         | Sql.js 1                         |
 | Estilos         | Tailwind CSS 4 + PostCSS         |
-| Package manager | npm                              |
+| Package manager | pnpm                             |
 
 ---
 
 ## ✅ Requisitos previos
 
-- Node.js
-- npm
+- [Node.js](https://nodejs.org/)
+- [pnpm](https://pnpm.io/installation)
 - Contraseña de aplicación de [Google](https://youtu.be/06rHLejczJE)
 
 ---
@@ -98,7 +98,7 @@ git clone https://github.com/EricV29/fidePOS.git
 cd fidePOS
 
 # 2. Instalar dependencias
-npm install
+pnpm install
 ```
 
 ---
@@ -152,23 +152,23 @@ EMAIL_SERVICE=gmail
 ## 💻 Uso y Scripts
 
 ```bash
-# Ejecutar modo desarrollo (Vite y Electron):
-npm run dev
+# Ejecutar modo desarrollo (Vite + Electron automáticamente):
+pnpm dev
 
-# Generar Build de producción:
-npm run build
+# Lint del proyecto:
+pnpm lint
 
-# Genera un paquete de producción utilizando electron-builder:
-npm run preview
+# Generar build de producción:
+pnpm build
 
 # Elimina todas las carpetas de salida (`dist` y `releases`):
-npm run clean
+pnpm clean
 
-#Limpia, construye y empaqueta todo el proyecto con un solo comando:
-npm run package
+# Limpia, construye y empaqueta todo el proyecto con un solo comando:
+pnpm package
 ```
 
-Accede a la app en `http://localhost:5173`.
+El instalador se genera en la carpeta `releases/`. Durante el desarrollo, el servidor de Vite corre en `http://localhost:6969` y Electron se abre automáticamente.
 
 ---
 

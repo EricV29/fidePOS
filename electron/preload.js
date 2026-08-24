@@ -41,6 +41,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Logout
   logout: () => ipcRenderer.send("logout"),
 
+  // Factory Reset (delete all app data)
+  factoryReset: () => ipcRenderer.invoke("factory-reset"),
+
   // Add user
   addUser: (data, lan) => ipcRenderer.invoke("addUser", data, lan),
 

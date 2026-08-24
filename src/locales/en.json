@@ -52,7 +52,9 @@
   },
   "login": {
     "title": "Login",
-    "subtitle": "Hello, enter your information to access."
+    "subtitle": "Hello, enter your information to access.",
+    "reset_data": "Delete app data",
+    "reset_warning": "This will permanently delete the local database and all saved settings. This action cannot be undone. Do you want to continue?"
   },
   "keys": {
     "title": "Welcome",

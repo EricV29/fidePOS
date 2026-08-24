@@ -99,6 +99,16 @@ const Login: React.FC = () => {
     localStorage.setItem("lang", value);
   };
 
+  const handleFactoryReset = () => {
+    triggerWarningAlert(t("login.reset_warning"), async () => {
+      try {
+        await window.electronAPI.factoryReset();
+      } catch (err) {
+        console.error("Comunication Error:", err);
+      }
+    });
+  };
+
   return (
     <>
       <div className="w-screen h-screen flex flex-col justify-center items-center overflow-hidden gap-5 absolute inset-0 z-10 bg-white [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#F57C00_100%)]">
@@ -124,6 +134,12 @@ const Login: React.FC = () => {
             emails={emails}
           />
         </div>
+        <button
+          onClick={handleFactoryReset}
+          className="absolute bottom-3 left-4 text-xs font-light text-gray-500/60 hover:text-red-600 transition-colors"
+        >
+          {t("login.reset_data")}
+        </button>
       </div>
     </>
   );
