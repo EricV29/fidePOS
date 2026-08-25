@@ -1,11 +1,13 @@
 const { app, BrowserWindow, ipcMain, protocol, net } = require("electron");
 const path = require("path");
+const AUTH_CODES = require("../constants/authCodes.json");
 const {
   newDB,
   loadSecurityConfigs,
   verifyDatabaseAccess,
   prepareFileKeysDB,
   resetAppData,
+  exportDatabase,
 } = require("./db/database.cjs");
 const {
   getInstallDate,
@@ -21,7 +23,10 @@ const {
   changePassword,
   getFilterSearchUsers,
   getAdmin,
+  getAdminId,
   getEmails,
+  verifyUserPassword,
+  restoreUser,
 } = require("./db/queries/usersQueries.cjs");
 const {
   getTopSalesCategory,
@@ -99,10 +104,8 @@ const {
   editCategory,
   deteleCategory,
   getFilterSearchCategories,
+  restoreCategory,
 } = require("./db/queries/categoriesQueries.cjs");
-const { sendRecoveryEmail } = require("./utility/recoveryPassword.cjs");
-const { haveEmailKeys } = require("./utility/haveEmailKeys.cjs");
-const { welcomeEmail } = require("./utility/welcomeEmail.cjs");
 const { hasRealInternet } = require("./utility/hasRealInternet.cjs");
 const { contactDevs } = require("./utility/contactDevs.cjs");
 const { generatePassword } = require("./utility/generatePassword.cjs");
@@ -321,10 +324,10 @@ function saveLogin(userData) {
 
 //* APP LISTENERS ----------
 // Start App First
-ipcMain.handle("startAppFirst", async (event, data) => {
+ipcMain.handle("startAppFirst", async (event) => {
   if (event.sender === welcomeWindow.webContents) {
     try {
-      const response = await newDB(data);
+      const response = await newDB();
       if (response.success) {
         welcomeWindow.close();
         keysGlobal = response.result;
@@ -396,7 +399,6 @@ ipcMain.handle("signup", async (event, data, lan) => {
     try {
       const response = await addAdmin(data);
       if (response.success) {
-        welcomeEmail(data, lan);
         signupWindow.close();
         createLoginWindow();
         return {
@@ -406,29 +408,6 @@ ipcMain.handle("signup", async (event, data, lan) => {
         return {
           success: false,
           error: response.error,
-        };
-      }
-    } catch (error) {
-      console.error("❌ ERROR: ", error);
-    }
-  } else {
-    console.warn("❌ ERROR: NOT ALLOWED");
-    return { success: false, error: "Not allowed" };
-  }
-});
-
-// Verify Email Keys
-ipcMain.handle("verifyEmailKeys", async (event) => {
-  if (event.sender === loginWindow.webContents) {
-    try {
-      const response = await haveEmailKeys();
-      if (response.success) {
-        return {
-          success: true,
-        };
-      } else {
-        return {
-          success: false,
         };
       }
     } catch (error) {
@@ -533,20 +512,43 @@ ipcMain.handle("forgotPassword", async (event, email, lan) => {
         };
       }
 
-      const newPass = await generatePassword();
-      const response = await insertNewPassword(email, newPass);
+      const response = await insertNewPassword(email);
 
       if (response.success) {
-        const responseEmail = await sendRecoveryEmail(email, newPass, lan);
-        if (responseEmail.success) {
-          return {
-            success: true,
-            result: responseEmail.result,
-          };
-        } else {
+        try {
+          const apiKey = process.env.RECOVERY_API_KEY;
+          const apiUrl = process.env.RECOVERY_API_URL;
+          const responseEmail = await fetch(apiUrl, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                "x-api-key": apiKey,
+              },
+              body: JSON.stringify({
+                system: "FidePOS",
+                email: email,
+                password: response.password,
+              }),
+            },
+          );
+
+          if (responseEmail.ok) {
+            return {
+              success: true,
+              result: AUTH_CODES.EMAIL_SENT,
+            };
+          } else {
+            const errorData = await responseEmail.json();
+            return {
+              success: false,
+              error: errorData.message || "Failed to send recovery email",
+            };
+          }
+        } catch (emailError) {
+          console.error("❌ Error sending recovery email:", emailError);
           return {
             success: false,
-            error: responseEmail.error,
+            error: "Failed to send recovery email",
           };
         }
       } else {
@@ -573,14 +575,19 @@ ipcMain.on("logout", (event) => {
   }
 });
 
-// Factory Reset (delete all app data from Login)
+// Factory Reset (delete all app data from Login or Signup)
 ipcMain.handle("factory-reset", async (event) => {
-  if (event.sender === loginWindow.webContents) {
+  const isValidSender =
+    (loginWindow && !loginWindow.isDestroyed() && event.sender === loginWindow.webContents) ||
+    (signupWindow && !signupWindow.isDestroyed() && event.sender === signupWindow.webContents);
+
+  if (isValidSender) {
     const response = await resetAppData();
     if (response.success) {
       sessionUser = null;
       keysGlobal = null;
-      loginWindow.close();
+      if (loginWindow && !loginWindow.isDestroyed()) loginWindow.close();
+      if (signupWindow && !signupWindow.isDestroyed()) signupWindow.close();
       createWelcomeWindow();
       console.log("🧹 FACTORY RESET DONE");
     }
@@ -1548,7 +1555,6 @@ ipcMain.handle("addUser", async (event, data, lan) => {
     try {
       const response = await addUser(data);
       if (response.success) {
-        welcomeEmail(data, lan);
         return {
           success: true,
           result: response.result,
@@ -1573,6 +1579,31 @@ ipcMain.handle("deleteUser", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await deleteUser(data);
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Restore User
+ipcMain.handle("restoreUser", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await restoreUser(data);
       if (response.success) {
         return {
           success: true,
@@ -1668,6 +1699,63 @@ ipcMain.handle("changePassword", async (event, data) => {
   }
 });
 
+// Verify User Password (for migration)
+ipcMain.handle("verifyUserPassword", async (event, data) => {
+  const allowed =
+    (mainWindow && !mainWindow.isDestroyed() && event.sender === mainWindow.webContents) ||
+    (loginWindow && !loginWindow.isDestroyed() && event.sender === loginWindow.webContents) ||
+    (signupWindow && !signupWindow.isDestroyed() && event.sender === signupWindow.webContents);
+  if (allowed) {
+    try {
+      const { userId, password } = data;
+      const response = await verifyUserPassword(userId, password);
+      return response;
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+      return { success: false, error: error.message };
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Get Admin ID (for factory reset verification)
+ipcMain.handle("getAdminId", async (event) => {
+  const allowed =
+    (mainWindow && !mainWindow.isDestroyed() && event.sender === mainWindow.webContents) ||
+    (loginWindow && !loginWindow.isDestroyed() && event.sender === loginWindow.webContents) ||
+    (signupWindow && !signupWindow.isDestroyed() && event.sender === signupWindow.webContents);
+  if (allowed) {
+    try {
+      const response = await getAdminId();
+      return response;
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+      return { success: false, error: error.message };
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Export Database (for migration)
+ipcMain.handle("exportDatabase", async (event) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await exportDatabase();
+      return response;
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+      return { success: false, error: error.message };
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
 // Upload Img
 ipcMain.handle("uploadImg", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
@@ -1719,6 +1807,32 @@ ipcMain.handle("deleteCategory", async (event, data) => {
   if (event.sender === mainWindow.webContents) {
     try {
       const response = await deteleCategory(data);
+
+      if (response.success) {
+        return {
+          success: true,
+          result: response.result,
+        };
+      } else {
+        return {
+          success: false,
+          error: response.error,
+        };
+      }
+    } catch (error) {
+      console.error("❌ ERROR: ", error);
+    }
+  } else {
+    console.warn("❌ ERROR: NOT ALLOWED");
+    return { success: false, error: "Not allowed" };
+  }
+});
+
+// Restore Category
+ipcMain.handle("restoreCategory", async (event, data) => {
+  if (event.sender === mainWindow.webContents) {
+    try {
+      const response = await restoreCategory(data);
 
       if (response.success) {
         return {

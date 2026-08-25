@@ -1,18 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ProfileForm from "@components/forms/form-signup";
 import fidelogoc from "@img/fidelogoc.png";
 import { useTranslation } from "react-i18next";
 import CustomSelect from "@components/Select";
 import type { AddUserFormValues } from "@forms/schemas/user.schema";
-
-interface DatabaseKeys {
-  db_password: string;
-  db_salt: string;
-}
+import { useModal } from "@context/ModalContext";
 
 const Signup: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const [keys, setKeys] = useState<DatabaseKeys>();
+  const { triggerWarningAlert } = useModal();
 
   const handleSignup = (data: AddUserFormValues) => {
     window.electronAPI.signup(data, i18n.language);
@@ -28,28 +24,15 @@ const Signup: React.FC = () => {
     localStorage.setItem("lang", value);
   };
 
-  const copyAllKeys = () => {
-    if (!keys) return;
-    const textToCopy = `Password: ${keys.db_password}\nSalt: ${keys.db_salt}`;
-    navigator.clipboard.writeText(textToCopy);
-    // Opcional: alert("Copiado!");
-  };
-
-  useEffect(() => {
-    const fetchKeys = async () => {
+  const handleFactoryReset = () => {
+    triggerWarningAlert(t("login.reset_warning"), async () => {
       try {
-        const response = await window.electronAPI.getKeys();
-
-        if (response && response.keys) {
-          setKeys(response.keys);
-        }
-      } catch (error) {
-        console.error("❌ Error get keys:", error);
+        await window.electronAPI.factoryReset();
+      } catch (err) {
+        console.error("Comunication Error:", err);
       }
-    };
-
-    fetchKeys();
-  }, []);
+    });
+  };
 
   return (
     <>
@@ -68,19 +51,15 @@ const Signup: React.FC = () => {
           <h1>{t("signup.title")}</h1>
           <p className="font-extralight">{t("signup.subtitle")}</p>
         </div>
-        {keys && (
-          <button
-            onClick={copyAllKeys}
-            className="flex items-center gap-2 px-4 py-2 bg-white/80 hover:bg-orange-50 border border-orange-200 rounded-lg transition-all group shadow-sm"
-          >
-            <span className="text-sm font-medium text-orange-800">
-              {t("signup.keys") || "Copiar llaves de seguridad"}
-            </span>
-          </button>
-        )}
         <div className="w-[450px]">
           <ProfileForm onSuccess={handleSignup} />
         </div>
+        <button
+          onClick={handleFactoryReset}
+          className="absolute bottom-3 left-4 text-xs font-light text-gray-500/60 hover:text-red-600 transition-colors"
+        >
+          {t("login.reset_data")}
+        </button>
       </div>
     </>
   );
