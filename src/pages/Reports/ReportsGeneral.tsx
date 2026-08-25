@@ -325,12 +325,14 @@ const ReportsGeneral = () => {
                 chartData={customersStatus!}
                 title={t("cards.customers_title")}
                 color="#1976D2"
+                labels={[t("cards.status_active"), t("cards.status_in_debt")]}
               />
 
               <CardInfoDetail
                 chartData={productsStatus!}
                 title={t("cards.products_status_title")}
                 color="#1976D2"
+                labels={[t("cards.status_active"), t("cards.status_inactive")]}
               />
             </div>
           </div>
