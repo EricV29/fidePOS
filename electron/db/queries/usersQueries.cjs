@@ -1,4 +1,11 @@
-const { queryAll, queryOne, runQuery } = require("../database.cjs");
+const {
+  queryAll,
+  queryOne,
+  runQuery,
+  getDB,
+  saveDB,
+  mapResultToObjects,
+} = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 
@@ -53,6 +60,21 @@ async function getAdmin() {
     return true;
   } catch (error) {
     console.error("❌ Error getting admin:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+async function getAdminId() {
+  try {
+    const admin = await queryOne(`SELECT id FROM user WHERE role_id = 1;`);
+
+    if (!admin) {
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
+    }
+
+    return { success: true, id: admin.id };
+  } catch (error) {
+    console.error("❌ Error getting admin id:", error);
     return { success: false, error: error.message };
   }
 }
@@ -268,12 +290,16 @@ async function changePassword(data) {
 
 // Delete User
 async function deleteUser(id) {
+  const db = await getDB();
   try {
     // Search User
-    const users = await queryOne(
+    const query = db.exec(
       "SELECT id, role_id, status_id FROM user WHERE id = ?",
       [id],
     );
+
+    const result = mapResultToObjects(query);
+    const users = result[0];
 
     // User?
     if (!users) {
@@ -290,14 +316,93 @@ async function deleteUser(id) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
-    await runQuery(
-      "UPDATE user SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
+    db.exec("BEGIN TRANSACTION;");
+
+    // Check if user has sales
+    const salesQuery = db.exec(
+      "SELECT id FROM sale WHERE user_id = ? LIMIT 1;",
+      [id],
+    );
+    const salesResult = mapResultToObjects(salesQuery);
+
+    if (salesResult.length > 0) {
+      // Has sales → soft delete
+      db.run(
+        "UPDATE user SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
+        [id],
+      );
+    } else {
+      // No sales → hard delete
+      db.run("DELETE FROM user WHERE id = ?", [id]);
+    }
+
+    db.exec("COMMIT;");
+    await saveDB(db);
+    return { success: true, result: AUTH_CODES.DELETE_USER };
+  } catch (error) {
+    if (db) db.exec("ROLLBACK;");
+    console.error("Error deleting user:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Verify User Password
+async function verifyUserPassword(userId, password) {
+  try {
+    const user = await queryOne(
+      "SELECT password FROM user WHERE id = ?",
+      [userId],
+    );
+
+    if (!user) {
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
+    }
+
+    const isValid = await bcrypt.compare(password, user.password);
+
+    if (!isValid) {
+      return { success: false, error: AUTH_CODES.INCORRECT_PASSWORD };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("❌ Error verify user password:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Restore User
+async function restoreUser(id) {
+  try {
+    // Search User
+    const userFound = await queryOne(
+      "SELECT id, role_id, status_id FROM user WHERE id = ?",
       [id],
     );
 
-    return { success: true, result: AUTH_CODES.DELETE_USER };
+    // User?
+    if (!userFound) {
+      return { success: false, error: AUTH_CODES.USER_NOT_FOUND };
+    }
+
+    // Role?
+    if (userFound.role_id === 1) {
+      return { success: false, error: AUTH_CODES.UNAUTHORIZED };
+    }
+
+    // Status?
+    if (userFound.status_id === 1) {
+      return { success: false, error: AUTH_CODES.USER_ACTIVE };
+    }
+
+    runQuery(
+      "UPDATE user SET deleted_at = NULL, status_id = 1 WHERE id = ?",
+      [id],
+    );
+
+    return { success: true, result: AUTH_CODES.RESTORE_USER };
   } catch (error) {
-    console.error("❌ Error deleting user:", error);
+    console.error("Error restoring user:", error);
     return { success: false, error: error.message };
   }
 }
@@ -305,10 +410,13 @@ async function deleteUser(id) {
 module.exports = {
   addUser,
   getAdmin,
+  getAdminId,
   getUsers,
   deleteUser,
   editUser,
   changePassword,
   getFilterSearchUsers,
   getEmails,
+  verifyUserPassword,
+  restoreUser,
 };

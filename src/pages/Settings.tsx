@@ -20,6 +20,8 @@ import { useLoading } from "@context/LoadingContext";
 import ModalEditUser from "@components/modals/ModalEditUser";
 import AUTH_CODES from "../../constants/authCodes.json";
 import ModalAddCategory from "@/components/modals/ModalAddCategory";
+import ModalMigration from "@/components/modals/ModalMigration";
+import ExportIcon from "@icons/ExportIcon";
 
 interface Context {
   session: UserSession;
@@ -152,6 +154,31 @@ const Settings = () => {
     });
   };
 
+  const restoreUser = async (id: number, status: string) => {
+    if (status !== "inactive") {
+      triggerResponseAlert(AUTH_CODES.USER_ACTIVE);
+      return;
+    }
+
+    triggerWarningAlert(t("modalWarningAlert.text_restore_user"), async () => {
+      try {
+        setLoading(true);
+        const response = await window.electronAPI.restoreUser(id);
+
+        if (response.success) {
+          loadSettings();
+          setLoading(false);
+          triggerResponseAlert(response.result);
+        } else {
+          setLoading(false);
+          triggerResponseAlert(response.error);
+        }
+      } catch (err) {
+        console.error("Comunication Error:", err);
+      }
+    });
+  };
+
   const deleteCategory = async (id: number) => {
     triggerWarningAlert(
       t("modalWarningAlert.text_delete_category"),
@@ -159,6 +186,34 @@ const Settings = () => {
         try {
           setLoading(true);
           const response = await window.electronAPI.deleteCategory(id);
+
+          if (response.success) {
+            loadSettings();
+            setLoading(false);
+            triggerResponseAlert(response.result);
+          } else {
+            setLoading(false);
+            triggerResponseAlert(response.error);
+          }
+        } catch (err) {
+          console.error("Comunication Error:", err);
+        }
+      },
+    );
+  };
+
+  const restoreCategory = async (id: number, status: string) => {
+    if (status !== "inactive") {
+      triggerResponseAlert(AUTH_CODES.CATEGORY_USED);
+      return;
+    }
+
+    triggerWarningAlert(
+      t("modalWarningAlert.text_restore_category"),
+      async () => {
+        try {
+          setLoading(true);
+          const response = await window.electronAPI.restoreCategory(id);
 
           if (response.success) {
             loadSettings();
@@ -337,6 +392,27 @@ const Settings = () => {
               <p>{t("settings.input4_btn")}</p>
             </button>
           </div>
+          {session?.role_id === 1 && (
+            <div className="w-full flex justify-start items-center gap-3">
+              <div className="w-auto">
+                <p className="font-semibold dark:text-white">
+                  {t("settings.input5")}
+                </p>
+                <p className="font-extralight dark:text-[#b3b3b3]">
+                  {t("settings.description5")}
+                </p>
+              </div>
+              <button
+                className="borange"
+                onClick={() =>
+                  setModal(<ModalMigration userId={session?.id} />)
+                }
+              >
+                <ExportIcon />
+                <p>{t("settings.input5_btn")}</p>
+              </button>
+            </div>
+          )}
           {session?.role_id !== 2 && (
             <>
               <div className="w-full min-h-[500px] flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">
@@ -355,6 +431,9 @@ const Settings = () => {
                     },
                     onDelete: (row) => {
                       deleteUser(row.id);
+                    },
+                    onActive: (row) => {
+                      restoreUser(row.id, row.status);
                     },
                   }}
                   pagination={paginationUsers}
@@ -381,6 +460,9 @@ const Settings = () => {
                     },
                     onDelete: (row) => {
                       deleteCategory(row.id);
+                    },
+                    onActive: (row) => {
+                      restoreCategory(row.id, row.status);
                     },
                   }}
                   pagination={paginationCategories}
