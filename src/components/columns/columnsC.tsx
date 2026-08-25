@@ -30,7 +30,11 @@ export const columnsC = (
     },
     accessorFn: (row) => `${row.name} ${row.last_name}`,
   },
-  { accessorKey: "phone", header: t("columns.phone") },
+  {
+    accessorKey: "phone",
+    header: t("columns.phone"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
+  },
   {
     accessorKey: "status",
     header: t("columns.status"),

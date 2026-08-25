@@ -22,10 +22,12 @@ export const columnsPS = (t: TFunction): ColumnDef<ProductsSale>[] => [
   {
     accessorKey: "code_sku",
     header: t("columns.code"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
   },
   {
     accessorKey: "product",
     header: t("columns.product"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
   },
   {
     accessorKey: "description",

@@ -29,9 +29,7 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 
 ## 📋 Tabla de contenidos
 
-- [FidePOS - Punto de Venta](#fidepos---punto-de-venta)
-- [](#)
-  - [📋 Tabla de contenidos](#-tabla-de-contenidos)
+- [📋 Tabla de contenidos](#-tabla-de-contenidos)
   - [📖 Descripción](#-descripción)
   - [🎥 Demo](#-demo)
   - [🛠️ Tecnologías](#️-tecnologías)
@@ -73,12 +71,16 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 
 ## 🛠️ Tecnologías
 
-| Capa            | Tecnología                       |
-| --------------- | -------------------------------- |
-| Frontend        | React 19, TypeScript 5.9, Vite 7 |
-| Backend         | Sql.js 1                         |
-| Estilos         | Tailwind CSS 4 + PostCSS         |
-| Package manager | pnpm                             |
+| Capa               | Tecnología                                          |
+| ------------------ | --------------------------------------------------- |
+| Frontend           | React 19, TypeScript 5.9, Vite 7                    |
+| Main Process       | Electron 39, sql.js 1                                |
+| Estilos            | Tailwind CSS 4 + PostCSS                            |
+| Formularios        | react-hook-form + Zod                                |
+| Gráficas           | Recharts                                             |
+| Exportación        | jsPDF, xlsx                                          |
+| Email              | Nodemailer                                           |
+| Package manager    | pnpm                                                |
 
 ---
 
@@ -126,25 +128,6 @@ EMAIL_PASS=xxxx xxxx xxxx xxxx
 # Valores comunes: 'gmail', 'hotmail', 'outlook', 'yahoo', 'icloud'.
 # Si usas un dominio propio, aquí suele ir la configuración de 'host' (smtp.tuservicio.com).
 EMAIL_SERVICE=gmail
-
-# -----------------------------------------------------------------------
-# EMAIL CONFIGURATION
-# -----------------------------------------------------------------------
-
-# The email address used to send the messages.
-# Example: my_business@gmail.com
-EMAIL_USER=email@example.com
-
-# IMPORTANT: This is NOT your regular login password.
-# For security reasons (like Gmail/Outlook), you must generate a
-# 16-character "App Password" from your account's security settings (2FA).
-# Example: abcd efgh ijkl mnop
-EMAIL_PASS=xxxx xxxx xxxx xxxx
-
-# The name of the email provider so Nodemailer knows which settings to use.
-# Common values: 'gmail', 'hotmail', 'outlook', 'yahoo', 'icloud'.
-# If using a custom domain, you might need an SMTP host instead.
-EMAIL_SERVICE=gmail
 ```
 
 ---
@@ -191,21 +174,23 @@ El instalador se genera en la carpeta `releases/`. Durante el desarrollo, el ser
 ## 📁 Estructura del proyecto
 
 ```
-project/
+fidePOS/
 ├── constants/          # Constantes globales del proyecto
 ├── electron/           # Proceso Principal de Electron (Main Process)
 │   ├── main.cjs        # Entry point de Electron (configuración de ventanas)
 │   ├── preload.js      # Script de precarga (IPC Bridge seguro entre Main y Renderer)
 │   ├── db/             # Configuración e inicialización de la base de datos local
-│   │   ├── database.js # Conexión singleton a la base de datos (sql.js / SQLite)
+│   │   ├── database.cjs # Conexión singleton a la base de datos (sql.js / SQLite)
+│   │   ├── dbManager/  # Gestión y utilidades de la base de datos
 │   │   └── queries/    # Consultas SQL y funciones de acceso a datos (CRUD)
 │   └── utility/        # Funciones utilitarias exclusivas del proceso de Electron
 ├── public/             # Recursos estáticos globales (imágenes, logos, etc.)
 ├── src/                # Proceso de Renderizado (Frontend con React)
 │   ├── assets/         # Fuentes, imágenes y estilos locales
 │   ├── components/     # Componentes reutilizables de la interfaz (UI)
-│   ├── constext/       # Contextos de React (Manejo de estados globales)
-│   ├── lib/            # Clientes externos, configuraciones de librerías y formateadores
+│   ├── context/        # Contextos de React (Manejo de estados globales)
+│   ├── hooks/          # Custom hooks reutilizables
+│   ├── lib/            # Configuraciones de librerías y formateadores
 │   ├── locales/        # Archivos JSON de traducción para i18next (es, en, etc.)
 │   ├── pages/          # Vistas principales de la aplicación (Home, Catalog, etc.)
 │   ├── types/          # Interfaces y definiciones de tipos de TypeScript

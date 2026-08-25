@@ -158,6 +158,9 @@ export function useTable<TData>(options: TableOptions<TData>): TableInstance<TDa
   }, [columns, meta]);
 
   const getRowModel = useCallback((): RowModel<TData> => {
+    const defaultCell = ({ getValue }: { getValue: () => unknown }) =>
+      getValue() as ReactNode;
+
     return {
       rows: data.map((item, index) => ({
         id: String(index),
@@ -165,9 +168,13 @@ export function useTable<TData>(options: TableOptions<TData>): TableInstance<TDa
         getVisibleCells: () =>
           columns.map((col) => {
             const id = getColumnId(col);
+            const colDef = {
+              ...(col as ColumnDef<TData>),
+              cell: col.cell ?? defaultCell,
+            };
             return {
               id: `${index}:${id}`,
-              column: { id, columnDef: col as ColumnDef<TData> },
+              column: { id, columnDef: colDef },
               getContext: () => ({
                 row: {
                   original: item,
@@ -179,7 +186,7 @@ export function useTable<TData>(options: TableOptions<TData>): TableInstance<TDa
                     return getValueFromItem(item, found?.accessorKey);
                   },
                 },
-                column: { id, columnDef: col as ColumnDef<TData> },
+                column: { id, columnDef: colDef },
                 table: { options: { meta } },
                 getValue: () => getValueFromItem(item, col.accessorKey),
               }),

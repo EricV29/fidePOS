@@ -34,9 +34,12 @@ export const columnsS = (
     accessorKey: "customer",
     header: t("columns.customer"),
     cell: ({ row }) => {
-      return `${row.original.name} ${row.original.last_name}`;
+      const name = row.original.name;
+      const lastName = row.original.last_name;
+      if (!name && !lastName) return t("columns.without_customer");
+      return `${name ?? ""} ${lastName ?? ""}`.trim();
     },
-    accessorFn: (row) => `${row.name} ${row.last_name}`,
+    accessorFn: (row) => `${row.name ?? ""} ${row.last_name ?? ""}`.trim(),
   },
   {
     accessorKey: "products",

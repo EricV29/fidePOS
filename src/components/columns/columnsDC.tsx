@@ -23,6 +23,7 @@ export const columnsDC = (
   {
     accessorKey: "sale_num",
     header: t("columns.sale_num"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
   },
   {
     accessorKey: "codes_sku",

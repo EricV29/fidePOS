@@ -25,6 +25,7 @@ export const columnsRSP = (
   {
     accessorKey: "sale_num",
     header: t("columns.sale"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
   },
   {
     accessorKey: "created_at",

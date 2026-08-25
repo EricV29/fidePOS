@@ -32,6 +32,7 @@ export const columnsAR = (
   {
     accessorKey: "code_sku",
     header: t("columns.code"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
   },
   {
     accessorKey: "debt_amount",

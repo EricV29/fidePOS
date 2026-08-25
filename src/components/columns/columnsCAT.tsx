@@ -43,7 +43,11 @@ export const columnsCAT = (
     },
   },
 
-  { accessorKey: "description", header: t("columns.description") },
+  {
+    accessorKey: "description",
+    header: t("columns.description"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
+  },
   {
     accessorKey: "status",
     header: t("columns.status"),
