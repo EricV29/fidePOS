@@ -1,10 +1,10 @@
 const initSqlJs = require("sql.js");
 const fs = require("fs");
 const path = require("path");
-const { app, safeStorage } = require("electron");
+const { app, safeStorage, dialog } = require("electron");
 const crypto = require("crypto");
 const { generateDBSecurity } = require("../utility/generateDBKeys.cjs");
-const nodemailer = require("nodemailer");
+const { generatePassword } = require("../utility/generatePassword.cjs");
 const AUTH_CODES = require("../../constants/authCodes.json");
 // C:\Users\user\AppData\Roaming\FidePOS or FidePOS-DEV
 
@@ -14,17 +14,10 @@ let dbInstance = null;
 //* START APP FUNCTIONS -----------------------
 
 //* NEW DB
-async function newDB(keysEmail) {
+async function newDB() {
   try {
-    if (keysEmail.email && keysEmail.email_pass) {
-      const email = await verifyEmailConfig(keysEmail);
-      if (!email.success) {
-        return { success: false, error: AUTH_CODES.INVALID_KEYS_EMAIL };
-      }
-    }
-
     const keys = await generateDBSecurity();
-    await setupSecurity(keys, keysEmail);
+    await setupSecurity(keys);
     await createSchema();
 
     return { success: true, result: keys };
@@ -34,8 +27,8 @@ async function newDB(keysEmail) {
   }
 }
 
-//* INITIALIZE AND SAVE ALL SECURITY (DB + EMAIL)
-async function setupSecurity(dbKeys, emailKeys) {
+//* INITIALIZE AND SAVE ALL SECURITY (DB)
+async function setupSecurity(dbKeys) {
   try {
     // Memory Config
     PASSWORD = dbKeys.db_password;
@@ -50,15 +43,6 @@ async function setupSecurity(dbKeys, emailKeys) {
     configPath = path.join(userDataPath, "config.bin");
     dbPath = path.join(userDataPath, "app.db");
 
-    // Global Variabels (Email)
-    if (emailKeys) {
-      EMAIL_USER = emailKeys.email;
-      EMAIL_PASS = emailKeys.email_pass;
-    } else {
-      EMAIL_USER = "";
-      EMAIL_PASS = "";
-    }
-
     if (!fs.existsSync(userDataPath)) {
       fs.mkdirSync(userDataPath, { recursive: true });
     }
@@ -67,8 +51,6 @@ async function setupSecurity(dbKeys, emailKeys) {
     const fullConfig = {
       db_password: dbKeys.db_password,
       db_salt: dbKeys.db_salt,
-      email_user: EMAIL_USER,
-      email_pass: EMAIL_PASS,
       setup_date: new Date().toISOString(),
     };
 
@@ -79,38 +61,11 @@ async function setupSecurity(dbKeys, emailKeys) {
     // Create .bin
     fs.writeFileSync(configPath, secureBuffer);
 
-    console.log("🔐 CONFIG SUCCESSFULLY (DB + EMAIL)");
+    console.log("🔐 CONFIG SUCCESSFULLY (DB)");
     return true;
   } catch (err) {
     console.error("❌ Error config setup credentials:", err);
     return false;
-  }
-}
-
-//* VERIFY EMAIL CREDENTIALS (CORRECT/INCORRECT)
-async function verifyEmailConfig(keysEmail) {
-  const { email, email_pass } = keysEmail;
-
-  const transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: email,
-      pass: email_pass,
-    },
-    pool: false,
-    connectionTimeout: 5000,
-    greetingTimeout: 5000,
-  });
-
-  try {
-    await transporter.verify();
-
-    transporter.close();
-
-    return { success: true };
-  } catch (error) {
-    console.error("❌ Error email autentication:", error.message);
-    return { success: false, error: error.message };
   }
 }
 
@@ -147,15 +102,17 @@ async function loadSecurityConfigs() {
 //* VERIFY DATABASE ACCESS
 async function verifyDatabaseAccess(dbPath, data) {
   try {
-    const { db_password, db_salt } = data;
-
-    const KEY = crypto.scryptSync(String(db_password), String(db_salt), 32);
+    const { db_password } = data;
 
     const buffer = fs.readFileSync(dbPath);
 
+    const SALT_LENGTH = 16;
     const IV_LENGTH = 16;
-    const iv = buffer.subarray(0, IV_LENGTH);
-    const encryptedData = buffer.subarray(IV_LENGTH);
+    const saltHex = buffer.subarray(0, SALT_LENGTH).toString("hex");
+    const iv = buffer.subarray(SALT_LENGTH, SALT_LENGTH + IV_LENGTH);
+    const encryptedData = buffer.subarray(SALT_LENGTH + IV_LENGTH);
+
+    const KEY = crypto.scryptSync(String(db_password), saltHex, 32);
 
     const decipher = crypto.createDecipheriv("aes-256-cbc", KEY, iv);
     const decryptedBuffer = Buffer.concat([
@@ -190,19 +147,21 @@ async function prepareFileKeysDB(originalDbPath, keys) {
       fs.mkdirSync(userDataPath, { recursive: true });
     }
 
-    fs.copyFileSync(originalDbPath, finalDbPath);
+    const originalBuffer = fs.readFileSync(originalDbPath);
+    const SALT_LENGTH = 16;
+    const saltHex = originalBuffer.subarray(0, SALT_LENGTH).toString("hex");
+    const dbBuffer = originalBuffer.subarray(SALT_LENGTH);
+    fs.writeFileSync(finalDbPath, dbBuffer);
 
     dbPath = finalDbPath;
     PASSWORD = keys.db_password;
-    SALT = keys.db_salt;
+    SALT = saltHex;
     ENCRYPTION_KEY = crypto.scryptSync(PASSWORD, SALT, 32);
     ALGORITHM = "aes-256-cbc";
 
     const configData = {
       db_password: keys.db_password,
-      db_salt: keys.db_salt,
-      email_user: "",
-      email_pass: "",
+      db_salt: saltHex,
     };
 
     const encryptedConfig = safeStorage.encryptString(
@@ -840,6 +799,59 @@ async function runQuery(sql, params = []) {
   return { success: true };
 }
 
+//* EXPORT DATABASE FOR MIGRATION
+async function exportDatabase() {
+  try {
+    // 1. Generate random password for export
+    const exportPassword = await generatePassword(16);
+
+    // 2. Read current encrypted DB
+    const encryptedBuffer = fs.readFileSync(dbPath);
+
+    // 3. Decrypt with current keys
+    const iv = encryptedBuffer.subarray(0, 16);
+    const encryptedData = encryptedBuffer.subarray(16);
+    const decipher = crypto.createDecipheriv(ALGORITHM, ENCRYPTION_KEY, iv);
+    const decrypted = Buffer.concat([
+      decipher.update(encryptedData),
+      decipher.final(),
+    ]);
+
+    // 4. Generate new salt and key for export
+    const newSalt = crypto.randomBytes(16).toString("hex");
+    const newKey = crypto.scryptSync(exportPassword, newSalt, 32);
+    const newIv = crypto.randomBytes(16);
+
+    // 5. Re-encrypt with new password
+    const cipher = crypto.createCipheriv("aes-256-cbc", newKey, newIv);
+    const reEncrypted = Buffer.concat([
+      newIv,
+      cipher.update(decrypted),
+      cipher.final(),
+    ]);
+
+    // 6. Save dialog
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const { filePath } = await dialog.showSaveDialog({
+      defaultPath: `FidePOS_Backup_${dateStr}.db`,
+      filters: [{ name: "Database", extensions: ["db"] }],
+    });
+
+    if (filePath) {
+      const saltBuffer = Buffer.from(newSalt, "hex");
+      const fileBuffer = Buffer.concat([saltBuffer, reEncrypted]);
+      fs.writeFileSync(filePath, fileBuffer);
+      console.log("📦 DATABASE EXPORTED SUCCESSFULLY:", filePath);
+      return { success: true, password: exportPassword };
+    }
+
+    return { success: false, error: "Export cancelled" };
+  } catch (err) {
+    console.error("❌ Error exporting database:", err);
+    return { success: false, error: err.message };
+  }
+}
+
 module.exports = {
   getDB,
   saveDB,
@@ -853,4 +865,5 @@ module.exports = {
   verifyDatabaseAccess,
   prepareFileKeysDB,
   resetAppData,
+  exportDatabase,
 };
