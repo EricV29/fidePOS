@@ -3,7 +3,7 @@ const { contextBridge, ipcRenderer, webUtils } = require("electron");
 
 contextBridge.exposeInMainWorld("electronAPI", {
   // Start App First
-  startAppFirst: (data) => ipcRenderer.invoke("startAppFirst", data),
+  startAppFirst: () => ipcRenderer.invoke("startAppFirst"),
 
   // Start App File DB
   startAppFileDB: (data) => ipcRenderer.invoke("startAppFileDB", data),
@@ -13,14 +13,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
     return webUtils.getPathForFile(file);
   },
 
-  // Get Keys
-  getKeys: () => ipcRenderer.invoke("getKeys"),
-
   // Singup
   signup: (data, lan) => ipcRenderer.invoke("signup", data, lan),
-
-  // Get Keys
-  verifyEmailKeys: () => ipcRenderer.invoke("verifyEmailKeys"),
 
   // Install Date
   getInstallDate: () => ipcRenderer.invoke("getInstallDate"),
@@ -41,6 +35,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
   // Logout
   logout: () => ipcRenderer.send("logout"),
 
+  // Factory Reset (delete all app data)
+  factoryReset: () => ipcRenderer.invoke("factory-reset"),
+
   // Add user
   addUser: (data, lan) => ipcRenderer.invoke("addUser", data, lan),
 
@@ -49,6 +46,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Delete user
   deleteUser: (data) => ipcRenderer.invoke("deleteUser", data),
+
+  // Restore user
+  restoreUser: (data) => ipcRenderer.invoke("restoreUser", data),
 
   // Edit user
   editUser: (data) => ipcRenderer.invoke("editUser", data),
@@ -59,6 +59,16 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Change password
   changePassword: (data) => ipcRenderer.invoke("changePassword", data),
+
+  // Verify User Password (for migration)
+  verifyUserPassword: (data) =>
+    ipcRenderer.invoke("verifyUserPassword", data),
+
+  // Get Admin ID (for factory reset verification)
+  getAdminId: () => ipcRenderer.invoke("getAdminId"),
+
+  // Export Database (for migration)
+  exportDatabase: () => ipcRenderer.invoke("exportDatabase"),
 
   // Upload Image
   uploadUserImage: (data) => ipcRenderer.invoke("uploadImg", data),
@@ -114,6 +124,9 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
   // Delete Category
   deleteCategory: (data) => ipcRenderer.invoke("deleteCategory", data),
+
+  // Restore Category
+  restoreCategory: (data) => ipcRenderer.invoke("restoreCategory", data),
 
   // Edit Category
   editCategory: (data) => ipcRenderer.invoke("editCategory", data),

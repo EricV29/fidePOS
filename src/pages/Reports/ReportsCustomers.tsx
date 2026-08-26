@@ -368,6 +368,7 @@ const ReportsCustomers = () => {
             chartData={customersStatus!}
             title={t("cards.customers_title")}
             color="#1976D2"
+            labels={[t("cards.status_active"), t("cards.status_in_debt")]}
           />
         </div>
         <div className="w-full h-auto flex-1 flex flex-col overflow-y-auto gap-2">

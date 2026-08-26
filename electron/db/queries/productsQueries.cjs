@@ -735,7 +735,7 @@ async function deleteProduct(data) {
     db.exec("BEGIN TRANSACTION;");
 
     if (reason === "error") {
-      const movementsProduct = db.run(
+      const movementsProduct = db.exec(
         "SELECT id FROM sale_detail WHERE product_id = ?;",
         [id],
       );
@@ -745,10 +745,7 @@ async function deleteProduct(data) {
         return { success: false, error: AUTH_CODES.USED_PRODUCT };
       } else {
         db.run("DELETE FROM entries WHERE product_id = ?;", [id]);
-        db.run(
-          "UPDATE product SET deleted_at = CURRENT_TIMESTAMP, cost_price = 0, unit_price = 0, stock = 0, status_id = 0 WHERE id = ?;",
-          [id],
-        );
+        db.run("DELETE FROM product WHERE id = ?;", [id]);
       }
     } else if (reason === "loss") {
       db.run(

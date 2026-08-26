@@ -280,7 +280,7 @@ export default function Products() {
         </div>
         <hr className="border border-[#b3b3b3] my-2" />
         <div className="flex-1 min-h-0 w-full flex flex-col gap-2">
-          <div className="w-full h-[120px] flex justify-between gap-2">
+          <div className="w-full h-30 flex justify-between gap-2">
             <CardInfoNumber
               icon={InvestmentIcon}
               title={t("cards.investment_title")}

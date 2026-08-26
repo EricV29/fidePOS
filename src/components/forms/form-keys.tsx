@@ -24,7 +24,6 @@ export default function KeysForm({ onSuccess }: KeysFormProps) {
     resolver: zodResolver(getKeysSchema(t)),
     defaultValues: {
       db_password: "",
-      db_salt: "",
     },
   });
 
@@ -54,30 +53,6 @@ export default function KeysForm({ onSuccess }: KeysFormProps) {
             </FormItem>
           )}
         />
-        <div>
-          <FormField
-            control={form.control}
-            name="db_salt"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="font-semibold">
-                  {t("formDBCredentials.input3")}
-                </FormLabel>
-                <FormControl>
-                  <div className="relative">
-                    <Input
-                      type="text"
-                      placeholder="••••••••••••••••••••"
-                      {...field}
-                      className="bg-white pr-10"
-                    />
-                  </div>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
         <div>
           <button type="submit" className="borange">
             {t("formDBCredentials.btn")}

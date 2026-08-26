@@ -1,6 +1,7 @@
-const { saveDB, runQuery, queryAll, queryOne } = require("../database.cjs");
+const { runQuery, queryOne } = require("../database.cjs");
 const bcrypt = require("bcrypt");
 const AUTH_CODES = require("../../../constants/authCodes.json");
+const { generatePassword } = require("../../utility/generatePassword.cjs");
 
 // Get Install Date
 async function getInstallDate() {
@@ -85,13 +86,14 @@ async function loginUser(data) {
 }
 
 // Recovery Password
-async function insertNewPassword(email, newPass) {
+async function insertNewPassword(email) {
   try {
+    const newPass = await generatePassword();
     const hashedPassword = await bcrypt.hash(newPass, 10);
 
     // Search User
-    const user = await queryAll(
-      "SELECT id, password, name, last_name, role_id, status_id FROM user WHERE email = ?",
+    const user = await queryOne(
+      "SELECT id, status_id FROM user WHERE email = ?",
       [email],
     );
 
@@ -105,23 +107,16 @@ async function insertNewPassword(email, newPass) {
       return { success: false, error: AUTH_CODES.INACTIVE_USER };
     }
 
-    // Password Update
-    runQuery("UPDATE user SET password = ? WHERE email = ?", [
+    // Update Password
+    await runQuery("UPDATE user SET password = ? WHERE email = ?", [
       hashedPassword,
       email,
     ]);
 
-    const rowsModified = db.getRowsModified();
-
-    if (rowsModified > 0) {
-      await saveDB(db);
-      return { success: true };
-    } else {
-      return { success: false, error: "❌ Database could not be updated" };
-    }
+    return { success: true, password: newPass };
   } catch (error) {
     console.error("❌ Error recovery password:", error);
-    return true;
+    return { success: false, error: error.message };
   }
 }
 

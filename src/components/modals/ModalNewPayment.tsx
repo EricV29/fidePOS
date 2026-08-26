@@ -147,7 +147,6 @@ export function ModalNewPayment({ account, onSuccess }: Props) {
   return ReactDOM.createPortal(
     <div
       className="fixed inset-0 flex justify-center items-center z-30 bg-black/10 backdrop-blur-sm"
-      onClick={close}
     >
       <div
         className="max-w-[700px] h-[500px] lg:h-[700px] flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"

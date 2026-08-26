@@ -46,35 +46,18 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
     amountToPayP?: number,
     hasCreditP?: boolean,
   ) => {
-    const inputPaidAmount = document.getElementById(
-      "paid_amount",
-    ) as HTMLInputElement | null;
     const paid = amountToPayP === undefined ? paidAmount : Number(amountToPayP);
     const credit = hasCreditP === undefined ? isCreditActive : hasCreditP;
+    const finalCash = cashReceivedP !== undefined ? cashReceivedP : cashReceived;
 
-    if (paid === 0 && inputPaidAmount) {
-      // Calculate change due
-      const change = (cashReceivedP ?? 0) - (dataNewSale?.total ?? 0);
-      inputPaidAmount.value = "";
+    if (!credit || paid === 0) {
+      const change = finalCash - (dataNewSale?.total ?? 0);
       setDebt(0);
       setChangeDue(change);
     } else {
-      if (inputPaidAmount) {
-        //Calculate paid amount
-        if (credit) {
-          inputPaidAmount.value = String(paid);
-        }
-
-        const finalCash =
-          cashReceivedP !== undefined ? cashReceivedP : cashReceived;
-        const paidValue = Number(inputPaidAmount?.value || 0);
-        setChangeDue(finalCash - paidValue);
-
-        //Calculate debt pending
-        const debtPending =
-          (dataNewSale?.total ?? 0) - Number(inputPaidAmount.value);
-        setDebt(debtPending);
-      }
+      setChangeDue(finalCash - paid);
+      const debtPending = (dataNewSale?.total ?? 0) - paid;
+      setDebt(debtPending);
     }
   };
 
@@ -192,7 +175,6 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
   return ReactDOM.createPortal(
     <div
       className="fixed inset-0 flex justify-center items-center z-30 bg-black/10 backdrop-blur-sm"
-      onClick={close}
     >
       <div
         className="w-[500px] flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
@@ -289,29 +271,30 @@ export function ModalPaid({ data, onSuccess }: ModalPaidProps) {
           </div>
         </div>
         <div className="w-full flex flex-col gap-2">
-          <div className="w-full flex justify-between items-center">
-            <div className="flex flex-col">
-              <p className="dark:text-white">
-                {t("modalNewPaid.input_paid_amount")}
-              </p>
-              <div className="inputtexto">
-                <input
-                  id="paid_amount"
-                  type="number"
-                  min={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "-" || e.key === "e") {
-                      e.preventDefault();
-                    }
-                  }}
-                  placeholder={t("modalNewPaid.input_paid_amount")}
-                  className="w-full h-full"
-                  disabled={!isCreditActive}
-                  onChange={handleChangePaidAmount}
-                />
+          <div className={`w-full flex justify-between items-center ${isCreditActive ? "" : ""}`}>
+            {isCreditActive && (
+              <div className="flex flex-col">
+                <p className="dark:text-white">
+                  {t("modalNewPaid.input_paid_amount")}
+                </p>
+                <div className="inputtexto">
+                  <input
+                    id="paid_amount"
+                    type="number"
+                    min={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "-" || e.key === "e") {
+                        e.preventDefault();
+                      }
+                    }}
+                    placeholder={t("modalNewPaid.input_paid_amount")}
+                    className="w-full h-full"
+                    onChange={handleChangePaidAmount}
+                  />
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col">
+            )}
+            <div className={`flex flex-col ${isCreditActive ? "" : "w-full"}`}>
               <p className="dark:text-white">
                 {t("modalNewPaid.input_cash_received")}
               </p>

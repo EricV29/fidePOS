@@ -26,11 +26,11 @@
   "start": {
     "option1": "Primera vez",
     "description1": "Base de datos: Se creara una nueva base de datos.",
-    "description2": "Correo electrónico: Puedes configurar tu cuenta de Gmail para permitir la recuperación de contraseñas y el envío automático de correos de bienvenida. Nota: Si no configuras esta opción, deberás contactar directamente con el soporte técnico para recuperar el acceso a tu cuenta.",
-    "btn_tutorial": "Enlace Tutorial.",
+    "description2": "Recuperación de contraseñas: Se utilizará un servicio en la nube para recuperar tu contraseña.",
+    "btn_start": "COMENZAR",
     "option2": "Tengo una base de datos",
     "description3": "Selecciona tu archivo (.db):",
-    "description4": "Ingresa tus credenciales de tu base de datos:"
+    "description4": "Ingresa la contraseña de tu base de datos:"
   },
   "formEmailCredentials": {
     "input1": "Correo electrónico (gmail)",
@@ -52,7 +52,12 @@
   },
   "login": {
     "title": "Iniciar Sesión",
-    "subtitle": "Hola, ingresa tus datos para acceder."
+    "subtitle": "Hola, ingresa tus datos para acceder.",
+    "reset_data": "Regresar al inicio",
+    "reset_warning": "Esto eliminará permanentemente la base de datos local y todas las configuraciones guardadas. Esta acción no se puede deshacer. ¿Deseas continuar?"
+  },
+  "loginModal": {
+    "admin_password": "Contraseña del administrador"
   },
   "keys": {
     "title": "¡Hola!",
@@ -142,6 +147,9 @@
     "input4": "Soporte",
     "description4": "Reporta problemas de la app con los desarrolladores.",
     "input4_btn": "Contactar",
+    "input5": "Migración de datos",
+    "description5": "Exporta tu base de datos para utilizarla en otro dispositivo.",
+    "input5_btn": "Migrar",
     "table1": "Tabla de Usuarios",
     "table2": "Tabla de Categorias"
   },
@@ -162,6 +170,7 @@
     "deleted_at": "Fecha eliminación",
     "category": "Categoría",
     "actions": "Acciones",
+    "without_customer": "Sin cliente",
     "total_amount": "Monto",
     "customer": "Cliente",
     "customers": "Clientes",
@@ -219,6 +228,9 @@
     "paid_title": "Total Pagado",
     "sales_title": "Ventas",
     "products_status_title": "Productos (activo/inactivo)",
+    "status_active": "Activo",
+    "status_inactive": "Inactivo",
+    "status_in_debt": "En deuda",
     "options": "Opciones",
     "pending_title": "Saldo pendiente",
     "discounts_title": "Descuentos",
@@ -267,18 +279,21 @@
     "text_forgot_password": "Se enviará un correo electrónico con tu contraseña. Asegúrate de tener conexión a internet.",
     "text_write_email": "Asegurate de escribir tu correo electrónico.",
     "text_delete_user": "¿Estás seguro de que quieres eliminar a este usuario?",
+    "text_restore_user": "¿Estás seguro de que quieres restaurar este usuario?",
     "text_debt_payment": "¿Estás seguro de que agregar un nuevo pago?",
     "text_complete_new_sale": "¿Estás seguro de completar la venta?",
     "text_delete_product": "¿Estás seguro de que quieres eliminar este producto?.",
     "text_delete_customer": "¿Estás seguro de que quieres eliminar a este cliente?",
     "text_active_customer": "¿Estás seguro de que quieres activar a este cliente?",
-    "text_delete_category": "¿Estás seguro de que quieres eliminar esta categoría?"
+    "text_delete_category": "¿Estás seguro de que quieres eliminar esta categoría?",
+    "text_restore_category": "¿Estás seguro de que quieres restaurar esta categoría?"
   },
   "modalSuccessAlert": {
     "title": "¡Exito!",
     "text_email_send": "Correo enviado.",
     "text_add_user": "Usuario agregado correctamente.",
     "text_delete_user": "Usuario eliminado correctamente.",
+    "text_restore_user": "Usuario restaurado correctamente.",
     "text_edit_user": "Usuario editado correctamente.",
     "text_change_pass_user": "Contraseña actualizada correctamente.",
     "text_img_upload": "Imagen cargada correctamente.",
@@ -293,12 +308,14 @@
     "text_delete_customer": "Cliente eliminado correctamente.",
     "text_restore_customer": "Cliente activado correctamente.",
     "text_edit_category": "Categoría editada correctamnete.",
-    "text_restore_category": "Categoría eliminada correctamente."
+    "text_delete_category": "Categoría eliminada correctamente.",
+    "text_restore_category": "Categoría restaurada correctamente."
   },
   "modalDangerAlert": {
     "title": "¡Cuidado!",
     "text_user_not_found": "Usuario no encontrado.",
     "text_user_inactive": "Usuario inactivo.",
+    "text_user_active": "Este usuario ya se encuentra activo.",
     "text_incorrect_password": "Contraseña incorrecta.",
     "text_email_used": "Correo electrónico ya utilizado. Prueba con otro.",
     "text_phone_used": "Número telefónico ya utilizado. Prueba con otro.",
@@ -320,6 +337,7 @@
     "text_empty_file": "El archivo esta vacío.",
     "text_missing_columns": "Faltan las siguientes columnas obligatorias: {{columns}}",
     "text_empty_products": "No hay productos para agregar al sistema.",
+    "text_insufficient_stock": "Stock insuficiente para este producto: {{product}}.",
     "text_code_sku_used_import": "Código SKU: {{codesku}} ya utilizado.",
     "text_not_selected_format": "Formato no seleccionado.",
     "text_not_selected_statistics": "Estadísticas no seleccionadas.",
@@ -382,6 +400,17 @@
     "title": "Cambiar contraseña",
     "description": "Cambia tu actual contraseña.",
     "subtitle": "Ingresa tu actual y nueva contraseña."
+  },
+  "modalMigration": {
+    "title": "Migración de datos",
+    "description": "Migra tus datos para poder utilizarlos en otro dispositivo con el mismo sistema.",
+    "subtitle": "Ingresa tu contraseña actual para verificar tu identidad.",
+    "input1": "Contraseña actual",
+    "btn_verify": "Verificar",
+    "title2": "Contraseña del archivo",
+    "description2": "Copia esta contraseña para desbloquear tu archivo en el otro dispositivo.",
+    "subtitle2": "Guarda esta contraseña en un lugar seguro. La necesitarás para importar tus datos en otro dispositivo.",
+    "btn_close": "Cerrar"
   },
   "formChangePassword": {
     "input1": "Contraseña actual",
@@ -495,7 +524,7 @@
     "discount": "Descuento",
     "change_due": "Cambio a regresar",
     "input_paid_amount": "Cantidad que pagará",
-    "input__cash_received": "Candidad con la que paga",
+    "input_cash_received": "Cantidad con la que paga",
     "btn": "Completar venta"
   },
   "modalExport": {

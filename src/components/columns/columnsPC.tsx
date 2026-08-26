@@ -37,6 +37,7 @@ export const columnsPC = (
   {
     accessorKey: "sale_num",
     header: t("columns.sale_num"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
   },
   {
     accessorKey: "amount",

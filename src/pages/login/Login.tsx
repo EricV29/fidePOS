@@ -6,7 +6,8 @@ import CustomSelect from "@components/Select";
 import type { LoginFormValues } from "@forms/schemas/user.schema";
 import { useModal } from "@context/ModalContext";
 import ModalWarningAlert from "@modals/ModalWarningAlert";
-import AUTH_CODES from "../../../constants/authCodes.json";
+import ModalAdminPassword from "@modals/ModalAdminPassword";
+
 
 const Login: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -64,23 +65,16 @@ const Login: React.FC = () => {
       async () => {
         try {
           setIsLoading(true);
-          const reponseEmail = await window.electronAPI.verifyEmailKeys();
-
-          if (!reponseEmail.success) {
-            triggerResponseAlert(AUTH_CODES.NOT_EMAIL_KEYS);
-            return;
+          const response = await window.electronAPI.forgotPassword(
+            email,
+            i18n.language,
+          );
+          if (response.success) {
+            setIsLoading(false);
+            triggerResponseAlert(response.result);
           } else {
-            const response = await window.electronAPI.forgotPassword(
-              email,
-              i18n.language,
-            );
-            if (response.success) {
-              setIsLoading(false);
-              triggerResponseAlert(response.result);
-            } else {
-              setIsLoading(false);
-              triggerResponseAlert(response.error);
-            }
+            setIsLoading(false);
+            triggerResponseAlert(response.error);
           }
         } catch (err) {
           console.error("Comunication Error:", err);
@@ -97,6 +91,22 @@ const Login: React.FC = () => {
   const handleLanguageChange = (value: string) => {
     i18n.changeLanguage(value);
     localStorage.setItem("lang", value);
+  };
+
+  const handleFactoryReset = () => {
+    setModal(
+      <ModalAdminPassword
+        onConfirm={() => {
+          triggerWarningAlert(t("login.reset_warning"), async () => {
+            try {
+              await window.electronAPI.factoryReset();
+            } catch (err) {
+              console.error("Comunication Error:", err);
+            }
+          });
+        }}
+      />,
+    );
   };
 
   return (
@@ -124,6 +134,12 @@ const Login: React.FC = () => {
             emails={emails}
           />
         </div>
+        <button
+          onClick={handleFactoryReset}
+          className="absolute bottom-3 left-4 text-xs font-light text-gray-500/60 hover:text-red-600 transition-colors"
+        >
+          {t("login.reset_data")}
+        </button>
       </div>
     </>
   );

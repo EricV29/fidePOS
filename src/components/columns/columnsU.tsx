@@ -29,8 +29,16 @@ export const columnsU = (
     },
     accessorFn: (row) => `${row.name} ${row.last_name}`,
   },
-  { accessorKey: "email", header: t("columns.email") },
-  { accessorKey: "phone", header: t("columns.phone") },
+  {
+    accessorKey: "email",
+    header: t("columns.email"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
+  },
+  {
+    accessorKey: "phone",
+    header: t("columns.phone"),
+    cell: ({ getValue }) => <>{getValue() as string}</>,
+  },
   {
     accessorKey: "role",
     header: "Role",

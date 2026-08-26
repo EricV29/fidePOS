@@ -4,6 +4,7 @@ const {
   queryAll,
   runQuery,
   queryOne,
+  mapResultToObjects,
 } = require("../database.cjs");
 const AUTH_CODES = require("../../../constants/authCodes.json");
 
@@ -1038,12 +1039,16 @@ async function activeCustomer(id) {
 
 // Delete Customer
 async function deleteCustomer(id) {
+  const db = await getDB();
   try {
     // Search Customer
-    const customerFound = await queryAll(
+    const query = db.exec(
       "SELECT id, status_id FROM customer WHERE id = ?",
       [id],
     );
+
+    const result = mapResultToObjects(query);
+    const customerFound = result[0];
 
     // Customer?
     if (!customerFound) {
@@ -1055,14 +1060,32 @@ async function deleteCustomer(id) {
       return { success: false, error: AUTH_CODES.INACTIVE_CUSTOMER };
     }
 
-    runQuery(
-      "UPDATE customer SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
+    db.exec("BEGIN TRANSACTION;");
+
+    // Check if customer has sales
+    const salesQuery = db.exec(
+      "SELECT id FROM sale WHERE customer_id = ? LIMIT 1;",
       [id],
     );
+    const salesResult = mapResultToObjects(salesQuery);
 
+    if (salesResult.length > 0) {
+      // Has sales → soft delete
+      db.run(
+        "UPDATE customer SET deleted_at = CURRENT_TIMESTAMP, status_id = 0 WHERE id = ?",
+        [id],
+      );
+    } else {
+      // No sales → hard delete
+      db.run("DELETE FROM customer WHERE id = ?", [id]);
+    }
+
+    db.exec("COMMIT;");
+    await saveDB(db);
     return { success: true, result: AUTH_CODES.DELETE_CUSTOMER };
   } catch (error) {
-    console.error("❌ Error deleting customer:", error);
+    if (db) db.exec("ROLLBACK;");
+    console.error("Error deleting customer:", error);
     return { success: false, error: error.message };
   }
 }

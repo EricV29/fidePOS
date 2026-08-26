@@ -16,7 +16,7 @@ declare global {
   interface Window {
     electronAPI: {
       // START APP FIRST
-      startAppFirst: (data) => Promise<{
+      startAppFirst: () => Promise<{
         success: boolean;
         result?: string;
         error?: string;
@@ -32,11 +32,6 @@ declare global {
       // GET FILE PATH
       getFilePath: (file: File) => string;
 
-      // GET KEYS
-      getKeys: () => Promise<{
-        keys: { db_password: string; db_salt: string };
-      }>;
-
       // SIGNUP
       signup: (
         data,
@@ -46,9 +41,6 @@ declare global {
         result?: string;
         error?: string;
       }>;
-
-      // VERIFY EMAIL KEYS
-      verifyEmailKeys: () => Promise<{ success: boolean }>;
 
       // INSTALL DATE APLICATION
       getInstallDate: () => Promise<string>;
@@ -83,6 +75,12 @@ declare global {
       // LOGOUT
       logout: () => void;
 
+      // FACTORY RESET (DELETE ALL APP DATA)
+      factoryReset: () => Promise<{
+        success: boolean;
+        error?: string;
+      }>;
+
       // ADD USER
       addUser: (
         data,
@@ -107,6 +105,13 @@ declare global {
         error?: string;
       }>;
 
+      // RESTORE USER
+      restoreUser: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
       // EDIT USER
       editUser: (data) => Promise<{
         success: boolean;
@@ -125,6 +130,22 @@ declare global {
       changePassword: (data) => Promise<{
         success: boolean;
         result?: string;
+        error?: string;
+      }>;
+
+      // VERIFY USER PASSWORD (for migration)
+      verifyUserPassword: (data: {
+        userId: number;
+        password: string;
+      }) => Promise<{ success: boolean; error?: string }>;
+
+      // GET ADMIN ID (for factory reset verification)
+      getAdminId: () => Promise<{ success: boolean; id?: number; error?: string }>;
+
+      // EXPORT DATABASE (for migration)
+      exportDatabase: () => Promise<{
+        success: boolean;
+        password?: string;
         error?: string;
       }>;
 
@@ -258,6 +279,13 @@ declare global {
 
       // DELETE CATEGORY
       deleteCategory: (data) => Promise<{
+        success: boolean;
+        result?: string;
+        error?: string;
+      }>;
+
+      // RESTORE CATEGORY
+      restoreCategory: (data) => Promise<{
         success: boolean;
         result?: string;
         error?: string;

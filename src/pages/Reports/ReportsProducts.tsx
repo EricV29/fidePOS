@@ -272,6 +272,7 @@ const ReportsProducts = () => {
                 chartData={productsStatus!}
                 title={t("cards.products_status_title")}
                 color="#1976D2"
+                labels={[t("cards.status_active"), t("cards.status_inactive")]}
               />
             </div>
           </div>

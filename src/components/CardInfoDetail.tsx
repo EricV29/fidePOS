@@ -8,12 +8,14 @@ interface CardInfoDetailProps {
   chartData: DataItem;
   title: string;
   color: string;
+  labels?: string[];
 }
 
 const CardInfoDetail: React.FC<CardInfoDetailProps> = ({
   chartData,
   title,
   color,
+  labels,
 }) => {
   if (!chartData) return null;
 
@@ -21,6 +23,7 @@ const CardInfoDetail: React.FC<CardInfoDetailProps> = ({
     (a, b) => a + Number(b),
     0,
   );
+  const keys = Object.keys(chartData);
   return (
     <>
       <div
@@ -44,14 +47,14 @@ const CardInfoDetail: React.FC<CardInfoDetailProps> = ({
           <div className="w-full flex justify-between gap-1 font-regular text-[clamp(5px,2vw,15px)]">
             <p className="flex gap-1 items-center">
               <span className="bg-[#1976D2] rounded-full w-2 h-2 block"></span>
-              {Object.keys(chartData)[0]}:
+              {labels?.[0] ?? keys[0]}:
               <span className="font-semibold">
                 {Object.values(chartData)[0]}
               </span>
             </p>
             <p className="flex gap-1 items-center">
               <span className="bg-[#43A047] rounded-full w-2 h-2 block"></span>
-              {Object.keys(chartData)[1]}:
+              {labels?.[1] ?? keys[1]}:
               <span className="font-semibold">
                 {Object.values(chartData)[1]}
               </span>

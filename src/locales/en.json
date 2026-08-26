@@ -26,11 +26,11 @@
   "start": {
     "option1": "First run",
     "description1": "Data Base: Create a new Data Base.",
-    "description2": "Email: You can use your Gmail account to enable password recovery and send welcome emails to new users. Please note: Without this configuration, you will need to contact the developers directly to recover your password.",
-    "btn_tutorial": "Link Tutorial.",
+    "description2": "Password Recovery: A cloud service will be used to recover your password.",
+    "btn_start": "GET STARTED",
     "option2": "I have data base",
     "description3": "Select your file of data base (.db):",
-    "description4": "Write your credentials of data base:"
+    "description4": "Enter your database password:"
   },
   "formEmailCredentials": {
     "input1": "Email (gmail)",
@@ -52,7 +52,12 @@
   },
   "login": {
     "title": "Login",
-    "subtitle": "Hello, enter your information to access."
+    "subtitle": "Hello, enter your information to access.",
+    "reset_data": "Back to start",
+    "reset_warning": "This will permanently delete the local database and all saved settings. This action cannot be undone. Do you want to continue?"
+  },
+  "loginModal": {
+    "admin_password": "Administrator password"
   },
   "keys": {
     "title": "Welcome",
@@ -136,6 +141,9 @@
     "input4": "Support",
     "description4": "Report problems with the app developer.",
     "input4_btn": "Contact",
+    "input5": "Data Migration",
+    "description5": "Export your database to use it on another device.",
+    "input5_btn": "Migrate",
     "table1": "Users Table",
     "table2": "Category Table"
   },
@@ -156,6 +164,7 @@
     "deleted_at": "Deleted date",
     "category": "Category",
     "actions": "Actions",
+    "without_customer": "No customer",
     "total_amount": "Amount",
     "customer": "Customer",
     "customers": "Customers",
@@ -212,6 +221,9 @@
     "paid_title": "Paid",
     "sales_title": "Sales",
     "products_status_title": "Products (active/inactive)",
+    "status_active": "Active",
+    "status_inactive": "Inactive",
+    "status_in_debt": "In Debt",
     "options": "Options",
     "pending_title": "Total receivable",
     "discounts_title": "Discounts",
@@ -260,18 +272,21 @@
     "text_forgot_password": "A password recovery email will be sent to you. Please ensure you are connected to the internet.",
     "text_write_email": "Make sure to write your email.",
     "text_delete_user": "Delete this user?",
+    "text_restore_user": "Are you sure you want to restore this user?",
     "text_debt_payment": "Add new payment? This action cannot be undone.",
     "text_complete_new_sale": "Are you sure you want to complete the sale?",
     "text_delete_product": "Delete this product? This action cannot be undone.",
     "text_delete_customer": "Delete this customer? This action cannot be undonde.",
     "text_active_customer": "Make sure to active this customer?",
-    "text_delete_category": "Delete this category?"
+    "text_delete_category": "Delete this category?",
+    "text_restore_category": "Are you sure you want to restore this category?"
   },
   "modalSuccessAlert": {
     "title": "¡Success!",
     "text_email_send": "Email sent.",
     "text_add_user": "User added successfully.",
     "text_delete_user": "User deleted successfully.",
+    "text_restore_user": "User restored successfully.",
     "text_edit_user": "User edited successfully.",
     "text_change_pass_user": "Change password successfully.",
     "text_img_upload": "Image upload successfully.",
@@ -286,12 +301,14 @@
     "text_delete_customer": "Customer deleted successfully.",
     "text_restore_customer": "Customer active successfully.",
     "text_edit_category": "Category edited successfully.",
-    "text_delete_category": "Category deleted successfully."
+    "text_delete_category": "Category deleted successfully.",
+    "text_restore_category": "Category restored successfully."
   },
   "modalDangerAlert": {
     "title": "¡Danger!",
     "text_user_not_found": "User not found.",
     "text_user_inactive": "User inactive",
+    "text_user_active": "This user is already active.",
     "text_incorrect_password": "Incorrect password",
     "text_email_used": "Email is already in use. Try a different one.",
     "text_phone_used": "Phone number already in use.  Try a different one.",
@@ -375,6 +392,17 @@
     "title": "Change Password",
     "description": "Change your current password.",
     "subtitle": "Enter your current password and new password."
+  },
+  "modalMigration": {
+    "title": "Data Migration",
+    "description": "Migrate your data to use it on another device with the same system.",
+    "subtitle": "Enter your current password to verify your identity.",
+    "input1": "Current Password",
+    "btn_verify": "Verify",
+    "title2": "File Password",
+    "description2": "Copy this password to unlock your file on the other device.",
+    "subtitle2": "Save this password in a safe place. You will need it to import your data on another device.",
+    "btn_close": "Close"
   },
   "formChangePassword": {
     "input1": "Current Password",

@@ -102,6 +102,14 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_delete_user",
       },
+      [AUTH_CODES.RESTORE_USER]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_restore_user",
+      },
+      [AUTH_CODES.USER_ACTIVE]: {
+        Component: ModalDangerAlert,
+        textKey: "modalDangerAlert.text_user_active",
+      },
       [AUTH_CODES.EDIT_USER]: {
         Component: ModalSuccessAlert,
         textKey: "modalSuccessAlert.text_edit_user",
@@ -280,7 +288,11 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
       },
       [AUTH_CODES.DELETE_CATEGORY]: {
         Component: ModalSuccessAlert,
-        textKey: "modalSuccessAlert.text_deleted_category",
+        textKey: "modalSuccessAlert.text_delete_category",
+      },
+      [AUTH_CODES.RESTORE_CATEGORY]: {
+        Component: ModalSuccessAlert,
+        textKey: "modalSuccessAlert.text_restore_category",
       },
       [AUTH_CODES.NOT_SELECTED_FILE]: {
         Component: ModalDangerAlert,
