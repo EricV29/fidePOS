@@ -53,7 +53,7 @@ const ModalAdminPassword = ({ onConfirm }: Props) => {
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex justify-center items-center z-30 bg-black/10 backdrop-blur-sm">
       <div
-        className="w-[400px] flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
+        className="w-100 flex flex-col p-5 gap-2 bg-white dark:bg-[#353935] rounded-[15px] border-2 border-[#b3b3b3] drop-shadow-[5px_5px_10px_rgba(0,0,0,0.25)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="w-full flex justify-between items-center dark:text-[#b3b3b3]">
