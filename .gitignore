@@ -17,6 +17,9 @@ releases
 # Codebase memory MCP artifacts
 .codebase-memory/
 
+# OpenCode
+.opencode/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
