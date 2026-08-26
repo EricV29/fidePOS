@@ -14,9 +14,9 @@ interface ModalEditCategoryProps {
 }
 
 const ModalAddCategory = ({ data, onSuccess }: ModalEditCategoryProps) => {
-  const { setModal } = useModal();
+  const { hideModal } = useModal();
   const { t } = useTranslation();
-  const close = () => setModal(null);
+  const close = () => hideModal();
   const { setLoading } = useLoading();
   const { triggerResponseAlert } = useModal();
   const modalRoot = document.getElementById("modal-root") as HTMLElement;

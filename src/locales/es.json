@@ -234,7 +234,9 @@
     "options": "Opciones",
     "pending_title": "Saldo pendiente",
     "discounts_title": "Descuentos",
-    "salesvs_title": "Pagado vs Pendiente"
+    "salesvs_title": "Pagado vs Pendiente",
+    "paid_label": "Pagado",
+    "pending_label": "Pendiente"
   },
   "datePicker": {
     "months": {

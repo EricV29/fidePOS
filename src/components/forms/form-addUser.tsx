@@ -42,6 +42,7 @@ export default function AddUserForm({ onSuccess }: AddUserFormProps) {
   });
 
   function onSubmit(values: AddUserFormValues) {
+    form.reset();
     onSuccess?.(values);
   }
 

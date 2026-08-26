@@ -12,11 +12,11 @@ interface ModalAddUserProps {
 }
 
 const ModalAddUser = ({ onSuccess }: ModalAddUserProps) => {
-  const { setModal } = useModal();
+  const { hideModal } = useModal();
   const { t, i18n } = useTranslation();
   const { triggerResponseAlert } = useModal();
   const { setLoading } = useLoading();
-  const close = () => setModal(null);
+  const close = () => hideModal();
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
   const handleAddUser = async (data: AddUserFormValues) => {

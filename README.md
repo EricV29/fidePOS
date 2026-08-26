@@ -35,7 +35,6 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
   - [🛠️ Tecnologías](#️-tecnologías)
   - [✅ Requisitos previos](#-requisitos-previos)
   - [🚀 Instalación](#-instalación)
-  - [⚙️ Configuración](#️-configuración)
   - [💻 Uso y Scripts](#-uso-y-scripts)
   - [📸 Sistema](#-sistema)
   - [📁 Estructura del proyecto](#-estructura-del-proyecto)
@@ -53,13 +52,6 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 - 📄 **Reportes Profesionales:** Generación y exportación de datos en formatos **PDF, Excel y CSV**.
 - 🖥️ **Arquitectura de Escritorio:** Ejecución local segura y rápida (vía Electron).
 - 🌐 **Soporte Multi-idioma:** Inglés y Español con i18n.
-
-> [!IMPORTANT]
-> ⚠️ Configuración de Credenciales de Correo (Opción: Importar Archivo)
->
-> Actualmente, el sistema presenta una limitación técnica al utilizar la Opción 2 (Importar base de datos existente).
->
-> Al importar un archivo .db, el flujo de inicio omite la configuración de las credenciales de email. Esta configuración solo se completa de forma automática cuando se genera una base de datos nueva desde cero.
 
 ---
 
@@ -79,7 +71,7 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 | Formularios        | react-hook-form + Zod                                |
 | Gráficas           | Recharts                                             |
 | Exportación        | jsPDF, xlsx                                          |
-| Email              | Nodemailer                                           |
+| Email              | API externa                                          |
 | Package manager    | pnpm                                                |
 
 ---
@@ -88,7 +80,6 @@ Aplicación de escritorio de punto de venta para PyMEs. Permite gestionar ventas
 
 - [Node.js](https://nodejs.org/)
 - [pnpm](https://pnpm.io/installation)
-- Contraseña de aplicación de [Google](https://youtu.be/06rHLejczJE)
 
 ---
 
@@ -101,33 +92,6 @@ cd fidePOS
 
 # 2. Instalar dependencias
 pnpm install
-```
-
----
-
-## ⚙️ Configuración
-
-Crea un archivo `.env` en la raíz del proyecto con tus credenciales:
-
-```env
-# -----------------------------------------------------------------------
-# CONFIGURACIÓN DE CORREO ELECTRÓNICO
-# -----------------------------------------------------------------------
-
-# La dirección de correo desde la cual se enviarán los mensajes.
-# Ejemplo: mi_negocio@gmail.com
-EMAIL_USER=email@gmail.com
-
-# ¡IMPORTANTE! No es tu contraseña normal de inicio de sesión.
-# Para Gmail/Outlook, debes generar una "Contraseña de Aplicación" de 16 dígitos
-# desde la configuración de seguridad (2FA) de tu cuenta.
-# Ejemplo: abcd efgh ijkl mnop
-EMAIL_PASS=xxxx xxxx xxxx xxxx
-
-# El nombre del servicio de correo que utilizas para que Nodemailer lo reconozca.
-# Valores comunes: 'gmail', 'hotmail', 'outlook', 'yahoo', 'icloud'.
-# Si usas un dominio propio, aquí suele ir la configuración de 'host' (smtp.tuservicio.com).
-EMAIL_SERVICE=gmail
 ```
 
 ---
@@ -159,7 +123,7 @@ El instalador se genera en la carpeta `releases/`. Durante el desarrollo, el ser
 
 | Vista del Sistema                                   | Descripción                                                                                                                                                                                              |
 | :-------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| ![Dashboard](./public/screenshots/welcome.png)      | **Panel Principal:** Dos opciones de arranque: 1. Base de Datos nueva con o sin credenciales para correos electrónicos. 2. Si ya tienes una Base de Datos de FidePOS agregala y coloca tus credenciales. |
+| ![Dashboard](./public/screenshots/welcome.png)      | **Panel Principal:** Dos opciones de arranque: 1. Crear una base de datos nueva. 2. Importar una base de datos existente de FidePOS con tu contraseña. |
 | ![Dashboard](./public/screenshots/dashboard.png)    | **Panel Principal:** Visualización de métricas de ventas diarias, ganancias y estado general del negocio mediante gráficas interactivas.                                                                 |
 | ![Inventory](./public/screenshots/nuevaVenta.png)   | **Ventas:** Interfaz ágil para registrar nuevas ventas, aplicar descuentos y procesar diferentes métodos de pago.                                                                                        |
 | ![Customers](./public/screenshots/inventario.png)   | **Inventario:** Control total de stock, categorías y precios.                                                                                                                                            |
