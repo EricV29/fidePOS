@@ -40,6 +40,7 @@ export default function AddCategoryForm({ data, onSuccess }: ProductFormProps) {
 
   function onSubmit(values: AddCategoryFormValues) {
     const datav = { ...values, id: categoryId };
+    form.reset();
     onSuccess?.(datav, editActive);
   }
 

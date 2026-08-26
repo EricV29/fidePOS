@@ -51,6 +51,7 @@ export default function AddCustomerForm({
 
   function onSubmit(values: AddCustomerFormValues) {
     const datav = { ...values, id: data?.id };
+    form.reset();
     onSuccess?.(datav, editActive);
   }
 
