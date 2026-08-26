@@ -35,7 +35,7 @@
       "installerIcon": "dist/fidelogo.ico",
       "installerHeaderIcon": "dist/fidelogo.ico",
       "uninstallDisplayName": "FidePOS",
-      "license": "license.txt",
+      "license": "LICENSE",
       "oneClick": false,
       "perMachine": true,
       "allowElevation": true,
