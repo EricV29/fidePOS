@@ -13,11 +13,11 @@ interface Props {
 }
 
 export function ModalAddProduct({ data, onSuccess }: Props) {
-  const { setModal } = useModal();
+  const { hideModal } = useModal();
   const { t } = useTranslation();
   const { setLoading } = useLoading();
   const { triggerResponseAlert, triggerQuestionAlert } = useModal();
-  const close = () => setModal(null);
+  const close = () => hideModal();
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
   const optionsStockUp = [
     {

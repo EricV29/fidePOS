@@ -17,12 +17,12 @@ interface Props {
 }
 
 export function ModalAddCustomer({ data, onSuccess }: Props) {
-  const { setModal } = useModal();
+  const { hideModal } = useModal();
   const { t } = useTranslation();
   const { setLoading } = useLoading();
   const { triggerResponseAlert } = useModal();
 
-  const close = () => setModal(null);
+  const close = () => hideModal();
   const modalRoot = document.getElementById("modal-root") as HTMLElement;
 
   const editCustomer = async (finalValues: CustomerComparation) => {

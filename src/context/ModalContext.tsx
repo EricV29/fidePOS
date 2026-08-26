@@ -10,7 +10,9 @@ import type { Option } from "@typesm/products";
 
 interface ModalContextType {
   modal: React.ReactNode | null;
+  modalVisible: boolean;
   setModal: (content: React.ReactNode | null) => void;
+  hideModal: () => void;
   triggerResponseAlert: (
     code: string | undefined,
     values?: Record<string, string>,
@@ -35,7 +37,10 @@ const ModalContext = createContext<ModalContextType | null>(null);
 
 export function ModalProvider({ children }: { children: React.ReactNode }) {
   const [modal, setModal] = useState<React.ReactNode | null>(null);
+  const [modalVisible, setModalVisible] = useState(false);
   const [alert, setAlert] = useState<React.ReactNode | null>(null);
+
+  const hideModal = () => setModalVisible(false);
 
   const { t } = useTranslation();
 
@@ -348,7 +353,12 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     <ModalContext.Provider
       value={{
         modal,
-        setModal,
+        modalVisible,
+        setModal: (content) => {
+          setModal(content);
+          setModalVisible(content !== null);
+        },
+        hideModal,
         triggerResponseAlert,
         triggerWarningAlert,
         triggerQuestionAlert,
@@ -358,6 +368,7 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
       {alert &&
         ReactDOM.createPortal(alert, document.getElementById("alert-root")!)}
       {modal &&
+        modalVisible &&
         ReactDOM.createPortal(modal, document.getElementById("modal-root")!)}
     </ModalContext.Provider>
   );
