@@ -258,6 +258,7 @@ export default function History() {
               chartData={paidVSPendingNumberCard!}
               title={t("cards.salesvs_title")}
               color="#1976D2"
+              labels={[t("cards.paid_label"), t("cards.pending_label")]}
             />
           </div>
           <div className="w-full min-h-0 flex flex-col flex-1 p-4 gap-4 border-2 border-[#b3b3b3] rounded-[10px] bg-transparent">

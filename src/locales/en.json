@@ -227,7 +227,9 @@
     "options": "Options",
     "pending_title": "Total receivable",
     "discounts_title": "Discounts",
-    "salesvs_title": "Paid vs Pending"
+    "salesvs_title": "Paid vs Pending",
+    "paid_label": "Paid",
+    "pending_label": "Pending"
   },
   "datePicker": {
     "months": {
